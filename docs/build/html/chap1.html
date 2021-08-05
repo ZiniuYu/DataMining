@@ -1,0 +1,462 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Chapter 1 Data Matrix &mdash; DataMining  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Data Mining and Machine Learning" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> DataMining
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Chapter 1 Data Matrix</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#data-matrix">1.1 Data Matrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#attributes">1.2 Attributes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#data-algebraic-and-geometric-view">1.3 Data: Algebraic and Geometric View</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#distance-and-angle">1.3.1 Distance and Angle</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mean-and-total-variance">1.3.2 Mean and Total Variance</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#orthogonal-projection">1.3.3 Orthogonal Projection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#linear-independence-and-dimensionality">1.3.4 Linear Independence and Dimensionality</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#data-probabilistic-view">1.4 Data: Probabilistic View</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#bivariate-random-variables">1.4.1 Bivariate Random Variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#multivariate-random-variable">1.4.2 Multivariate Random Variable</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#random-sample-and-statistics">1.4.3 Random Sample and Statistics</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">DataMining</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Chapter 1 Data Matrix</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/chap1.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\newcommand{\bs}{\boldsymbol}
+\newcommand{\dp}{\displaystyle}
+\newcommand{\rm}{\mathrm}
+\newcommand{\pd}{\partial}\\\newcommand{\cd}{\cdot}
+\newcommand{\cds}{\cdots}
+\newcommand{\dds}{\ddots}
+\newcommand{\vds}{\vdots}
+\newcommand{\lv}{\lVert}
+\newcommand{\rv}{\rVert}
+\newcommand{\wh}{\widehat}
+\newcommand{\ol}{\overline}\\\newcommand{\0}{\boldsymbol{0}}
+\newcommand{\a}{\boldsymbol{\mathrm{a}}}
+\newcommand{\b}{\boldsymbol{\mathrm{b}}}
+\newcommand{\e}{\boldsymbol{\mathrm{e}}}
+\newcommand{\i}{\boldsymbol{i}}
+\newcommand{\j}{\boldsymbol{j}}
+\newcommand{\p}{\boldsymbol{\mathrm{p}}}
+\newcommand{\q}{\boldsymbol{\mathrm{q}}}
+\newcommand{\r}{\boldsymbol{\mathrm{r}}}
+\newcommand{\u}{\boldsymbol{u}}
+\newcommand{\v}{\boldsymbol{\mathrm{v}}}
+\newcommand{\w}{\boldsymbol{w}}
+\newcommand{\x}{\boldsymbol{\mathrm{x}}}
+\newcommand{\y}{\boldsymbol{y}}\\\newcommand{\A}{\boldsymbol{A}}
+\newcommand{\B}{\boldsymbol{B}}
+\newcommand{\C}{\boldsymbol{C}}
+\newcommand{\D}{\boldsymbol{\mathrm{D}}}
+\newcommand{\N}{\boldsymbol{N}}
+\newcommand{\X}{\boldsymbol{X}}\\
+\newcommand{\R}{\mathbb{R}}\\\newcommand{\ld}{\lambda}
+\newcommand{\Ld}{\Lambda}
+\newcommand{\sg}{\sigma}
+\newcommand{\Sg}{\Sigma}
+\newcommand{\th}{\theta}\\\newcommand{\mmu}{\boldsymbol{\mu}}\\\newcommand{\bb}{\begin{bmatrix}}
+\newcommand{\eb}{\end{bmatrix}}
+\newcommand{\bp}{\begin{pmatrix}}
+\newcommand{\ep}{\end{pmatrix}}
+\newcommand{\bv}{\begin{vmatrix}}
+\newcommand{\ev}{\end{vmatrix}}\\\newcommand{\im}{^{-1}}
+\newcommand{\pr}{^{\prime}}
+\newcommand{\ppr}{^{\prime\prime}}\end{aligned}\end{align} \]</div>
+<div class="section" id="chapter-1-data-matrix">
+<h1>Chapter 1 Data Matrix<a class="headerlink" href="#chapter-1-data-matrix" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="data-matrix">
+<h2>1.1 Data Matrix<a class="headerlink" href="#data-matrix" title="Permalink to this headline">¶</a></h2>
+<p>The <span class="math notranslate nohighlight">\(n\times d\)</span> data matrix is given as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\D=\bp &amp;X_1&amp;X_2&amp;\cds&amp;X_d\\ \x_1&amp;x_{11}&amp;x_{12}&amp;\cds&amp;x_{1d}\\
+\x_2&amp;x_{21}&amp;x_{22}&amp;\cds&amp;x_{2d}\\ \vds&amp;\vds&amp;\vds&amp;\dds&amp;\vds\\
+\x_n&amp;x_{n1}&amp;x_{n2}&amp;\cds&amp;x_{nd} \ep\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\x_i\)</span> donotes the <span class="math notranslate nohighlight">\(i\)</span>th row, which is a <span class="math notranslate nohighlight">\(d\)</span>-tuple given as</p>
+<div class="math notranslate nohighlight">
+\[\x_i=(x_{i1},x_{i2},\cds,x_{id})\]</div>
+<p>and <span class="math notranslate nohighlight">\(X_j\)</span> denotes the <span class="math notranslate nohighlight">\(j\)</span>th column, which is an <span class="math notranslate nohighlight">\(n\)</span>-tuple given as</p>
+<div class="math notranslate nohighlight">
+\[X_j=(x_{1j},x_{2j},\cds,x_{nj})\]</div>
+<p>The number of instances <span class="math notranslate nohighlight">\(n\)</span> is referred to as the <em>size</em> of the data,
+whereas the number of attributes <span class="math notranslate nohighlight">\(d\)</span> is called the <em>dimensionality</em> of the
+data.</p>
+</div>
+<div class="section" id="attributes">
+<h2>1.2 Attributes<a class="headerlink" href="#attributes" title="Permalink to this headline">¶</a></h2>
+<p><strong>Numeric Attributes</strong></p>
+<p>A <em>numeric</em> attribute is one that has a real-valued or integer-valued domain.
+Numeric attributes that take on a finite or countably infinite set of values are
+called <em>discrete</em>, whereas those that can take on any real value are called
+<em>continuous</em>.
+If an attribute has as its domain the set <span class="math notranslate nohighlight">\(\{0, 1\}\)</span>, it is called a <em>binary</em> attribute.</p>
+<ul class="simple">
+<li><p><em>Interval-scaled</em>: For these kinds of attributes only differences (addtion or subtraction) make sense.</p></li>
+<li><p><em>Ratio-scaled</em>: Here one can compute both differences as well as ratios between values.</p></li>
+</ul>
+<p><strong>Categorical Attributes</strong></p>
+<p>A <em>categorical</em> attribute is one that has a set-valued domain composed of a set of symbols.</p>
+<ul class="simple">
+<li><p><em>Nominal</em>: The attribute values in the domain are unordered, and thus only equality comparisons are meaningful.</p></li>
+<li><p><em>Ordinal</em>: The attribute values are ordered, and thus both equality
+comparisons and inequality comparisons are allowed, though it may not be
+possible to quantify the difference between values.</p></li>
+</ul>
+</div>
+<div class="section" id="data-algebraic-and-geometric-view">
+<h2>1.3 Data: Algebraic and Geometric View<a class="headerlink" href="#data-algebraic-and-geometric-view" title="Permalink to this headline">¶</a></h2>
+<p>If the <span class="math notranslate nohighlight">\(d\)</span> attributes or dimensions in the data matrix <span class="math notranslate nohighlight">\(\D\)</span> are all
+numeric, then each row can be considered as a <span class="math notranslate nohighlight">\(d\)</span>-dimensional point:</p>
+<div class="math notranslate nohighlight">
+\[\x_i=(x_{i1},x_{i2},\cds,x_{id})\in\R^d\]</div>
+<p>or equivalently, each row may be considered as a <span class="math notranslate nohighlight">\(d\)</span>-dimensional column vector:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\x_i=\bp x_{i1}\\x_{i2}\\\vds\\x_{id} \ep=\bp x_{i1}&amp;x_{i2}&amp;\cds&amp;x_{id} \ep^T\in\R^d\end{split}\]</div>
+<p>The <span class="math notranslate nohighlight">\(j\)</span>th <em>standard basis vector</em> <span class="math notranslate nohighlight">\(\e_j\)</span> of Cartesian coordinate
+space is the <span class="math notranslate nohighlight">\(d\)</span>-dimensional unit vector whose <span class="math notranslate nohighlight">\(j\)</span>th component is
+1 and the rest of thecomponents are 0:</p>
+<div class="math notranslate nohighlight">
+\[\e_j=(0,\cds,1_j,\cds,0)^T\]</div>
+<p>Any other vector in <span class="math notranslate nohighlight">\(\R^d\)</span> can be written as a <em>linear combination</em> of the standard basis vectors:</p>
+<div class="math notranslate nohighlight">
+\[\x_i=x_{i1}\e_1+\x_{i2}\e_2+\cds+x_{id}\e_d=\sum_{j=1}^dx_{ij}\e_j\]</div>
+<p>where the scalar value <span class="math notranslate nohighlight">\(x_{ij}\)</span> is the coordinate value along the <span class="math notranslate nohighlight">\(j\)</span>th axis or attribute.</p>
+<p>Each numeric column or attribute can also be treated as a vector in an <span class="math notranslate nohighlight">\(n\)</span>-dimensional space <span class="math notranslate nohighlight">\(\R^n\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}X_j=\bp x_{1j}\\x_{2j}\\\vds\\x_{nj} \ep\end{split}\]</div>
+<p>If all attributes are numeric, then the data matrix <span class="math notranslate nohighlight">\(\D\)</span> is in the fact an
+<span class="math notranslate nohighlight">\(n\times d\)</span> matrix, also written as <span class="math notranslate nohighlight">\(\D\in\R^{n\times d}\)</span>, given as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\D=\bp x_{11}&amp;x_{12}&amp;\cds&amp;x_{1d}\\x_{21}&amp;x_{22}&amp;\cds&amp;x_{2d}\\
+\vds&amp;\vds&amp;\dds&amp;\vds\\x_{n1}&amp;x_{n2}&amp;\cds&amp;x_{nd} \ep=
+\bp -&amp;\x_1^T&amp;-\\-&amp;\x_2^T&amp;-\\&amp;\vds\\-&amp;\x_n^T&amp;- \ep=
+\bp |&amp;|&amp;&amp;|\\X_1&amp;X_2&amp;\cds&amp;X_d\\|&amp;|&amp;&amp;| \ep\end{split}\]</div>
+<div class="section" id="distance-and-angle">
+<h3>1.3.1 Distance and Angle<a class="headerlink" href="#distance-and-angle" title="Permalink to this headline">¶</a></h3>
+<p>Let <span class="math notranslate nohighlight">\(\a,\b\in\R^m\)</span> be two <span class="math notranslate nohighlight">\(m\)</span>-dimensional vectors given as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\a=\bp a_1\\a_2\\\vds\\a_m \ep\quad\b=\bp b_1\\b_2\\\vds\\b_m \ep\end{split}\]</div>
+<p><strong>Dot Product</strong></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\a^T\b=\bp a_1&amp;a_2&amp;\cds&amp;a_m\ep\times\bp b_1\\b_2\\\vds\\b_m\ep=a_1b_1+a_2b_2+\cds+a_mb_m=\sum_{i=1}^ma_ib_i\)</span></p>
+</div>
+<p><strong>Length</strong></p>
+<p>The <em>Euclidean norm</em> or <em>length</em> of a vector <span class="math notranslate nohighlight">\(\a\in\R^m\)</span> is defined as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\lv\a\rv=\sqrt{\a^T\a}=\sqrt{a_1^2+a_2^2+\cds+a_m^2}=\sqrt{\sum_{i=1}^ma_i^2}\)</span></p>
+</div>
+<p>The <em>unit vector</em> in the direction of <span class="math notranslate nohighlight">\(\a\)</span> is given as</p>
+<div class="math notranslate nohighlight">
+\[\u=\frac{\a}{\lv\a\rv}=\bigg(\frac{1}{\lv\a\rv}\bigg)\a\]</div>
+<p>By definition <span class="math notranslate nohighlight">\(\u\)</span> has length <span class="math notranslate nohighlight">\(\lv\u\rv=1\)</span>, and it is also called a <em>normalized</em> vector.</p>
+<p>The Euclidean norm is a special case of a general class of norms, known as <span class="math notranslate nohighlight">\(L_p\)</span><em>-norm</em>, defined as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\lv\a\rv_p=(|a_1|^p+|a_2|^p+\cds+|a_m|^p)^{\frac{1}{\p}}=\bigg(\sum_{i=1}^m|a_i|^p\bigg)^{\frac{1}{p}}\)</span></p>
+</div>
+<p>for any <span class="math notranslate nohighlight">\(p\neq 0\)</span>.</p>
+<p><strong>Distance</strong></p>
+<p>The <em>Eclidean distance</em> between <span class="math notranslate nohighlight">\(\a\)</span> and <span class="math notranslate nohighlight">\(\b\)</span>, as follows</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\lv\a-\b\rv=\sqrt{(\a-\b)^T(\a-\b)}=\sqrt{\sum_{i=1}^m(a_i-b_i)^2}\)</span></p>
+</div>
+<p>The general <span class="math notranslate nohighlight">\(L_p\)</span>-distance function is geven as follows</p>
+<div class="math notranslate nohighlight">
+\[\lv\a-\b\rv_p=\bigg(\sum_{i=1}^m|a_i-b_i|^p\bigg)^{\frac{1}{p}}\]</div>
+<p><strong>Angle</strong></p>
+<p>The cosine of the smallest angle between vectors <span class="math notranslate nohighlight">\(\a\)</span> and <span class="math notranslate nohighlight">\(\b\)</span>, also
+called the <em>cosine similarity</em> is given as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\cos\th=\frac{\a^T\b}{\lv\a\rv\lv\b\rv}=\bigg(\frac{\a}{\lv\a\rv}\bigg)^T\bigg(\frac{\b}{\lv\b\rv}\bigg)\)</span></p>
+</div>
+<p>The <em>Cauchy-Schwartz</em> inequality states that for any vectors <span class="math notranslate nohighlight">\(\a\)</span> and <span class="math notranslate nohighlight">\(\b\)</span> in :math:<a href="#id1"><span class="problematic" id="id2">`</span></a>R^ma_i</p>
+<div class="math notranslate nohighlight">
+\[|\a^T\b|\leq\lv\a\rv\cd\lv\b\rv\]</div>
+<p>It follows immediately from the Cauchy-Schwartz inequality that</p>
+<div class="math notranslate nohighlight">
+\[-1\leq\cos\th\leq 1\]</div>
+<p><strong>Orthogonality</strong></p>
+<p>Two vectors <span class="math notranslate nohighlight">\(\a\)</span> and <span class="math notranslate nohighlight">\(\b\)</span> are said to be <em>orthogonal</em> if and only if
+<span class="math notranslate nohighlight">\(\a^T\b=0\)</span>, which in turn implies that <span class="math notranslate nohighlight">\(\cos\th=0\)</span>.
+In this case, we say that they have no similarity.</p>
+</div>
+<div class="section" id="mean-and-total-variance">
+<h3>1.3.2 Mean and Total Variance<a class="headerlink" href="#mean-and-total-variance" title="Permalink to this headline">¶</a></h3>
+<p><strong>Mean</strong></p>
+<div class="math notranslate nohighlight">
+\[mean(\D)=\mmu=\frac{1}{n}\sum_{i=1}^n\x_i\]</div>
+<p><strong>Total Variance</strong></p>
+<div class="math notranslate nohighlight">
+\[\rm{var}(\D)=\frac{1}{n}\sum_{i=1}^n\lv\x_i-\mmu\rv^2\]</div>
+<p>Simplifying the equation we obtain</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\rm{var}(\D)&amp;=\frac{1}{n}\sum_{i=1}^n(\lv\x_i\rv^2-2\x_i^T\mmu+\lv\mmu\rv^2)\\&amp;=\frac{1}{n}\bigg(\sum_{i=1}^n\lv\x_i\rv^2-2n\mmu^T\bigg(\frac{1}{n}\sum_{i=1}^n\x_i\bigg)+n\lv\mmu\rv^2\bigg)\\&amp;=\frac{1}{n}\bigg(\sum_{i=1}^n\lv\x_i\rv^2-2n\mmu^T\mmu+n\lv\mmu\rv^2\bigg)\\&amp;=\frac{1}{n}\bigg(\sum_{i=1}^n\lv\x_i\rv^2\bigg)-\lv\mmu\rv^2\end{aligned}\end{align} \]</div>
+<p><strong>Centered Data Matrix</strong></p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\ol\D=\D-\bs{1}\cd\mmu^T=\bp\x_1^T\\\x_2^T\\\vds\\\x_n^T\ep-
+\bp\mmu^T\\\mmu^T\\\vds\\\mmu^T\ep=\bp\x_1^T-
+\mmu^T\\\x_2^T-\mmu^T\\\vds\\\x_n^T-\mmu^T\ep=
+\bp\ol\x_1^T\\\ol\x_2^T\\\vds\\\ol\x_n^T\ep\end{split}\]</div>
+<p>The mean of the centered data matrix <span class="math notranslate nohighlight">\(\ol\D\)</span> is <span class="math notranslate nohighlight">\(\0\in\R^d\)</span>, because
+we have subtracted the mean <span class="math notranslate nohighlight">\(\mmu\)</span> from all the points <span class="math notranslate nohighlight">\(\x_i\)</span>.</p>
+</div>
+<div class="section" id="orthogonal-projection">
+<h3>1.3.3 Orthogonal Projection<a class="headerlink" href="#orthogonal-projection" title="Permalink to this headline">¶</a></h3>
+<p>Let <span class="math notranslate nohighlight">\(\a,\b\in\R^m\)</span> be two <span class="math notranslate nohighlight">\(m\)</span>-dimensional vectors.
+An <em>orthogonal decomposition</em> of the vector <span class="math notranslate nohighlight">\(\b\)</span> in the direction of another vector <span class="math notranslate nohighlight">\(\a\)</span> is given as</p>
+<div class="math notranslate nohighlight">
+\[\b=\b_\parallel+\b_\perp=\p+\r\]</div>
+<p>where <span class="math notranslate nohighlight">\(\p=\b_\parallel\)</span> is parallel to <span class="math notranslate nohighlight">\(\a\)</span>, and <span class="math notranslate nohighlight">\(\r=\b_\perp\)</span>
+is perpendicular or orthogonal to <span class="math notranslate nohighlight">\(\a\)</span>.
+The vector <span class="math notranslate nohighlight">\(\p\)</span> is called the <em>orthogonal projection</em> or simply projection of <span class="math notranslate nohighlight">\(\b\)</span> on the vector <span class="math notranslate nohighlight">\(\a\)</span>.
+The magnitude of the vector <span class="math notranslate nohighlight">\(\r=\b-\p\)</span> gives the <em>perpendicular distance</em>
+between <span class="math notranslate nohighlight">\(\b\)</span> and <span class="math notranslate nohighlight">\(\a\)</span>, which is often interpreted as the residual or
+error between the points <span class="math notranslate nohighlight">\(\b\)</span> and <span class="math notranslate nohighlight">\(\p\)</span>.
+The vector <span class="math notranslate nohighlight">\(\r\)</span> is also called the <em>error vector</em>.</p>
+<p>We can derive an expression for <span class="math notranslate nohighlight">\(\p\)</span> by noting that <span class="math notranslate nohighlight">\(\p=c\a\)</span> for
+some scalar <span class="math notranslate nohighlight">\(c\)</span>, as <span class="math notranslate nohighlight">\(p\)</span> is parallel to <span class="math notranslate nohighlight">\(\a\)</span>.
+Thus <span class="math notranslate nohighlight">\(\r=\b-\p=\b-c\a\)</span>.
+Because <span class="math notranslate nohighlight">\(\p\)</span> and <span class="math notranslate nohighlight">\(\r\)</span> are orthogonal, we have</p>
+<div class="math notranslate nohighlight">
+\[\p^T\r=(c\a)^T(\b-c\a)=c\a^T\b-c^2\a^T\a=0\]</div>
+<p>which implies that</p>
+<div class="math notranslate nohighlight">
+\[c=\frac{\a^T\b}{\a^T\a}\]</div>
+<p>Therefore, the projection of <span class="math notranslate nohighlight">\(\b\)</span> on <span class="math notranslate nohighlight">\(\a\)</span> is given as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\p=c\a=\bigg(\frac{\a^T\b}{\a^T\a}\bigg)\a\)</span></p>
+</div>
+<p>The scalar offset <span class="math notranslate nohighlight">\(c\)</span> along <span class="math notranslate nohighlight">\(\a\)</span> is also called the
+<em>scalar projection</em> of <span class="math notranslate nohighlight">\(\b\)</span> on <span class="math notranslate nohighlight">\(\a\)</span>, denoted as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\rm{proj}_\a(\b)=\bigg(\frac{\b^T\a}{\a^T\a}\bigg)\)</span></p>
+</div>
+<p>Therefore, the projection of <span class="math notranslate nohighlight">\(\b\)</span> on <span class="math notranslate nohighlight">\(\a\)</span> can also be written as</p>
+<div class="math notranslate nohighlight">
+\[\p=\rm{proj}_\a(\b)\cd\a\]</div>
+</div>
+<div class="section" id="linear-independence-and-dimensionality">
+<h3>1.3.4 Linear Independence and Dimensionality<a class="headerlink" href="#linear-independence-and-dimensionality" title="Permalink to this headline">¶</a></h3>
+</div>
+</div>
+<div class="section" id="data-probabilistic-view">
+<h2>1.4 Data: Probabilistic View<a class="headerlink" href="#data-probabilistic-view" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="bivariate-random-variables">
+<h3>1.4.1 Bivariate Random Variables<a class="headerlink" href="#bivariate-random-variables" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="multivariate-random-variable">
+<h3>1.4.2 Multivariate Random Variable<a class="headerlink" href="#multivariate-random-variable" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="random-sample-and-statistics">
+<h3>1.4.3 Random Sample and Statistics<a class="headerlink" href="#random-sample-and-statistics" title="Permalink to this headline">¶</a></h3>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="index.html" class="btn btn-neutral float-left" title="Data Mining and Machine Learning" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Ziniu Yu.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

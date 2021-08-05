@@ -1,0 +1,331 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Chapter 1 Data Matrix &mdash; DataMining  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Data Mining and Machine Learning" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> DataMining
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Chapter 1 Data Matrix</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#data-matrix">1.1 Data Matrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#attributes">1.2 Attributes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#data-algebraic-and-geometric-view">1.3 Data: Algebraic and Geometric View</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#distance-and-angle">1.3.1 Distance and Angle</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mean-and-total-variance">1.3.2 Mean and Total Variance</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#orthogonal-projection">1.3.3 Orthogonal Projection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#linear-independence-and-dimensionality">1.3.4 Linear Independence and Dimensionality</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#data-probabilistic-view">1.4 Data: Probabilistic View</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#bivariate-random-variables">1.4.1 Bivariate Random Variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#multivariate-random-variable">1.4.2 Multivariate Random Variable</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#random-sample-and-statistics">1.4.3 Random Sample and Statistics</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">DataMining</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Chapter 1 Data Matrix</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/chap1.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\newcommand{\bs}{\boldsymbol}
+\newcommand{\dp}{\displaystyle}
+\newcommand{\rm}{\mathrm}
+\newcommand{\pd}{\partial}\\\newcommand{\cd}{\cdot}
+\newcommand{\cds}{\cdots}
+\newcommand{\dds}{\ddots}
+\newcommand{\vds}{\vdots}
+\newcommand{\lv}{\lVert}
+\newcommand{\rv}{\rVert}
+\newcommand{\wh}{\widehat}\\\newcommand{\0}{\boldsymbol{0}}
+\newcommand{\a}{\boldsymbol{a}}
+\newcommand{\b}{\boldsymbol{b}}
+\newcommand{\e}{\boldsymbol{e}}
+\newcommand{\i}{\boldsymbol{i}}
+\newcommand{\j}{\boldsymbol{j}}
+\newcommand{\p}{\boldsymbol{p}}
+\newcommand{\q}{\boldsymbol{q}}
+\newcommand{\u}{\boldsymbol{u}}
+\newcommand{\v}{\boldsymbol{v}}
+\newcommand{\w}{\boldsymbol{w}}
+\newcommand{\x}{\boldsymbol{x}}
+\newcommand{\y}{\boldsymbol{y}}\\\newcommand{\A}{\boldsymbol{A}}
+\newcommand{\B}{\boldsymbol{B}}
+\newcommand{\C}{\boldsymbol{C}}
+\newcommand{\N}{\boldsymbol{N}}
+\newcommand{\X}{\boldsymbol{X}}\\\newcommand{\D}{\boldsymbol{\mathrm{D}}}
+\newcommand{\R}{\boldsymbol{\mathrm{R}}}\\\newcommand{\ld}{\lambda}
+\newcommand{\Ld}{\Lambda}
+\newcommand{\sg}{\sigma}
+\newcommand{\Sg}{\Sigma}
+\newcommand{\th}{\theta}\\\newcommand{\bb}{\begin{bmatrix}}
+\newcommand{\eb}{\end{bmatrix}}
+\newcommand{\bv}{\begin{vmatrix}}
+\newcommand{\ev}{\end{vmatrix}}\\\newcommand{\im}{^{-1}}
+\newcommand{\pr}{^{\prime}}
+\newcommand{\ppr}{^{\prime\prime}}\end{aligned}\end{align} \]</div>
+<div class="section" id="chapter-1-data-matrix">
+<h1>Chapter 1 Data Matrix<a class="headerlink" href="#chapter-1-data-matrix" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="data-matrix">
+<h2>1.1 Data Matrix<a class="headerlink" href="#data-matrix" title="Permalink to this headline">¶</a></h2>
+<p>The <span class="math notranslate nohighlight">\(n\times d\)</span> data matrix is given as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\D=\bb &amp;X_1&amp;X_2&amp;\cds&amp;X_d\\ \x_1&amp;x_{11}&amp;x_{12}&amp;\cds&amp;x_{1d}\\
+\x_2&amp;x_{21}&amp;x_{22}&amp;\cds&amp;x_{2d}\\ \vds&amp;\vds&amp;\vds&amp;\dds&amp;\vds\\
+\x_n&amp;x_{n1}&amp;x_{n2}&amp;\cds&amp;x_{nd} \eb\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\x_i\)</span> donotes the <span class="math notranslate nohighlight">\(i\)</span>th row, which is a <span class="math notranslate nohighlight">\(d\)</span>-tuple given as</p>
+<div class="math notranslate nohighlight">
+\[\x_i=(x_{i1},x_{i2},\cds,x_{id})\]</div>
+<p>and <span class="math notranslate nohighlight">\(X_j\)</span> denotes the <span class="math notranslate nohighlight">\(j\)</span>th column, which is an <span class="math notranslate nohighlight">\(n\)</span>-tuple given as</p>
+<div class="math notranslate nohighlight">
+\[X_j=(x_{1j},x_{2j},\cds,x_{nj})\]</div>
+<p>The number of instances <span class="math notranslate nohighlight">\(n\)</span> is referred to as the <em>size</em> of the data,
+whereas the number of attributes <span class="math notranslate nohighlight">\(d\)</span> is called the <em>dimensionality</em> of the
+data.</p>
+</div>
+<div class="section" id="attributes">
+<h2>1.2 Attributes<a class="headerlink" href="#attributes" title="Permalink to this headline">¶</a></h2>
+<p><strong>Numeric Attributes</strong></p>
+<p>A <em>numeric</em> attribute is one that has a real-valued or integer-valued domain.
+Numeric attributes that take on a finite or countably infinite set of values are
+called <em>discrete</em>, whereas those that can take on any real value are called
+<em>continuous</em>.
+If an attribute has as its domain the set <span class="math notranslate nohighlight">\(\{0, 1\}\)</span>, it is called a <em>binary</em> attribute.</p>
+<ul class="simple">
+<li><p><em>Interval-scaled</em>: For these kinds of attributes only differences (addtion or subtraction) make sense.</p></li>
+<li><p><em>Ratio-scaled</em>: Here one can compute both differences as well as ratios between values.</p></li>
+</ul>
+<p><strong>Categorical Attributes</strong></p>
+<p>A <em>categorical</em> attribute is one that has a set-valued domain composed of a set of symbols.</p>
+<ul class="simple">
+<li><p><em>Nominal</em>: The attribute values in the domain are unordered, and thus only equality comparisons are meaningful.</p></li>
+<li><p><em>Ordinal</em>: The attribute values are ordered, and thus both equality
+comparisons and inequality comparisons are allowed, though it may not be
+possible to quantify the difference between values.</p></li>
+</ul>
+</div>
+<div class="section" id="data-algebraic-and-geometric-view">
+<h2>1.3 Data: Algebraic and Geometric View<a class="headerlink" href="#data-algebraic-and-geometric-view" title="Permalink to this headline">¶</a></h2>
+<p>If the <span class="math notranslate nohighlight">\(d\)</span> attributes or dimensions in the data matrix <span class="math notranslate nohighlight">\(\D\)</span> are all numeric, then each row can be considered as a <span class="math notranslate nohighlight">\(d\)</span>-dimensional point:</p>
+<div class="section" id="distance-and-angle">
+<h3>1.3.1 Distance and Angle<a class="headerlink" href="#distance-and-angle" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="mean-and-total-variance">
+<h3>1.3.2 Mean and Total Variance<a class="headerlink" href="#mean-and-total-variance" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="orthogonal-projection">
+<h3>1.3.3 Orthogonal Projection<a class="headerlink" href="#orthogonal-projection" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="linear-independence-and-dimensionality">
+<h3>1.3.4 Linear Independence and Dimensionality<a class="headerlink" href="#linear-independence-and-dimensionality" title="Permalink to this headline">¶</a></h3>
+</div>
+</div>
+<div class="section" id="data-probabilistic-view">
+<h2>1.4 Data: Probabilistic View<a class="headerlink" href="#data-probabilistic-view" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="bivariate-random-variables">
+<h3>1.4.1 Bivariate Random Variables<a class="headerlink" href="#bivariate-random-variables" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="multivariate-random-variable">
+<h3>1.4.2 Multivariate Random Variable<a class="headerlink" href="#multivariate-random-variable" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="random-sample-and-statistics">
+<h3>1.4.3 Random Sample and Statistics<a class="headerlink" href="#random-sample-and-statistics" title="Permalink to this headline">¶</a></h3>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="index.html" class="btn btn-neutral float-left" title="Data Mining and Machine Learning" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Ziniu Yu.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
