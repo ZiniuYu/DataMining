@@ -59,6 +59,7 @@ rst_prolog = r'''
     \newcommand{\bs}{\boldsymbol}
     \newcommand{\dp}{\displaystyle}
     \newcommand{\rm}{\mathrm}
+    \newcommand{\cl}{\mathcal}
     \newcommand{\pd}{\partial}
     
     \newcommand{\cd}{\cdot}
@@ -69,6 +70,7 @@ rst_prolog = r'''
     \newcommand{\rv}{\rVert}
     \newcommand{\wh}{\widehat}
     \newcommand{\ol}{\overline}
+    \newcommand{\ra}{\rightarrow}
     
     \newcommand{\0}{\boldsymbol{0}}
     \newcommand{\a}{\boldsymbol{\mathrm{a}}}
@@ -90,7 +92,7 @@ rst_prolog = r'''
     \newcommand{\C}{\boldsymbol{C}}
     \newcommand{\D}{\boldsymbol{\mathrm{D}}}
     \newcommand{\N}{\boldsymbol{N}}
-    \newcommand{\X}{\boldsymbol{X}}
+    \newcommand{\X}{\boldsymbol{\mathrm{X}}}
 
 
     \newcommand{\R}{\mathbb{R}}

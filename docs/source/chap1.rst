@@ -271,25 +271,387 @@ Therefore, the projection of :math:`\b` on :math:`\a` can also be written as
 
     \p=\rm{proj}_\a(\b)\cd\a
 
-
 1.3.4 Linear Independence and Dimensionality
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Given the data matrix
 
+.. math::
+
+    \D=\bp \x_1&\x_2&\cds&\x_n \ep^T=\bp X_1&X_2&\cds&X_d \ep
+
+we are often interested in the linear combinations of the rows (points) or the columns (attributes).
+
+Given any set of vectors :math:`\v_1,\v_2,\cds,\v_k` in an :math:`m`-dimensional 
+vector space :math:`\R^m`, their *linear combination* is given as 
+
+.. math::
+
+    c_1\v_1+c_2\v_2+\cds+c_k\v_k
+
+where :math:`c_i\in\R` are scalar values.
+The set of all possible linear combinations of the :math:`k` vectors is called 
+the *span*, denoted as :math:`span(\v_1,\cds,\v_k)`, which is itself a vector
+space being a *subspace* of :math:`\R^m`.
+If :math:`span(\v_1,\cds,\v_k)=\R^m`, then we say that :math:`\v_1,\cds,\v_k`
+is a *spanning set* for :math:`\R^m`.
+
+**Row and Column space**
+
+The *column space* of :math:`\D`, denoted :math:`col(\D)`, is the set of all 
+linear combinations of the :math:`d` attributes :math:`X_j\in\R^n`
+
+.. math::
+
+    col(\D)=span(X_1,X_2,\cds,X_d)
+
+By definition :math:`col(\D)` is a subsapce of :math:`\R^n`.
+The *row space* of :math:`\D`, denoted :math:`row(\D)`, is the setof all linear
+combinations of the :math:`n` points :math:`\x_i\in\R^d`
+
+.. math::
+
+    row(\D)=span(\x_1,\x_2,\cds,\x_n)
+
+By definition :math:`row(\D)` is a subspace of :math:`\R^d`.
+
+.. math::
+
+    row(\D)=col(\D^T)
+
+**Linear Independence**
+
+The :math:`k` vectors are linearly dependent if there are scalars 
+:math:`c_1,c_2,\cds,c_k`, at least one of which is not zero, such that
+
+.. math::
+
+    c_1\v_1+c_2\v_2+\cds+c_k\v_k=\0
+
+On the other hand, :math:`\v_1,\cds,\v_k` are *linearly independent* if and only if
+
+.. math::
+
+    c_1\v_1+c_2\v_2+\cds+c_k\v_k=\0\rm{\ implies\ }c_1=c_2=\cds=c_k=0
+
+**Dimension and Rank**
+
+Let :math:`S` be a subspace of :math:`\R^m`.
+A *basis* for :math:`S` is a set of vectors in :math:`S`, say 
+:math:`\v_1,\cds,\v_k`, that are linearly independent and they span :math:`S`, 
+that is, :math:`span(\v_1,\cds,\v_k)=S`.
+A basis is a minimal spanning set.
+If the vectors in the basis are pairwise orthogonal, they are said to form an *orthogonal basis* for :math:`S`.
+If they are also normalized to be unit vectors, then they make up an *orthonormal basis* for :math:`S`.
+The *standard basis* for :math:`\R^m` is an orthonormal basis consisting of the vectors
+
+.. math::
+
+    \e_1=\bp 1\\0\\\vds\\0 \ep\quad\e_2=\bp 0\\1\\\vds\\0 \ep\quad\cds\quad\e_m=\bp 0\\0\\\vds\\1 \ep
+
+The number of vectors in a basis for :math:`S` is called the *dimension* of :math:`S`, denoted as :math:`dim(S)`.
+Because :math:`S` is a subspace of :math:`\R^m`, we must have :math:`dim(S)\leq m`.
+
+For any matrix, the dimension of its row and column space is the same, and this 
+dimension is also called the *rank* of the matrix.
+For the data matrix :math:`\D\in\R^{n\times d}`, we have 
+:math:`rank(\D)\leq\min(n,d)`, which follows from the fact that the column space 
+can have dimension at most :math:`d`, the row space can have dimension at most
+:math:`n`.
+With dimensionality reduction methods it is often possible to approximate 
+:math:`\D\in\R^{n\times d}` with a derived data matrix 
+:math:`\D\pr\in\R^{n\times k}`, which has much lower dimensionality, that is,
+:math:`k\ll d`.
 
 1.4 Data: Probabilistic View
 ----------------------------
 
+A random variable :math:`X` is called a *discrete random variable* if it takes 
+on only a finite or countably infinite number of values in its range, wehreas 
+:math:`X` is called a *continuous random variable* if it can take on any value
+in its range.
+
+**Probability mass Function**
+
+If :math:`X` is discrete, the *probability mass function* of :math:`X` is defined as
+
+.. note::
+
+    :math:`f(x)=P(X=x)` for all :math:`x\in\R`.
+
+:math:`f` must obey the basi rules of probability, that is, :math:`f` must be non-negative:
+
+.. math::
+
+    f(x)\geq 0
+
+and the sum of all probabilities should add to 1:
+
+.. math::
+
+    \sum_xf(x)=1
+
+**Probability Density Function**
+
+We define the *probability density function*, which specifies the probability 
+that the variable :math:`X` takes on values in any interval 
+:math:`[a,b]\subset\R`:
+
+.. note::
+
+    :math:`\dp P(X\in[a,b])=\int_a^b f(x)dx`
+
+The density function :math:`f` must satisfy the basic laws of probability:
+
+.. math::
+
+    f(x) \geq 0,\quad\rm{for\ all\ }x\in\R
+
+and
+
+.. math::
+
+    \int_{-\infty}^\infty f(x)dx=1
+
+We can get an intuitive understanding of the density function :math:`f` by 
+considering the probability density over a small interval of width 
+:math:`2\epsilon >0`, centered at :math:`x`, namely 
+:math:`[x-\epsilon,x+\epsilon]`:
+
+.. math::
+
+    P(X\in[x-\epsilon,x+\epsilon])=\int_{x-\epsilon}^{x+\epsilon}f(x)dx\simeq 2\epsilon\cd f(x)
+
+    f(x)\simeq\frac{P(X\in[x-\epsilon,x+\epsilon])}{2\epsilon}
+
+It is important to note that :math:`P(X=x)\neq f(x)`.
+
+We can use the PDF to obtain the relative probability of one value :math:`x_1` 
+over another :math:`x_2` because for a given :math:`\epsilon>0`, we have
+
+.. math::
+
+    \frac{P(X\in[x_1-\epsilon,x_1+\epsilon])}{P(X\in[x_2-\epsilon,x_2+\epsilon])}
+    \simeq\frac{2\epsilon\cd f(x_1)}{2\epsilon\cd f(x_2)}=\frac{f(x_1)}{f(x_2)}
+
+If :math:`f(x_1)` is larger than :math:`f(x_2)`, then values of :math:`X` close
+to :math:`x_1` are more probable than values cloes to :math:`x_2` and vice versa.
+
+**Cumulative Distribution Function**
+
+The *cumulative distribution function (CDF)* :math:`F:\R\rightarrow[0,1]` which 
+gives the probability of observing a value at most some given value :math:`x`:
+
+.. note::
+
+    :math:`F(x)=P(X\leq x)` for all :math:`-\infty<x<\infty`
+
+When :math:`X` is discrete, :math:`F` is given as
+
+.. math::
+
+    F(x)=P(X\leq x)=\sum_{u\leq x}f(u)
+
+and when :math:`X` is continuous, :math:`F` is given as
+
+.. math::
+
+    F(x)=P(X\leq x)=\int_{-\infty}^xf(u)du
 
 1.4.1 Bivariate Random Variables
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+We can also perform pair-wise analysis by considering a pair of attributes, 
+:math:`X_1` and :math:`X_2`, as a *bivariate random variable*:
 
+.. math::
+
+    \X=\bp X_1\\X_2 \ep
+
+**Joint Probability Mass Function**
+
+If :math:`X_1` and :math:`X_2` are both discrete random variables then 
+:math:`\X` has a *joint probability mass function* given as follows:
+
+.. math::
+
+    f(\x)=f(x_1,x_2)=P(X_1=x_1,X_2=x_2)=P(\X=\x)
+
+:math:`f` must satisfy the following two conditions:
+
+.. math::
+
+    f(\x)=f(x_1,x_2)\geq 0\quad\rm{for\ all\ }-\infty<x_1,x_2<\infty
+
+    \sum_\x f(\X)=\sum_{x_1}\sum_{x_2}f(x_1,x_2)=1
+
+**Joint Probability Density Function**
+
+If :math:`X_1` and :math:`X_2` are both continuous random variables then 
+:math:`\X` has a *joint probability density function* :math:`f` given as follows:
+
+.. math::
+
+    P(\X\in W)=\iint_{\x\in W}f(\X)d\X=\iint_{(x_1,x_2)^T\in W}f(x_1,x_2)dx_1dx_2
+
+where :math:`W\subset\R^2` is some subset of the 2-dimensional space of reals.
+:math:`f` must also satisfy the following two conditions:
+
+.. math::
+
+    f(\x)=f(x_1,x_2)\geq 0\quad\rm{for\ all\ }-\infty<x_1,x_2<\infty
+
+    \int_{\R^2}f(\x)d\x=\int_{-\infty}^\infty\int_{-\infty}^\infty f(x_1,x_2)dx_1dx_2=1
+
+The probability density at :math:`\x` can be approximated using a 2-dimensional 
+window of width :math:`2\epsilon` centered at :math:`\x=(x_1,x_2)^T` as
+
+.. math::
+
+    P(\X\in W)&=P(\X\in([x_1-\epsilon,x_1+\epsilon],[x_2-\epsilon,x_2+\epsilon]))
+
+    &=\int_{x_1-\epsilon}^{x_1+\epsilon}\int_{x_2-\epsilon}^{x_2+\epsilon}
+    f(x_1,x_2)dx_1dx_2\simeq 2\epsilon\cd 2\epsilon\cd f(x_1,x_2)
+
+which implies that
+
+.. math::
+
+    f(x_1,x_2)=\frac{P(\X\in W)}{(2\epsilon)^2}
+
+The relative probability of one value :math:`(a_1,a_2)` versus another 
+:math:`(b_1,b_2)` can therefore be computed via the probability density function:
+
+.. math::
+
+    \frac{P(\X\in([a_1-\epsilon,a_1+\epsilon],[a_2-\epsilon,a_2+\epsilon]))}
+    {P(\X\in([b_1-\epsilon,b_1+\epsilon],[b_2-\epsilon,b_2+\epsilon]))}\simeq
+    \frac{(2\epsilon)^2\cd f(a_1,a_2)}{(2\epsilon)^2\cd f(b_1,b_2)}=
+    \frac{f(a_1,a_2)}{f(b_1,b_2)}
+
+**Joint Cumulative Distribution Function**
+
+The *joint cumulative distribution function* for two random variables 
+:math:`X_1` and :math:`X_2` is defined as the function :math:`F`, such that for
+all values :math:`x_1,x_2\in(-\infty,\infty)`,
+
+.. math::
+
+    F(\x)=F(x_1,x_2)=P(X_1\leq x_1\rm{\ and\ }X_2\leq x_2)=P(\X\leq\x)
+
+**Statistical Independence**
+
+Two random variables :math:`X_1` and :math:`X_2` are said to be (statistically)
+*independent* if, for every :math:`W_1\subset\R` and :math:`W_2\subset\R`, 
+
+.. math::
+
+    P(X_1\in W_1\rm{\ and\ }X_2\in W_2)=P(X_1\in W_1)\cd P(X_2\in W_2)
+
+Furthermore, if :math:`X_1` and :math:`X_2` are independent, then the following two conditions are also satisfied:
+
+.. math::
+
+    F(\x)=F(x_1,x_2)=F_1(x_1)\cd F_2(x_2)
+
+    f(\x)=f(x_1,x_2)=f_1(x_1)\cd f_2(x_2)
 
 1.4.2 Multivariate Random Variable
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+A :math:`d`-dimensional *multivariate random variable* 
+:math:`\X=(X_1,X_2,\cds,X_d)^T`, also called a *vector random variable*, is
+defined as a function that assigns a vector of real numbers to each outcome in
+the sample space, that is :math:`\X:\cl{O}\ra\R^d`.
 
+If all :math:`X_j` are discrete, then :math:`\X` is jointly discrete and its
+joint probability mass function :math:`f` is given as
+
+.. math::
+
+    f(\x)&=P(\X=\x)
+
+    f(x_1,x_2,\cds,x_d)&=P(X_1=x_1,X_2=x_2,\cds,X_d=x_d)
+
+If all :math:`X_j` are continuous, then :math:`\X` is jointly continuous and its
+joint probability density function is given as
+
+.. math::
+
+    P(\X\in W)&=\underset{\x\in W}{\int\cds\int}f(\x)d\x
+
+    P((X_1,X_2,\cds,X_d)^T\in W)&=\underset{(x_1,x_2,\cds,x_d)^T\in W}{\int\cds\int}f(x_1,x_2,\cds,x_d)dx_1dx_2\cds dx_d
+
+for any :math:`d`-dimensional region :math:`W\subseteq\R^d`.
+
+We say that :math:`X_1,X_2,\cds,X_d` are independent random variables if any only if, for every region :math:`W_i\in\R`:
+
+.. math::
+
+    P(X_1\in W_1\rm{\ and\ }X_2\in W_2\cds\rm{\ and\ }X_d\in W_d)
+    
+    =P(X_1\in W_1)\cd P(X_2\in W_2)\cds P(X_d\in W_d)
+
+If :math:`X_1,X_2,\cds,X_d` are independent then the following conditions are also satisfied
+
+.. math::
+
+    F(\x)=F(x_1,\cds,x_d)=F_1(x_1)\cd F_2(x_2)\cd \cds \cd F_d(x_d)
+
+    f(\x)=f(x_1,\cds,x_d)=f_1(x_1)\cd f_2(x_2)\cd \cds \cd f_d(x_d)
 
 1.4.3 Random Sample and Statistics
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+In statistics, the word *population* is used to refer to the set or universe of all entieis under study.
+We try to make inferences about the population parameters by drawing a random 
+sample from the population, and by computing appropriate *statistics* from the
+sample that give estimates of the corresponding population parameters of 
+interest.
+
+**Univariate Sample**
+
+Given a random variable :math:`X`, a *random sample* of size :math:`n` from 
+:math:`X` is defined as a set of :math:`n` *independent and identically* 
+*distributed (IID)* random variables :math:`S_1,S_2,\cds,S_n`, that is, all of
+the :math:`S_i`'s are statistically independent of each other, and follow the 
+same probability mass or density function as :math:`X`.
+
+Their joint probability function is given as
+
+
+.. note::
+
+    :math:`\dp f(x_1,\cds,x_n)=\prod_{i=1}^nf_X(x_i)`
+
+where :math:`f_X` is the probability mass or density function for :math:`X`.
+
+**Multivariate Sample**
+
+:math:`\x_i` are assumed to be independent and identically distributed, and thus their joint distirbution is given as
+
+.. note::
+
+    :math:`\dp f(\x_1,\x_2,\cds,\x_n)=\prod_{i=1}^n f_{\X}(\x_i)`
+
+where :math:`f_{\X}` is the probability mass or density function for :math:`\X`.
+
+Under the attribute independence assumption the above equation can be rewritten as
+
+.. math::
+
+    f(\x_1,\x_2,\cds,\x_n)=\prod_{i=1}^n f(\x_i)=\prod_{i=1}^n\prod_{j=1}^df_{X_j}(x_{ij})
+
+**Statistics**
+
+Let :math:`\{ \bs{\rm{S}}_i\}_{i=1}^m` denote a random sample of size :math:`m` 
+drawn from a (multivariate) random variable :math:`\X`.
+A statistic :math:`\hat{\th}` is some function over the random sample, given as
+
+.. math::
+
+    \hat{\th}:(\bs{\rm{S}}_1,\bs{\rm{S}}_2,\cds,\bs{\rm{S}}_m)\ra\R
+
+If we use the value of a statistic to estimate a population parameter, this 
+value is called a *point estimate* of the parameter, and the statistic is called 
+an *estimator* of the parameter.
