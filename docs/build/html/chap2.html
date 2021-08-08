@@ -93,6 +93,7 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Chapter 2 Numeric Attributes</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#univariate-analysis">2.1 Univariate Analysis</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#measures-of-central-tendency">2.1.1 Measures of Central Tendency</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#measures-of-dispersion">2.1.2 Measures of Dispersion</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#bivariate-analysis">2.2 Bivariate Analysis</a></li>
@@ -247,7 +248,109 @@ empirical CDF is an estimate for the unknown population CDF <span class="math no
 \[\begin{split}I(x_i=x)=\left\{\begin{array}{lr}1\quad\rm{if\ }x_i=x\\0\quad\rm{if\ }x_i\neq x\end{array}\right.\end{split}\]</div>
 <div class="section" id="measures-of-central-tendency">
 <h3>2.1.1 Measures of Central Tendency<a class="headerlink" href="#measures-of-central-tendency" title="Permalink to this headline">¶</a></h3>
-<p><strong>Mean</strong></p>
+<p><strong>Mean</strong>
+The <em>mean</em>, also called the <em>expected value</em>, of a random variable <span class="math notranslate nohighlight">\(X\)</span> is
+the arithmetic average of the values of <span class="math notranslate nohighlight">\(X\)</span>.
+It provides a one-number summary of the <em>location</em> or <em>central tendency</em> for the distribution of <span class="math notranslate nohighlight">\(X\)</span>.</p>
+<p>The mean or expected value of a discrete random variable <span class="math notranslate nohighlight">\(X\)</span> is definede as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\mu=E[X]=\sum_xx\cd f(x)\)</span></p>
+</div>
+<p>where <span class="math notranslate nohighlight">\(f(x)\)</span> is the probability mass function of <span class="math notranslate nohighlight">\(X\)</span>.</p>
+<p>The expected vvalue of a continuous random variable <span class="math notranslate nohighlight">\(X\)</span> is defined as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\mu=E[x]=\int_{-\infty}^\infty x\cd f(x)dx\)</span></p>
+</div>
+<p>where <span class="math notranslate nohighlight">\(f(x)\)</span> is the probability density function of <span class="math notranslate nohighlight">\(X\)</span>.</p>
+<p><strong>Sample Mean</strong></p>
+<p>The <em>sample mean</em> is a statistic, that is, a function
+<span class="math notranslate nohighlight">\(\hat\mu:\{x_1,x_2,\cds,x_n\}\ra\R\)</span>, defined as the average value of
+<span class="math notranslate nohighlight">\(x_i\)</span>‘s:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\hat\mu=\frac{1}{n}\sum_{i=1}^nx_i\)</span></p>
+</div>
+<p>It serves as an estimator for the unknown mean value <span class="math notranslate nohighlight">\(\mu\)</span> of <span class="math notranslate nohighlight">\(X\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[\hat\mu=\sum_xx\cd\hat{f}(x)=\sum_xx\bigg(\frac{1}{n}\sum_{i=1}^nI(x_i=x)\bigg)=\frac{1}{n}\sum_{i=1}^nx_i\]</div>
+<p><strong>Sample Mean Is Unbiased</strong></p>
+<p>An estimator <span class="math notranslate nohighlight">\(\hat\th\)</span> is called an <em>unbiased estimator</em> for parameter
+<span class="math notranslate nohighlight">\(\th\)</span> if <span class="math notranslate nohighlight">\(E[\hat\th]=\th\)</span> forr every possible value of <span class="math notranslate nohighlight">\(\th\)</span>.
+The sample mean <span class="math notranslate nohighlight">\(\hat\mu\)</span> is an unbiased estimator for the population mean <span class="math notranslate nohighlight">\(\mu\)</span>, as</p>
+<div class="math notranslate nohighlight">
+\[E[\hat\mu]=E\bigg[\frac{1}{n}\sum_{i=1}^nx_i\bigg]=\frac{1}{n}\sum_{i=1}^nE[x_i]=\frac{1}{n}\sum_{i=1}^n\mu=\mu\]</div>
+<p><strong>Robustness</strong></p>
+<p>We say that a statistic is <em>robust</em> if it is not affected by extreme values (such as outliers) in the data.
+The sample mean is not robust because a single large value (an outlier) can skew the average.
+A more robust measure is the <em>trimmed mean</em> obtained after discarding a small
+fraction of extreme values on one or both ends.</p>
+<p><strong>Geometric Interpretation of Sample Mean</strong></p>
+<p>Consider the projection of <span class="math notranslate nohighlight">\(X\)</span> onto the vector <span class="math notranslate nohighlight">\(\bs{1}\)</span>, we have</p>
+<div class="math notranslate nohighlight">
+\[\p=\bigg(\frac{X^T\bs{1}}{\bs{1}^T\bs{1}}\bigg)\cd\bs{1}=
+\bigg(\frac{\sum_{i=1}^nx_i}{n}\bigg)\cd\bs{1}=\hat\mu\cd\bs{1}\]</div>
+<p>Thus, the sample mean is simply the offset or the scalar projection of <span class="math notranslate nohighlight">\(X\)</span> on the vector <span class="math notranslate nohighlight">\(\bs{1}\)</span>:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\hat\mu=\rm{proj}_{\bs{1}}(X)=\bigg(\frac{X^T\bs{1}}{\bs{1}^T\bs{1}}\bigg)\)</span></p>
+</div>
+<p>The sample mean can be used to center the attribute <span class="math notranslate nohighlight">\(X\)</span>.
+Define the <em>centered attribute vector</em>, <span class="math notranslate nohighlight">\(\bar{X}\)</span>, as follows:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\bar{X}=X-\hat\mu\cd\bs{1}=\bp x_1-\hat\mu\\x_2-\hat\mu\\\vds\\x_n-\hat\mu \ep\end{split}\]</div>
+<p>We can see that <span class="math notranslate nohighlight">\(\bs{1}\)</span> and <span class="math notranslate nohighlight">\(\bar{X}\)</span> are orthogonal to each other, since</p>
+<div class="math notranslate nohighlight">
+\[\bs{1}^T\bar{X}=\bs{1}^T(X-\hat\mu\cd\bs{1})=\bs{1}^TX-
+\bigg(\frac{X^T\bs{1}}{\bs{1}^T\bs{1}}\bigg)\cd\bs{1}^T\bs{1}=0\]</div>
+<p>If fact, the subspace containing <span class="math notranslate nohighlight">\(\bar{X}\)</span> is an <em>orthogonal complement</em> of the space spanned by <span class="math notranslate nohighlight">\(bs{1}\)</span>.</p>
+<p><strong>Median</strong></p>
+<p>The <em>median</em> of a random variable is defined as the value <span class="math notranslate nohighlight">\(m\)</span> such that</p>
+<div class="math notranslate nohighlight">
+\[P(X\leq m)\geq\frac{1}{2}\quad\rm{and}\quad P(X\geq m)\geq\frac{1}{2}\]</div>
+<p>In terms of the (inverse) cumulative distribution function, the median is therefore the value <span class="math notranslate nohighlight">\(m\)</span> for which</p>
+<div class="math notranslate nohighlight">
+\[F(m)=0.5\quad\rm{or}\quad m=F\im(0.5)\]</div>
+<p>The <em>sample median</em> can be obtained from the empirical CDF or the empirical inverse CDF by computing</p>
+<div class="math notranslate nohighlight">
+\[\hat{F}(m)=0.5\quad\rm{or}\quad m=\hat{F}\im(0.5)\]</div>
+<p>Median is robust, as it is not affected very much by extreme values.</p>
+<p><strong>Mode</strong></p>
+<p>The <em>mode</em> of a random variable <span class="math notranslate nohighlight">\(X\)</span> is the value at which the probability
+mass function or the probability density function attains its maximum value,
+depending on whether <span class="math notranslate nohighlight">\(X\)</span> is discrete or continuous, respectively.</p>
+</div>
+<div class="section" id="measures-of-dispersion">
+<h3>2.1.2 Measures of Dispersion<a class="headerlink" href="#measures-of-dispersion" title="Permalink to this headline">¶</a></h3>
+<p><strong>Range</strong></p>
+<p>The <em>value range</em> or simply <em>range</em> of a random variable <span class="math notranslate nohighlight">\(X\)</span> is the
+difference between the maximum and minimum values of <span class="math notranslate nohighlight">\(X\)</span>, given as</p>
+<div class="math notranslate nohighlight">
+\[r=\max\{X\}-\min\{X\}\]</div>
+<p>The <em>sample range</em> is a statistic, given as</p>
+<div class="math notranslate nohighlight">
+\[\hat{r}=\max_{i=1}^n\{x_i\}-\min_{i=1}^n\{x_i\}\]</div>
+<p>By definition, range is sensitive to extreme values, and thus is not robust.</p>
+<p><strong>Interquartile Range</strong></p>
+<p><em>Quartiles</em> are special values of the quantile function that divide the data into four equal parts.
+A more robust measure of the dispersion of <span class="math notranslate nohighlight">\(X\)</span> is the <em>interquartile range (IQR)</em>, defined as</p>
+<div class="math notranslate nohighlight">
+\[IQR=q_3-q_1=F\im(0.75)-F\im(0.25)\]</div>
+<p>The <em>sample</em> IQR can be obtained by plugging in the empirical inverse CDF:</p>
+<div class="math notranslate nohighlight">
+\[\wh{IQR}=\hat{q}_3-\hat{q}_1=\hat{F}\im(0.75)-\hat{F}\im(0.25)\]</div>
+<p><strong>Variance and Standard Deviation</strong></p>
+<p>The <em>variance</em> of a random variable <span class="math notranslate nohighlight">\(X\)</span> provides a measure of how much the
+values <span class="math notranslate nohighlight">\(X\)</span> deviate from the mean or expected value of <span class="math notranslate nohighlight">\(X\)</span></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\sg^2=\rm{var}(X)=E[(X-\mu)^2]=\)</span>
+<span class="math notranslate nohighlight">\(\dp\left\{\begin{array}{lr}\dp\sum_x(x-\mu)^2f(x)\quad\rm{if\ }X\rm{\ is\ discrete}\\\dp\int_{-\infty}^\infty(x-\mu)^2f(x)dx\quad\rm{if\ }X\rm{\ is\ continuous}\end{array}\right.\)</span></p>
+</div>
+<p>The <em>standard deviation</em>, <span class="math notranslate nohighlight">\(\sg\)</span>, is defined as the positive square root of the variance, <span class="math notranslate nohighlight">\(\sg^2\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\sg^2&amp;=\rm{var}(X)=E[(X-\mu)^2]=E[X^2-2\mu X+\mu^2]\\&amp;=E[X^2]-2\mu E[X]+\mu^2=E[X^2]-2\mu^2+\mu^2\\&amp;=E[X^2]-(E[X])^2\end{aligned}\end{align} \]</div>
 </div>
 </div>
 <div class="section" id="bivariate-analysis">
