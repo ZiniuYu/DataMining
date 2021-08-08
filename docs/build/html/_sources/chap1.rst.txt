@@ -162,7 +162,7 @@ called the *cosine similarity* is given as
 
     :math:`\dp\cos\th=\frac{\a^T\b}{\lv\a\rv\lv\b\rv}=\bigg(\frac{\a}{\lv\a\rv}\bigg)^T\bigg(\frac{\b}{\lv\b\rv}\bigg)`
 
-The *Cauchy-Schwartz* inequality states that for any vectors :math:`\a` and :math:`\b` in :math:`\R^ma_i
+The *Cauchy-Schwartz* inequality states that for any vectors :math:`\a` and :math:`\b` in :math:`\R^m`
 
 .. math::
 

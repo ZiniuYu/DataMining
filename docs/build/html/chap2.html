@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Data Mining and Machine Learning &mdash; DataMining  documentation</title>
+  <title>Chapter 2 Numeric Attributes &mdash; DataMining  documentation</title>
   
 
   
@@ -42,7 +42,7 @@
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Chapter 1 Data Matrix" href="chap1.html" /> 
+    <link rel="prev" title="Chapter 1 Data Matrix" href="chap1.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -56,7 +56,7 @@
           
 
           
-            <a href="#" class="icon icon-home"> DataMining
+            <a href="index.html" class="icon icon-home"> DataMining
           
 
           
@@ -88,9 +88,19 @@
             
             
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="chap1.html">Chapter 1 Data Matrix</a></li>
-<li class="toctree-l1"><a class="reference internal" href="chap2.html">Chapter 2 Numeric Attributes</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Chapter 2 Numeric Attributes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#univariate-analysis">2.1 Univariate Analysis</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#measures-of-central-tendency">2.1.1 Measures of Central Tendency</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#bivariate-analysis">2.2 Bivariate Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#multivariate-analysis">2.3 Multivariate Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#data-normalization">2.4 Data Normalization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#normal-distribution">2.5 Normal Distribution</a></li>
+</ul>
+</li>
 </ul>
 
             
@@ -106,7 +116,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="#">DataMining</a>
+          <a href="index.html">DataMining</a>
         
       </nav>
 
@@ -137,15 +147,15 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="#" class="icon icon-home"></a> &raquo;</li>
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
-      <li>Data Mining and Machine Learning</li>
+      <li>Chapter 2 Numeric Attributes</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/chap2.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -202,28 +212,55 @@
 \newcommand{\ev}{\end{vmatrix}}\\\newcommand{\im}{^{-1}}
 \newcommand{\pr}{^{\prime}}
 \newcommand{\ppr}{^{\prime\prime}}\end{aligned}\end{align} \]</div>
-<div class="section" id="data-mining-and-machine-learning">
-<h1>Data Mining and Machine Learning<a class="headerlink" href="#data-mining-and-machine-learning" title="Permalink to this headline">¶</a></h1>
-<p>Study notes of Data Mining and Machine Learning, 2nd Edition by Mohammed J. Zaki and Magner Meira, JR</p>
-<div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="chap1.html">Chapter 1 Data Matrix</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="chap1.html#data-matrix">1.1 Data Matrix</a></li>
-<li class="toctree-l2"><a class="reference internal" href="chap1.html#attributes">1.2 Attributes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="chap1.html#data-algebraic-and-geometric-view">1.3 Data: Algebraic and Geometric View</a></li>
-<li class="toctree-l2"><a class="reference internal" href="chap1.html#data-probabilistic-view">1.4 Data: Probabilistic View</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="chap2.html">Chapter 2 Numeric Attributes</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="chap2.html#univariate-analysis">2.1 Univariate Analysis</a></li>
-<li class="toctree-l2"><a class="reference internal" href="chap2.html#bivariate-analysis">2.2 Bivariate Analysis</a></li>
-<li class="toctree-l2"><a class="reference internal" href="chap2.html#multivariate-analysis">2.3 Multivariate Analysis</a></li>
-<li class="toctree-l2"><a class="reference internal" href="chap2.html#data-normalization">2.4 Data Normalization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="chap2.html#normal-distribution">2.5 Normal Distribution</a></li>
-</ul>
-</li>
-</ul>
+<div class="section" id="chapter-2-numeric-attributes">
+<h1>Chapter 2 Numeric Attributes<a class="headerlink" href="#chapter-2-numeric-attributes" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="univariate-analysis">
+<h2>2.1 Univariate Analysis<a class="headerlink" href="#univariate-analysis" title="Permalink to this headline">¶</a></h2>
+<p>Univariate analysis focuses on a single attribute at a time; thus the data
+matrix <span class="math notranslate nohighlight">\(\D\)</span> can be thought of as an <span class="math notranslate nohighlight">\(n\times 1\)</span> matrix, or simply a
+column vector, given as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\D=\bp X\\x_1\\x_2\\\vds\\x_n \ep\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(X\)</span> is the numeric attribute of interest, with <span class="math notranslate nohighlight">\(x+i\in\R\)</span>.
+<span class="math notranslate nohighlight">\(X\)</span> is assumed to be a random variable, with each point
+<span class="math notranslate nohighlight">\(x_i(1\leq i\leq b)\)</span> itself treated as an identity random variable.</p>
+<p><strong>Empirical Cumulative Distribution Function</strong></p>
+<p>The <em>empirical cumulative distribution function (CDF)</em> of <span class="math notranslate nohighlight">\(X\)</span> is given as</p>
+<div class="math notranslate nohighlight">
+\[\hat{F}(x)=\frac{1}{n}\sum_{i=1}^nI(x_i\leq x)\]</div>
+<p>where</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}I(x_i\leq x)=\left\{\begin{array}{lr}1\quad\rm{if\ }x_i\leq x\\0\quad\rm{if\ }x_i&gt;x\end{array}\right.\end{split}\]</div>
+<p>is a binary <em>indicator variable</em> that indicates whether the given condition is satisfied or not.
+Note that we use the notation <span class="math notranslate nohighlight">\(\hat{F}\)</span> to denote the fact that the
+empirical CDF is an estimate for the unknown population CDF <span class="math notranslate nohighlight">\(F\)</span>.</p>
+<p><strong>Inverse Cumulative Distribution Function</strong></p>
+<p>Define the <em>inverse cumulative distribution function</em> or <em>quantile function</em> for a random variable <span class="math notranslate nohighlight">\(X\)</span> as follows:</p>
+<div class="math notranslate nohighlight">
+\[F\im(q)=\min\{x|F(x)\geq q\}\quad\rm{for\ }q\in[0,1]\]</div>
+<p><strong>Empirical Probability Mass Function</strong></p>
+<p>The <em>empirical probability mass function (PMF)</em> of <span class="math notranslate nohighlight">\(X\)</span> is given as</p>
+<div class="math notranslate nohighlight">
+\[\hat{f}(x)=P(X=x)=\frac{1}{n}\sum_{i=1}^nI(x_i=x)\]</div>
+<p>where</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}I(x_i=x)=\left\{\begin{array}{lr}1\quad\rm{if\ }x_i=x\\0\quad\rm{if\ }x_i\neq x\end{array}\right.\end{split}\]</div>
+<div class="section" id="measures-of-central-tendency">
+<h3>2.1.1 Measures of Central Tendency<a class="headerlink" href="#measures-of-central-tendency" title="Permalink to this headline">¶</a></h3>
+<p><strong>Mean</strong></p>
+</div>
+</div>
+<div class="section" id="bivariate-analysis">
+<h2>2.2 Bivariate Analysis<a class="headerlink" href="#bivariate-analysis" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="multivariate-analysis">
+<h2>2.3 Multivariate Analysis<a class="headerlink" href="#multivariate-analysis" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="data-normalization">
+<h2>2.4 Data Normalization<a class="headerlink" href="#data-normalization" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="normal-distribution">
+<h2>2.5 Normal Distribution<a class="headerlink" href="#normal-distribution" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 
@@ -233,7 +270,7 @@
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="chap1.html" class="btn btn-neutral float-right" title="Chapter 1 Data Matrix" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="chap1.html" class="btn btn-neutral float-left" title="Chapter 1 Data Matrix" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>
