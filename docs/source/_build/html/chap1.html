@@ -42,6 +42,7 @@
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Chapter 2 Numeric Attributes" href="chap2.html" />
     <link rel="prev" title="Data Mining and Machine Learning" href="index.html" /> 
 </head>
 
@@ -107,6 +108,7 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="chap2.html">Chapter 2 Numeric Attributes</a></li>
 </ul>
 
             
@@ -178,35 +180,42 @@
 \[ \begin{align}\begin{aligned}\newcommand{\bs}{\boldsymbol}
 \newcommand{\dp}{\displaystyle}
 \newcommand{\rm}{\mathrm}
+\newcommand{\cl}{\mathcal}
 \newcommand{\pd}{\partial}\\\newcommand{\cd}{\cdot}
 \newcommand{\cds}{\cdots}
 \newcommand{\dds}{\ddots}
 \newcommand{\vds}{\vdots}
 \newcommand{\lv}{\lVert}
 \newcommand{\rv}{\rVert}
-\newcommand{\wh}{\widehat}\\\newcommand{\0}{\boldsymbol{0}}
-\newcommand{\a}{\boldsymbol{a}}
-\newcommand{\b}{\boldsymbol{b}}
-\newcommand{\e}{\boldsymbol{e}}
+\newcommand{\wh}{\widehat}
+\newcommand{\ol}{\overline}
+\newcommand{\ra}{\rightarrow}\\\newcommand{\0}{\boldsymbol{0}}
+\newcommand{\a}{\boldsymbol{\mathrm{a}}}
+\newcommand{\b}{\boldsymbol{\mathrm{b}}}
+\newcommand{\e}{\boldsymbol{\mathrm{e}}}
 \newcommand{\i}{\boldsymbol{i}}
 \newcommand{\j}{\boldsymbol{j}}
-\newcommand{\p}{\boldsymbol{p}}
-\newcommand{\q}{\boldsymbol{q}}
+\newcommand{\p}{\boldsymbol{\mathrm{p}}}
+\newcommand{\q}{\boldsymbol{\mathrm{q}}}
+\newcommand{\r}{\boldsymbol{\mathrm{r}}}
 \newcommand{\u}{\boldsymbol{u}}
-\newcommand{\v}{\boldsymbol{v}}
+\newcommand{\v}{\boldsymbol{\mathrm{v}}}
 \newcommand{\w}{\boldsymbol{w}}
-\newcommand{\x}{\boldsymbol{x}}
+\newcommand{\x}{\boldsymbol{\mathrm{x}}}
 \newcommand{\y}{\boldsymbol{y}}\\\newcommand{\A}{\boldsymbol{A}}
 \newcommand{\B}{\boldsymbol{B}}
 \newcommand{\C}{\boldsymbol{C}}
+\newcommand{\D}{\boldsymbol{\mathrm{D}}}
 \newcommand{\N}{\boldsymbol{N}}
-\newcommand{\X}{\boldsymbol{X}}\\\newcommand{\D}{\boldsymbol{\mathrm{D}}}
-\newcommand{\R}{\boldsymbol{\mathrm{R}}}\\\newcommand{\ld}{\lambda}
+\newcommand{\X}{\boldsymbol{\mathrm{X}}}\\
+\newcommand{\R}{\mathbb{R}}\\\newcommand{\ld}{\lambda}
 \newcommand{\Ld}{\Lambda}
 \newcommand{\sg}{\sigma}
 \newcommand{\Sg}{\Sigma}
-\newcommand{\th}{\theta}\\\newcommand{\bb}{\begin{bmatrix}}
+\newcommand{\th}{\theta}\\\newcommand{\mmu}{\boldsymbol{\mu}}\\\newcommand{\bb}{\begin{bmatrix}}
 \newcommand{\eb}{\end{bmatrix}}
+\newcommand{\bp}{\begin{pmatrix}}
+\newcommand{\ep}{\end{pmatrix}}
 \newcommand{\bv}{\begin{vmatrix}}
 \newcommand{\ev}{\end{vmatrix}}\\\newcommand{\im}{^{-1}}
 \newcommand{\pr}{^{\prime}}
@@ -217,9 +226,9 @@
 <h2>1.1 Data Matrix<a class="headerlink" href="#data-matrix" title="Permalink to this headline">¶</a></h2>
 <p>The <span class="math notranslate nohighlight">\(n\times d\)</span> data matrix is given as</p>
 <div class="math notranslate nohighlight">
-\[\begin{split}\D=\bb &amp;X_1&amp;X_2&amp;\cds&amp;X_d\\ \x_1&amp;x_{11}&amp;x_{12}&amp;\cds&amp;x_{1d}\\
+\[\begin{split}\D=\bp &amp;X_1&amp;X_2&amp;\cds&amp;X_d\\ \x_1&amp;x_{11}&amp;x_{12}&amp;\cds&amp;x_{1d}\\
 \x_2&amp;x_{21}&amp;x_{22}&amp;\cds&amp;x_{2d}\\ \vds&amp;\vds&amp;\vds&amp;\dds&amp;\vds\\
-\x_n&amp;x_{n1}&amp;x_{n2}&amp;\cds&amp;x_{nd} \eb\end{split}\]</div>
+\x_n&amp;x_{n1}&amp;x_{n2}&amp;\cds&amp;x_{nd} \ep\end{split}\]</div>
 <p>where <span class="math notranslate nohighlight">\(\x_i\)</span> donotes the <span class="math notranslate nohighlight">\(i\)</span>th row, which is a <span class="math notranslate nohighlight">\(d\)</span>-tuple given as</p>
 <div class="math notranslate nohighlight">
 \[\x_i=(x_{i1},x_{i2},\cds,x_{id})\]</div>
@@ -253,30 +262,376 @@ possible to quantify the difference between values.</p></li>
 </div>
 <div class="section" id="data-algebraic-and-geometric-view">
 <h2>1.3 Data: Algebraic and Geometric View<a class="headerlink" href="#data-algebraic-and-geometric-view" title="Permalink to this headline">¶</a></h2>
-<p>If the <span class="math notranslate nohighlight">\(d\)</span> attributes or dimensions in the data matrix <span class="math notranslate nohighlight">\(\D\)</span> are all numeric, then each row can be considered as a <span class="math notranslate nohighlight">\(d\)</span>-dimensional point:</p>
+<p>If the <span class="math notranslate nohighlight">\(d\)</span> attributes or dimensions in the data matrix <span class="math notranslate nohighlight">\(\D\)</span> are all
+numeric, then each row can be considered as a <span class="math notranslate nohighlight">\(d\)</span>-dimensional point:</p>
+<div class="math notranslate nohighlight">
+\[\x_i=(x_{i1},x_{i2},\cds,x_{id})\in\R^d\]</div>
+<p>or equivalently, each row may be considered as a <span class="math notranslate nohighlight">\(d\)</span>-dimensional column vector:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\x_i=\bp x_{i1}\\x_{i2}\\\vds\\x_{id} \ep=\bp x_{i1}&amp;x_{i2}&amp;\cds&amp;x_{id} \ep^T\in\R^d\end{split}\]</div>
+<p>The <span class="math notranslate nohighlight">\(j\)</span>th <em>standard basis vector</em> <span class="math notranslate nohighlight">\(\e_j\)</span> of Cartesian coordinate
+space is the <span class="math notranslate nohighlight">\(d\)</span>-dimensional unit vector whose <span class="math notranslate nohighlight">\(j\)</span>th component is
+1 and the rest of thecomponents are 0:</p>
+<div class="math notranslate nohighlight">
+\[\e_j=(0,\cds,1_j,\cds,0)^T\]</div>
+<p>Any other vector in <span class="math notranslate nohighlight">\(\R^d\)</span> can be written as a <em>linear combination</em> of the standard basis vectors:</p>
+<div class="math notranslate nohighlight">
+\[\x_i=x_{i1}\e_1+\x_{i2}\e_2+\cds+x_{id}\e_d=\sum_{j=1}^dx_{ij}\e_j\]</div>
+<p>where the scalar value <span class="math notranslate nohighlight">\(x_{ij}\)</span> is the coordinate value along the <span class="math notranslate nohighlight">\(j\)</span>th axis or attribute.</p>
+<p>Each numeric column or attribute can also be treated as a vector in an <span class="math notranslate nohighlight">\(n\)</span>-dimensional space <span class="math notranslate nohighlight">\(\R^n\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}X_j=\bp x_{1j}\\x_{2j}\\\vds\\x_{nj} \ep\end{split}\]</div>
+<p>If all attributes are numeric, then the data matrix <span class="math notranslate nohighlight">\(\D\)</span> is in the fact an
+<span class="math notranslate nohighlight">\(n\times d\)</span> matrix, also written as <span class="math notranslate nohighlight">\(\D\in\R^{n\times d}\)</span>, given as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\D=\bp x_{11}&amp;x_{12}&amp;\cds&amp;x_{1d}\\x_{21}&amp;x_{22}&amp;\cds&amp;x_{2d}\\
+\vds&amp;\vds&amp;\dds&amp;\vds\\x_{n1}&amp;x_{n2}&amp;\cds&amp;x_{nd} \ep=
+\bp -&amp;\x_1^T&amp;-\\-&amp;\x_2^T&amp;-\\&amp;\vds\\-&amp;\x_n^T&amp;- \ep=
+\bp |&amp;|&amp;&amp;|\\X_1&amp;X_2&amp;\cds&amp;X_d\\|&amp;|&amp;&amp;| \ep\end{split}\]</div>
 <div class="section" id="distance-and-angle">
 <h3>1.3.1 Distance and Angle<a class="headerlink" href="#distance-and-angle" title="Permalink to this headline">¶</a></h3>
+<p>Let <span class="math notranslate nohighlight">\(\a,\b\in\R^m\)</span> be two <span class="math notranslate nohighlight">\(m\)</span>-dimensional vectors given as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\a=\bp a_1\\a_2\\\vds\\a_m \ep\quad\b=\bp b_1\\b_2\\\vds\\b_m \ep\end{split}\]</div>
+<p><strong>Dot Product</strong></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\a^T\b=\bp a_1&amp;a_2&amp;\cds&amp;a_m\ep\times\bp b_1\\b_2\\\vds\\b_m\ep=a_1b_1+a_2b_2+\cds+a_mb_m=\sum_{i=1}^ma_ib_i\)</span></p>
+</div>
+<p><strong>Length</strong></p>
+<p>The <em>Euclidean norm</em> or <em>length</em> of a vector <span class="math notranslate nohighlight">\(\a\in\R^m\)</span> is defined as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\lv\a\rv=\sqrt{\a^T\a}=\sqrt{a_1^2+a_2^2+\cds+a_m^2}=\sqrt{\sum_{i=1}^ma_i^2}\)</span></p>
+</div>
+<p>The <em>unit vector</em> in the direction of <span class="math notranslate nohighlight">\(\a\)</span> is given as</p>
+<div class="math notranslate nohighlight">
+\[\u=\frac{\a}{\lv\a\rv}=\bigg(\frac{1}{\lv\a\rv}\bigg)\a\]</div>
+<p>By definition <span class="math notranslate nohighlight">\(\u\)</span> has length <span class="math notranslate nohighlight">\(\lv\u\rv=1\)</span>, and it is also called a <em>normalized</em> vector.</p>
+<p>The Euclidean norm is a special case of a general class of norms, known as <span class="math notranslate nohighlight">\(L_p\)</span><em>-norm</em>, defined as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\lv\a\rv_p=(|a_1|^p+|a_2|^p+\cds+|a_m|^p)^{\frac{1}{\p}}=\bigg(\sum_{i=1}^m|a_i|^p\bigg)^{\frac{1}{p}}\)</span></p>
+</div>
+<p>for any <span class="math notranslate nohighlight">\(p\neq 0\)</span>.</p>
+<p><strong>Distance</strong></p>
+<p>The <em>Eclidean distance</em> between <span class="math notranslate nohighlight">\(\a\)</span> and <span class="math notranslate nohighlight">\(\b\)</span>, as follows</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\lv\a-\b\rv=\sqrt{(\a-\b)^T(\a-\b)}=\sqrt{\sum_{i=1}^m(a_i-b_i)^2}\)</span></p>
+</div>
+<p>The general <span class="math notranslate nohighlight">\(L_p\)</span>-distance function is geven as follows</p>
+<div class="math notranslate nohighlight">
+\[\lv\a-\b\rv_p=\bigg(\sum_{i=1}^m|a_i-b_i|^p\bigg)^{\frac{1}{p}}\]</div>
+<p><strong>Angle</strong></p>
+<p>The cosine of the smallest angle between vectors <span class="math notranslate nohighlight">\(\a\)</span> and <span class="math notranslate nohighlight">\(\b\)</span>, also
+called the <em>cosine similarity</em> is given as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\cos\th=\frac{\a^T\b}{\lv\a\rv\lv\b\rv}=\bigg(\frac{\a}{\lv\a\rv}\bigg)^T\bigg(\frac{\b}{\lv\b\rv}\bigg)\)</span></p>
+</div>
+<p>The <em>Cauchy-Schwartz</em> inequality states that for any vectors <span class="math notranslate nohighlight">\(\a\)</span> and <span class="math notranslate nohighlight">\(\b\)</span> in <span class="math notranslate nohighlight">\(\R^m\)</span></p>
+<div class="math notranslate nohighlight">
+\[|\a^T\b|\leq\lv\a\rv\cd\lv\b\rv\]</div>
+<p>It follows immediately from the Cauchy-Schwartz inequality that</p>
+<div class="math notranslate nohighlight">
+\[-1\leq\cos\th\leq 1\]</div>
+<p><strong>Orthogonality</strong></p>
+<p>Two vectors <span class="math notranslate nohighlight">\(\a\)</span> and <span class="math notranslate nohighlight">\(\b\)</span> are said to be <em>orthogonal</em> if and only if
+<span class="math notranslate nohighlight">\(\a^T\b=0\)</span>, which in turn implies that <span class="math notranslate nohighlight">\(\cos\th=0\)</span>.
+In this case, we say that they have no similarity.</p>
 </div>
 <div class="section" id="mean-and-total-variance">
 <h3>1.3.2 Mean and Total Variance<a class="headerlink" href="#mean-and-total-variance" title="Permalink to this headline">¶</a></h3>
+<p><strong>Mean</strong></p>
+<div class="math notranslate nohighlight">
+\[mean(\D)=\mmu=\frac{1}{n}\sum_{i=1}^n\x_i\]</div>
+<p><strong>Total Variance</strong></p>
+<div class="math notranslate nohighlight">
+\[\rm{var}(\D)=\frac{1}{n}\sum_{i=1}^n\lv\x_i-\mmu\rv^2\]</div>
+<p>Simplifying the equation we obtain</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\rm{var}(\D)&amp;=\frac{1}{n}\sum_{i=1}^n(\lv\x_i\rv^2-2\x_i^T\mmu+\lv\mmu\rv^2)\\&amp;=\frac{1}{n}\bigg(\sum_{i=1}^n\lv\x_i\rv^2-2n\mmu^T\bigg(\frac{1}{n}\sum_{i=1}^n\x_i\bigg)+n\lv\mmu\rv^2\bigg)\\&amp;=\frac{1}{n}\bigg(\sum_{i=1}^n\lv\x_i\rv^2-2n\mmu^T\mmu+n\lv\mmu\rv^2\bigg)\\&amp;=\frac{1}{n}\bigg(\sum_{i=1}^n\lv\x_i\rv^2\bigg)-\lv\mmu\rv^2\end{aligned}\end{align} \]</div>
+<p><strong>Centered Data Matrix</strong></p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\ol\D=\D-\bs{1}\cd\mmu^T=\bp\x_1^T\\\x_2^T\\\vds\\\x_n^T\ep-
+\bp\mmu^T\\\mmu^T\\\vds\\\mmu^T\ep=\bp\x_1^T-
+\mmu^T\\\x_2^T-\mmu^T\\\vds\\\x_n^T-\mmu^T\ep=
+\bp\ol\x_1^T\\\ol\x_2^T\\\vds\\\ol\x_n^T\ep\end{split}\]</div>
+<p>The mean of the centered data matrix <span class="math notranslate nohighlight">\(\ol\D\)</span> is <span class="math notranslate nohighlight">\(\0\in\R^d\)</span>, because
+we have subtracted the mean <span class="math notranslate nohighlight">\(\mmu\)</span> from all the points <span class="math notranslate nohighlight">\(\x_i\)</span>.</p>
 </div>
 <div class="section" id="orthogonal-projection">
 <h3>1.3.3 Orthogonal Projection<a class="headerlink" href="#orthogonal-projection" title="Permalink to this headline">¶</a></h3>
+<p>Let <span class="math notranslate nohighlight">\(\a,\b\in\R^m\)</span> be two <span class="math notranslate nohighlight">\(m\)</span>-dimensional vectors.
+An <em>orthogonal decomposition</em> of the vector <span class="math notranslate nohighlight">\(\b\)</span> in the direction of another vector <span class="math notranslate nohighlight">\(\a\)</span> is given as</p>
+<div class="math notranslate nohighlight">
+\[\b=\b_\parallel+\b_\perp=\p+\r\]</div>
+<p>where <span class="math notranslate nohighlight">\(\p=\b_\parallel\)</span> is parallel to <span class="math notranslate nohighlight">\(\a\)</span>, and <span class="math notranslate nohighlight">\(\r=\b_\perp\)</span>
+is perpendicular or orthogonal to <span class="math notranslate nohighlight">\(\a\)</span>.
+The vector <span class="math notranslate nohighlight">\(\p\)</span> is called the <em>orthogonal projection</em> or simply projection of <span class="math notranslate nohighlight">\(\b\)</span> on the vector <span class="math notranslate nohighlight">\(\a\)</span>.
+The magnitude of the vector <span class="math notranslate nohighlight">\(\r=\b-\p\)</span> gives the <em>perpendicular distance</em>
+between <span class="math notranslate nohighlight">\(\b\)</span> and <span class="math notranslate nohighlight">\(\a\)</span>, which is often interpreted as the residual or
+error between the points <span class="math notranslate nohighlight">\(\b\)</span> and <span class="math notranslate nohighlight">\(\p\)</span>.
+The vector <span class="math notranslate nohighlight">\(\r\)</span> is also called the <em>error vector</em>.</p>
+<p>We can derive an expression for <span class="math notranslate nohighlight">\(\p\)</span> by noting that <span class="math notranslate nohighlight">\(\p=c\a\)</span> for
+some scalar <span class="math notranslate nohighlight">\(c\)</span>, as <span class="math notranslate nohighlight">\(p\)</span> is parallel to <span class="math notranslate nohighlight">\(\a\)</span>.
+Thus <span class="math notranslate nohighlight">\(\r=\b-\p=\b-c\a\)</span>.
+Because <span class="math notranslate nohighlight">\(\p\)</span> and <span class="math notranslate nohighlight">\(\r\)</span> are orthogonal, we have</p>
+<div class="math notranslate nohighlight">
+\[\p^T\r=(c\a)^T(\b-c\a)=c\a^T\b-c^2\a^T\a=0\]</div>
+<p>which implies that</p>
+<div class="math notranslate nohighlight">
+\[c=\frac{\a^T\b}{\a^T\a}\]</div>
+<p>Therefore, the projection of <span class="math notranslate nohighlight">\(\b\)</span> on <span class="math notranslate nohighlight">\(\a\)</span> is given as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\p=c\a=\bigg(\frac{\a^T\b}{\a^T\a}\bigg)\a\)</span></p>
+</div>
+<p>The scalar offset <span class="math notranslate nohighlight">\(c\)</span> along <span class="math notranslate nohighlight">\(\a\)</span> is also called the
+<em>scalar projection</em> of <span class="math notranslate nohighlight">\(\b\)</span> on <span class="math notranslate nohighlight">\(\a\)</span>, denoted as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\rm{proj}_\a(\b)=\bigg(\frac{\b^T\a}{\a^T\a}\bigg)\)</span></p>
+</div>
+<p>Therefore, the projection of <span class="math notranslate nohighlight">\(\b\)</span> on <span class="math notranslate nohighlight">\(\a\)</span> can also be written as</p>
+<div class="math notranslate nohighlight">
+\[\p=\rm{proj}_\a(\b)\cd\a\]</div>
 </div>
 <div class="section" id="linear-independence-and-dimensionality">
 <h3>1.3.4 Linear Independence and Dimensionality<a class="headerlink" href="#linear-independence-and-dimensionality" title="Permalink to this headline">¶</a></h3>
+<p>Given the data matrix</p>
+<div class="math notranslate nohighlight">
+\[\D=\bp \x_1&amp;\x_2&amp;\cds&amp;\x_n \ep^T=\bp X_1&amp;X_2&amp;\cds&amp;X_d \ep\]</div>
+<p>we are often interested in the linear combinations of the rows (points) or the columns (attributes).</p>
+<p>Given any set of vectors <span class="math notranslate nohighlight">\(\v_1,\v_2,\cds,\v_k\)</span> in an <span class="math notranslate nohighlight">\(m\)</span>-dimensional
+vector space <span class="math notranslate nohighlight">\(\R^m\)</span>, their <em>linear combination</em> is given as</p>
+<div class="math notranslate nohighlight">
+\[c_1\v_1+c_2\v_2+\cds+c_k\v_k\]</div>
+<p>where <span class="math notranslate nohighlight">\(c_i\in\R\)</span> are scalar values.
+The set of all possible linear combinations of the <span class="math notranslate nohighlight">\(k\)</span> vectors is called
+the <em>span</em>, denoted as <span class="math notranslate nohighlight">\(span(\v_1,\cds,\v_k)\)</span>, which is itself a vector
+space being a <em>subspace</em> of <span class="math notranslate nohighlight">\(\R^m\)</span>.
+If <span class="math notranslate nohighlight">\(span(\v_1,\cds,\v_k)=\R^m\)</span>, then we say that <span class="math notranslate nohighlight">\(\v_1,\cds,\v_k\)</span>
+is a <em>spanning set</em> for <span class="math notranslate nohighlight">\(\R^m\)</span>.</p>
+<p><strong>Row and Column space</strong></p>
+<p>The <em>column space</em> of <span class="math notranslate nohighlight">\(\D\)</span>, denoted <span class="math notranslate nohighlight">\(col(\D)\)</span>, is the set of all
+linear combinations of the <span class="math notranslate nohighlight">\(d\)</span> attributes <span class="math notranslate nohighlight">\(X_j\in\R^n\)</span></p>
+<div class="math notranslate nohighlight">
+\[col(\D)=span(X_1,X_2,\cds,X_d)\]</div>
+<p>By definition <span class="math notranslate nohighlight">\(col(\D)\)</span> is a subsapce of <span class="math notranslate nohighlight">\(\R^n\)</span>.
+The <em>row space</em> of <span class="math notranslate nohighlight">\(\D\)</span>, denoted <span class="math notranslate nohighlight">\(row(\D)\)</span>, is the setof all linear
+combinations of the <span class="math notranslate nohighlight">\(n\)</span> points <span class="math notranslate nohighlight">\(\x_i\in\R^d\)</span></p>
+<div class="math notranslate nohighlight">
+\[row(\D)=span(\x_1,\x_2,\cds,\x_n)\]</div>
+<p>By definition <span class="math notranslate nohighlight">\(row(\D)\)</span> is a subspace of <span class="math notranslate nohighlight">\(\R^d\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[row(\D)=col(\D^T)\]</div>
+<p><strong>Linear Independence</strong></p>
+<p>The <span class="math notranslate nohighlight">\(k\)</span> vectors are linearly dependent if there are scalars
+<span class="math notranslate nohighlight">\(c_1,c_2,\cds,c_k\)</span>, at least one of which is not zero, such that</p>
+<div class="math notranslate nohighlight">
+\[c_1\v_1+c_2\v_2+\cds+c_k\v_k=\0\]</div>
+<p>On the other hand, <span class="math notranslate nohighlight">\(\v_1,\cds,\v_k\)</span> are <em>linearly independent</em> if and only if</p>
+<div class="math notranslate nohighlight">
+\[c_1\v_1+c_2\v_2+\cds+c_k\v_k=\0\rm{\ implies\ }c_1=c_2=\cds=c_k=0\]</div>
+<p><strong>Dimension and Rank</strong></p>
+<p>Let <span class="math notranslate nohighlight">\(S\)</span> be a subspace of <span class="math notranslate nohighlight">\(\R^m\)</span>.
+A <em>basis</em> for <span class="math notranslate nohighlight">\(S\)</span> is a set of vectors in <span class="math notranslate nohighlight">\(S\)</span>, say
+<span class="math notranslate nohighlight">\(\v_1,\cds,\v_k\)</span>, that are linearly independent and they span <span class="math notranslate nohighlight">\(S\)</span>,
+that is, <span class="math notranslate nohighlight">\(span(\v_1,\cds,\v_k)=S\)</span>.
+A basis is a minimal spanning set.
+If the vectors in the basis are pairwise orthogonal, they are said to form an <em>orthogonal basis</em> for <span class="math notranslate nohighlight">\(S\)</span>.
+If they are also normalized to be unit vectors, then they make up an <em>orthonormal basis</em> for <span class="math notranslate nohighlight">\(S\)</span>.
+The <em>standard basis</em> for <span class="math notranslate nohighlight">\(\R^m\)</span> is an orthonormal basis consisting of the vectors</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\e_1=\bp 1\\0\\\vds\\0 \ep\quad\e_2=\bp 0\\1\\\vds\\0 \ep\quad\cds\quad\e_m=\bp 0\\0\\\vds\\1 \ep\end{split}\]</div>
+<p>The number of vectors in a basis for <span class="math notranslate nohighlight">\(S\)</span> is called the <em>dimension</em> of <span class="math notranslate nohighlight">\(S\)</span>, denoted as <span class="math notranslate nohighlight">\(dim(S)\)</span>.
+Because <span class="math notranslate nohighlight">\(S\)</span> is a subspace of <span class="math notranslate nohighlight">\(\R^m\)</span>, we must have <span class="math notranslate nohighlight">\(dim(S)\leq m\)</span>.</p>
+<p>For any matrix, the dimension of its row and column space is the same, and this
+dimension is also called the <em>rank</em> of the matrix.
+For the data matrix <span class="math notranslate nohighlight">\(\D\in\R^{n\times d}\)</span>, we have
+<span class="math notranslate nohighlight">\(rank(\D)\leq\min(n,d)\)</span>, which follows from the fact that the column space
+can have dimension at most <span class="math notranslate nohighlight">\(d\)</span>, the row space can have dimension at most
+<span class="math notranslate nohighlight">\(n\)</span>.
+With dimensionality reduction methods it is often possible to approximate
+<span class="math notranslate nohighlight">\(\D\in\R^{n\times d}\)</span> with a derived data matrix
+<span class="math notranslate nohighlight">\(\D\pr\in\R^{n\times k}\)</span>, which has much lower dimensionality, that is,
+<span class="math notranslate nohighlight">\(k\ll d\)</span>.</p>
 </div>
 </div>
 <div class="section" id="data-probabilistic-view">
 <h2>1.4 Data: Probabilistic View<a class="headerlink" href="#data-probabilistic-view" title="Permalink to this headline">¶</a></h2>
+<p>A random variable <span class="math notranslate nohighlight">\(X\)</span> is called a <em>discrete random variable</em> if it takes
+on only a finite or countably infinite number of values in its range, wehreas
+<span class="math notranslate nohighlight">\(X\)</span> is called a <em>continuous random variable</em> if it can take on any value
+in its range.</p>
+<p><strong>Probability mass Function</strong></p>
+<p>If <span class="math notranslate nohighlight">\(X\)</span> is discrete, the <em>probability mass function</em> of <span class="math notranslate nohighlight">\(X\)</span> is defined as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(f(x)=P(X=x)\)</span> for all <span class="math notranslate nohighlight">\(x\in\R\)</span>.</p>
+</div>
+<p><span class="math notranslate nohighlight">\(f\)</span> must obey the basi rules of probability, that is, <span class="math notranslate nohighlight">\(f\)</span> must be non-negative:</p>
+<div class="math notranslate nohighlight">
+\[f(x)\geq 0\]</div>
+<p>and the sum of all probabilities should add to 1:</p>
+<div class="math notranslate nohighlight">
+\[\sum_xf(x)=1\]</div>
+<p><strong>Probability Density Function</strong></p>
+<p>We define the <em>probability density function</em>, which specifies the probability
+that the variable <span class="math notranslate nohighlight">\(X\)</span> takes on values in any interval
+<span class="math notranslate nohighlight">\([a,b]\subset\R\)</span>:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp P(X\in[a,b])=\int_a^b f(x)dx\)</span></p>
+</div>
+<p>The density function <span class="math notranslate nohighlight">\(f\)</span> must satisfy the basic laws of probability:</p>
+<div class="math notranslate nohighlight">
+\[f(x) \geq 0,\quad\rm{for\ all\ }x\in\R\]</div>
+<p>and</p>
+<div class="math notranslate nohighlight">
+\[\int_{-\infty}^\infty f(x)dx=1\]</div>
+<p>We can get an intuitive understanding of the density function <span class="math notranslate nohighlight">\(f\)</span> by
+considering the probability density over a small interval of width
+<span class="math notranslate nohighlight">\(2\epsilon &gt;0\)</span>, centered at <span class="math notranslate nohighlight">\(x\)</span>, namely
+<span class="math notranslate nohighlight">\([x-\epsilon,x+\epsilon]\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}P(X\in[x-\epsilon,x+\epsilon])=\int_{x-\epsilon}^{x+\epsilon}f(x)dx\simeq 2\epsilon\cd f(x)\\f(x)\simeq\frac{P(X\in[x-\epsilon,x+\epsilon])}{2\epsilon}\end{aligned}\end{align} \]</div>
+<p>It is important to note that <span class="math notranslate nohighlight">\(P(X=x)\neq f(x)\)</span>.</p>
+<p>We can use the PDF to obtain the relative probability of one value <span class="math notranslate nohighlight">\(x_1\)</span>
+over another <span class="math notranslate nohighlight">\(x_2\)</span> because for a given <span class="math notranslate nohighlight">\(\epsilon&gt;0\)</span>, we have</p>
+<div class="math notranslate nohighlight">
+\[\frac{P(X\in[x_1-\epsilon,x_1+\epsilon])}{P(X\in[x_2-\epsilon,x_2+\epsilon])}
+\simeq\frac{2\epsilon\cd f(x_1)}{2\epsilon\cd f(x_2)}=\frac{f(x_1)}{f(x_2)}\]</div>
+<p>If <span class="math notranslate nohighlight">\(f(x_1)\)</span> is larger than <span class="math notranslate nohighlight">\(f(x_2)\)</span>, then values of <span class="math notranslate nohighlight">\(X\)</span> close
+to <span class="math notranslate nohighlight">\(x_1\)</span> are more probable than values cloes to <span class="math notranslate nohighlight">\(x_2\)</span> and vice versa.</p>
+<p><strong>Cumulative Distribution Function</strong></p>
+<p>The <em>cumulative distribution function (CDF)</em> <span class="math notranslate nohighlight">\(F:\R\rightarrow[0,1]\)</span> which
+gives the probability of observing a value at most some given value <span class="math notranslate nohighlight">\(x\)</span>:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(F(x)=P(X\leq x)\)</span> for all <span class="math notranslate nohighlight">\(-\infty&lt;x&lt;\infty\)</span></p>
+</div>
+<p>When <span class="math notranslate nohighlight">\(X\)</span> is discrete, <span class="math notranslate nohighlight">\(F\)</span> is given as</p>
+<div class="math notranslate nohighlight">
+\[F(x)=P(X\leq x)=\sum_{u\leq x}f(u)\]</div>
+<p>and when <span class="math notranslate nohighlight">\(X\)</span> is continuous, <span class="math notranslate nohighlight">\(F\)</span> is given as</p>
+<div class="math notranslate nohighlight">
+\[F(x)=P(X\leq x)=\int_{-\infty}^xf(u)du\]</div>
 <div class="section" id="bivariate-random-variables">
 <h3>1.4.1 Bivariate Random Variables<a class="headerlink" href="#bivariate-random-variables" title="Permalink to this headline">¶</a></h3>
+<p>We can also perform pair-wise analysis by considering a pair of attributes,
+<span class="math notranslate nohighlight">\(X_1\)</span> and <span class="math notranslate nohighlight">\(X_2\)</span>, as a <em>bivariate random variable</em>:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\X=\bp X_1\\X_2 \ep\end{split}\]</div>
+<p><strong>Joint Probability Mass Function</strong></p>
+<p>If <span class="math notranslate nohighlight">\(X_1\)</span> and <span class="math notranslate nohighlight">\(X_2\)</span> are both discrete random variables then
+<span class="math notranslate nohighlight">\(\X\)</span> has a <em>joint probability mass function</em> given as follows:</p>
+<div class="math notranslate nohighlight">
+\[f(\x)=f(x_1,x_2)=P(X_1=x_1,X_2=x_2)=P(\X=\x)\]</div>
+<p><span class="math notranslate nohighlight">\(f\)</span> must satisfy the following two conditions:</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}f(\x)=f(x_1,x_2)\geq 0\quad\rm{for\ all\ }-\infty&lt;x_1,x_2&lt;\infty\\\sum_\x f(\X)=\sum_{x_1}\sum_{x_2}f(x_1,x_2)=1\end{aligned}\end{align} \]</div>
+<p><strong>Joint Probability Density Function</strong></p>
+<p>If <span class="math notranslate nohighlight">\(X_1\)</span> and <span class="math notranslate nohighlight">\(X_2\)</span> are both continuous random variables then
+<span class="math notranslate nohighlight">\(\X\)</span> has a <em>joint probability density function</em> <span class="math notranslate nohighlight">\(f\)</span> given as follows:</p>
+<div class="math notranslate nohighlight">
+\[P(\X\in W)=\iint_{\x\in W}f(\X)d\X=\iint_{(x_1,x_2)^T\in W}f(x_1,x_2)dx_1dx_2\]</div>
+<p>where <span class="math notranslate nohighlight">\(W\subset\R^2\)</span> is some subset of the 2-dimensional space of reals.
+<span class="math notranslate nohighlight">\(f\)</span> must also satisfy the following two conditions:</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}f(\x)=f(x_1,x_2)\geq 0\quad\rm{for\ all\ }-\infty&lt;x_1,x_2&lt;\infty\\\int_{\R^2}f(\x)d\x=\int_{-\infty}^\infty\int_{-\infty}^\infty f(x_1,x_2)dx_1dx_2=1\end{aligned}\end{align} \]</div>
+<p>The probability density at <span class="math notranslate nohighlight">\(\x\)</span> can be approximated using a 2-dimensional
+window of width <span class="math notranslate nohighlight">\(2\epsilon\)</span> centered at <span class="math notranslate nohighlight">\(\x=(x_1,x_2)^T\)</span> as</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}P(\X\in W)&amp;=P(\X\in([x_1-\epsilon,x_1+\epsilon],[x_2-\epsilon,x_2+\epsilon]))\\&amp;=\int_{x_1-\epsilon}^{x_1+\epsilon}\int_{x_2-\epsilon}^{x_2+\epsilon}
+f(x_1,x_2)dx_1dx_2\simeq 2\epsilon\cd 2\epsilon\cd f(x_1,x_2)\end{aligned}\end{align} \]</div>
+<p>which implies that</p>
+<div class="math notranslate nohighlight">
+\[f(x_1,x_2)=\frac{P(\X\in W)}{(2\epsilon)^2}\]</div>
+<p>The relative probability of one value <span class="math notranslate nohighlight">\((a_1,a_2)\)</span> versus another
+<span class="math notranslate nohighlight">\((b_1,b_2)\)</span> can therefore be computed via the probability density function:</p>
+<div class="math notranslate nohighlight">
+\[\frac{P(\X\in([a_1-\epsilon,a_1+\epsilon],[a_2-\epsilon,a_2+\epsilon]))}
+{P(\X\in([b_1-\epsilon,b_1+\epsilon],[b_2-\epsilon,b_2+\epsilon]))}\simeq
+\frac{(2\epsilon)^2\cd f(a_1,a_2)}{(2\epsilon)^2\cd f(b_1,b_2)}=
+\frac{f(a_1,a_2)}{f(b_1,b_2)}\]</div>
+<p><strong>Joint Cumulative Distribution Function</strong></p>
+<p>The <em>joint cumulative distribution function</em> for two random variables
+<span class="math notranslate nohighlight">\(X_1\)</span> and <span class="math notranslate nohighlight">\(X_2\)</span> is defined as the function <span class="math notranslate nohighlight">\(F\)</span>, such that for
+all values <span class="math notranslate nohighlight">\(x_1,x_2\in(-\infty,\infty)\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[F(\x)=F(x_1,x_2)=P(X_1\leq x_1\rm{\ and\ }X_2\leq x_2)=P(\X\leq\x)\]</div>
+<p><strong>Statistical Independence</strong></p>
+<p>Two random variables <span class="math notranslate nohighlight">\(X_1\)</span> and <span class="math notranslate nohighlight">\(X_2\)</span> are said to be (statistically)
+<em>independent</em> if, for every <span class="math notranslate nohighlight">\(W_1\subset\R\)</span> and <span class="math notranslate nohighlight">\(W_2\subset\R\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[P(X_1\in W_1\rm{\ and\ }X_2\in W_2)=P(X_1\in W_1)\cd P(X_2\in W_2)\]</div>
+<p>Furthermore, if <span class="math notranslate nohighlight">\(X_1\)</span> and <span class="math notranslate nohighlight">\(X_2\)</span> are independent, then the following two conditions are also satisfied:</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}F(\x)=F(x_1,x_2)=F_1(x_1)\cd F_2(x_2)\\f(\x)=f(x_1,x_2)=f_1(x_1)\cd f_2(x_2)\end{aligned}\end{align} \]</div>
 </div>
 <div class="section" id="multivariate-random-variable">
 <h3>1.4.2 Multivariate Random Variable<a class="headerlink" href="#multivariate-random-variable" title="Permalink to this headline">¶</a></h3>
+<p>A <span class="math notranslate nohighlight">\(d\)</span>-dimensional <em>multivariate random variable</em>
+<span class="math notranslate nohighlight">\(\X=(X_1,X_2,\cds,X_d)^T\)</span>, also called a <em>vector random variable</em>, is
+defined as a function that assigns a vector of real numbers to each outcome in
+the sample space, that is <span class="math notranslate nohighlight">\(\X:\cl{O}\ra\R^d\)</span>.</p>
+<p>If all <span class="math notranslate nohighlight">\(X_j\)</span> are discrete, then <span class="math notranslate nohighlight">\(\X\)</span> is jointly discrete and its
+joint probability mass function <span class="math notranslate nohighlight">\(f\)</span> is given as</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}f(\x)&amp;=P(\X=\x)\\f(x_1,x_2,\cds,x_d)&amp;=P(X_1=x_1,X_2=x_2,\cds,X_d=x_d)\end{aligned}\end{align} \]</div>
+<p>If all <span class="math notranslate nohighlight">\(X_j\)</span> are continuous, then <span class="math notranslate nohighlight">\(\X\)</span> is jointly continuous and its
+joint probability density function is given as</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}P(\X\in W)&amp;=\underset{\x\in W}{\int\cds\int}f(\x)d\x\\P((X_1,X_2,\cds,X_d)^T\in W)&amp;=\underset{(x_1,x_2,\cds,x_d)^T\in W}{\int\cds\int}f(x_1,x_2,\cds,x_d)dx_1dx_2\cds dx_d\end{aligned}\end{align} \]</div>
+<p>for any <span class="math notranslate nohighlight">\(d\)</span>-dimensional region <span class="math notranslate nohighlight">\(W\subseteq\R^d\)</span>.</p>
+<p>We say that <span class="math notranslate nohighlight">\(X_1,X_2,\cds,X_d\)</span> are independent random variables if any only if, for every region <span class="math notranslate nohighlight">\(W_i\in\R\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}P(X_1\in W_1\rm{\ and\ }X_2\in W_2\cds\rm{\ and\ }X_d\in W_d)\\=P(X_1\in W_1)\cd P(X_2\in W_2)\cds P(X_d\in W_d)\end{aligned}\end{align} \]</div>
+<p>If <span class="math notranslate nohighlight">\(X_1,X_2,\cds,X_d\)</span> are independent then the following conditions are also satisfied</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}F(\x)=F(x_1,\cds,x_d)=F_1(x_1)\cd F_2(x_2)\cd \cds \cd F_d(x_d)\\f(\x)=f(x_1,\cds,x_d)=f_1(x_1)\cd f_2(x_2)\cd \cds \cd f_d(x_d)\end{aligned}\end{align} \]</div>
 </div>
 <div class="section" id="random-sample-and-statistics">
 <h3>1.4.3 Random Sample and Statistics<a class="headerlink" href="#random-sample-and-statistics" title="Permalink to this headline">¶</a></h3>
+<p>In statistics, the word <em>population</em> is used to refer to the set or universe of all entieis under study.
+We try to make inferences about the population parameters by drawing a random
+sample from the population, and by computing appropriate <em>statistics</em> from the
+sample that give estimates of the corresponding population parameters of
+interest.</p>
+<p><strong>Univariate Sample</strong></p>
+<p>Given a random variable <span class="math notranslate nohighlight">\(X\)</span>, a <em>random sample</em> of size <span class="math notranslate nohighlight">\(n\)</span> from
+<span class="math notranslate nohighlight">\(X\)</span> is defined as a set of <span class="math notranslate nohighlight">\(n\)</span> <em>independent and identically</em>
+<em>distributed (IID)</em> random variables <span class="math notranslate nohighlight">\(S_1,S_2,\cds,S_n\)</span>, that is, all of
+the <span class="math notranslate nohighlight">\(S_i\)</span>’s are statistically independent of each other, and follow the
+same probability mass or density function as <span class="math notranslate nohighlight">\(X\)</span>.</p>
+<p>Their joint probability function is given as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp f(x_1,\cds,x_n)=\prod_{i=1}^nf_X(x_i)\)</span></p>
+</div>
+<p>where <span class="math notranslate nohighlight">\(f_X\)</span> is the probability mass or density function for <span class="math notranslate nohighlight">\(X\)</span>.</p>
+<p><strong>Multivariate Sample</strong></p>
+<p><span class="math notranslate nohighlight">\(\x_i\)</span> are assumed to be independent and identically distributed, and thus their joint distirbution is given as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp f(\x_1,\x_2,\cds,\x_n)=\prod_{i=1}^n f_{\X}(\x_i)\)</span></p>
+</div>
+<p>where <span class="math notranslate nohighlight">\(f_{\X}\)</span> is the probability mass or density function for <span class="math notranslate nohighlight">\(\X\)</span>.</p>
+<p>Under the attribute independence assumption the above equation can be rewritten as</p>
+<div class="math notranslate nohighlight">
+\[f(\x_1,\x_2,\cds,\x_n)=\prod_{i=1}^n f(\x_i)=\prod_{i=1}^n\prod_{j=1}^df_{X_j}(x_{ij})\]</div>
+<p><strong>Statistics</strong></p>
+<p>Let <span class="math notranslate nohighlight">\(\{ \bs{\rm{S}}_i\}_{i=1}^m\)</span> denote a random sample of size <span class="math notranslate nohighlight">\(m\)</span>
+drawn from a (multivariate) random variable <span class="math notranslate nohighlight">\(\X\)</span>.
+A statistic <span class="math notranslate nohighlight">\(\hat{\th}\)</span> is some function over the random sample, given as</p>
+<div class="math notranslate nohighlight">
+\[\hat{\th}:(\bs{\rm{S}}_1,\bs{\rm{S}}_2,\cds,\bs{\rm{S}}_m)\ra\R\]</div>
+<p>If we use the value of a statistic to estimate a population parameter, this
+value is called a <em>point estimate</em> of the parameter, and the statistic is called
+an <em>estimator</em> of the parameter.</p>
 </div>
 </div>
 </div>
@@ -287,6 +642,7 @@ possible to quantify the difference between values.</p></li>
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="chap2.html" class="btn btn-neutral float-right" title="Chapter 2 Numeric Attributes" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
         <a href="index.html" class="btn btn-neutral float-left" title="Data Mining and Machine Learning" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 

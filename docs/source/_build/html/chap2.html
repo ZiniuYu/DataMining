@@ -96,11 +96,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#measures-of-dispersion">2.1.2 Measures of Dispersion</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#bivariate-analysis">2.2 Bivariate Analysis</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#measures-of-location-and-dispersion">2.2.1 Measures of Location and Dispersion</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#measures-of-association">2.2.2 Measures of Association</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="#bivariate-analysis">2.2 Bivariate Analysis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#multivariate-analysis">2.3 Multivariate Analysis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#data-normalization">2.4 Data Normalization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#normal-distribution">2.5 Normal Distribution</a></li>
@@ -208,7 +204,7 @@
 \newcommand{\R}{\mathbb{R}}\\\newcommand{\ld}{\lambda}
 \newcommand{\Ld}{\Lambda}
 \newcommand{\sg}{\sigma}
-\newcommand{\Sg}{\bs{\mathrm{\Sigma}}}
+\newcommand{\Sg}{\Sigma}
 \newcommand{\th}{\theta}\\\newcommand{\mmu}{\boldsymbol{\mu}}\\\newcommand{\bb}{\begin{bmatrix}}
 \newcommand{\eb}{\end{bmatrix}}
 \newcommand{\bp}{\begin{pmatrix}}
@@ -358,211 +354,10 @@ values <span class="math notranslate nohighlight">\(X\)</span> deviate from the 
 <p>It is worth noting that variance is in fact the <em>second moment about the mean</em>,
 corresponding to <span class="math notranslate nohighlight">\(r=2\)</span>, which is a special case of the <span class="math notranslate nohighlight">\(r\)</span><em>th moment about the mean</em> for a random variable <span class="math notranslate nohighlight">\(X\)</span>, defined as
 <span class="math notranslate nohighlight">\(E[(X-\mu)^r]\)</span>.</p>
-<p><strong>Sample Variance</strong></p>
-<p>The <em>sample variance</em> is defined as</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p><span class="math notranslate nohighlight">\(\dp\sg^2=\frac{1}{n}\sum_{i=1}^n(x_i-\mu)^2\)</span></p>
-</div>
-<div class="math notranslate nohighlight">
-\[\hat\sg^2=\sum_x(x-\hat\mu)^2\hat{f}(x)=\sum_x(x-\hat\mu)^2\bigg(\frac{1}{n}
-\sum_{i=1}^nI(x_i=x)\bigg)=\frac{1}{n}\sum_{i=1}^n(x_i-\hat\mu)^2\]</div>
-<p>The <em>sample standard deviation</em> is given as the positive square root of the sample variance:</p>
-<div class="math notranslate nohighlight">
-\[\hat\sg=\sqrt{\frac{1}{n}\sum_{i=1}^n(x_u-\hat\mu)^2}\]</div>
-<p>The <em>standard score</em>, also called the <span class="math notranslate nohighlight">\(z\)</span><em>-score</em>, of a sample value
-<span class="math notranslate nohighlight">\(x_i\)</span> is the number of standard deviations the value is away from the mean:</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p><span class="math notranslate nohighlight">\(\dp z_i=\frac{x_i-\hat\mu}{\hat\sg}\)</span></p>
-</div>
-<p><strong>Variance of the Sample Mean</strong></p>
-<p>The expected value of the sample mean is simply <span class="math notranslate nohighlight">\(\mu\)</span>.</p>
-<div class="math notranslate nohighlight">
-\[\rm{var}\bigg(\sum_{i=1}^nx_i\bigg)=\sum_{i=1}^n\rm{var}(x_i)=\sum_{i=1}^n\sg^2=n\sg^2\]</div>
-<p>Further, note that</p>
-<div class="math notranslate nohighlight">
-\[E\bigg[\sum_{i=1}^nx_i\bigg]=n\mu\]</div>
-<p>The variance of the sample mean <span class="math notranslate nohighlight">\(\hat\mu\)</span> can be computed as</p>
-<div class="math notranslate nohighlight">
-\[ \begin{align}\begin{aligned}\rm{var}(\hat\mu)&amp;=E[(\hat\mu-\mu)^2]=E[\hat\mu^2]-\mu^2-
-E\bigg[\bigg(\frac{1}{n}\sum_{i=1}^nx_i\bigg)^2\bigg]-
-\frac{1}{n^2}E\bigg[\sum_{i=1}^nx_i\bigg]^2\\&amp;=\frac{1}{n^2}\bigg(E\bigg[\bigg(\sum_{i=1}^nx_i\bigg)^2\bigg]-
-E\bigg[\sum_{i=1}^nx_i\bigg]^2\bigg)-\frac{1}{n^2}\rm{var}
-\bigg(\sum_{i=1}^nx_i\bigg)\\&amp;=\frac{\sg^2}{n}\end{aligned}\end{align} \]</div>
-<p><strong>Bias of Sample Variance</strong></p>
-<p>The sample variance is a <em>biased estimator</em> for the true population variance,
-<span class="math notranslate nohighlight">\(\sg^2\)</span>, that is, <span class="math notranslate nohighlight">\(E[\hat\sg^2]\neq\sg^2\)</span>.</p>
-<div class="math notranslate nohighlight">
-\[\sum_{i=1}^n(x_i-\mu)^2=n(\hat\mu-\mu)^2+\sum_{i=1}^n(x_i-\hat\mu)^2\]</div>
-<div class="math notranslate nohighlight">
-\[ \begin{align}\begin{aligned}E[\hat\sg]^2&amp;=E\bigg[\frac{1}{n}\sum_{i=1}^n(x_i-\hat\mu)^2\bigg]=
-E\bigg[\frac{1}{n}\sum_{i=1}^n(x_i-\mu)^2\bigg]-E[(\hat\mu-\mu)^2]\\&amp;=\frac{1}{n}n\sg^2-\frac{\sg^2}{n}=\bigg(\frac{n-1}{n}\bigg)\sg^2\end{aligned}\end{align} \]</div>
-<p>The sample variance <span class="math notranslate nohighlight">\(\hat\sg^2\)</span> is a biased estimator of <span class="math notranslate nohighlight">\(\sg^2\)</span>,
-as its expected value differs from the population variance by a factor of
-<span class="math notranslate nohighlight">\(\frac{n-1}{n}\)</span>.
-However, it is <em>asymptotically unbiased</em>, that is, the bias vanishes as <span class="math notranslate nohighlight">\(n\ra\infty\)</span> because</p>
-<div class="math notranslate nohighlight">
-\[\lim_{n\ra\infty}\frac{n-1}{n}=\lim_{n\ra\infty}1-\frac{1}{n}=1\]</div>
-<p>Put differently, as the sample size increases, we have</p>
-<div class="math notranslate nohighlight">
-\[E[\hat\sg^2]\ra\sg^2\quad\rm{as\ }n\ra\infty\]</div>
-<p>If we eant an unbiased estimate of the sample variance, denoted
-<span class="math notranslate nohighlight">\(\hat\sg_u^2\)</span>, we must divide by <span class="math notranslate nohighlight">\(n-1\)</span> instead of <span class="math notranslate nohighlight">\(n\)</span>:</p>
-<div class="math notranslate nohighlight">
-\[\hat\sg_u^2=\frac{1}{n-1}\sum_{i=1}^n(x_i-\hat\mu)^2\]</div>
-<div class="math notranslate nohighlight">
-\[ \begin{align}\begin{aligned}E[\hat\sg_u^2]&amp;=E\bigg[\frac{1}{n-1}\sum_{i=1}^n(x_i-\hat\mu)^2\bigg]=
-\frac{1}{n-1}\cd E\bigg[\sum_{i=1}^n(x_i-\mu)^2\bigg]-\frac{n}{n-1}\cd
-E[(\hat\mu-\mu)^2]\\&amp;=\frac{n}{n-1}\sg^2-\frac{n}{n-1}\cd\frac{\sg^2}{n}\\&amp;=\frac{n}{n-1}\sg^2-\frac{1}{n-1}\sg^2=\sg^2\end{aligned}\end{align} \]</div>
-<p><strong>Geometric Interpretation of Sample Variance</strong></p>
-<p>Let <span class="math notranslate nohighlight">\(\bar{X}\)</span> denote the centered attribute vector</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}\bar{X}=X-\hat\mu\cd\bs{1}=\bp x_1-\hat\mu\\x_2-\hat\mu\\\vds\\x_n-\hat\mu \ep\end{split}\]</div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p><span class="math notranslate nohighlight">\(\dp\hat\sg^2=\frac{1}{n}\lv\bar{X}\rv^2=\frac{1}{n}\bar{X}^T\bar{X}=\frac{1}{n}\sum_{i=1}^n(x_i-\bar\mu)^2\)</span></p>
-</div>
-<p>Define the <em>degress of freedom</em> (dof) of a statistical vector as the
-dimensionality of the subspace that contains the vector.
-Notice that the centered attribute vector <span class="math notranslate nohighlight">\(\bar{X}=X-\hat\mu\cd\bs{1}\)</span>
-lies in a <span class="math notranslate nohighlight">\(n-1\)</span> dimensional subspace that is an orthogonal complement of
-the 1 dimensional subspace spanned by the ones vector <span class="math notranslate nohighlight">\(\bs{1}\)</span>.
-Thus, the vector <span class="math notranslate nohighlight">\(\bar{X}\)</span> has only <span class="math notranslate nohighlight">\(n-1\)</span> degrees of freedom, and
-the unbiased sample variance is simply the mean or expected squared length of
-<span class="math notranslate nohighlight">\(\bar{X}\)</span> per dimension</p>
-<div class="math notranslate nohighlight">
-\[\sg_u^2=\frac{\lv X\rv^2}{n-1}=\frac{\bar{X}^T\bar{X}}{n-1}=\frac{1}{n-1}\cd\sum_{i=1}^n(x_i-\hat\mu)^2\]</div>
 </div>
 </div>
 <div class="section" id="bivariate-analysis">
 <h2>2.2 Bivariate Analysis<a class="headerlink" href="#bivariate-analysis" title="Permalink to this headline">¶</a></h2>
-<p>In bivariate analysis, we consider two attributes at the same time.</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}\D=\bp X_1&amp;X_2\\x_{11}&amp;x_{12}\\x_{21}&amp;x_{22}\\\vds&amp;\vds\\x_{n1}&amp;x_{n2} \ep\end{split}\]</div>
-<p>It can be viewed as <span class="math notranslate nohighlight">\(n\)</span> points or vectors in 2-dimensional space over the
-attributes <span class="math notranslate nohighlight">\(X_1\)</span> and <span class="math notranslate nohighlight">\(X_2\)</span>, that is,
-<span class="math notranslate nohighlight">\(\x_i=(x_{i1},x_{i2})^T\in\R^2\)</span>.
-Alternatively, it can be viewed as two points or vectors in an <span class="math notranslate nohighlight">\(n\)</span>-dimensional space comprising the points, that is, each column is a vector in
-<span class="math notranslate nohighlight">\(\R\)</span>, as follows:</p>
-<div class="math notranslate nohighlight">
-\[ \begin{align}\begin{aligned}X_1=(x_{11},x_{21},\cds,x_{n1})^T\\X_2=(x_{12},x_{22},\cds,x_{n2})^T\end{aligned}\end{align} \]</div>
-<p>In the probabilistic view, the column vector <span class="math notranslate nohighlight">\(\X=(X_1,X_2)^T\)</span> is
-considered a bivariate vector random variable, and the points
-<span class="math notranslate nohighlight">\(\x_i (1\leq i\leq n)\)</span> are treated as a random sample drawn from
-<span class="math notranslate nohighlight">\(\X\)</span>, that is, <span class="math notranslate nohighlight">\(\x_i\)</span>’s are considered independent and identically
-distributed as <span class="math notranslate nohighlight">\(\X\)</span>.</p>
-<p><strong>Empirical Joint Probability Mass Function</strong></p>
-<p>The <em>empirical joint probability mass function</em> for <span class="math notranslate nohighlight">\(\X\)</span> is given as</p>
-<div class="math notranslate nohighlight">
-\[\hat{f}(\x)=P(\X=\x)=\frac{1}{n}\sum_{i=1}^nI(\x_i=\x)\]</div>
-<div class="math notranslate nohighlight">
-\[\hat{f}(x_1,x_2)=P(X_1=x_1,X_2=x_2)=\frac{1}{n}\sum_{i=1}^nI(x_{i1}=x_1,x_{i2}=x_2)\]</div>
-<p>where</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}I(\x_i=\x)=\left\{\begin{array}{lr}1\quad\rm{if\ }x_{i1}=x_1\rm{\ and\ }
-x_{i2}=x_2\\0\quad\rm{otherwise}\end{array}\right.\end{split}\]</div>
-<div class="section" id="measures-of-location-and-dispersion">
-<h3>2.2.1 Measures of Location and Dispersion<a class="headerlink" href="#measures-of-location-and-dispersion" title="Permalink to this headline">¶</a></h3>
-<p><strong>Mean</strong></p>
-<p>The bivariate mean is defined as the expected value of the vector random variable <span class="math notranslate nohighlight">\(\X\)</span>, defined as follows:</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}\mmu=E[\X]=E\bigg[\bp X_1\\X_2 \ep\bigg]=\bp E[X_1]\\E[X_2] \ep=\bp \mu_1\\\mu_2 \ep\end{split}\]</div>
-<p>The sample mean vector can be computed from the joint empirical PMF</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p><span class="math notranslate nohighlight">\(\dp\hat\mmu=\sum_\x\x\hat{f}(\x)=\sum_\x\x\bigg(\frac{1}{n}\sum_{i=1}^nI(\x_i=\x)\bigg)=\frac{1}{n}\sum_{i=1}^n\x_i\)</span></p>
-</div>
-<p><strong>Variance</strong></p>
-<p>The <em>total variance</em> is given as</p>
-<div class="math notranslate nohighlight">
-\[\sg_1^2+\sg_2^2\]</div>
-<p>The <em>sample total variance</em> is simply</p>
-<div class="math notranslate nohighlight">
-\[\rm{var}(\D)=\hat\sg_1^2+\hat\sg_2^2\]</div>
-</div>
-<div class="section" id="measures-of-association">
-<h3>2.2.2 Measures of Association<a class="headerlink" href="#measures-of-association" title="Permalink to this headline">¶</a></h3>
-<p><strong>Covariance</strong></p>
-<p>The <em>covariance</em> between two attributes <span class="math notranslate nohighlight">\(X_1\)</span> and <span class="math notranslate nohighlight">\(X_2\)</span> provides a
-measure of the association or linear dependence between them, and is defined as</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p><span class="math notranslate nohighlight">\(\sg_{12}=E[(X_1-\mu_1)(X_2-\mu_2)]\)</span></p>
-</div>
-<p>By linearity of expectation, we have</p>
-<div class="math notranslate nohighlight">
-\[ \begin{align}\begin{aligned}\sg_{12}&amp;=E[(X_1-\mu_1)(X_2-\mu_2)]=E[X_1X_2-X_1\mu_2-X_2\mu_1+\mu_1\mu_2]\\&amp;=E[X_1X_2]-\mu_2E[X_1]-\mu_1E[X_2]+\mu_1\mu_2=E[X_1X_2]-\mu_1\mu_2\end{aligned}\end{align} \]</div>
-<p>which implies</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p><span class="math notranslate nohighlight">\(\sg_{12}=E[X_1X_2]-E[X_1]E[X_2]\)</span></p>
-</div>
-<p>If <span class="math notranslate nohighlight">\(X_1\)</span> and <span class="math notranslate nohighlight">\(X_2\)</span> are independent random variables, then we conclude that their covariance is zero.
-This is because if <span class="math notranslate nohighlight">\(X_1\)</span> and <span class="math notranslate nohighlight">\(X_2\)</span> are independent, then we have</p>
-<div class="math notranslate nohighlight">
-\[E[X_1X_2]=E[X_1]\cd E[X_2]\]</div>
-<p>which in turn implies that</p>
-<div class="math notranslate nohighlight">
-\[\sg_{12}=0\]</div>
-<p>The converse is not true.</p>
-<p>The <em>sample covariance</em> between <span class="math notranslate nohighlight">\(X_1\)</span> and <span class="math notranslate nohighlight">\(X_2\)</span> is given as</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p><span class="math notranslate nohighlight">\(\dp\hat\sg_{12}=\frac{1}{n}\sum_{i=1}^n(x_{i1}-\hat\mu_1)(x_{i2}-\hat\mu_2)\)</span></p>
-</div>
-<div class="math notranslate nohighlight">
-\[ \begin{align}\begin{aligned}\hat\sg_{12}&amp;=E[(X_1-\hat\mu_1)(X_2-\hat\mu_2)]\\&amp;=\sum_{\x=(x_1,x_2)^T}(x_1-\hat\mu_1)(x_2-\hat\mu_2)\hat{f}(x_1,x_2)\\&amp;=\frac{1}{n}\sum_{\x=(x_1,x_2)^T}\sum_{i=1}^n(x_1-\hat\mu_1)\cd(x_2-\hat\mu_2)\cd I(x_{i1}=x_1,x_{i2}=x_2)\\&amp;=\frac{1}{n}\sum_{i=1}^n(x_{i1}-\hat\mu_1)(x_{i2}-\hat\mu_2)\end{aligned}\end{align} \]</div>
-<p><strong>Correlation</strong></p>
-<p>The <em>correlation</em> between variables <span class="math notranslate nohighlight">\(X_1\)</span> and <span class="math notranslate nohighlight">\(X_2\)</span> is the
-<em>standardized covariance</em>, obatained by normalizing the covariance with the
-standard deviation of each variable, given as</p>
-<div class="math notranslate nohighlight">
-\[\rho_{12}=\frac{\sg_{12}}{\sg_1\sg_2}=\frac{\sg_{12}}{\sqrt{\sg_1^2\sg_2^2}}\]</div>
-<p>The <em>sample correlation</em> for attributes <span class="math notranslate nohighlight">\(X_1\)</span> and <span class="math notranslate nohighlight">\(X_2\)</span> is given as</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p><span class="math notranslate nohighlight">\(\dp\hat\rho_{12}=\frac{\hat\sg_{12}}{\hat\sg_1\sg_2}=\)</span>
-<span class="math notranslate nohighlight">\(\dp\frac{\sum_{i=1}^n(x_{i1}-\hat\mu_1)(x_{i2}-\hat\mu_2)}{\sqrt{\sum_{i=1}^n(x_{i1}-\hat\mu_1)^2}\sqrt{\sum_{i=1}^n(x_{i2}-\hat\mu_2)^2}}\)</span></p>
-</div>
-<p><strong>Geometric Interpretation of Sample Covariance and Correlation</strong></p>
-<p>Let <span class="math notranslate nohighlight">\(\bar{X}_1\)</span> and <span class="math notranslate nohighlight">\(\bar{X}_2\)</span> denote the centered attribute vectors in <span class="math notranslate nohighlight">\(\R^n\)</span>, given as follows:</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}\bar{X}_1=X_1-\hat\mu_1\cd\bs{1}=\bp x_{11}-\hat\mu_1\\x_{21}-\hat\mu_1\\
-\vds\\x_{n1}-\hat\mu_1 \ep\quad\bar{X}_2=X_2-\hat\mu_2\cd\bs{1}=
-\bp x_{12}-\hat\mu_2\\x_{22}-\hat\mu_2\\\vds\\x_{n2}-\hat\mu_2 \ep\end{split}\]</div>
-<p>The sample covariance can then be written as</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p><span class="math notranslate nohighlight">\(\dp\hat\sg_{12}=\frac{\hat{X}_1^T\hat{X}_2}{n}\)</span></p>
-</div>
-<p>The sample correlation can be written as</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p><span class="math notranslate nohighlight">\(\dp\hat\rho_{12}=\frac{\bar{X}_1^T\bar{X}_2}{\sqrt{\bar{X}_1^T\bar{X}_1}\sqrt{\bar{X}_2^T\bar{X}_2}}=\)</span>
-<span class="math notranslate nohighlight">\(\dp\frac{\bar{X}_1^T\bar{X}_2}{\lv\bar{X}_1\rv\lv\bar{X}_2\rv}=\)</span>
-<span class="math notranslate nohighlight">\(\dp\left(\frac{\bar{X}_1}{\lv\bar{X}_1\rv}\right)^T\left(\frac{\bar{X}_2}{\lv\bar{X}_2\rv}\right)=\cos\th\)</span></p>
-</div>
-<p><strong>Covariance Matrix</strong></p>
-<p>The variance-covariance information for the two attributes <span class="math notranslate nohighlight">\(X_1\)</span> and
-<span class="math notranslate nohighlight">\(X_2\)</span> can be summarized in the square <span class="math notranslate nohighlight">\(2\times 2\)</span>
-<em>covariance matrix</em>, given as</p>
-<div class="math notranslate nohighlight">
-\[\Sg=E[(\X-\mmu)(\X-\mmu)^T]\]</div>
-<div class="math notranslate nohighlight">
-\[\begin{split}=E\bigg[\bp X_1-\mu_1\\X_2-\mu_2 \ep\bp X_1-\mu&amp;X_2-\mu_2 \ep\bigg]\end{split}\]</div>
-<div class="math notranslate nohighlight">
-\[\begin{split}=\bp E[(X_1-\mu_1)(X_1-\mu_1)]&amp;E[(X_1-\mu_1)(X_2-\mu_2)]\\E[(X_2-\mu_2)(X_1-\mu_1)]&amp;E[(X_2-\mu_2)(X_2-\mu_2)] \ep\end{split}\]</div>
-<div class="math notranslate nohighlight">
-\[\begin{split}=\bp \sg_1^2&amp;\sg_{12}\\\sg_{21}&amp;\sg_2^2 \ep\end{split}\]</div>
-<p>Because <span class="math notranslate nohighlight">\(\sg_{12}=\sg_{21}\)</span>, <span class="math notranslate nohighlight">\(\Sg\)</span> is a <em>symmetric</em> matrix.</p>
-<p>The <em>total variance</em> of the two attributes is given as the sum of the diagonal
-elements of <span class="math notranslate nohighlight">\(\Sg\)</span>, which is also called the <em>trace</em> of <span class="math notranslate nohighlight">\(\Sg\)</span>, given
-as</p>
-<div class="math notranslate nohighlight">
-\[tr(\Sg)=\sg_1^2+\sg_2^2\]</div>
-<p>We immediately have <span class="math notranslate nohighlight">\(tr(\Sg)\leq 0\)</span>.</p>
-</div>
 </div>
 <div class="section" id="multivariate-analysis">
 <h2>2.3 Multivariate Analysis<a class="headerlink" href="#multivariate-analysis" title="Permalink to this headline">¶</a></h2>

@@ -1,0 +1,282 @@
+Chapter 2 Numeric Attributes
+============================
+
+2.1 Univariate Analysis
+-----------------------
+
+Univariate analysis focuses on a single attribute at a time; thus the data
+matrix :math:`\D` can be thought of as an :math:`n\times 1` matrix, or simply a
+column vector, given as
+
+.. math::
+
+    \D=\bp X\\x_1\\x_2\\\vds\\x_n \ep
+
+where :math:`X` is the numeric attribute of interest, with :math:`x+i\in\R`.
+:math:`X` is assumed to be a random variable, with each point 
+:math:`x_i(1\leq i\leq b)` itself treated as an identity random variable.
+
+**Empirical Cumulative Distribution Function**
+
+The *empirical cumulative distribution function (CDF)* of :math:`X` is given as
+
+.. math::
+
+    \hat{F}(x)=\frac{1}{n}\sum_{i=1}^nI(x_i\leq x)
+
+where
+
+.. math::
+
+    I(x_i\leq x)=\left\{\begin{array}{lr}1\quad\rm{if\ }x_i\leq x\\0\quad\rm{if\ }x_i>x\end{array}\right.
+
+is a binary *indicator variable* that indicates whether the given condition is satisfied or not.
+Note that we use the notation :math:`\hat{F}` to denote the fact that the 
+empirical CDF is an estimate for the unknown population CDF :math:`F`.
+
+**Inverse Cumulative Distribution Function**
+
+Define the *inverse cumulative distribution function* or *quantile function* for a random variable :math:`X` as follows:
+
+.. math::
+
+    F\im(q)=\min\{x|F(x)\geq q\}\quad\rm{for\ }q\in[0,1]
+
+**Empirical Probability Mass Function**
+
+The *empirical probability mass function (PMF)* of :math:`X` is given as
+
+.. math::
+
+    \hat{f}(x)=P(X=x)=\frac{1}{n}\sum_{i=1}^nI(x_i=x)
+
+where
+
+.. math::
+
+    I(x_i=x)=\left\{\begin{array}{lr}1\quad\rm{if\ }x_i=x\\0\quad\rm{if\ }x_i\neq x\end{array}\right.
+
+2.1.1 Measures of Central Tendency
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+**Mean**
+The *mean*, also called the *expected value*, of a random variable :math:`X` is 
+the arithmetic average of the values of :math:`X`.
+It provides a one-number summary of the *location* or *central tendency* for the distribution of :math:`X`.
+
+The mean or expected value of a discrete random variable :math:`X` is definede as
+
+.. note::
+
+    :math:`\dp\mu=E[X]=\sum_xx\cd f(x)`
+
+where :math:`f(x)` is the probability mass function of :math:`X`.
+
+The expected vvalue of a continuous random variable :math:`X` is defined as
+
+.. note::
+
+    :math:`\dp\mu=E[x]=\int_{-\infty}^\infty x\cd f(x)dx`
+
+where :math:`f(x)` is the probability density function of :math:`X`.
+
+**Sample Mean**
+
+The *sample mean* is a statistic, that is, a function 
+:math:`\hat\mu:\{x_1,x_2,\cds,x_n\}\ra\R`, defined as the average value of 
+:math:`x_i`\ 's:
+
+.. note::
+
+    :math:`\dp\hat\mu=\frac{1}{n}\sum_{i=1}^nx_i`
+
+It serves as an estimator for the unknown mean value :math:`\mu` of :math:`X`.
+
+.. math::
+
+    \hat\mu=\sum_xx\cd\hat{f}(x)=\sum_xx\bigg(\frac{1}{n}\sum_{i=1}^nI(x_i=x)\bigg)=\frac{1}{n}\sum_{i=1}^nx_i
+
+**Sample Mean Is Unbiased**
+
+An estimator :math:`\hat\th` is called an *unbiased estimator* for parameter 
+:math:`\th` if :math:`E[\hat\th]=\th` forr every possible value of :math:`\th`.
+The sample mean :math:`\hat\mu` is an unbiased estimator for the population mean :math:`\mu`, as
+
+.. math::
+
+    E[\hat\mu]=E\bigg[\frac{1}{n}\sum_{i=1}^nx_i\bigg]=\frac{1}{n}\sum_{i=1}^nE[x_i]=\frac{1}{n}\sum_{i=1}^n\mu=\mu
+
+**Robustness**
+
+We say that a statistic is *robust* if it is not affected by extreme values (such as outliers) in the data.
+The sample mean is not robust because a single large value (an outlier) can skew the average.
+A more robust measure is the *trimmed mean* obtained after discarding a small 
+fraction of extreme values on one or both ends.
+
+**Geometric Interpretation of Sample Mean**
+
+Consider the projection of :math:`X` onto the vector :math:`\bs{1}`, we have
+
+.. math::
+
+    \p=\bigg(\frac{X^T\bs{1}}{\bs{1}^T\bs{1}}\bigg)\cd\bs{1}=
+    \bigg(\frac{\sum_{i=1}^nx_i}{n}\bigg)\cd\bs{1}=\hat\mu\cd\bs{1}
+
+Thus, the sample mean is simply the offset or the scalar projection of :math:`X` on the vector :math:`\bs{1}`:
+
+.. note::
+
+    :math:`\dp\hat\mu=\rm{proj}_{\bs{1}}(X)=\bigg(\frac{X^T\bs{1}}{\bs{1}^T\bs{1}}\bigg)`
+
+The sample mean can be used to center the attribute :math:`X`.
+Define the *centered attribute vector*, :math:`\bar{X}`, as follows:
+
+.. math::
+
+    \bar{X}=X-\hat\mu\cd\bs{1}=\bp x_1-\hat\mu\\x_2-\hat\mu\\\vds\\x_n-\hat\mu \ep
+
+We can see that :math:`\bs{1}` and :math:`\bar{X}` are orthogonal to each other, since
+
+.. math::
+
+    \bs{1}^T\bar{X}=\bs{1}^T(X-\hat\mu\cd\bs{1})=\bs{1}^TX-
+    \bigg(\frac{X^T\bs{1}}{\bs{1}^T\bs{1}}\bigg)\cd\bs{1}^T\bs{1}=0
+
+If fact, the subspace containing :math:`\bar{X}` is an *orthogonal complement* of the space spanned by :math:`bs{1}`.
+
+**Median**
+
+The *median* of a random variable is defined as the value :math:`m` such that
+
+.. math::
+
+    P(X\leq m)\geq\frac{1}{2}\quad\rm{and}\quad P(X\geq m)\geq\frac{1}{2}
+
+In terms of the (inverse) cumulative distribution function, the median is therefore the value :math:`m` for which
+
+.. math::
+
+    F(m)=0.5\quad\rm{or}\quad m=F\im(0.5)
+
+The *sample median* can be obtained from the empirical CDF or the empirical inverse CDF by computing
+
+.. math::
+
+    \hat{F}(m)=0.5\quad\rm{or}\quad m=\hat{F}\im(0.5)
+
+Median is robust, as it is not affected very much by extreme values.
+
+**Mode**
+
+The *mode* of a random variable :math:`X` is the value at which the probability 
+mass function or the probability density function attains its maximum value,
+depending on whether :math:`X` is discrete or continuous, respectively.
+
+2.1.2 Measures of Dispersion
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+**Range**
+
+The *value range* or simply *range* of a random variable :math:`X` is the 
+difference between the maximum and minimum values of :math:`X`, given as
+
+.. math::
+
+    r=\max\{X\}-\min\{X\}
+
+The *sample range* is a statistic, given as
+
+.. math::
+
+    \hat{r}=\max_{i=1}^n\{x_i\}-\min_{i=1}^n\{x_i\}
+
+By definition, range is sensitive to extreme values, and thus is not robust.
+
+**Interquartile Range**
+
+*Quartiles* are special values of the quantile function that divide the data into four equal parts.
+A more robust measure of the dispersion of :math:`X` is the *interquartile range (IQR)*, defined as
+
+.. math::
+
+    IQR=q_3-q_1=F\im(0.75)-F\im(0.25)
+
+The *sample* IQR can be obtained by plugging in the empirical inverse CDF:
+
+.. math::
+
+    \wh{IQR}=\hat{q}_3-\hat{q}_1=\hat{F}\im(0.75)-\hat{F}\im(0.25)
+
+**Variance and Standard Deviation**
+
+The *variance* of a random variable :math:`X` provides a measure of how much the 
+values :math:`X` deviate from the mean or expected value of :math:`X`
+
+.. note::
+
+    :math:`\dp\sg^2=\rm{var}(X)=E[(X-\mu)^2]=`
+    :math:`\dp\left\{\begin{array}{lr}\dp\sum_x(x-\mu)^2f(x)\quad\rm{if\ }X\rm{\ is\ discrete}\\\dp\int_{-\infty}^\infty(x-\mu)^2f(x)dx\quad\rm{if\ }X\rm{\ is\ continuous}\end{array}\right.`
+
+The *standard deviation*, :math:`\sg`, is defined as the positive square root of the variance, :math:`\sg^2`.
+
+.. math::
+
+    \sg^2&=\rm{var}(X)=E[(X-\mu)^2]=E[X^2-2\mu X+\mu^2]
+
+    &=E[X^2]-2\mu E[X]+\mu^2=E[X^2]-2\mu^2+\mu^2
+
+    &=E[X^2]-(E[X])^2
+
+It is worth noting that variance is in fact the *second moment about the mean*,
+corresponding to :math:`r=2`, which is a special case of the :math:`r`\ 
+*th moment about the mean* for a random variable :math:`X`, defined as
+:math:`E[(X-\mu)^r]`.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2.2 Bivariate Analysis
+----------------------
+
+
+
+
+
+
+
+
+
+2.3 Multivariate Analysis
+-------------------------
+
+
+
+
+
+
+
+
+
+2.4 Data Normalization
+----------------------
+
+
+
+
+
+
+
+
+
+2.5 Normal Distribution
+-----------------------

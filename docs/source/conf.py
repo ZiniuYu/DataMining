@@ -100,7 +100,7 @@ rst_prolog = r'''
     \newcommand{\ld}{\lambda}
     \newcommand{\Ld}{\Lambda}
     \newcommand{\sg}{\sigma}
-    \newcommand{\Sg}{\Sigma}
+    \newcommand{\Sg}{\bs{\mathrm{\Sigma}}}
     \newcommand{\th}{\theta}
 
     \newcommand{\mmu}{\boldsymbol{\mu}}

@@ -227,30 +227,347 @@ The *standard deviation*, :math:`\sg`, is defined as the positive square root of
 
     &=E[X^2]-(E[X])^2
 
+It is worth noting that variance is in fact the *second moment about the mean*,
+corresponding to :math:`r=2`, which is a special case of the :math:`r`\ 
+*th moment about the mean* for a random variable :math:`X`, defined as
+:math:`E[(X-\mu)^r]`.
 
+**Sample Variance**
 
+The *sample variance* is defined as
 
+.. note::
 
+    :math:`\dp\sg^2=\frac{1}{n}\sum_{i=1}^n(x_i-\mu)^2`
 
+.. math::
 
+    \hat\sg^2=\sum_x(x-\hat\mu)^2\hat{f}(x)=\sum_x(x-\hat\mu)^2\bigg(\frac{1}{n}
+    \sum_{i=1}^nI(x_i=x)\bigg)=\frac{1}{n}\sum_{i=1}^n(x_i-\hat\mu)^2
 
+The *sample standard deviation* is given as the positive square root of the sample variance:
 
+.. math::
 
+    \hat\sg=\sqrt{\frac{1}{n}\sum_{i=1}^n(x_u-\hat\mu)^2}
 
+The *standard score*, also called the :math:`z`\ *-score*, of a sample value 
+:math:`x_i` is the number of standard deviations the value is away from the mean:
 
+.. note::
 
+    :math:`\dp z_i=\frac{x_i-\hat\mu}{\hat\sg}`
 
+**Variance of the Sample Mean**
+
+The expected value of the sample mean is simply :math:`\mu`.
+
+.. math::
+
+    \rm{var}\bigg(\sum_{i=1}^nx_i\bigg)=\sum_{i=1}^n\rm{var}(x_i)=\sum_{i=1}^n\sg^2=n\sg^2
+
+Further, note that
+
+.. math::
+
+    E\bigg[\sum_{i=1}^nx_i\bigg]=n\mu
+
+The variance of the sample mean :math:`\hat\mu` can be computed as
+
+.. math::
+
+    \rm{var}(\hat\mu)&=E[(\hat\mu-\mu)^2]=E[\hat\mu^2]-\mu^2-
+    E\bigg[\bigg(\frac{1}{n}\sum_{i=1}^nx_i\bigg)^2\bigg]-
+    \frac{1}{n^2}E\bigg[\sum_{i=1}^nx_i\bigg]^2
+
+    &=\frac{1}{n^2}\bigg(E\bigg[\bigg(\sum_{i=1}^nx_i\bigg)^2\bigg]-
+    E\bigg[\sum_{i=1}^nx_i\bigg]^2\bigg)-\frac{1}{n^2}\rm{var}
+    \bigg(\sum_{i=1}^nx_i\bigg)
+
+    &=\frac{\sg^2}{n}
+
+**Bias of Sample Variance**
+
+The sample variance is a *biased estimator* for the true population variance, 
+:math:`\sg^2`, that is, :math:`E[\hat\sg^2]\neq\sg^2`.
+
+.. math::
+
+    \sum_{i=1}^n(x_i-\mu)^2=n(\hat\mu-\mu)^2+\sum_{i=1}^n(x_i-\hat\mu)^2
+
+.. math::
+
+    E[\hat\sg]^2&=E\bigg[\frac{1}{n}\sum_{i=1}^n(x_i-\hat\mu)^2\bigg]=
+    E\bigg[\frac{1}{n}\sum_{i=1}^n(x_i-\mu)^2\bigg]-E[(\hat\mu-\mu)^2]
+
+    &=\frac{1}{n}n\sg^2-\frac{\sg^2}{n}=\bigg(\frac{n-1}{n}\bigg)\sg^2
+
+The sample variance :math:`\hat\sg^2` is a biased estimator of :math:`\sg^2`,
+as its expected value differs from the population variance by a factor of
+:math:`\frac{n-1}{n}`.
+However, it is *asymptotically unbiased*, that is, the bias vanishes as :math:`n\ra\infty` because
+
+.. math::
+
+    \lim_{n\ra\infty}\frac{n-1}{n}=\lim_{n\ra\infty}1-\frac{1}{n}=1
+
+Put differently, as the sample size increases, we have
+
+.. math::
+
+    E[\hat\sg^2]\ra\sg^2\quad\rm{as\ }n\ra\infty
+
+If we eant an unbiased estimate of the sample variance, denoted 
+:math:`\hat\sg_u^2`, we must divide by :math:`n-1` instead of :math:`n`:
+
+.. math::
+
+    \hat\sg_u^2=\frac{1}{n-1}\sum_{i=1}^n(x_i-\hat\mu)^2
+
+.. math::
+
+    E[\hat\sg_u^2]&=E\bigg[\frac{1}{n-1}\sum_{i=1}^n(x_i-\hat\mu)^2\bigg]=
+    \frac{1}{n-1}\cd E\bigg[\sum_{i=1}^n(x_i-\mu)^2\bigg]-\frac{n}{n-1}\cd
+    E[(\hat\mu-\mu)^2]
+
+    &=\frac{n}{n-1}\sg^2-\frac{n}{n-1}\cd\frac{\sg^2}{n}
+
+    &=\frac{n}{n-1}\sg^2-\frac{1}{n-1}\sg^2=\sg^2
+
+**Geometric Interpretation of Sample Variance**
+
+Let :math:`\bar{X}` denote the centered attribute vector
+
+.. math::
+
+    \bar{X}=X-\hat\mu\cd\bs{1}=\bp x_1-\hat\mu\\x_2-\hat\mu\\\vds\\x_n-\hat\mu \ep
+
+.. note::
+
+    :math:`\dp\hat\sg^2=\frac{1}{n}\lv\bar{X}\rv^2=\frac{1}{n}\bar{X}^T\bar{X}=\frac{1}{n}\sum_{i=1}^n(x_i-\bar\mu)^2`
+
+Define the *degress of freedom* (dof) of a statistical vector as the 
+dimensionality of the subspace that contains the vector.
+Notice that the centered attribute vector :math:`\bar{X}=X-\hat\mu\cd\bs{1}`
+lies in a :math:`n-1` dimensional subspace that is an orthogonal complement of 
+the 1 dimensional subspace spanned by the ones vector :math:`\bs{1}`.
+Thus, the vector :math:`\bar{X}` has only :math:`n-1` degrees of freedom, and
+the unbiased sample variance is simply the mean or expected squared length of
+:math:`\bar{X}` per dimension
+
+.. math::
+
+    \sg_u^2=\frac{\lv X\rv^2}{n-1}=\frac{\bar{X}^T\bar{X}}{n-1}=\frac{1}{n-1}\cd\sum_{i=1}^n(x_i-\hat\mu)^2
 
 2.2 Bivariate Analysis
 ----------------------
 
+In bivariate analysis, we consider two attributes at the same time.
 
+.. math::
 
+    \D=\bp X_1&X_2\\x_{11}&x_{12}\\x_{21}&x_{22}\\\vds&\vds\\x_{n1}&x_{n2} \ep
 
+It can be viewed as :math:`n` points or vectors in 2-dimensional space over the 
+attributes :math:`X_1` and :math:`X_2`, that is, 
+:math:`\x_i=(x_{i1},x_{i2})^T\in\R^2`.
+Alternatively, it can be viewed as two points or vectors in an :math:`n`\
+-dimensional space comprising the points, that is, each column is a vector in
+:math:`\R`, as follows:
 
+.. math::
 
+    X_1=(x_{11},x_{21},\cds,x_{n1})^T
 
+    X_2=(x_{12},x_{22},\cds,x_{n2})^T
 
+In the probabilistic view, the column vector :math:`\X=(X_1,X_2)^T` is 
+considered a bivariate vector random variable, and the points 
+:math:`\x_i (1\leq i\leq n)` are treated as a random sample drawn from 
+:math:`\X`, that is, :math:`\x_i`'s are considered independent and identically
+distributed as :math:`\X`.
+
+**Empirical Joint Probability Mass Function**
+
+The *empirical joint probability mass function* for :math:`\X` is given as
+
+.. math::
+
+    \hat{f}(\x)=P(\X=\x)=\frac{1}{n}\sum_{i=1}^nI(\x_i=\x)
+
+.. math::
+
+    \hat{f}(x_1,x_2)=P(X_1=x_1,X_2=x_2)=\frac{1}{n}\sum_{i=1}^nI(x_{i1}=x_1,x_{i2}=x_2)
+
+where
+
+.. math::
+
+    I(\x_i=\x)=\left\{\begin{array}{lr}1\quad\rm{if\ }x_{i1}=x_1\rm{\ and\ }
+    x_{i2}=x_2\\0\quad\rm{otherwise}\end{array}\right.
+
+2.2.1 Measures of Location and Dispersion
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+**Mean**
+
+The bivariate mean is defined as the expected value of the vector random variable :math:`\X`, defined as follows:
+
+.. math::
+
+    \mmu=E[\X]=E\bigg[\bp X_1\\X_2 \ep\bigg]=\bp E[X_1]\\E[X_2] \ep=\bp \mu_1\\\mu_2 \ep
+
+The sample mean vector can be computed from the joint empirical PMF
+
+.. note::
+
+    :math:`\dp\hat\mmu=\sum_\x\x\hat{f}(\x)=\sum_\x\x\bigg(\frac{1}{n}\sum_{i=1}^nI(\x_i=\x)\bigg)=\frac{1}{n}\sum_{i=1}^n\x_i`
+
+**Variance**
+
+The *total variance* is given as
+
+.. math::
+
+    \sg_1^2+\sg_2^2
+
+The *sample total variance* is simply
+
+.. math::
+
+    \rm{var}(\D)=\hat\sg_1^2+\hat\sg_2^2
+
+2.2.2 Measures of Association
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+**Covariance**
+
+The *covariance* between two attributes :math:`X_1` and :math:`X_2` provides a 
+measure of the association or linear dependence between them, and is defined as
+
+.. note::
+
+    :math:`\sg_{12}=E[(X_1-\mu_1)(X_2-\mu_2)]`
+
+By linearity of expectation, we have
+
+.. math::
+
+    \sg_{12}&=E[(X_1-\mu_1)(X_2-\mu_2)]=E[X_1X_2-X_1\mu_2-X_2\mu_1+\mu_1\mu_2]
+
+    &=E[X_1X_2]-\mu_2E[X_1]-\mu_1E[X_2]+\mu_1\mu_2=E[X_1X_2]-\mu_1\mu_2
+
+which implies
+
+.. note::
+
+    :math:`\sg_{12}=E[X_1X_2]-E[X_1]E[X_2]`
+
+If :math:`X_1` and :math:`X_2` are independent random variables, then we conclude that their covariance is zero.
+This is because if :math:`X_1` and :math:`X_2` are independent, then we have
+
+.. math::
+
+    E[X_1X_2]=E[X_1]\cd E[X_2]
+
+which in turn implies that
+
+.. math::
+
+    \sg_{12}=0
+
+The converse is not true.
+
+The *sample covariance* between :math:`X_1` and :math:`X_2` is given as
+
+.. note::
+
+    :math:`\dp\hat\sg_{12}=\frac{1}{n}\sum_{i=1}^n(x_{i1}-\hat\mu_1)(x_{i2}-\hat\mu_2)`
+
+.. math::
+
+    \hat\sg_{12}&=E[(X_1-\hat\mu_1)(X_2-\hat\mu_2)]
+
+    &=\sum_{\x=(x_1,x_2)^T}(x_1-\hat\mu_1)(x_2-\hat\mu_2)\hat{f}(x_1,x_2)
+
+    &=\frac{1}{n}\sum_{\x=(x_1,x_2)^T}\sum_{i=1}^n(x_1-\hat\mu_1)\cd(x_2-\hat\mu_2)\cd I(x_{i1}=x_1,x_{i2}=x_2)
+
+    &=\frac{1}{n}\sum_{i=1}^n(x_{i1}-\hat\mu_1)(x_{i2}-\hat\mu_2)
+
+**Correlation**
+
+The *correlation* between variables :math:`X_1` and :math:`X_2` is the 
+*standardized covariance*, obatained by normalizing the covariance with the
+standard deviation of each variable, given as
+
+.. math::
+
+    \rho_{12}=\frac{\sg_{12}}{\sg_1\sg_2}=\frac{\sg_{12}}{\sqrt{\sg_1^2\sg_2^2}}
+
+The *sample correlation* for attributes :math:`X_1` and :math:`X_2` is given as
+
+.. note::
+
+    :math:`\dp\hat\rho_{12}=\frac{\hat\sg_{12}}{\hat\sg_1\sg_2}=`
+    :math:`\dp\frac{\sum_{i=1}^n(x_{i1}-\hat\mu_1)(x_{i2}-\hat\mu_2)}{\sqrt{\sum_{i=1}^n(x_{i1}-\hat\mu_1)^2}\sqrt{\sum_{i=1}^n(x_{i2}-\hat\mu_2)^2}}`
+
+**Geometric Interpretation of Sample Covariance and Correlation**
+
+Let :math:`\bar{X}_1` and :math:`\bar{X}_2` denote the centered attribute vectors in :math:`\R^n`, given as follows:
+
+.. math::
+
+    \bar{X}_1=X_1-\hat\mu_1\cd\bs{1}=\bp x_{11}-\hat\mu_1\\x_{21}-\hat\mu_1\\
+    \vds\\x_{n1}-\hat\mu_1 \ep\quad\bar{X}_2=X_2-\hat\mu_2\cd\bs{1}=
+    \bp x_{12}-\hat\mu_2\\x_{22}-\hat\mu_2\\\vds\\x_{n2}-\hat\mu_2 \ep
+
+The sample covariance can then be written as
+
+.. note::
+
+    :math:`\dp\hat\sg_{12}=\frac{\hat{X}_1^T\hat{X}_2}{n}`
+
+The sample correlation can be written as
+
+.. note::
+
+    :math:`\dp\hat\rho_{12}=\frac{\bar{X}_1^T\bar{X}_2}{\sqrt{\bar{X}_1^T\bar{X}_1}\sqrt{\bar{X}_2^T\bar{X}_2}}=`
+    :math:`\dp\frac{\bar{X}_1^T\bar{X}_2}{\lv\bar{X}_1\rv\lv\bar{X}_2\rv}=`
+    :math:`\dp\left(\frac{\bar{X}_1}{\lv\bar{X}_1\rv}\right)^T\left(\frac{\bar{X}_2}{\lv\bar{X}_2\rv}\right)=\cos\th`
+
+**Covariance Matrix**
+
+The variance-covariance information for the two attributes :math:`X_1` and 
+:math:`X_2` can be summarized in the square :math:`2\times 2` 
+*covariance matrix*, given as
+
+.. math::
+
+    \Sg=E[(\X-\mmu)(\X-\mmu)^T]
+
+.. math::
+
+    =E\bigg[\bp X_1-\mu_1\\X_2-\mu_2 \ep\bp X_1-\mu&X_2-\mu_2 \ep\bigg]
+
+.. math::
+
+    =\bp E[(X_1-\mu_1)(X_1-\mu_1)]&E[(X_1-\mu_1)(X_2-\mu_2)]\\E[(X_2-\mu_2)(X_1-\mu_1)]&E[(X_2-\mu_2)(X_2-\mu_2)] \ep
+
+.. math::
+    
+    =\bp \sg_1^2&\sg_{12}\\\sg_{21}&\sg_2^2 \ep
+
+Because :math:`\sg_{12}=\sg_{21}`, :math:`\Sg` is a *symmetric* matrix.
+
+The *total variance* of the two attributes is given as the sum of the diagonal 
+elements of :math:`\Sg`, which is also called the *trace* of :math:`\Sg`, given
+as
+
+.. math::
+
+    tr(\Sg)=\sg_1^2+\sg_2^2
+
+We immediately have :math:`tr(\Sg)\leq 0`.
 
 2.3 Multivariate Analysis
 -------------------------
