@@ -569,6 +569,25 @@ as
 
 We immediately have :math:`tr(\Sg)\leq 0`.
 
+The generalized covariance is non-negative, because
+
+.. math::
+
+    |\Sg|=\det(\Sg)=\sg_1^2\sg_2^2-\sg_{12}^2=\sg_1^2\sg_2^2-\rho_{12}^2\sg_1^2\sg_2^2=(1-\rho_{12}^2)\sg_1^2\sg_2^2
+
+Note that :math:`|\rho_{12}|\leq 1` implies that :math:`\rho_{12}^2\leq 1`,
+which in turn implies that :math:`\det(\Sg)\geq 0`.
+
+The *sample covariance matrix* is given as
+
+.. note::
+
+    :math:`\dp\hat\Sg=\bp\hat\sg_1^2&\hat\sg_{12}\\\hat\sg_{12}&\hat\sg_2^2\ep`
+
+.. note::
+
+    :math:`\dp\rm{var}(\D)=tr(\hat\Sg)=\hat\sg_1^2+\hat\sg_2^2`
+
 2.3 Multivariate Analysis
 -------------------------
 
