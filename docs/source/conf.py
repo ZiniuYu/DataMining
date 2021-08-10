@@ -76,7 +76,7 @@ rst_prolog = r'''
     \newcommand{\a}{\boldsymbol{\mathrm{a}}}
     \newcommand{\b}{\boldsymbol{\mathrm{b}}}
     \newcommand{\e}{\boldsymbol{\mathrm{e}}}
-    \newcommand{\i}{\boldsymbol{i}}
+    \newcommand{\i}{\boldsymbol{\mathrm{i}}}
     \newcommand{\j}{\boldsymbol{j}}
     \newcommand{\p}{\boldsymbol{\mathrm{p}}}
     \newcommand{\q}{\boldsymbol{\mathrm{q}}}
@@ -91,7 +91,8 @@ rst_prolog = r'''
     \newcommand{\B}{\boldsymbol{B}}
     \newcommand{\C}{\boldsymbol{C}}
     \newcommand{\D}{\boldsymbol{\mathrm{D}}}
-    \newcommand{\N}{\boldsymbol{N}}
+    \newcommand{\N}{\boldsymbol{\mathrm{N}}}
+    \newcommand{\P}{\boldsymbol{\mathrm{P}}}
     \newcommand{\X}{\boldsymbol{\mathrm{X}}}
 
 

@@ -640,7 +640,9 @@ The *sample mean* is given as
 
 **Covariance Matrix**
 
-The multivariate covariance information is captured by the :math:`d\times d` symmetric *covariance matrix*
+The multivariate covariance information is captured by th\bp \sg_1^2&\sg_{12}&\cds&\sg_{1d}\\
+\sg_{21}&\sg_{2}^2&\cds&\sg_{2d}\\\cds&\cds&\cds&\cds\\
+\sg_{d1}&\sg_{d2}&\cds&\sg_d^2 \epe :math:`d\times d` symmetric *covariance matrix*
 
 .. math::
 
