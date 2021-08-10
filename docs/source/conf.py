@@ -98,7 +98,7 @@ rst_prolog = r'''
     \newcommand{\R}{\mathbb{R}}
 
     \newcommand{\ld}{\lambda}
-    \newcommand{\Ld}{\Lambda}
+    \newcommand{\Ld}{\bs{\mathrm{\Lambda}}}
     \newcommand{\sg}{\sigma}
     \newcommand{\Sg}{\bs{\mathrm{\Sigma}}}
     \newcommand{\th}{\theta}

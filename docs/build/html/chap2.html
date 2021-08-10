@@ -103,7 +103,11 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#multivariate-analysis">2.3 Multivariate Analysis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#data-normalization">2.4 Data Normalization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#normal-distribution">2.5 Normal Distribution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#normal-distribution">2.5 Normal Distribution</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#univariate-normal-distribution">2.5.1 Univariate Normal Distribution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#multivariate-normal-distribution">2.5.2 Multivariate Normal Distribution</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -206,7 +210,7 @@
 \newcommand{\N}{\boldsymbol{N}}
 \newcommand{\X}{\boldsymbol{\mathrm{X}}}\\
 \newcommand{\R}{\mathbb{R}}\\\newcommand{\ld}{\lambda}
-\newcommand{\Ld}{\Lambda}
+\newcommand{\Ld}{\bs{\mathrm{\Lambda}}}
 \newcommand{\sg}{\sigma}
 \newcommand{\Sg}{\bs{\mathrm{\Sigma}}}
 \newcommand{\th}{\theta}\\\newcommand{\mmu}{\boldsymbol{\mu}}\\\newcommand{\bb}{\begin{bmatrix}}
@@ -566,12 +570,179 @@ as</p>
 </div>
 <div class="section" id="multivariate-analysis">
 <h2>2.3 Multivariate Analysis<a class="headerlink" href="#multivariate-analysis" title="Permalink to this headline">¶</a></h2>
+<p>In multivariate analysis, we consider all the <span class="math notranslate nohighlight">\(d\)</span> numeric attributes <span class="math notranslate nohighlight">\(X_1,X_2,\cds,X_d\)</span>.
+The full data is an <span class="math notranslate nohighlight">\(n\times d\)</span> matrix, given as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\D=\bp X_1&amp;X_2&amp;\cds&amp;X_d\\x_{11}&amp;x_{12}&amp;\cds&amp;x_{1d}\\
+x_{21}&amp;x_{22}&amp;\cds&amp;x_{2d}\\\vds&amp;\vds&amp;\dds&amp;\vds\\x_{n1}&amp;x_{n2}&amp;\cds&amp;x_{nd}\ep
+=\bp|&amp;|&amp;&amp;|\\X_1&amp;X_2&amp;\cds&amp;X_d\\|&amp;|&amp;&amp;|\ep=\bp -&amp;\x_1^T&amp;-\\-&amp;\x_2^T&amp;-\\&amp;\vds\\
+-&amp;\x_n^T&amp;\ep\end{split}\]</div>
+<p>In the row view, the data can be considered as a set of <span class="math notranslate nohighlight">\(n\)</span> points or
+vectors in the <span class="math notranslate nohighlight">\(d\)</span>-dimensional attribute space</p>
+<div class="math notranslate nohighlight">
+\[\x_i=(x_{i1},x_{i2},\cds,x_{id})^T\in\R^d\]</div>
+<p>In the column view, the data can be considered as a set of <span class="math notranslate nohighlight">\(d\)</span> points or
+vectors in the <span class="math notranslate nohighlight">\(n\)</span>-dimensional space spanned by the data points</p>
+<div class="math notranslate nohighlight">
+\[X_j=(x_{1j},x_{2j},\cds,x_{nj})^T\in\R^n\]</div>
+<p>In the probabilistic view, the <span class="math notranslate nohighlight">\(d\)</span> attributes are modeled as a vector
+random variable, <span class="math notranslate nohighlight">\(\X=(X_1,X_2,\cds,X_d)^T\)</span>, and the points <span class="math notranslate nohighlight">\(\x_i\)</span>
+are considered to be a random sample drawn from <span class="math notranslate nohighlight">\(\X\)</span>, that is, they are
+independent and identically distributed as <span class="math notranslate nohighlight">\(\X\)</span>.</p>
+<p><strong>Mean</strong></p>
+<p>The <em>multivariate mean vector</em> is obtained by taking the mean of each attribute, given as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\mmu=E[\X]=\bp E[X_1]\\E[X_2]\\\vds\\E[X_d] \ep=\bp \mu_1\\\mu_2\\\vds\mu_d \ep\end{split}\]</div>
+<p>The <em>sample mean</em> is given as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\hat\mmu=\frac{1}{n}\sum_{i=1}^n\x_i\)</span></p>
+</div>
+<div class="math notranslate nohighlight">
+\[\hat\mmu=\frac{1}{n}\D^T\bs{1}\]</div>
+<p><strong>Covariance Matrix</strong></p>
+<p>The multivariate covariance information is captured by the <span class="math notranslate nohighlight">\(d\times d\)</span> symmetric <em>covariance matrix</em></p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\Sg=E[\X-\mmu)(\X-\mmu)^T]=\bp \sg_1^2&amp;\sg_{12}&amp;\cds&amp;\sg_{1d}\\
+\sg_{21}&amp;\sg_{2}^2&amp;\cds&amp;\sg_{2d}\\\cds&amp;\cds&amp;\cds&amp;\cds\\
+\sg_{d1}&amp;\sg_{d2}&amp;\cds&amp;\sg_d^2 \ep\end{split}\]</div>
+<p><strong>Covariance Matrix Is Positive Semidefinite</strong></p>
+<p><span class="math notranslate nohighlight">\(\Sg\)</span> is a <em>positive semidefinite</em> matrix, that is,</p>
+<div class="math notranslate nohighlight">
+\[\a^T\Sg\a\geq 0\rm{\ for\ any\ }d\rm{-dimensional\ vector\ }\a\]</div>
+<p>Too see this, observe that</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\a^t\Sg\a&amp;=\a^TE[(\X-\mmu)(\X-\mmu)^T]\a\\&amp;=E[\a^T(\X-\mmu)(\X-\mmu)^T\a]\\&amp;=E[Y^2]\\&amp;\geq 0\end{aligned}\end{align} \]</div>
+<p>where <span class="math notranslate nohighlight">\(Y\)</span> is the random variable <span class="math notranslate nohighlight">\(Y=\a^t(\X-\mmu)=\sum_{i=1}^da_i(X_i-\mu_i)\)</span>.</p>
+<p>The <span class="math notranslate nohighlight">\(d\)</span> eigenvalues of <span class="math notranslate nohighlight">\(\Sg\)</span> can be arranged from the largest to the
+smallest as follows: <span class="math notranslate nohighlight">\(\ld_1\geq\ld_2\geq\cds\geq\ld_d\geq 0\)</span>.</p>
+<p><strong>Total and Generalized Variance</strong></p>
+<p>The total variacne is given as the trace of the covariance matrix:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(tr(\Sg)=\sg_1^2+\sg_2^2+\cds+\sg_d^2\)</span></p>
+</div>
+<p>The generalized variacne is defined as the determinant of the covariance matrix,
+<span class="math notranslate nohighlight">\(\det(\Sg)\)</span>, also denoted as <span class="math notranslate nohighlight">\(|\Sg|\)</span>; it gives a single value for
+the overall multivariate scatter:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\det(\Sg)=|\Sg|=\prod_{i=1}^d\ld_i\)</span></p>
+</div>
+<p>Since all the eigenvalues of <span class="math notranslate nohighlight">\(\Sg\)</span> are non-negative (<span class="math notranslate nohighlight">\(\ld_i\geq 0\)</span>), it follows that <span class="math notranslate nohighlight">\(\det(\Sg)\geq 0\)</span>.</p>
+<p><strong>Sample Covariance Matrix</strong></p>
+<p>The <em>sample covariance matrix</em> is given as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\hat\Sg=E[(\X-\hat\mmu)(\X-\hat\mmu)^T]=\)</span>
+<span class="math notranslate nohighlight">\(\dp\bp\hat\sg_1^2&amp;\hat\sg_{12}&amp;\cds&amp;\hat\sg_{1d}\\\hat\sg_{21}&amp;\hat\sg_{2}^2&amp;\cds&amp;\hat\sg_{2d}\\\cds&amp;\cds&amp;\cds&amp;\cds\\\hat\sg_{d1}&amp;\hat\sg_{d2}&amp;\cds&amp;\hat\sg_d^2\ep\)</span></p>
+</div>
+<p>Let <span class="math notranslate nohighlight">\(\bar{D}\)</span> represent the centered data matrix, given as the matrix of
+centered attribute vectors <span class="math notranslate nohighlight">\(\bar{X}_i-X_i-\hat\mu_i\cd\bs{1}\)</span>, where
+<span class="math notranslate nohighlight">\(\bs{1}\in\R^n\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\begin{split}\bar{\D}=\D-\bs{1}\cd\hat\mmu^T=\bp |&amp;|&amp;&amp;|\\\bar{X}_1&amp;\bar{X}_2&amp;\cds&amp;\bar{X}_d\\|&amp;|&amp;&amp;|\ep\end{split}\\\begin{split}=\bp \x_1^T-\hat\mmu^T\\\x_2^T-\hat\mmu^T\\\vds\\\x_n^T-\hat\mmu^T \ep=
+\bp -&amp;\bar\x_1^T&amp;-\\-&amp;\bar\x_2^T&amp;-\\&amp;\vds\\-&amp;\bar\x_n^T&amp;- \ep\end{split}\end{aligned}\end{align} \]</div>
+<p>In matrix notation, the sample covariance matrix can be written as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\hat\Sg=\frac{1}{n}(\bar\D^T\bar\D)=\frac{1}{n}\)</span>
+<span class="math notranslate nohighlight">\(\dp\bp\bar{X}_1^T\bar{X}_1&amp;\bar{X}_1^T\bar{X}_2&amp;\cds&amp;\bar{X}_1^T\bar{X}_d\\\bar{X}_2^T\bar{X}_1&amp;\bar{X}_2^T\bar{X}_2&amp;\cds&amp;\bar{X}_2^T\bar{X}_d\\\vds&amp;\vds&amp;\dds&amp;\vds\\\bar{X}_d^T\bar{X}_1&amp;\bar{X}_d^T\bar{X}_2&amp;\cds&amp;\bar{X}_d^T\bar{X}_d\ep\)</span></p>
+</div>
+<p>The sample covariance matrix can also be written as a sum of rank-one matrices
+obtained as the <em>outer product</em> of each centered point:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\hat\Sg=\frac{1}{n}\sum_{i=1}^n\bar\x_i\cd\bar\x_i^T\)</span></p>
+</div>
+<p>Also the sample total variance is given as</p>
+<div class="math notranslate nohighlight">
+\[\rm{var}(\D)=tr(\hat\Sg)=\hat\sg_1^2=\hat\sg_2^2+\cds+\hat\sg_d^2\]</div>
+<p><strong>Sample Scatter Matrix</strong></p>
+<p>The <em>sample scatter matrix</em> is the <span class="math notranslate nohighlight">\(d\times d\)</span> positive semi-denifite matrix defined as</p>
+<div class="math notranslate nohighlight">
+\[\bs{\rm{S}}=\bar\D^T\bar\D=\sum_{i=1}^n\bar\x_i\cd\bar\x_i^T\]</div>
+<p>It is simply the un-normalized sample covariance matrix, since <span class="math notranslate nohighlight">\(\bs{\rm{S}}=n\cd\hat\Sg\)</span>.</p>
 </div>
 <div class="section" id="data-normalization">
 <h2>2.4 Data Normalization<a class="headerlink" href="#data-normalization" title="Permalink to this headline">¶</a></h2>
+<p><strong>Range Normalization</strong></p>
+<p>Let <span class="math notranslate nohighlight">\(X\)</span> be an attribute and let <span class="math notranslate nohighlight">\(x_1,x_2,\cds,x_n\)</span> be a random sample drawn from <span class="math notranslate nohighlight">\(X\)</span>.
+In <em>range normalization</em> each value is caled by the sample range <span class="math notranslate nohighlight">\(\hat{r}\)</span> of <span class="math notranslate nohighlight">\(X\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[x_i\pr=\frac{x_i-\min_i\{x_i\}}{\hat{r}}=\frac{x_i-\min_i\{x_i\}}{\max_i\{x_i\}-\min_i\{x_i\}}\]</div>
+<p>After transformation the new attribute takes on values in the range [0, 1].</p>
+<p><strong>Standard Score Normalization</strong></p>
+<p>In <em>standard score normalization</em>, also called <span class="math notranslate nohighlight">\(z\)</span>-normalization, each
+value is replaced by its <span class="math notranslate nohighlight">\(z\)</span>-score:</p>
+<div class="math notranslate nohighlight">
+\[x_i\pr=\frac{x_i-\hat\mu}{\hat\sg}\]</div>
 </div>
 <div class="section" id="normal-distribution">
 <h2>2.5 Normal Distribution<a class="headerlink" href="#normal-distribution" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="univariate-normal-distribution">
+<h3>2.5.1 Univariate Normal Distribution<a class="headerlink" href="#univariate-normal-distribution" title="Permalink to this headline">¶</a></h3>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp f(x|\mu,\sg^2)=\frac{1}{\sqrt{2\pi \sg^2}}\exp\bigg\{-\frac{(x-\mu)^2}{2\sg^2}\bigg\}\)</span></p>
+</div>
+<p><strong>Probability Mass</strong></p>
+<p>Given an interval <span class="math notranslate nohighlight">\([a,b]\)</span> the probability mass of the normal distribution within that interval is given as</p>
+<div class="math notranslate nohighlight">
+\[P(a\leq x\leq b)=\int_a^bf(x|\mu,\sg^2)dx\]</div>
+<p>The probability mass concentrated with <span class="math notranslate nohighlight">\(k\)</span> standard deviations from the
+mean, that is, for the interval <span class="math notranslate nohighlight">\([\mu-k\sg,\mu+k\sg]\)</span>, can be computed as</p>
+<div class="math notranslate nohighlight">
+\[P(\mu-k\sg\leq x\leq\mu+k\sg)=\frac{1}{\sqrt{2\pi}\sg}
+\int_{\mu-k\sg}^{\mu+k\sg}\exp\bigg\{-\frac{(x-\mu)^2}{2\sg^2}\bigg\}\]</div>
+<p>Via a change of variable <span class="math notranslate nohighlight">\(z=\frac{x-\mu}{\sg}\)</span>, we get</p>
+<div class="math notranslate nohighlight">
+\[P(-k\leq z\leq k)=\frac{1}{\sqrt{2\pi}}=\int_{-k}^ke^{-\frac{1}{2}z^2}dz=
+\frac{2}{\sqrt{2\pi}}\int_0^ke^{-\frac{1}{2}z^2}dz\]</div>
+<p>Via another change of variable <span class="math notranslate nohighlight">\(t=\frac{z}{\sqrt{2}}\)</span>, we get</p>
+<div class="math notranslate nohighlight">
+\[P(-k\leq z\leq k)=2\cd P(0\leq t\leq k/\sqrt{2})=\frac{2}{\sqrt{\pi}}
+\int_0^{k/\sqrt{2}}e^{-t^2}dt=\rm{erf}(k/\sqrt{2})\]</div>
+<p>where erf is the <em>Gauss error function</em>, defined as</p>
+<div class="math notranslate nohighlight">
+\[\rm{erf}(x)=\frac{2}{\sqrt{\pi}}\int_0^xe^{-t^2}dt\]</div>
+</div>
+<div class="section" id="multivariate-normal-distribution">
+<h3>2.5.2 Multivariate Normal Distribution<a class="headerlink" href="#multivariate-normal-distribution" title="Permalink to this headline">¶</a></h3>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp f(\x|\mmu,\Sg)=\frac{1}{(\sqrt{2\pi})^d\sqrt{|\Sg|}}\)</span>
+<span class="math notranslate nohighlight">\(\dp\exp\bigg\{-\frac{(\x-\mmu)^T\Sg\im(\x-\mmu)}{2}\bigg\}\)</span></p>
+</div>
+<p>As in the univariate case, the term</p>
+<div class="math notranslate nohighlight">
+\[(\x-\mmu)^T\Sg\im(\x-\mmu)\]</div>
+<p>measures the distance, called the <em>Mahalanobis distance</em>, of the point
+<span class="math notranslate nohighlight">\(\x\)</span> from the mean <span class="math notranslate nohighlight">\(\mmu\)</span> of the distribution, taking into account
+all of the variance-covariance information between the attributes.</p>
+<p>The <em>standard multivariate normal distribution</em> has parameters <span class="math notranslate nohighlight">\(\mu=\0\)</span> and <span class="math notranslate nohighlight">\(\Sg=\bs{\rm{I}}\)</span>.</p>
+<p><strong>Geometry of the Multivariate Normal</strong></p>
+<p>Compared to the standard normal distribution, we can expect the density contours to be shifted, scaled, and rotated.
+The shape or geometry of the normal distribution becomes clear by considering
+the eigen-decomposition of the covariance matrix.
+The eigenvector equation for <span class="math notranslate nohighlight">\(\Sg\)</span> is given as</p>
+<div class="math notranslate nohighlight">
+\[\Sg\u_i=\ld_i\u_i\]</div>
+<p>The diagonal matrix <span class="math notranslate nohighlight">\(\Ld\)</span> is used to record the eigenvalues:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\Ld=\bp \ld_1&amp;0&amp;\cds&amp;0\\0&amp;\ld_2&amp;\cds&amp;0\\\vds&amp;\vds&amp;\dds&amp;\vds\\0&amp;0&amp;\cds&amp;\ld_d \ep\end{split}\]</div>
+<p>The eigenvectors are orthonormal, and can be put together into an orthogonal matrix <span class="math notranslate nohighlight">\(\bs{\rm{U}}\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\bs{\rm{U}}=\bp |&amp;|&amp;&amp;|\\\u_1&amp;\u_2&amp;\cds&amp;\u_d\\|&amp;|&amp;&amp;| \ep\end{split}\]</div>
+<p>The eigen-decomposition of <span class="math notranslate nohighlight">\(\Sg\)</span> can then be expressed compactly as follows:</p>
+<div class="math notranslate nohighlight">
+\[\Sg=\bs{\rm{U}}\Ld\bs{\rm{U}}^T\]</div>
+<p>This equation can be interpreted geometrically as a change in basis vectors.</p>
+<p><strong>Total and Generalized Variance</strong></p>
+<div class="math notranslate nohighlight">
+\[\rm{var}(\D)=tr(\D)=\sum_{i=1}^d\sg_i^2=\sum_{i=1}^d\ld_i=tr(\Ld)\]</div>
+<p>In other words <span class="math notranslate nohighlight">\(\sg_1^2+\cds+\sg_d^2=\ld_1+\cds+\ld_d\)</span>.</p>
+</div>
 </div>
 </div>
 
