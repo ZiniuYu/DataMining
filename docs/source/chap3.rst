@@ -594,12 +594,142 @@ where :math:`I_{i_1i_2\cds i_d}` is the indicator variable
     x_{k1}=\e_{1i_1},x_{k2}=\e_{2i_2},\cds,x_{kd}=\e_{di_d}\\
     0\quad\rm{otherwise}\end{array}\right.
 
+Using the notation :math:`\i=(i_1,i_2,\cds,i_d)` to denote the index tuple, we
+can write the joint empirical PMF as the :math:`d`\ -dimensional matrix
+:math:`\hat\P` of size 
+:math:`m_1\times m_2\times\cds\times m_d=\prod_{i=1}^dm_i`, given as
 
+.. math::
 
+    \hat\P(\i)=\{\hat{p}_\i\}\rm{\ for\ all\ index\ tuples\ }\i,\rm{\ with\ }1\leq i_1\leq m_1,\cds,1\leq i_d\leq m_d
+
+where :math:`\hat{p}_\i=\hat{p}_{i_1i_2\cds i_d}`.
+The :math:`d`\ -dimensional contingency table is then given as
+
+.. math::
+
+    \N=n\times\hat\P=\{n_\i\}\rm{\ for\ all\ index\ tuples\ }\i,\rm{\ with\ }1\leq i_1\leq m_1,\cds,1\leq i_d\leq m_d
+
+where :math:`n_\i=n_{i_1i_2\cds i_d}`.
+The contingency table is augmented with the marginal count vectors :math:`\N_i` 
+for all :math:`d` attributes :math:`\X_i`:
+
+.. math::
+
+    \N_i=n\hat\p_i=\bp n_1^i\\\vds\\n_{m_i}^i \ep
+
+:math:`\bs{\chi^2}`\ **-Test**
+
+The null hypothesis :math:`H_0` is that the attributes are :math:`d`\ -way independent.
+The alternative hypothesis :math:`H_1` is that they are dependent in some way.
+
+The expected number of occurrences of the symbol tuple :math:`(a_{1i_1},a_{2i_2},\cds,a_{di_d})` is given as
+
+.. math::
+
+    e_\i=n\cd\hat\p_\i=n\cd\prod_{j=1}^d\hat{p}_{i_j}^j=\frac{n_{i_1}^1n_{i_2}^2\cds n_{i_d}^d}{n^{d-1}}
+
+The chi-squared statistic measures the difference between the observed counts 
+:math:`n_\i` and the expected count :math:`e_\i`:
+
+.. note::
+
+    :math:`\dp\chi^2=\sum_\i\frac{(n_\i-e_\i)^2}{e_\i}=\sum_{i_1=1}^{m_1}\sum_{i_2=1}^{m_2}\cds\sum_{i_d=1}^{m_d}`
+    :math:`\dp\frac{(n_{i_1,i_2,\cds,i_d}-e_{i_1,i_2,\cds,i_d})^2}{e_{i_1,i_2,\cds,i_d}}`
+
+The total number of degrees of freedom is given as
+
+.. math::
+
+    q&=\prod_{i=1}^d|dom(X_i)|-\sum_{i=1}^d|dom(X_i)|+(d-1)
+
+    &=\bigg(\prod_{i=1}^dm_i\bigg)-\bigg(\sum_{i=1}^dm_i\bigg)+d-1
 
 3.4 Distance and Angle
 ----------------------
 
+With the modeling of categorical attributes as multivariate Bernoulli variables, 
+it is possible to compute the distance or the angle between any two points 
+:math:`\x_i` and :math:`\x_j`:
+
+.. math::
+
+    \x_i=\bp\e_{1i_1}\\\vds\\\e_{di_d}\ep\quad\x_j=\bp\e_{1j_1}\\\vds\\\e_{dj_d}\ep
+
+The number of matching values :math:`s`
+
+.. math::
+
+    s=\x_i^T\x_j=\sum_{k=1}^d(\e_{ki_k)^T\e_{kj_k)
+
+The norm of each point
+
+.. math::
+
+    \lv\x_i\rv^2=\x_i^T\x_i=d
+
+**Euclidean Distance**
+
+.. math::
+
+    \lv\x_i-\x_j\rv=\sqrt{\x_i^T\x_i-2\x_i\x_j+\x_j^T\x_j}=\sqrt{2(d-s)}
+
+**Hamming Distance**
+
+.. math::
+
+    \delta_H(\x_i,\x_j)=d-s=\frac{1}{2}\lv\x_i-\x_j\rv^2
+
+**Cosine Similarity**
+
+.. math::
+
+    \cos\th=\frac{\x_i^T\x_j}{\lv\x_i\rv\cd\lv\x_j\rv}=\frac{s}{d}
+
+**Jaccard Coefficient**
+
+The *Jaccard Coefficient* is defined as the ratio of the number of matching
+values to the number of distinct values that appear in both :math:`\x_i` and
+:math:`\x_j`, across the :math:`d` attributes:
+
+.. math::
+
+    J(\x_i,\x_j)=\frac{s}{2(d-s)+s}=\frac{s}{2d-s}
 
 3.5 Discretization
 ------------------
+
+*Discretization*, also called *binning*, converts numeric attributes into categorical ones.
+Formally, given a numeric attribute :math:`X`, and a random sample 
+:math:`\{x_i\}_{i=1}^n` of size :math:`n` drawn from :math:`X`, the 
+discretization task is to divide the value range of :math:`X` into :math:`k`
+consecutive intervals, also called *bins*, by finding :math:`k-1` boundary
+values :math:`v_1,v_2,\cds,v_{k-1}` that yield the :math:`k` intervals:
+
+.. math::
+
+    [x_\min,v_1],(v_1,v_2],\cds,(v_{k-1},x_\max]
+
+where the extremes of the range of :math:`X` are given as
+
+.. math::
+
+    x_\min=\min_i\{x_i\}\quad x_\max=\max_i\{x_i\}
+
+**Equal-Width Intervals**
+
+.. math::
+
+    w=\frac{x_\max-x_\min}{k}
+
+The :math:`i`\ th interval boundary is given as
+
+.. math::
+
+    v_i=x_\min+iw,\rm{\ for\ }i=1,\cds,k-1
+
+**Equal-Frequency Intervals**
+
+.. math::
+
+    v_i=\hat{F}\im(i/k)\rm{\ for\ }i=1,\cds,k-1

@@ -87,7 +87,7 @@
               
             
             
-              <p class="caption"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="chap1.html">Chapter 1 Data Matrix</a></li>
 <li class="toctree-l1"><a class="reference internal" href="chap2.html">Chapter 2 Numeric Attributes</a></li>
@@ -586,13 +586,90 @@ given as the <span class="math notranslate nohighlight">\(d\pr\times d\pr\)</spa
 \[\begin{split}I_{i_1i_2\cds i_d}(\x_k)=\left\{\begin{array}{lr}1\quad\rm{if\ }
 x_{k1}=\e_{1i_1},x_{k2}=\e_{2i_2},\cds,x_{kd}=\e_{di_d}\\
 0\quad\rm{otherwise}\end{array}\right.\end{split}\]</div>
+<p>Using the notation <span class="math notranslate nohighlight">\(\i=(i_1,i_2,\cds,i_d)\)</span> to denote the index tuple, we
+can write the joint empirical PMF as the <span class="math notranslate nohighlight">\(d\)</span>-dimensional matrix
+<span class="math notranslate nohighlight">\(\hat\P\)</span> of size
+<span class="math notranslate nohighlight">\(m_1\times m_2\times\cds\times m_d=\prod_{i=1}^dm_i\)</span>, given as</p>
+<div class="math notranslate nohighlight">
+\[\hat\P(\i)=\{\hat{p}_\i\}\rm{\ for\ all\ index\ tuples\ }\i,\rm{\ with\ }1\leq i_1\leq m_1,\cds,1\leq i_d\leq m_d\]</div>
+<p>where <span class="math notranslate nohighlight">\(\hat{p}_\i=\hat{p}_{i_1i_2\cds i_d}\)</span>.
+The <span class="math notranslate nohighlight">\(d\)</span>-dimensional contingency table is then given as</p>
+<div class="math notranslate nohighlight">
+\[\N=n\times\hat\P=\{n_\i\}\rm{\ for\ all\ index\ tuples\ }\i,\rm{\ with\ }1\leq i_1\leq m_1,\cds,1\leq i_d\leq m_d\]</div>
+<p>where <span class="math notranslate nohighlight">\(n_\i=n_{i_1i_2\cds i_d}\)</span>.
+The contingency table is augmented with the marginal count vectors <span class="math notranslate nohighlight">\(\N_i\)</span>
+for all <span class="math notranslate nohighlight">\(d\)</span> attributes <span class="math notranslate nohighlight">\(\X_i\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\N_i=n\hat\p_i=\bp n_1^i\\\vds\\n_{m_i}^i \ep\end{split}\]</div>
+<p><span class="math notranslate nohighlight">\(\bs{\chi^2}\)</span><strong>-Test</strong></p>
+<p>The null hypothesis <span class="math notranslate nohighlight">\(H_0\)</span> is that the attributes are <span class="math notranslate nohighlight">\(d\)</span>-way independent.
+The alternative hypothesis <span class="math notranslate nohighlight">\(H_1\)</span> is that they are dependent in some way.</p>
+<p>The expected number of occurrences of the symbol tuple <span class="math notranslate nohighlight">\((a_{1i_1},a_{2i_2},\cds,a_{di_d})\)</span> is given as</p>
+<div class="math notranslate nohighlight">
+\[e_\i=n\cd\hat\p_\i=n\cd\prod_{j=1}^d\hat{p}_{i_j}^j=\frac{n_{i_1}^1n_{i_2}^2\cds n_{i_d}^d}{n^{d-1}}\]</div>
+<p>The chi-squared statistic measures the difference between the observed counts
+<span class="math notranslate nohighlight">\(n_\i\)</span> and the expected count <span class="math notranslate nohighlight">\(e_\i\)</span>:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\chi^2=\sum_\i\frac{(n_\i-e_\i)^2}{e_\i}=\sum_{i_1=1}^{m_1}\sum_{i_2=1}^{m_2}\cds\sum_{i_d=1}^{m_d}\)</span>
+<span class="math notranslate nohighlight">\(\dp\frac{(n_{i_1,i_2,\cds,i_d}-e_{i_1,i_2,\cds,i_d})^2}{e_{i_1,i_2,\cds,i_d}}\)</span></p>
+</div>
+<p>The total number of degrees of freedom is given as</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}q&amp;=\prod_{i=1}^d|dom(X_i)|-\sum_{i=1}^d|dom(X_i)|+(d-1)\\&amp;=\bigg(\prod_{i=1}^dm_i\bigg)-\bigg(\sum_{i=1}^dm_i\bigg)+d-1\end{aligned}\end{align} \]</div>
 </div>
 </div>
 <div class="section" id="distance-and-angle">
 <h2>3.4 Distance and Angle<a class="headerlink" href="#distance-and-angle" title="Permalink to this headline">¶</a></h2>
+<p>With the modeling of categorical attributes as multivariate Bernoulli variables,
+it is possible to compute the distance or the angle between any two points
+<span class="math notranslate nohighlight">\(\x_i\)</span> and <span class="math notranslate nohighlight">\(\x_j\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\x_i=\bp\e_{1i_1}\\\vds\\\e_{di_d}\ep\quad\x_j=\bp\e_{1j_1}\\\vds\\\e_{dj_d}\ep\end{split}\]</div>
+<p>The number of matching values <span class="math notranslate nohighlight">\(s\)</span></p>
+<div class="math notranslate nohighlight">
+\[s=\x_i^T\x_j=\sum_{k=1}^d(\e_{ki_k)^T\e_{kj_k)\]</div>
+<p>The norm of each point</p>
+<div class="math notranslate nohighlight">
+\[\lv\x_i\rv^2=\x_i^T\x_i=d\]</div>
+<p><strong>Euclidean Distance</strong></p>
+<div class="math notranslate nohighlight">
+\[\lv\x_i-\x_j\rv=\sqrt{\x_i^T\x_i-2\x_i\x_j+\x_j^T\x_j}=\sqrt{2(d-s)}\]</div>
+<p><strong>Hamming Distance</strong></p>
+<div class="math notranslate nohighlight">
+\[\delta_H(\x_i,\x_j)=d-s=\frac{1}{2}\lv\x_i-\x_j\rv^2\]</div>
+<p><strong>Cosine Similarity</strong></p>
+<div class="math notranslate nohighlight">
+\[\cos\th=\frac{\x_i^T\x_j}{\lv\x_i\rv\cd\lv\x_j\rv}=\frac{s}{d}\]</div>
+<p><strong>Jaccard Coefficient</strong></p>
+<p>The <em>Jaccard Coefficient</em> is defined as the ratio of the number of matching
+values to the number of distinct values that appear in both <span class="math notranslate nohighlight">\(\x_i\)</span> and
+<span class="math notranslate nohighlight">\(\x_j\)</span>, across the <span class="math notranslate nohighlight">\(d\)</span> attributes:</p>
+<div class="math notranslate nohighlight">
+\[J(\x_i,\x_j)=\frac{s}{2(d-s)+s}=\frac{s}{2d-s}\]</div>
 </div>
 <div class="section" id="discretization">
 <h2>3.5 Discretization<a class="headerlink" href="#discretization" title="Permalink to this headline">¶</a></h2>
+<p><em>Discretization</em>, also called <em>binning</em>, converts numeric attributes into categorical ones.
+Formally, given a numeric attribute <span class="math notranslate nohighlight">\(X\)</span>, and a random sample
+<span class="math notranslate nohighlight">\(\{x_i\}_{i=1}^n\)</span> of size <span class="math notranslate nohighlight">\(n\)</span> drawn from <span class="math notranslate nohighlight">\(X\)</span>, the
+discretization task is to divide the value range of <span class="math notranslate nohighlight">\(X\)</span> into <span class="math notranslate nohighlight">\(k\)</span>
+consecutive intervals, also called <em>bins</em>, by finding <span class="math notranslate nohighlight">\(k-1\)</span> boundary
+values <span class="math notranslate nohighlight">\(v_1,v_2,\cds,v_{k-1}\)</span> that yield the <span class="math notranslate nohighlight">\(k\)</span> intervals:</p>
+<div class="math notranslate nohighlight">
+\[[x_\min,v_1],(v_1,v_2],\cds,(v_{k-1},x_\max]\]</div>
+<p>where the extremes of the range of <span class="math notranslate nohighlight">\(X\)</span> are given as</p>
+<div class="math notranslate nohighlight">
+\[x_\min=\min_i\{x_i\}\quad x_\max=\max_i\{x_i\}\]</div>
+<p><strong>Equal-Width Intervals</strong></p>
+<div class="math notranslate nohighlight">
+\[w=\frac{x_\max-x_\min}{k}\]</div>
+<p>The <span class="math notranslate nohighlight">\(i\)</span>th interval boundary is given as</p>
+<div class="math notranslate nohighlight">
+\[v_i=x_\min+iw,\rm{\ for\ }i=1,\cds,k-1\]</div>
+<p><strong>Equal-Frequency Intervals</strong></p>
+<div class="math notranslate nohighlight">
+\[v_i=\hat{F}\im(i/k)\rm{\ for\ }i=1,\cds,k-1\]</div>
 </div>
 </div>
 
