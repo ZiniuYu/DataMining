@@ -87,7 +87,7 @@
               
             
             
-              <p class="caption"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="chap1.html">Chapter 1 Data Matrix</a></li>
 <li class="toctree-l1"><a class="reference internal" href="chap2.html">Chapter 2 Numeric Attributes</a></li>
@@ -208,6 +208,48 @@
 \newcommand{\ppr}{^{\prime\prime}}\end{aligned}\end{align} \]</div>
 <div class="section" id="chapter-5-kernel-methods">
 <h1>Chapter 5 Kernel Methods<a class="headerlink" href="#chapter-5-kernel-methods" title="Permalink to this headline">¶</a></h1>
+<p>Given a data instance <span class="math notranslate nohighlight">\(\x\)</span>, we need to find a mapping <span class="math notranslate nohighlight">\(\phi\)</span>, so
+that <span class="math notranslate nohighlight">\(\phi(\x)\)</span> is the vector representation of <span class="math notranslate nohighlight">\(\x\)</span>.
+Even when the input data is a numeric data matrix, if we wish to discover
+nonlinear relationships among the attributes, then a nonlinear mapping
+<span class="math notranslate nohighlight">\(\phi\)</span> may be used, so that <span class="math notranslate nohighlight">\(\phi(\x)\)</span> represents a vector in the
+corresponding high-dimensional space comprising nonlinear attributes.
+We use the <em>input space</em> to reefer to the data space for the input data
+<span class="math notranslate nohighlight">\(\x\)</span> and <em>feature space</em> to refer to the space of mapped vectors
+<span class="math notranslate nohighlight">\(\phi(\x)\)</span>.</p>
+<p>Kernel methods avoid explicitly transforming each point <span class="math notranslate nohighlight">\(\x\)</span> in the input
+space into the mapped point <span class="math notranslate nohighlight">\(\phi(\x)\)</span> in the feature space.
+Instead, the input objects are represented via their <span class="math notranslate nohighlight">\(n\times n\)</span> pairwise similarity values.
+The similarity function, called a <em>kernel</em>, is chosen so that it represents a
+dot product in some high-dimensional feature space, yet it can be computed
+without directly constructing <span class="math notranslate nohighlight">\(\phi(\x)\)</span>.
+Let <span class="math notranslate nohighlight">\(\cl{I}\)</span> denote the input space, and let <span class="math notranslate nohighlight">\(\D\subset\cl{I}\)</span> be a
+dataset comprising <span class="math notranslate nohighlight">\(n\)</span> objects <span class="math notranslate nohighlight">\(\x_i\ (i=1,2,\cds,n)\)</span> in the input
+space.
+We can represent the pairwise similarity values between points in <span class="math notranslate nohighlight">\(\D\)</span> via the <span class="math notranslate nohighlight">\(n\times n\)</span> <em>kernel matrix</em></p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\K=\bp K(\x_1,\x_1)&amp;K(\x_1,\x_2)&amp;\cds&amp;K(\x_1,\x_n)\\
+K(\x_2,\x_1)&amp;K(\x_2,\x_2)&amp;\cds&amp;K(\x_2,\x_n)\\\vds&amp;\vds&amp;\dds&amp;\vds\\
+K(\x_m,\x_1)&amp;K(\x_n,\x_2)&amp;\cds&amp;K(\x_n,\x_n) \ep\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(K:\cl{I}\times\cl{I}\ra\R\)</span> is a <em>kernel function</em> on any two points in input space.
+For any <span class="math notranslate nohighlight">\(\x_i,\x_j\in\cl{I}\)</span>, the kernel function should satisfy the condition</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(K(\x_i,\x_j)=\phi(\x_i)^T\phi(\x_j)\)</span></p>
+</div>
+<p>Intuitively, this means that we should be able to compute the value of the dot
+product using the original input representation <span class="math notranslate nohighlight">\(\x\)</span>, without having
+recourse to the mapping <span class="math notranslate nohighlight">\(\phi(\x)\)</span>.</p>
+<p>many data mining methods can be <em>kernelized</em>, that is, instead of mapping the
+input points into feature space, the data can be represented via the
+<span class="math notranslate nohighlight">\(n\times n\)</span> kernel matrix <span class="math notranslate nohighlight">\(\K\)</span>, and all relevant analysis can be
+performed over <span class="math notranslate nohighlight">\(\K\)</span>.
+This is usually done via the so-called <em>kernel trick</em>, that is, show that the
+analysis task requires only dot products <span class="math notranslate nohighlight">\(\phi(\x_i)^T\phi(\x_j)\)</span> that can
+be computed efficiently in input space.
+Once the kernel matrix has been computed, we no longer even need the input
+points <span class="math notranslate nohighlight">\(\x_i\)</span>, as all operations involving only dot products inthe feature
+space can be performed over the <span class="math notranslate nohighlight">\(n\times n\)</span> kernel matrix <span class="math notranslate nohighlight">\(\K\)</span>.</p>
 </div>
 
 
