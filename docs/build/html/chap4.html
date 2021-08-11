@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Data Mining and Machine Learning &mdash; DataMining  documentation</title>
+  <title>Chapter 4 Graph Data &mdash; DataMining  documentation</title>
   
 
   
@@ -42,7 +42,8 @@
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Chapter 1 Data Matrix" href="chap1.html" /> 
+    <link rel="next" title="Chapter 5 Kernel Methods" href="chap5.html" />
+    <link rel="prev" title="Chapter 3 Categorical Attributes" href="chap3.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -56,7 +57,7 @@
           
 
           
-            <a href="#" class="icon icon-home"> DataMining
+            <a href="index.html" class="icon icon-home"> DataMining
           
 
           
@@ -88,11 +89,17 @@
             
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="chap1.html">Chapter 1 Data Matrix</a></li>
 <li class="toctree-l1"><a class="reference internal" href="chap2.html">Chapter 2 Numeric Attributes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="chap3.html">Chapter 3 Categorical Attributes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="chap4.html">Chapter 4 Graph Data</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Chapter 4 Graph Data</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#graph-concepts">4.1 Graph Concepts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#topological-attributes">4.2 Topological Attributes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#centrality-analisys">4.3 Centrality Analisys</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#graph-models">4.4 Graph Models</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="chap5.html">Chapter 5 Kernel Methods</a></li>
 </ul>
 
@@ -109,7 +116,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="#">DataMining</a>
+          <a href="index.html">DataMining</a>
         
       </nav>
 
@@ -140,15 +147,15 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="#" class="icon icon-home"></a> &raquo;</li>
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
-      <li>Data Mining and Machine Learning</li>
+      <li>Chapter 4 Graph Data</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/chap4.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -206,44 +213,19 @@
 \newcommand{\ev}{\end{vmatrix}}\\\newcommand{\im}{^{-1}}
 \newcommand{\pr}{^{\prime}}
 \newcommand{\ppr}{^{\prime\prime}}\end{aligned}\end{align} \]</div>
-<div class="section" id="data-mining-and-machine-learning">
-<h1>Data Mining and Machine Learning<a class="headerlink" href="#data-mining-and-machine-learning" title="Permalink to this headline">¶</a></h1>
-<p>Study notes of Data Mining and Machine Learning, 2nd Edition by Mohammed J. Zaki and Magner Meira, JR</p>
-<div class="toctree-wrapper compound">
-<p class="caption"><span class="caption-text">Contents:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="chap1.html">Chapter 1 Data Matrix</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="chap1.html#data-matrix">1.1 Data Matrix</a></li>
-<li class="toctree-l2"><a class="reference internal" href="chap1.html#attributes">1.2 Attributes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="chap1.html#data-algebraic-and-geometric-view">1.3 Data: Algebraic and Geometric View</a></li>
-<li class="toctree-l2"><a class="reference internal" href="chap1.html#data-probabilistic-view">1.4 Data: Probabilistic View</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="chap2.html">Chapter 2 Numeric Attributes</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="chap2.html#univariate-analysis">2.1 Univariate Analysis</a></li>
-<li class="toctree-l2"><a class="reference internal" href="chap2.html#bivariate-analysis">2.2 Bivariate Analysis</a></li>
-<li class="toctree-l2"><a class="reference internal" href="chap2.html#multivariate-analysis">2.3 Multivariate Analysis</a></li>
-<li class="toctree-l2"><a class="reference internal" href="chap2.html#data-normalization">2.4 Data Normalization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="chap2.html#normal-distribution">2.5 Normal Distribution</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="chap3.html">Chapter 3 Categorical Attributes</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="chap3.html#univariate-analysis">3.1 Univariate Analysis</a></li>
-<li class="toctree-l2"><a class="reference internal" href="chap3.html#bivariate-analysis">3.2 Bivariate Analysis</a></li>
-<li class="toctree-l2"><a class="reference internal" href="chap3.html#multivariate-analysis">3.3 Multivariate Analysis</a></li>
-<li class="toctree-l2"><a class="reference internal" href="chap3.html#distance-and-angle">3.4 Distance and Angle</a></li>
-<li class="toctree-l2"><a class="reference internal" href="chap3.html#discretization">3.5 Discretization</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="chap4.html">Chapter 4 Graph Data</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="chap4.html#graph-concepts">4.1 Graph Concepts</a></li>
-<li class="toctree-l2"><a class="reference internal" href="chap4.html#topological-attributes">4.2 Topological Attributes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="chap4.html#centrality-analisys">4.3 Centrality Analisys</a></li>
-<li class="toctree-l2"><a class="reference internal" href="chap4.html#graph-models">4.4 Graph Models</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="chap5.html">Chapter 5 Kernel Methods</a></li>
-</ul>
+<div class="section" id="chapter-4-graph-data">
+<h1>Chapter 4 Graph Data<a class="headerlink" href="#chapter-4-graph-data" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="graph-concepts">
+<h2>4.1 Graph Concepts<a class="headerlink" href="#graph-concepts" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="topological-attributes">
+<h2>4.2 Topological Attributes<a class="headerlink" href="#topological-attributes" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="centrality-analisys">
+<h2>4.3 Centrality Analisys<a class="headerlink" href="#centrality-analisys" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="graph-models">
+<h2>4.4 Graph Models<a class="headerlink" href="#graph-models" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 
@@ -253,7 +235,8 @@
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="chap1.html" class="btn btn-neutral float-right" title="Chapter 1 Data Matrix" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="chap5.html" class="btn btn-neutral float-right" title="Chapter 5 Kernel Methods" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="chap3.html" class="btn btn-neutral float-left" title="Chapter 3 Categorical Attributes" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>

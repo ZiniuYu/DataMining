@@ -85,16 +85,16 @@ rst_prolog = r'''
     \newcommand{\v}{\boldsymbol{\mathrm{v}}}
     \newcommand{\w}{\boldsymbol{w}}
     \newcommand{\x}{\boldsymbol{\mathrm{x}}}
-    \newcommand{\y}{\boldsymbol{y}}
+    \newcommand{\y}{\boldsymbol{\mathrm{y}}}
 
     \newcommand{\A}{\boldsymbol{A}}
     \newcommand{\B}{\boldsymbol{B}}
     \newcommand{\C}{\boldsymbol{C}}
     \newcommand{\D}{\boldsymbol{\mathrm{D}}}
+    \newcommand{\K}{\boldsymbol{\mathrm{K}}}
     \newcommand{\N}{\boldsymbol{\mathrm{N}}}
     \newcommand{\P}{\boldsymbol{\mathrm{P}}}
     \newcommand{\X}{\boldsymbol{\mathrm{X}}}
-
 
     \newcommand{\R}{\mathbb{R}}
 
