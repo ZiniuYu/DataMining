@@ -76,6 +76,8 @@ rst_prolog = r'''
     \newcommand{\a}{\boldsymbol{\mathrm{a}}}
     \newcommand{\b}{\boldsymbol{\mathrm{b}}}
     \newcommand{\e}{\boldsymbol{\mathrm{e}}}
+    \newcommand{\f}{\boldsymbol{\mathrm{f}}}
+    \newcommand{\g}{\boldsymbol{\mathrm{g}}}
     \newcommand{\i}{\boldsymbol{\mathrm{i}}}
     \newcommand{\j}{\boldsymbol{j}}
     \newcommand{\p}{\boldsymbol{\mathrm{p}}}
@@ -87,21 +89,22 @@ rst_prolog = r'''
     \newcommand{\x}{\boldsymbol{\mathrm{x}}}
     \newcommand{\y}{\boldsymbol{\mathrm{y}}}
 
-    \newcommand{\A}{\boldsymbol{A}}
+    \newcommand{\A}{\boldsymbol{\mathrm{A}}}
     \newcommand{\B}{\boldsymbol{B}}
     \newcommand{\C}{\boldsymbol{C}}
     \newcommand{\D}{\boldsymbol{\mathrm{D}}}
     \newcommand{\K}{\boldsymbol{\mathrm{K}}}
     \newcommand{\N}{\boldsymbol{\mathrm{N}}}
     \newcommand{\P}{\boldsymbol{\mathrm{P}}}
+    \newcommand{\U}{\boldsymbol{\mathrm{U}}}
     \newcommand{\X}{\boldsymbol{\mathrm{X}}}
 
     \newcommand{\R}{\mathbb{R}}
 
     \newcommand{\ld}{\lambda}
-    \newcommand{\Ld}{\bs{\mathrm{\Lambda}}}
+    \newcommand{\Ld}{\boldsymbol{\mathrm{\Lambda}}}
     \newcommand{\sg}{\sigma}
-    \newcommand{\Sg}{\bs{\mathrm{\Sigma}}}
+    \newcommand{\Sg}{\boldsymbol{\mathrm{\Sigma}}}
     \newcommand{\th}{\theta}
 
     \newcommand{\mmu}{\boldsymbol{\mu}}
