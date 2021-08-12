@@ -80,6 +80,7 @@ rst_prolog = r'''
     \newcommand{\g}{\boldsymbol{\mathrm{g}}}
     \newcommand{\i}{\boldsymbol{\mathrm{i}}}
     \newcommand{\j}{\boldsymbol{j}}
+    \newcommand{\n}{\boldsymbol{\mathrm{n}}}
     \newcommand{\p}{\boldsymbol{\mathrm{p}}}
     \newcommand{\q}{\boldsymbol{\mathrm{q}}}
     \newcommand{\r}{\boldsymbol{\mathrm{r}}}

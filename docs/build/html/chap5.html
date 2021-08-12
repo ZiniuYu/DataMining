@@ -87,7 +87,7 @@
               
             
             
-              <p class="caption"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="chap1.html">Chapter 1 Data Matrix</a></li>
 <li class="toctree-l1"><a class="reference internal" href="chap2.html">Chapter 2 Numeric Attributes</a></li>
@@ -192,6 +192,7 @@
 \newcommand{\g}{\boldsymbol{\mathrm{g}}}
 \newcommand{\i}{\boldsymbol{\mathrm{i}}}
 \newcommand{\j}{\boldsymbol{j}}
+\newcommand{\n}{\boldsymbol{\mathrm{n}}}
 \newcommand{\p}{\boldsymbol{\mathrm{p}}}
 \newcommand{\q}{\boldsymbol{\mathrm{q}}}
 \newcommand{\r}{\boldsymbol{\mathrm{r}}}
@@ -420,6 +421,63 @@ condition</p>
 </div>
 <div class="section" id="vector-kernels">
 <h2>5.2 Vector Kernels<a class="headerlink" href="#vector-kernels" title="Permalink to this headline">¶</a></h2>
+<p><strong>Polynomial Kernel</strong></p>
+<p>Polynomial kernels are of two types: homogeneous or inhomogeneous.
+Let <span class="math notranslate nohighlight">\(\x,\y\in\R^d\)</span>.
+The <em>homogeneous polynomial kernel</em> is defined as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(K_q(\x,\y)=\phi(\x)^T\phi(\y)=(\x^T\y)^q\)</span></p>
+</div>
+<p>where <span class="math notranslate nohighlight">\(q\)</span> is the degree of the polynomial.</p>
+<p>The most typical cases are the <em>linear</em> (with <span class="math notranslate nohighlight">\(q=1\)</span>) and <em>quadratic</em> (with <span class="math notranslate nohighlight">\(q=2\)</span>) kernels, given as</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}K_1(\x,\y)=\x^T\y\\K_2(\x,\y)=(\x^T\y)^2\end{aligned}\end{align} \]</div>
+<p>The <em>inhomogeneous polynomial kernel</em> is defined as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(k_q(\x,\y)=\phi(\x)^T\phi(\y)=(c+\x^T\y)^q\)</span></p>
+</div>
+<p>where <span class="math notranslate nohighlight">\(q\)</span> is the degree of the polynomial, and <span class="math notranslate nohighlight">\(c\geq 0\)</span> is some constant.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}K_q(\x,\y)=(c+\x^T\y)^q=\sum_{k=0}^q\bp q\\k \ep c^{q-k}(\x^T\y)^k\end{split}\]</div>
+<p>Let <span class="math notranslate nohighlight">\(n_0,n_1,\cds,n_d\)</span> denote non-negative integers, such that <span class="math notranslate nohighlight">\(\sum_{i=0}^dn_i=q\)</span>.
+Further, let <span class="math notranslate nohighlight">\(\n=(n_0,n_1,\cds,n_d)\)</span>, and let <span class="math notranslate nohighlight">\(|\n|=\sum_{i=0}^dn_i=q\)</span>.
+Also, let <span class="math notranslate nohighlight">\(\bp q\\\n \ep\)</span> denote the multinomial coefficient</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\bp q\\\n \ep=\bp q\\n_0,n_1,\cds,n_d \ep=\frac{q!}{n_0!n_1!\cds n_d!}\end{split}\]</div>
+<p>The multinomial expansion of the inhomogeneous kernel is then given as</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}K_q(\x,\y)=(c+\x^T\y)^q=\bigg(c+\sum_{k=1}^dx_ky_k\bigg)^q=(c+x_1y_1+\cds+x_dy_d)^q\\\begin{split}=\sum_{|\n|=q}\bp q\\\n \ep c^{n_0}(x_1y_1)^{n_1}(x_2y_2)^{n_2}\cds(x_dy_d)^{n_d}\end{split}\\\begin{split}=\sum_{|\n|=q}\bp q\\\n \ep c^{n_0}(x_1^{n_1}x_2^{n_2}\cds x_d^{n_d})(y_1^{n_1}y_2^{n_2}\cds y_d^{n_d})\end{split}\\=\sum_{|\n|=q}\bigg(\sqrt{a_\n}\prod_{k=1}^dx_k^{n_k}\bigg)\bigg(\sqrt{a_\n}\prod_{k=1}^dy_k^{n_k}\bigg)\\=\phi(\x)^T\phi(\y)\end{aligned}\end{align} \]</div>
+<p>Using the notation <span class="math notranslate nohighlight">\(\x^\n=\prod_{k=1}^dx_k^{n_k}\)</span>, the mapping <span class="math notranslate nohighlight">\(\phi:\R^d\ra\R^m\)</span> is given as the vector</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\phi(\x)=(\cds,a_\n\x^\n,\cds)^T=\left(\cds,\sqrt{\bp q\\\n \ep c^{n_0}}\prod_{k=1}^dx_k^{n_k},\cds\right)^T\end{split}\]</div>
+<p>It can be shown that the dimensionality of the feature space is given as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}m=\bp d+q\\q \ep\end{split}\]</div>
+<p><strong>Gaussian Kernel</strong></p>
+<p>The Gaussian kernel, also called the Gaussian radial basis function (RBF) kernel, is defined as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp K(\x,\y)=\exp\bigg\{-\frac{\lv\x-\y\rv^2}{2\sg^2}\bigg\}\)</span></p>
+</div>
+<p>where <span class="math notranslate nohighlight">\(\sg&gt;0\)</span> is the spread parameter that plays the same role as the
+standard deviation in a normal density function.
+Note that <span class="math notranslate nohighlight">\(K(\x,\x)=1\)</span>, and further that the kernel value is inversely
+related to the distance between the two points <span class="math notranslate nohighlight">\(\x\)</span> and <span class="math notranslate nohighlight">\(\y\)</span>.</p>
+<p>A feature space for the Gaussian kernal has infinite dimensionality.</p>
+<div class="math notranslate nohighlight">
+\[\exp\{a\}=\sum_{n=0}^\infty\frac{a^n}{n!}=1+a+\frac{1}{2!}a^2+\frac{1}{3!}a^3+\cds\]</div>
+<p>Further, using <span class="math notranslate nohighlight">\(\gamma=\frac{1}{2\sg^2}\)</span>, and noting that
+<span class="math notranslate nohighlight">\(\lv\x-\y\rv^2=\lv\x\rv^2+\lv\y\rv^2-2\x^T\y\)</span>, we can rewrite the Gaussian
+kernel as follows:</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}K(\x,\y)&amp;=\exp\{-\gamma\lv\x-\y\rv^2\}\\&amp;=\exp\{-\gamma\lv\x\rv^2\}\cd\exp\{-\gamma\lv\y\rv^2\}\cd\exp\{2\gamma\x^T\y\}\end{aligned}\end{align} \]</div>
+<p>In particular, the last term is given as the infinite expansion</p>
+<div class="math notranslate nohighlight">
+\[\exp\{2\gamma\x^T\y\}=\sum_{q=0}^\infty\frac{(2\gamma)^q}{q!}(\x^T\y)^q=
+1+(2\gamma)\x^T\y+\frac{(2\gamma)^2}{2!}(\x^T\y)^2+\cds\]</div>
+<p>Using the multinomial expansion of <span class="math notranslate nohighlight">\((\x^T\y)^q\)</span>, we can write the Gaussian kernel as</p>
 </div>
 <div class="section" id="basic-kernel-operations-in-feature-space">
 <h2>5.3 Basic Kernel Operations in Feature Space<a class="headerlink" href="#basic-kernel-operations-in-feature-space" title="Permalink to this headline">¶</a></h2>

@@ -330,7 +330,109 @@ with the kernel value being equivalent to the dot product between two mapped poi
 5.2 Vector Kernels
 ------------------
 
+**Polynomial Kernel**
 
+Polynomial kernels are of two types: homogeneous or inhomogeneous.
+Let :math:`\x,\y\in\R^d`.
+The *homogeneous polynomial kernel* is defined as
+
+.. note::
+
+    :math:`K_q(\x,\y)=\phi(\x)^T\phi(\y)=(\x^T\y)^q`
+
+where :math:`q` is the degree of the polynomial.
+
+The most typical cases are the *linear* (with :math:`q=1`) and *quadratic* (with :math:`q=2`) kernels, given as
+
+.. math::
+
+    K_1(\x,\y)=\x^T\y
+
+    K_2(\x,\y)=(\x^T\y)^2
+
+The *inhomogeneous polynomial kernel* is defined as
+
+.. note::
+
+    :math:`k_q(\x,\y)=\phi(\x)^T\phi(\y)=(c+\x^T\y)^q`
+
+where :math:`q` is the degree of the polynomial, and :math:`c\geq 0` is some constant.
+
+.. math::
+
+    K_q(\x,\y)=(c+\x^T\y)^q=\sum_{k=0}^q\bp q\\k \ep c^{q-k}(\x^T\y)^k
+
+Let :math:`n_0,n_1,\cds,n_d` denote non-negative integers, such that :math:`\sum_{i=0}^dn_i=q`.
+Further, let :math:`\n=(n_0,n_1,\cds,n_d)`, and let :math:`|\n|=\sum_{i=0}^dn_i=q`.
+Also, let :math:`\bp q\\\n \ep` denote the multinomial coefficient
+
+.. math::
+
+    \bp q\\\n \ep=\bp q\\n_0,n_1,\cds,n_d \ep=\frac{q!}{n_0!n_1!\cds n_d!}
+
+The multinomial expansion of the inhomogeneous kernel is then given as
+
+.. math::
+
+    K_q(\x,\y)=(c+\x^T\y)^q=\bigg(c+\sum_{k=1}^dx_ky_k\bigg)^q=(c+x_1y_1+\cds+x_dy_d)^q
+
+    =\sum_{|\n|=q}\bp q\\\n \ep c^{n_0}(x_1y_1)^{n_1}(x_2y_2)^{n_2}\cds(x_dy_d)^{n_d}
+
+    =\sum_{|\n|=q}\bp q\\\n \ep c^{n_0}(x_1^{n_1}x_2^{n_2}\cds x_d^{n_d})(y_1^{n_1}y_2^{n_2}\cds y_d^{n_d})
+
+    =\sum_{|\n|=q}\bigg(\sqrt{a_\n}\prod_{k=1}^dx_k^{n_k}\bigg)\bigg(\sqrt{a_\n}\prod_{k=1}^dy_k^{n_k}\bigg)
+
+    =\phi(\x)^T\phi(\y)
+
+Using the notation :math:`\x^\n=\prod_{k=1}^dx_k^{n_k}`, the mapping :math:`\phi:\R^d\ra\R^m` is given as the vector
+
+.. math::
+
+    \phi(\x)=(\cds,a_\n\x^\n,\cds)^T=\left(\cds,\sqrt{\bp q\\\n \ep c^{n_0}}\prod_{k=1}^dx_k^{n_k},\cds\right)^T
+
+It can be shown that the dimensionality of the feature space is given as
+
+.. math::
+
+    m=\bp d+q\\q \ep
+
+**Gaussian Kernel**
+
+The Gaussian kernel, also called the Gaussian radial basis function (RBF) kernel, is defined as
+
+.. note::
+
+    :math:`\dp K(\x,\y)=\exp\bigg\{-\frac{\lv\x-\y\rv^2}{2\sg^2}\bigg\}`
+
+where :math:`\sg>0` is the spread parameter that plays the same role as the 
+standard deviation in a normal density function.
+Note that :math:`K(\x,\x)=1`, and further that the kernel value is inversely 
+related to the distance between the two points :math:`\x` and :math:`\y`.
+
+A feature space for the Gaussian kernal has infinite dimensionality.
+
+.. math::
+
+    \exp\{a\}=\sum_{n=0}^\infty\frac{a^n}{n!}=1+a+\frac{1}{2!}a^2+\frac{1}{3!}a^3+\cds
+
+Further, using :math:`\gamma=\frac{1}{2\sg^2}`, and noting that 
+:math:`\lv\x-\y\rv^2=\lv\x\rv^2+\lv\y\rv^2-2\x^T\y`, we can rewrite the Gaussian
+kernel as follows:
+
+.. math::
+
+    K(\x,\y)&=\exp\{-\gamma\lv\x-\y\rv^2\}
+
+    &=\exp\{-\gamma\lv\x\rv^2\}\cd\exp\{-\gamma\lv\y\rv^2\}\cd\exp\{2\gamma\x^T\y\}
+
+In particular, the last term is given as the infinite expansion
+
+.. math::
+
+    \exp\{2\gamma\x^T\y\}=\sum_{q=0}^\infty\frac{(2\gamma)^q}{q!}(\x^T\y)^q=
+    1+(2\gamma)\x^T\y+\frac{(2\gamma)^2}{2!}(\x^T\y)^2+\cds
+
+Using the multinomial expansion of :math:`(\x^T\y)^q`, we can write the Gaussian kernel as
 
 
 
