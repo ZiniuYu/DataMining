@@ -434,44 +434,344 @@ In particular, the last term is given as the infinite expansion
 
 Using the multinomial expansion of :math:`(\x^T\y)^q`, we can write the Gaussian kernel as
 
+.. math::
 
+    K(\x,\y)=\exp\{-\gamma\lv\x\rv^2\}\exp\{-\gamma\lv\y\rv^2\}
+    \sum_{q=0}^\infty\frac{(2\gamma)^q}{q!}\bigg(\sum_{|\n|=q}\bp q\\\n \ep
+    \prod_{k=1}^d(x_ky_k)^{n_k}\bigg)
 
+    =\sum_{q=0}^\infty\sum_{|\n|=q}
+    \bigg(\sqrt{a_{q,\n}}\exp\{-\gamma\lv\x\rv^2\}\prod_{k=1}^dx_k^{n_k}\bigg)
+    \bigg(\sqrt{a_{q,\n}}\exp\{-\gamma\lv\y\rv^2\}\prod_{k=1}^dy_k^{n_k}\bigg)
 
+    =\phi(\x)^T\phi(\y)
 
+where
 
+.. math::
+    
+    \dp a_{q,\n}=\frac{(2\gamma)^q}{q!}\bp q\\\n \ep
 
+    \n=(n_1,n_2,\cds,n_d)
 
+    |\n|=n_1+n_2+\cds+n_d=q
 
+The mapping into feature space corresponds to the function :math:`\phi:\R^d\ra\R^\infty`
 
+.. math::
 
-
-
-
-
-
-
+    \phi(\x)=\left(\cds,\sqrt{\frac{(2\gamma)^q}{q!}\bp q\\\n \ep}
+    \exp\{-\gamma\lv\x\rv^2\}\prod_{k=1}^dx_k^{n_k},\cds\right)^T
 
 5.3 Basic Kernel Operations in Feature Space
 --------------------------------------------
 
+**Norm of a Point**
 
+.. note::
 
+    :math:`\lv\phi(\x)\rv^2=\phi(\x)^T\phi(\x)=K(\x,\x)`
 
+**Distance between Points**
 
+The squared distance between two points :math:`\phi(\x_i)` and :math:`\phi(\x_j)` can be computed as
 
+.. note::
 
+    :math:`\lv\phi(\x_i)-\phi(\x_j)\rv^2=\lv\phi(\x_i)\rv^2+\lv\phi(\x_j)\rv^2-2\phi(\x_i)^T\phi(\x_j)`
+    :math:`=K(\x_i,\x_i)+K(\x_j,\x_j)-2K(\x_i,\x_j)`
 
+which implies that the distance is
 
+.. math::
 
+    \lv\phi(\x_i)-\phi(\x_j)\rv=\sqrt{K(\x_i,\x_i)+K(\x_j,\x_j)-2K(\x_i,\x_j)}
 
+The kernel value can be considered as a measure of the similarity between two points, as
 
+.. math::
 
+    \frac{1}{2}(\lv\phi(\x_i)\rv^2+\lv\phi(\x_j)\rv^2-\lv\phi(\x_i)-\phi(\x_j)\rv^2)=K(\x_i,\x_j)=\phi(\x_i)^T\phi(\x_j)
 
+Thus, the more the distance :math:`\lv\phi(\x_i)-\phi(\x_j)\rv` between the two 
+points in feature space, the less the kernel value, that is, the less the 
+similarity.
 
+**Mean in Feature Space**
 
+.. math::
 
+    \mmu_\phi=\frac{1}{n}\sum_{i=1}^n\phi(\x_i)
 
+Because we do not, in general, have access to :math:`\phi(\x_i)`, we cannot 
+explicity compute the mean point in feature space
 
+.. math::
+
+    \lv\mmu_\phi\rv^2=\mmu_\phi^T\mmu_\phi=\bigg(\frac{1}{n}\sum_{i=1}^n
+    \phi(\x_i)\bigg)^T\bigg(\frac{1}{n}\sum_{j=1}^n\phi(\x_j)\bigg)=
+    \frac{1}{n^2}\sum_{i=1}^n\sum_{j=1}^n\phi(\x_i)^T\phi(\x_j)
+
+which implies that
+
+.. note::
+
+    :math:`\dp\lv\mmu_\phi\rv^2=\frac{1}{n^2}\sum_{i=1}^n\sum_{j=1}^nK(\x_i,\x_j)`
+
+**Total Variance in Feature Space**
+
+.. note::
+
+    :math:`\lv\phi(\x_i)-\mmu_\phi\rv^2=\lv\phi(\x_i)\rv^2-2\phi(\x_i)^T\mmu_\phi+\lv\mmu_\phi\rv^2`
+
+    :math:`\dp=K(\x_i,\x_i)-\frac{2}{n}\sum_{j=1}^nK(\x_i,\x_j)+\frac{1}{n^2}\sum_{a=1}^n\sum_{b=1}^nK(\x_a,\x_b)`
+
+.. math::
+
+    \sg_\phi^2&=\frac{1}{n}\sum_{i=1}^n\lv\phi(\x_i)-\mmu_\phi\rv^2
+
+    &=\frac{1}{n}\sum_{i=1}^n\bigg(K(\x_i,\x_i)-\frac{2}{n}\sum_{j=1}^n
+    K(\x_i,\x_j)+\frac{1}{n^2}\sum_{a=1}^n\sum_{b=1}^nK(\x_a,\x_b)\bigg)
+
+    &=\frac{1}{n}\sum_{i=1}^nK(\x_i,\x_i)-\frac{2}{n^2}\sum_{i=1}^n\sum_{j=1}^n
+    K(\x_i,\x_j)+\frac{n}{n^3}\sum_{a=1}^n\sum_{b=1}^nK(\x_a,\x_b)
+
+That is
+
+.. note::
+
+    :math:`\dp\sg_\phi^2=\frac{1}{n}\sum_{i=1}^nK(\x_i,\x_i)-\frac{2}{n^2}\sum_{i=1}^n\sum_{j=1}^nK(\x_i,\x_j)`
+
+**Centering in Feature Space**
+
+We can center each point in feature space by subtracting the mean from it, as follows:
+
+.. math::
+
+    \bar\phi(\x_i)=\phi(\x_i)-\mmu_\phi
+
+The *centered kernel matrix* is given as
+
+.. math::
+
+    \bar\K=\{\bar{K}(\x_i,\x_j)\}_{i,j=1}^n
+
+where each cell corresponds to the kernel between centered points, that is
+
+.. math::
+
+    \bar{K}(\x_i,\x_j)&=\bar\phi(\x_i)^T\bar\phi(\x_j)
+    
+    &=(\phi(\x_i)-\mmu_\phi)^T(\phi(\x_j)-\mmu_\phi)
+
+    &=\phi(\x_i)^T\phi(\x_j)-\phi(\x_i)^T\mmu_\phi-\phi(\x_j)^T\mmu_\phi+\mmu_\phi^T\mmu_\phi
+
+    &=K(\x_i,\x_j)-\frac{1}{n}\sum_{k=1}^n\phi(\x_i)^T\phi(\x_k)-
+    \frac{1}{n}\sum_{k=1}^n\phi(\x_j)^T\phi(\x_k)+\lv\mmu_\phi\rv^2
+
+    &=K(\x_i,\x_j)-\frac{1}{n}\sum_{k=1}^nK(\x_i,\x_k)-\frac{1}{n}\sum_{k=1}^n
+    K(\x_j,\x_k)+\frac{1}{n^2}\sum_{a=1}^n\sum_{b=1}^nK(\x_a,\X_b)
+
+The centered kernel matrix can be written campactly as follows:
+
+.. note::
+
+    :math:`\dp\bar\K=\K-\frac{1}{n}\1_{n\times n}\K-\frac{1}{n}\K\1_{n\times n}`
+    :math:`\dp+\frac{1}{n^2}\1_{n\times n}\K\1_{n\times n}=`
+    :math:`\dp\bigg(\bs{\rm{I}}-\frac{1}{n}\1_{n\times n}\bigg)\K\bigg(\bs{\rm{I}}-\frac{1}{n}\1_{n\times n}\bigg)`
+
+**Normalizing in Feature Space**
+
+The dot product in feature space corresponds to the cosine of the angle between the two mapped points, because
+
+.. math::
+
+    \phi_n(\x_i)^T\phi_n(\x_j)=\frac{\phi(\x_i)^T\phi(\x_j)}{\lv\phi(\x_i)\rv\cd\lv\phi(\x_j)\rv}=\cos\th
+
+The normalized kernel matrix :math:`\K_n` can be computed using only the kernel function :math:`K`, as
+
+.. note::
+
+    :math:`\dp\K_n(\x_i,\x_j)=\frac{\phi(\x_i)^T\phi(\x_j)}{\lv\phi(\x_i)\rv\cd\lv\phi(\x_j)\rv}=`
+    :math:`\dp\frac{K(\x_i,\x_j)}{\sqrt{K(\x_i,\x_i)\cd K(\x_j,\x_j)}}`
+
+Let :math:`\W` denote the diagonal matrix comprising the diagonal elements of :math:`\K`:
+
+.. math::
+
+    \W=\rm{diag}(\K)=\bp K(\x_1,\x_1)&0&\cds&0\\0&K(\x_2,\x_2)&\cds&0\\\vds&\vds&\dds&\vds\\0&0&\cds&K(\x_n,\x_n) \ep
+
+The normalized kernel matrix can then be expressed compactly as
+
+.. math::
+
+    \K_n=\W^{-1/2}\cds\K\cd\W^{-1/2}
 
 5.4 Kernels for Complex Objects
 -------------------------------
+
+5.4.1 Spectrum Kernel for Strings
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Consider text or sequence data defined over an alphabet :math:`\Sg`.
+The :math:`l`-spectrum feature map is the mapping 
+:math:`\phi:\Sg^*\ra\R^{|\Sg|^l}` from the set of substrings over :math:`\Sg` to 
+the :math:`|\Sg|^l`-dimensional space representing the number of occurrences of 
+all possible substrings of length :math:`l`, defined as
+
+.. math::
+
+    \phi(\x)=(\cds,\#(\alpha),\cds)_{\alpha\in\Sg^l}^T
+
+where :math:`\#(\alpha)` is the number of occurrences of the :math:`l`-length string :math:`\alpha` in :math:`\x`.
+
+The (full) spectrum map is an extension of the :math:`l`-spectrum map, obtained 
+by considering all lengths from :math:`l=0` to :math:`l=\infty`, leading to an
+infinite dimensional feature map :math:`\phi:\Sg^*\ra\R^\infty`:
+
+.. math::
+
+    \phi(\x)=(\cds,\#(\alpha),\cds)_{\alpha\in\Sg^*}^T
+
+where :math:`\#(\alpha)` is the number of occurrences of the string :math:`\alpha` in :math:`\x`.
+
+The (:math:`l`-)spectrum kernel between two string :math:`\x_i,\x_j` is simply 
+the dot product between their (:math:`l`-)spectrum maps:
+
+.. math::
+
+    K(\x_i,\x_j)=\phi(\x_i)^T\phi(\x_j)
+
+5.4.2 Diffusion Kernels on Graph Nodes
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Let :math`\S` be some symmetric similarity matrix between nodes of a graph :math:`G=(V,E)`.
+Consider the similarity between any two nodes obtained by summing the product of the similarities over walks of length 2:
+
+.. math::
+
+    S^{(2)}(\x_i,\x_j)=\sum_{a=1}^nS(\x_i,\x_a)S(\x_a,\x_j)=\S_i^T\S_j
+
+where
+
+.. math::
+
+    \S_i=(S(\x_i,\x_1),S(\x_i,\x_2),\cds,S(\x_i,\x_n))^T
+
+denotes the (column) vector representing the :math:`i`th row of :math:`S`.
+Over all pairs of nodes the similarity matrix over walks of length 2, denoted 
+:math:`\S^{(2)}`, is thus given as the square of the base similarity matrix 
+:math:`\S`:
+
+.. math::
+
+    \S^{(2)}=\S\times\S=\S^2
+
+In general, if we sum up the product of the base similarities over all :math:`l`
+-length walks between two nodes, we obtain the :math:`l`-length similarity
+matrix :math:`\S^{(l)}`, which is simply the :math:`l`th power of :math:`\S`,
+that is,
+
+.. math::
+
+    \S^{(l)}=\S^l
+
+**Power Kernels**
+
+The kernel value between any two points is then a dot product in feature space:
+
+.. math::
+
+    K(\x_i,\x_j)=S^{(2)}(\x_i,\x_j)=\S_i^T\S_j=\phi(\x_i)^T\phi(\x_j)
+
+For a general walk length :math:`l`, let :math:`\K=\S^l`.
+Consider the eigen-decomposition of :math:`\S`:
+
+.. math::
+
+    \S=\U\Ld\U^T=\sum_{i=1}^n\u_i\ld_i\u_i^T
+
+The eigen-decomposition of :math:`\K` can be obtained as follows:
+
+.. math::
+
+    \K=\S^l=(\U\Ld\U^T)^l=\U(\Ld^l)\U^T
+
+**Exponential Diffusion Kernel**
+
+Instead of fixing the walk length *a priori*, we can obtain a new kernel between 
+nodes of a graph by considering walks of all possible lengths, but by damping
+the contribution of longer walks, which leads to the 
+*exponential diffusion kernel*, defined as
+
+.. note::
+
+    :math:`\dp\K=\sum_{l=0}^\infty\frac{1}{l!}\beta^l\S^l=`
+    :math:`\dp\I+\beta\S+\frac{1}{2!}\beta^2\S^2+\frac{1}{3!}\beta^3\S^3+\cds=\exp\{\beta\S\}`
+
+where :math:`\beta` is a damping factor, and :math:`\exp\{\beta\S\}` is the matrix exponential.
+
+.. math::
+
+    \K&=\I+\beta\S+\frac{1}{2!}\beta^2\S^2+\cds
+
+    &=\bigg(\sum_{i=1}^n\u_i\u_i^T\bigg)+\bigg(\sum_{i=1}^n\u_i\beta\ld_i\u_i^T
+    \bigg)+\bigg(\sum_{i=1}^n\u_i\frac{1}{2!}\beta^2\ld_i^2\u_i^T\bigg)+\cds
+
+    &=\sum_{i=1}^n\u_i(1+\beta\ld_i+\frac{1}{2!}\beta^2\ld_i^2+\cds)+\u_i^T
+
+    &=\sum_{i=1}^n\u_i\exp\{\beta\ld_i\}\u_i^T
+
+.. math::
+
+    =\U\bp\exp\{\beta\ld_1\}&0&\cds&0\\0&\exp\{\beta\ld_2\}&\cds&0\\
+    \vds&\vds&\dds&\vds\\0&0&\cds&\exp\{\beta\ld_n\}\ep\U^T\quad\quad\quad\quad
+
+**Von Neumann Diffusion Kernel**
+
+A related kernel based on powers of :math:`\S` is the *von Neumann diffusion kernel*, defined as
+
+.. note::
+
+    :math:`\dp\K=\sum_{l=0}^\infty\beta^l\S^l`
+
+.. math::
+
+    \K&=\I+\beta\S+\beta^2\S^2+\beta^3\S^3+\cds
+
+    &=\I+\beta\S(\I+\beta\S+\beta^2\S^2+\cds)
+
+    &=\I+\beta\S\K
+
+Rearranging the terms to obtain a closed form expression for the von Neumann kernel:
+
+.. math::
+
+    \K-\beta\S\K&=\I
+
+    (\I-\beta\S)\K&=\I
+
+    \K&=(\I-\beta\S)\im
+
+    \K&=(\U\U^T-\U(\beta\Ld)\U^T)\im
+
+    &=(\U(\I-\beta\Ld)\U^T)\im
+
+    &=\U(\I-\beta\Ld)\im\U^T
+
+For :math:`\K` to be a positive semidefinite kernel, all its eigenvalues should 
+be non-negative, which in turn implies that
+
+.. math::
+
+    (1-\beta\ld_i)\im&\geq 0
+
+    1-\beta\ld_i&\geq 0
+
+    \beta&\leq 1/\ld_i
+
+Further, the inverse matrix :math:`(\I-\beta\Ld)\im` exists only if
+
+.. math::
+
+    \det(\I-\beta\Ld)=\prod_{i=1}^n(1-\beta\ld_i)\neq 0
