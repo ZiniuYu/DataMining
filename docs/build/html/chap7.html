@@ -1,0 +1,364 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Chapter 7 Dimensionality Reduction &mdash; DataMining  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Chapter 6 High-dimensional Data" href="chap6.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> DataMining
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="chap1.html">Chapter 1 Data Matrix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chap2.html">Chapter 2 Numeric Attributes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chap3.html">Chapter 3 Categorical Attributes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chap4.html">Chapter 4 Graph Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chap5.html">Chapter 5 Kernel Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chap6.html">Chapter 6 High-dimensional Data</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Chapter 7 Dimensionality Reduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#background">7.1 Background</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#principal-component-analysis">7.2 Principal Component Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kernel-principal-component-analysis">7.3 Kernel Principal Component Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#singular-value-decomposition">7.4 Singular Value Decomposition</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">DataMining</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Chapter 7 Dimensionality Reduction</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/chap7.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\newcommand{\bs}{\boldsymbol}
+\newcommand{\dp}{\displaystyle}
+\newcommand{\rm}{\mathrm}
+\newcommand{\cl}{\mathcal}
+\newcommand{\pd}{\partial}\\\newcommand{\cd}{\cdot}
+\newcommand{\cds}{\cdots}
+\newcommand{\dds}{\ddots}
+\newcommand{\vds}{\vdots}
+\newcommand{\lv}{\lVert}
+\newcommand{\rv}{\rVert}
+\newcommand{\wh}{\widehat}
+\newcommand{\ol}{\overline}
+\newcommand{\ra}{\rightarrow}\\\newcommand{\0}{\boldsymbol{0}}
+\newcommand{\1}{\boldsymbol{1}}
+\newcommand{\a}{\boldsymbol{\mathrm{a}}}
+\newcommand{\b}{\boldsymbol{\mathrm{b}}}
+\newcommand{\e}{\boldsymbol{\mathrm{e}}}
+\newcommand{\f}{\boldsymbol{\mathrm{f}}}
+\newcommand{\g}{\boldsymbol{\mathrm{g}}}
+\newcommand{\i}{\boldsymbol{\mathrm{i}}}
+\newcommand{\j}{\boldsymbol{j}}
+\newcommand{\n}{\boldsymbol{\mathrm{n}}}
+\newcommand{\p}{\boldsymbol{\mathrm{p}}}
+\newcommand{\q}{\boldsymbol{\mathrm{q}}}
+\newcommand{\r}{\boldsymbol{\mathrm{r}}}
+\newcommand{\u}{\boldsymbol{u}}
+\newcommand{\v}{\boldsymbol{\mathrm{v}}}
+\newcommand{\w}{\boldsymbol{w}}
+\newcommand{\x}{\boldsymbol{\mathrm{x}}}
+\newcommand{\y}{\boldsymbol{\mathrm{y}}}\\\newcommand{\A}{\boldsymbol{\mathrm{A}}}
+\newcommand{\B}{\boldsymbol{B}}
+\newcommand{\C}{\boldsymbol{C}}
+\newcommand{\D}{\boldsymbol{\mathrm{D}}}
+\newcommand{\I}{\boldsymbol{\mathrm{I}}}
+\newcommand{\K}{\boldsymbol{\mathrm{K}}}
+\newcommand{\N}{\boldsymbol{\mathrm{N}}}
+\newcommand{\P}{\boldsymbol{\mathrm{P}}}
+\newcommand{\S}{\boldsymbol{\mathrm{S}}}
+\newcommand{\U}{\boldsymbol{\mathrm{U}}}
+\newcommand{\W}{\boldsymbol{\mathrm{W}}}
+\newcommand{\X}{\boldsymbol{\mathrm{X}}}\\\newcommand{\R}{\mathbb{R}}\\\newcommand{\ld}{\lambda}
+\newcommand{\Ld}{\boldsymbol{\mathrm{\Lambda}}}
+\newcommand{\sg}{\sigma}
+\newcommand{\Sg}{\boldsymbol{\mathrm{\Sigma}}}
+\newcommand{\th}{\theta}\\\newcommand{\mmu}{\boldsymbol{\mu}}\\\newcommand{\bb}{\begin{bmatrix}}
+\newcommand{\eb}{\end{bmatrix}}
+\newcommand{\bp}{\begin{pmatrix}}
+\newcommand{\ep}{\end{pmatrix}}
+\newcommand{\bv}{\begin{vmatrix}}
+\newcommand{\ev}{\end{vmatrix}}\\\newcommand{\im}{^{-1}}
+\newcommand{\pr}{^{\prime}}
+\newcommand{\ppr}{^{\prime\prime}}\end{aligned}\end{align} \]</div>
+<div class="section" id="chapter-7-dimensionality-reduction">
+<h1>Chapter 7 Dimensionality Reduction<a class="headerlink" href="#chapter-7-dimensionality-reduction" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="background">
+<h2>7.1 Background<a class="headerlink" href="#background" title="Permalink to this headline">¶</a></h2>
+<p>Let the data <span class="math notranslate nohighlight">\(\D\)</span> consist of <span class="math notranslate nohighlight">\(n\)</span> points over <span class="math notranslate nohighlight">\(d\)</span> attributes,
+that is, it is an <span class="math notranslate nohighlight">\(n\times d\)</span> matrix, given as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\D=\left(\begin{array}{c|cccc}&amp;X_1&amp;X_2&amp;\cds&amp;X_d\\ \hline
+\x_1&amp;x_{11}&amp;x_{12}&amp;\cds&amp;x_{1d}\\\x_2&amp;x_{21}&amp;x_{22}&amp;\cds&amp;x_{2d}\\
+\vds&amp;\vds&amp;\vds&amp;\dds&amp;\vds\\\x_n&amp;x_{n1}&amp;x_{n2}&amp;\cds&amp;x_{nd}\end{array}\right)\end{split}\]</div>
+<p>Each point <span class="math notranslate nohighlight">\(\x_i=(x_{i1},x_{i2},\cds,x_{id})^T\)</span> is a vector in the ambient
+<span class="math notranslate nohighlight">\(d\)</span>-dimensional vector space spanned by the <span class="math notranslate nohighlight">\(d\)</span> standard basis
+vectors <span class="math notranslate nohighlight">\(\e_1,\e_2,\cds,\e_d\)</span>, where <span class="math notranslate nohighlight">\(\e_i\)</span> corresponds to the
+<span class="math notranslate nohighlight">\(i\)</span>.</p>
+<p>Given any other set of <span class="math notranslate nohighlight">\(d\)</span> orthonormal vectors <span class="math notranslate nohighlight">\(\u_1,\u_2,\cds,\u_d\)</span>,
+with <span class="math notranslate nohighlight">\(\u_i^T\u_j=0\)</span> and <span class="math notranslate nohighlight">\(\lv\u_i\rv=1\)</span> (or <span class="math notranslate nohighlight">\(\u_i^T\u_i=1\)</span>), we
+can re-express each point <span class="math notranslate nohighlight">\(x\)</span> as the linear combination</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\x=a_1\u_1+a_2\u_2+\cds+a_d\u_d\)</span></p>
+</div>
+<p>where the vector <span class="math notranslate nohighlight">\(\a=(a_1,a_2,\cds,a_d)^T\)</span> represents the coordinates of
+<span class="math notranslate nohighlight">\(\x\)</span> in the new basis.
+The above linear combination can also be expressed as a matrix multiplication:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\x=\U\a\)</span>.</p>
+</div>
+<p>where <span class="math notranslate nohighlight">\(\U\)</span> is an <em>orthonormal</em> matrix whose <span class="math notranslate nohighlight">\(i\)</span>th column comprises
+the <span class="math notranslate nohighlight">\(i\)</span>th basis vector <span class="math notranslate nohighlight">\(\u_i\)</span>.</p>
+<p>Because <span class="math notranslate nohighlight">\(\U\)</span> is orthogonal, we have</p>
+<div class="math notranslate nohighlight">
+\[\U\im=\U^T\]</div>
+<p>which implies that <span class="math notranslate nohighlight">\(\U^T\U=\I\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[\U^T\x=\U^T\U\a\]</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\a=\U^T\x\)</span></p>
+</div>
+<p>Becuase there are potentially infinite choices for the set of orthonormal basis
+vectors, one natural question is whether ther exists an <em>optimal</em> basis, for a
+suitable notion of optimality.
+We are interested in finding the optimal <span class="math notranslate nohighlight">\(r\)</span>-dimensional representation of <span class="math notranslate nohighlight">\(\D\)</span> with <span class="math notranslate nohighlight">\(r\ll d\)</span>.
+Projection of <span class="math notranslate nohighlight">\(\x\)</span> onto the first <span class="math notranslate nohighlight">\(r\)</span> basis vectors is given as</p>
+<div class="math notranslate nohighlight">
+\[\x\pr=a_1\u_1+a_2\u_2+\cds+a_r\u_r+\sum_{i=1}^ra_i\u_i\]</div>
+<p>which can be written in matrix notaion as follows</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\x\pr=\bp|&amp;|&amp;&amp;|\\\u_1&amp;\u_2&amp;\cds&amp;\u_r\\|&amp;|&amp;&amp;|\ep\bp a_1\\a_2\\\vds\\a_r \ep=\U_r\a_r\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\U_r\)</span> is the matrix comprising the first <span class="math notranslate nohighlight">\(r\)</span> basis vectors,
+and <span class="math notranslate nohighlight">\(\a_r\)</span> is a vectgor comprising the first <span class="math notranslate nohighlight">\(r\)</span> coordinates.
+Because <span class="math notranslate nohighlight">\(\a=\U^T\x\)</span>, restricting it to the first <span class="math notranslate nohighlight">\(r\)</span> terms, we get</p>
+<div class="math notranslate nohighlight">
+\[\a_r=\U_r^T\x\]</div>
+<p>The projection of <span class="math notranslate nohighlight">\(\x\)</span> onto the first <span class="math notranslate nohighlight">\(r\)</span> basis vectors can be compactly written as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\x\pr=\U_r\U_r^T\x=\P_r\x\)</span></p>
+</div>
+<p>where <span class="math notranslate nohighlight">\(\P_r=\U_r\U_r^T\)</span> is the <em>orthogonal projection matrix</em> for the
+subspace spanned by the first <span class="math notranslate nohighlight">\(r\)</span> basis vectors.
+The projection matrix <span class="math notranslate nohighlight">\(\P_r\)</span> can also be written as the decomposition</p>
+<div class="math notranslate nohighlight">
+\[P_r=\U_r\U_r^T=\sum_{i=1}^r\u_i\u_i^T\]</div>
+<p>The projection of <span class="math notranslate nohighlight">\(\x\)</span> onto the remaining dimensions comprises the <em>error vector</em></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\bs\epsilon=\sum_{i=r+1}^da_i\u_i=\x-\x\pr\)</span></p>
+</div>
+<p>It is worth noting that <span class="math notranslate nohighlight">\(\x\pr\)</span> and <span class="math notranslate nohighlight">\(\bs\epsilon\)</span> are orthogonal vectors:</p>
+<div class="math notranslate nohighlight">
+\[{\x\pr}^T\bs\epsilon=\sum_{i=1}^r\sum_{j=r+1}^da_ia_j\u_i^T\u_j=0\]</div>
+<p>The subspace spanned by the first <span class="math notranslate nohighlight">\(r\)</span> basis vectors and the subspace
+spanned by the remaining basis vectors are <em>orthogonal subspaces</em>.
+They are <em>orthogonal complement</em> of each other.</p>
+<p>The goal of dimensionality reduction is to seek an <span class="math notranslate nohighlight">\(r\)</span>-dimensional basis
+that gives the best possible approximation <span class="math notranslate nohighlight">\(\x_i\pr\)</span> over all the points
+<span class="math notranslate nohighlight">\(\x_i\in\D\)</span>.
+Alternatively, we may seek to minimize the error <span class="math notranslate nohighlight">\(\bs\epsilon_i=\x_i-\x_i\pr\)</span> over all the points.</p>
+</div>
+<div class="section" id="principal-component-analysis">
+<h2>7.2 Principal Component Analysis<a class="headerlink" href="#principal-component-analysis" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="kernel-principal-component-analysis">
+<h2>7.3 Kernel Principal Component Analysis<a class="headerlink" href="#kernel-principal-component-analysis" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="singular-value-decomposition">
+<h2>7.4 Singular Value Decomposition<a class="headerlink" href="#singular-value-decomposition" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="chap6.html" class="btn btn-neutral float-left" title="Chapter 6 High-dimensional Data" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Ziniu Yu.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
