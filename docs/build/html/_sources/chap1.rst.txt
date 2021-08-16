@@ -8,9 +8,9 @@ The :math:`n\times d` data matrix is given as
 
 .. math::
 
-    \D=\bp &X_1&X_2&\cds&X_d\\ \x_1&x_{11}&x_{12}&\cds&x_{1d}\\
-    \x_2&x_{21}&x_{22}&\cds&x_{2d}\\ \vds&\vds&\vds&\dds&\vds\\
-    \x_n&x_{n1}&x_{n2}&\cds&x_{nd} \ep
+    \left(\begin{array}{c|cccc}&X_1&X_2&\cds&X_d\\ \hline 
+    \x_1&x_{11}&x_{12}&\cds&x_{1d}\\\x_2&x_{21}&x_{22}&\cds&x_{2d}\\ 
+    \vds&\vds&\vds&\dds&\vds\\\x_n&x_{n1}&x_{n2}&\cds&x_{nd}\end{array}\right)
 
 where :math:`\x_i` donotes the :math:`i`\ th row, which is a :math:`d`-tuple given as
 

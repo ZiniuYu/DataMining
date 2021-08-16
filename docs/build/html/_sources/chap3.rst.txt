@@ -10,7 +10,7 @@ The data :math:`\D` is an :math:`n\times 1` symbolic data matrix given as
 
 .. math::
 
-    \D=\bp X\\x_1\\x_2\\\vds\\x_n \ep
+    \D=\bp X\\\hline x_1\\x_2\\\vds\\x_n \ep
 
 where each point :math:`x_i\in dom(X)`.
 
@@ -277,7 +277,7 @@ The dataset is now an :math:`n\times 2` symbolic data matrix:
 
 .. math::
 
-    \D=\bp X_1&X_2\\x_{11}&x_{12}\\x_{21}&x_{22}\\\vds&\vds\\x_{n1}&x_{n2} \ep
+    \D=\bp X_1&X_2\\\hline x_{11}&x_{12}\\x_{21}&x_{22}\\\vds&\vds\\x_{n1}&x_{n2} \ep
 
 We model :math:`X_1` and :math:`X_2` as multivariate Bernoulli variables 
 :math:`\X_1` and :math:`\X_2` with dimensions :math:`m_1` and :math:`m_2`.
@@ -532,7 +532,7 @@ For an :math:`n\times d` symbolic matrix
 
 .. math::
 
-    \D=\bp X_1&X_2&\cds&X_d\\x_{11}&x_{12}&\cds&x_{1d}\\
+    \D=\bp X_1&X_2&\cds&X_d\\\hline x_{11}&x_{12}&\cds&x_{1d}\\
     x_{21}&x_{22}&\cds&x_{2d}\\\vds&\vds&\dds&\vds\\x_{n1}&x_{n2}&\cds&x_{nd}\ep
 
 The joint distribution is modeled as a :math:`d\pr=\sum_{j=1}^dm_j` dimensional vector random variable

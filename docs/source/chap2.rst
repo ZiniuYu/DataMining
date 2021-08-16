@@ -9,8 +9,8 @@ matrix :math:`\D` can be thought of as an :math:`n\times 1` matrix, or simply a
 column vector, given as
 
 .. math::
-
-    \D=\bp X\\x_1\\x_2\\\vds\\x_n \ep
+    
+    \D=\bp X\\\hline x_1\\x_2\\\vds\\x_n \ep
 
 where :math:`X` is the numeric attribute of interest, with :math:`x+i\in\R`.
 :math:`X` is assumed to be a random variable, with each point 
@@ -366,7 +366,7 @@ In bivariate analysis, we consider two attributes at the same time.
 
 .. math::
 
-    \D=\bp X_1&X_2\\x_{11}&x_{12}\\x_{21}&x_{22}\\\vds&\vds\\x_{n1}&x_{n2} \ep
+    \D=\bp X_1&X_2\\\hline x_{11}&x_{12}\\x_{21}&x_{22}\\\vds&\vds\\x_{n1}&x_{n2} \ep
 
 It can be viewed as :math:`n` points or vectors in 2-dimensional space over the 
 attributes :math:`X_1` and :math:`X_2`, that is, 
@@ -596,7 +596,7 @@ The full data is an :math:`n\times d` matrix, given as
 
 .. math::
 
-    \D=\bp X_1&X_2&\cds&X_d\\x_{11}&x_{12}&\cds&x_{1d}\\
+    \D=\bp X_1&X_2&\cds&X_d\\\hline x_{11}&x_{12}&\cds&x_{1d}\\
     x_{21}&x_{22}&\cds&x_{2d}\\\vds&\vds&\dds&\vds\\x_{n1}&x_{n2}&\cds&x_{nd}\ep
     =\bp|&|&&|\\X_1&X_2&\cds&X_d\\|&|&&|\ep=\bp -&\x_1^T&-\\-&\x_2^T&-\\&\vds\\
     -&\x_n^T&\ep

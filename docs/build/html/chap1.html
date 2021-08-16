@@ -112,6 +112,7 @@
 <li class="toctree-l1"><a class="reference internal" href="chap3.html">Chapter 3 Categorical Attributes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="chap4.html">Chapter 4 Graph Data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="chap5.html">Chapter 5 Kernel Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chap6.html">Chapter 6 High-dimensional Data</a></li>
 </ul>
 
             
@@ -238,9 +239,9 @@
 <h2>1.1 Data Matrix<a class="headerlink" href="#data-matrix" title="Permalink to this headline">¶</a></h2>
 <p>The <span class="math notranslate nohighlight">\(n\times d\)</span> data matrix is given as</p>
 <div class="math notranslate nohighlight">
-\[\begin{split}\D=\bp &amp;X_1&amp;X_2&amp;\cds&amp;X_d\\ \x_1&amp;x_{11}&amp;x_{12}&amp;\cds&amp;x_{1d}\\
-\x_2&amp;x_{21}&amp;x_{22}&amp;\cds&amp;x_{2d}\\ \vds&amp;\vds&amp;\vds&amp;\dds&amp;\vds\\
-\x_n&amp;x_{n1}&amp;x_{n2}&amp;\cds&amp;x_{nd} \ep\end{split}\]</div>
+\[\begin{split}\left(\begin{array}{c|cccc}&amp;X_1&amp;X_2&amp;\cds&amp;X_d\\ \hline
+\x_1&amp;x_{11}&amp;x_{12}&amp;\cds&amp;x_{1d}\\\x_2&amp;x_{21}&amp;x_{22}&amp;\cds&amp;x_{2d}\\
+\vds&amp;\vds&amp;\vds&amp;\dds&amp;\vds\\\x_n&amp;x_{n1}&amp;x_{n2}&amp;\cds&amp;x_{nd}\end{array}\right)\end{split}\]</div>
 <p>where <span class="math notranslate nohighlight">\(\x_i\)</span> donotes the <span class="math notranslate nohighlight">\(i\)</span>th row, which is a <span class="math notranslate nohighlight">\(d\)</span>-tuple given as</p>
 <div class="math notranslate nohighlight">
 \[\x_i=(x_{i1},x_{i2},\cds,x_{id})\]</div>
