@@ -76,6 +76,7 @@ rst_prolog = r'''
     \newcommand{\1}{\boldsymbol{1}}
     \newcommand{\a}{\boldsymbol{\mathrm{a}}}
     \newcommand{\b}{\boldsymbol{\mathrm{b}}}
+    \newcommand{\c}{\boldsymbol{\mathrm{c}}}
     \newcommand{\e}{\boldsymbol{\mathrm{e}}}
     \newcommand{\f}{\boldsymbol{\mathrm{f}}}
     \newcommand{\g}{\boldsymbol{\mathrm{g}}}

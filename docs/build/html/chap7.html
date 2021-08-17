@@ -87,7 +87,7 @@
               
             
             
-              <p class="caption"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="chap1.html">Chapter 1 Data Matrix</a></li>
 <li class="toctree-l1"><a class="reference internal" href="chap2.html">Chapter 2 Numeric Attributes</a></li>
@@ -192,6 +192,7 @@
 \newcommand{\1}{\boldsymbol{1}}
 \newcommand{\a}{\boldsymbol{\mathrm{a}}}
 \newcommand{\b}{\boldsymbol{\mathrm{b}}}
+\newcommand{\c}{\boldsymbol{\mathrm{c}}}
 \newcommand{\e}{\boldsymbol{\mathrm{e}}}
 \newcommand{\f}{\boldsymbol{\mathrm{f}}}
 \newcommand{\g}{\boldsymbol{\mathrm{g}}}
@@ -525,8 +526,24 @@ covariance matrix in feature space:</p>
 \mmu_\phi)^T=\frac{1}{n}\sum_{i=1}^n\bar\phi(\x_i)\bar\phi(\x_i)^T\]</div>
 <p>Plugging the expansion of <span class="math notranslate nohighlight">\(\Sg_\phi\)</span>, we get</p>
 <div class="math notranslate nohighlight">
-\[ \begin{align}\begin{aligned}\bigg(\frac{1}{n}\sum_{i=1}^n\bar\phi(\x_i)\bar\phi(\x_i)^T\bigg)\u_1&amp;=\ld_1\u_1\\\frac{1}{n}\sum_{i=1}^n\bar\phi(\x_i)(\bar\phi(\x_i)^T\u_1)&amp;=\ld_1\u_1\\\sum_{i=1}^n\bigg(\frac{\bar\phi(\x_i)^T\u_1}{n\ld_1}\bigg)\bar\phi(\x_i)&amp;=\u_1\\\sum_{i=1}^nc_i\bar\phi(\x_i)=\u_1\end{aligned}\end{align} \]</div>
+\[ \begin{align}\begin{aligned}\bigg(\frac{1}{n}\sum_{i=1}^n\bar\phi(\x_i)\bar\phi(\x_i)^T\bigg)\u_1&amp;=\ld_1\u_1\\\frac{1}{n}\sum_{i=1}^n\bar\phi(\x_i)(\bar\phi(\x_i)^T\u_1)&amp;=\ld_1\u_1\\\sum_{i=1}^n\bigg(\frac{\bar\phi(\x_i)^T\u_1}{n\ld_1}\bigg)\bar\phi(\x_i)&amp;=\u_1\\\sum_{i=1}^nc_i\bar\phi(\x_i)&amp;=\u_1\end{aligned}\end{align} \]</div>
 <p>where <span class="math notranslate nohighlight">\(c_i=\frac{\bar\phi(\x_i)^T\u_1}{n\ld_1}\)</span> is a scalar value.</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\bigg(\frac{1}{n}\sum_{i=1}^n\bar\phi(\x_i)\bar\phi(\x_i)^T\bigg)\bigg(
+\sum_{j=1}^nc_j\bar\phi(\x_j)\bigg)&amp;=\ld_1\sum_{i=1}^nc_i\bar\phi(\x_i)\\\frac{1}{n}\sum_{i=1}^n\sum_{j=1}^nc_i\bar\phi(\x_i)\bar\phi(\x_i)^T\bar\phi
+(\x_j)&amp;=\ld_1\sum_{i=1}^nc_i\bar\phi(\x_i)\\\sum_{i=1}^n\bigg(\bar\phi(\x_i)\sum_{j=1}^nc_j\bar\phi(\x_i)^T\bar\phi
+(\x_j)\bigg)&amp;=n\ld_1\sum_{i=1}^nc_i\bar\phi(\x_i)\\\sum_{i=1}^n\bigg(\bar\phi(\x_i)\sum_{j=1}^nc_j\bar{K}(\x_i,\x_j)\bigg)&amp;=n\ld_1\sum_{i=1}^nc_i\bar\phi(\x_i)\end{aligned}\end{align} \]</div>
+<p>We assume that the kernel matrix <span class="math notranslate nohighlight">\(\K\)</span> has already been centered using</p>
+<div class="math notranslate nohighlight">
+\[\bar\K=\bigg(\I-\frac{1}{n}\1_{n\times n}\bigg)\K\bigg(\I-\frac{1}{n}\1_{n\times n}\bigg)\]</div>
+<p>Take any point, say <span class="math notranslate nohighlight">\(\bar\phi(\x_k)\)</span> and multiply by <span class="math notranslate nohighlight">\(\bar\phi(\x_k)^T\)</span> on both sides to obtain</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\sum_{i=1}^n\bigg(\bar\phi(\x_k)^T\bar\phi(\x_i)\sum_{j=1}^nc_j\bar{K}
+(\x_i,\x_j)\bigg)&amp;=n\ld_1\sum_{i=1}^nc_i\bar\phi(\x_k)^T\bar\phi(\x_i)\\\sum_{i=1}^n\bigg(\bar{K}(\x_k,\x_i)\sum_{j=1}^nc_j\bar{K}
+(\x_i,\x_j)\bigg)&amp;=n\ld_1\sum_{i=1}^nc_i\bar{K}(\x_k,\x_i)\end{aligned}\end{align} \]</div>
+<p>We can compactly represent it as follows:</p>
+<div class="math notranslate nohighlight">
+\[\bar\K^2\c=n\ld_1\bar\K\c\]</div>
 </div>
 <div class="section" id="singular-value-decomposition">
 <h2>7.4 Singular Value Decomposition<a class="headerlink" href="#singular-value-decomposition" title="Permalink to this headline">¶</a></h2>

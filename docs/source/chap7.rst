@@ -473,20 +473,44 @@ Plugging the expansion of :math:`\Sg_\phi`, we get
 
     \sum_{i=1}^n\bigg(\frac{\bar\phi(\x_i)^T\u_1}{n\ld_1}\bigg)\bar\phi(\x_i)&=\u_1
 
-    \sum_{i=1}^nc_i\bar\phi(\x_i)=\u_1
+    \sum_{i=1}^nc_i\bar\phi(\x_i)&=\u_1
 
 where :math:`c_i=\frac{\bar\phi(\x_i)^T\u_1}{n\ld_1}` is a scalar value.
 
+.. math::
 
+    \bigg(\frac{1}{n}\sum_{i=1}^n\bar\phi(\x_i)\bar\phi(\x_i)^T\bigg)\bigg(
+    \sum_{j=1}^nc_j\bar\phi(\x_j)\bigg)&=\ld_1\sum_{i=1}^nc_i\bar\phi(\x_i)
 
+    \frac{1}{n}\sum_{i=1}^n\sum_{j=1}^nc_i\bar\phi(\x_i)\bar\phi(\x_i)^T\bar\phi
+    (\x_j)&=\ld_1\sum_{i=1}^nc_i\bar\phi(\x_i)
 
+    \sum_{i=1}^n\bigg(\bar\phi(\x_i)\sum_{j=1}^nc_j\bar\phi(\x_i)^T\bar\phi
+    (\x_j)\bigg)&=n\ld_1\sum_{i=1}^nc_i\bar\phi(\x_i)
 
+    \sum_{i=1}^n\bigg(\bar\phi(\x_i)\sum_{j=1}^nc_j\bar{K}(\x_i,\x_j)\bigg)&=n\ld_1\sum_{i=1}^nc_i\bar\phi(\x_i)
 
+We assume that the kernel matrix :math:`\K` has already been centered using
 
+.. math::
 
+    \bar\K=\bigg(\I-\frac{1}{n}\1_{n\times n}\bigg)\K\bigg(\I-\frac{1}{n}\1_{n\times n}\bigg)
 
+Take any point, say :math:`\bar\phi(\x_k)` and multiply by :math:`\bar\phi(\x_k)^T` on both sides to obtain
 
+.. math::
 
+    \sum_{i=1}^n\bigg(\bar\phi(\x_k)^T\bar\phi(\x_i)\sum_{j=1}^nc_j\bar{K}
+    (\x_i,\x_j)\bigg)&=n\ld_1\sum_{i=1}^nc_i\bar\phi(\x_k)^T\bar\phi(\x_i)
+
+    \sum_{i=1}^n\bigg(\bar{K}(\x_k,\x_i)\sum_{j=1}^nc_j\bar{K}
+    (\x_i,\x_j)\bigg)&=n\ld_1\sum_{i=1}^nc_i\bar{K}(\x_k,\x_i)
+
+We can compactly represent it as follows:
+
+.. math::
+
+    \bar\K^2\c=n\ld_1\bar\K\c
 
 
 
