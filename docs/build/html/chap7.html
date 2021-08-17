@@ -87,7 +87,7 @@
               
             
             
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+              <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="chap1.html">Chapter 1 Data Matrix</a></li>
 <li class="toctree-l1"><a class="reference internal" href="chap2.html">Chapter 2 Numeric Attributes</a></li>
@@ -97,7 +97,13 @@
 <li class="toctree-l1"><a class="reference internal" href="chap6.html">Chapter 6 High-dimensional Data</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Chapter 7 Dimensionality Reduction</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#background">7.1 Background</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#principal-component-analysis">7.2 Principal Component Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#principal-component-analysis">7.2 Principal Component Analysis</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#best-line-approximation">7.2.1 Best Line approximation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#best-2-dimensional-approximation">7.2.2 Best 2-dimensional Approximation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#best-r-dimensional-approximation">7.2.3 Best <span class="math notranslate nohighlight">\(r\)</span>-dimensional Approximation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#geometry-of-pca">7.2.4 Geometry of PCA</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#kernel-principal-component-analysis">7.3 Kernel Principal Component Analysis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#singular-value-decomposition">7.4 Singular Value Decomposition</a></li>
 </ul>
@@ -195,7 +201,7 @@
 \newcommand{\p}{\boldsymbol{\mathrm{p}}}
 \newcommand{\q}{\boldsymbol{\mathrm{q}}}
 \newcommand{\r}{\boldsymbol{\mathrm{r}}}
-\newcommand{\u}{\boldsymbol{u}}
+\newcommand{\u}{\boldsymbol{\mathrm{u}}}
 \newcommand{\v}{\boldsymbol{\mathrm{v}}}
 \newcommand{\w}{\boldsymbol{w}}
 \newcommand{\x}{\boldsymbol{\mathrm{x}}}
@@ -305,9 +311,222 @@ Alternatively, we may seek to minimize the error <span class="math notranslate n
 </div>
 <div class="section" id="principal-component-analysis">
 <h2>7.2 Principal Component Analysis<a class="headerlink" href="#principal-component-analysis" title="Permalink to this headline">¶</a></h2>
+<p>Principal Component Analysis (PCA) is a technique that seeks a <span class="math notranslate nohighlight">\(r\)</span>
+-dimensional basis that best captures the variance in the data.</p>
+<div class="section" id="best-line-approximation">
+<h3>7.2.1 Best Line approximation<a class="headerlink" href="#best-line-approximation" title="Permalink to this headline">¶</a></h3>
+<p>Assume that <span class="math notranslate nohighlight">\(\u\)</span> is a unit vector, and the data matrix <span class="math notranslate nohighlight">\(\D\)</span> has been
+centered by subtracting the mean <span class="math notranslate nohighlight">\(\mu\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[\bar\D=\D-\1\cd\mmu^T\]</div>
+<p>The projection of the centered point <span class="math notranslate nohighlight">\(\bar\x_i\in\bar\D\)</span> on the vector <span class="math notranslate nohighlight">\(\u\)</span> is given as</p>
+<div class="math notranslate nohighlight">
+\[\x_i\pr=\bigg(\frac{\u^T\bar\x_i}{\u^T\u}\bigg)\u=(\u^T\bar\x_i)\u=a_i\u\]</div>
+<p>where</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(a_i=\u^T\bar\x_i\)</span></p>
+</div>
+<p>is the offset or scalar projection of <span class="math notranslate nohighlight">\(\x_i\)</span> on <span class="math notranslate nohighlight">\(\u\)</span>.
+We also call <span class="math notranslate nohighlight">\(a_i\)</span> a <em>projected point</em>.
+Note that the scalar projection of the mean <span class="math notranslate nohighlight">\(\bar\mmu\)</span> is 0.
+Therefore, the mean of the projected points <span class="math notranslate nohighlight">\(a_i\)</span> is also zero, since</p>
+<div class="math notranslate nohighlight">
+\[\mu_a=\frac{1}{n}\sum_{i=1}^na_i=\frac{1}{n}\sum_{i=1}^n\u^T(\bar\x_i)=\u^T\bar\mmu=0\]</div>
+<p>We have to choose the direction <span class="math notranslate nohighlight">\(\u\)</span> such that the variance of the projected points is maximized.
+The projected variance along <span class="math notranslate nohighlight">\(\u\)</span> is given as</p>
+<div class="math notranslate nohighlight">
+\[\sg_\u^2=\frac{1}{n}\sum_{i=1}^n(a_i-\mu_a)^2=\frac{1}{n}\sum_{i=1}^n
+(\u^T\bar\x_i)^2=\frac{1}{n}\sum_{i=1}^n\u^T(\bar\x_i\bar\x_i^T)\u=\u^T
+\bigg(\frac{1}{n}\sum_{i=1}^n\bar\x_i\bar\x_i^T\bigg)\u\]</div>
+<p>Thus, we get</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\sg_\u^2=\u^T\Sg\u\)</span></p>
+</div>
+<p>where <span class="math notranslate nohighlight">\(\Sg\)</span> is the sample covariance matrix for the centered data <span class="math notranslate nohighlight">\(\bar\D\)</span>.</p>
+<p>We have to find the optimal basis vector <span class="math notranslate nohighlight">\(\u\)</span> that maximizes the projected
+variance <span class="math notranslate nohighlight">\(\sg_\u^2\)</span> subject to the constraint that <span class="math notranslate nohighlight">\(\u^T\u=1\)</span>.
+This can be solved by introducing a Lagrangian multiplier <span class="math notranslate nohighlight">\(\alpha\)</span> for the
+constraint, to obtain the unconstrained maximization problem</p>
+<div class="math notranslate nohighlight">
+\[\max_\u J(\u)=\u^T\Sg\u-\alpha(\u^T\u-1)\]</div>
+<p>Setting the derivative of <span class="math notranslate nohighlight">\(J(\u)\)</span> with respect to <span class="math notranslate nohighlight">\(\u\)</span> to the zero vector, we obtain</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\frac{\pd}{\pd\u}J(\u)&amp;=\0\\\frac{\pd}{\pd\u}(\u^T\Sg\u-\alpha(\u^T\u-1))&amp;=\0\\2\Sg\u-2\alpha\u&amp;=\0\end{aligned}\end{align} \]</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\Sg\u=\alpha\u\)</span></p>
+</div>
+<div class="math notranslate nohighlight">
+\[\u^T\Sg\u=\u^T\alpha\u=\alpha\u^T\u=\alpha\]</div>
+<p>The dominant eigenvector <span class="math notranslate nohighlight">\(\u_1\)</span> specifies the direction of most variance,
+also called the <em>first principal component</em>, that is, <span class="math notranslate nohighlight">\(\u=\u_1\)</span>.
+Further, the largest eigenvalue <span class="math notranslate nohighlight">\(\ld_1\)</span> specifies the projected variance, that is, <span class="math notranslate nohighlight">\(\sg_\u^2=\alpha=\ld_1\)</span>.</p>
+<p><strong>Minimum Squared Error Approach</strong></p>
+<p>The direction that maximizes the projected variance is also the one that minimizes the average squared error.
+The mean squared error (MSE) optimization condition is defined as</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}MSE(\u)&amp;=\frac{1}{n}\sum_{i=1}^n\lv\epsilon_i\rv^2=
+\frac{1}{n}\sum_{i=1}^n\lv\bar\x_i-\x_i\pr\rv^2=
+\frac{1}{n}\sum_{i=1}^n(\bar\x_i-\x_i\pr)^T(\bar\x_i-\x_i\pr)\\&amp;=\frac{1}{n}\sum_{i=1}^n(\lv\bar\x_i\rv^2-2\bar\x_i^T\x_i\pr+(\x_i\pr)^T\x_i\pr)\\&amp;=\frac{1}{n}\sum_{i=1}^n(\lv\bar\x_i\rv^2-2\bar\x_i^T(\u^T\bar\x_i)\u+
+((\u^T\bar\x_i)\u)^T(\u^T\bar\x_i)\u),\rm{since\ }\x_i\pr=(\u^T\bar\x_i)\u\\&amp;=\frac{1}{n}\sum_{i=1}^n(\lv\bar\x_i\rv^2-2(\u^T\bar\x_i)(\bar\x_i^T\u)+(\u^T\bar\x_i)(\bar\x_i^T\u)\u^T\u)\\&amp;=\frac{1}{n}\sum_{i=1}^n(\lv\bar\rv^2-(\u^T\bar\x_i)\bar\x_i^T\u))\\&amp;=\frac{1}{n}\sum_{i=1}^n\lv\bar\x_i\rv^2-\frac{1}{n}\sum_{i=1}^n\u^T(\bar\x_i\bar\x_i^T)\u\\&amp;=\frac{1}{n}\sum_{i=1}^n\lv\bar\x_i\rv^2-\u^T\bigg(\frac{1}{n}\sum_{i=1}^n\bar\x_i\bar\x_i^T\bigg)\u\end{aligned}\end{align} \]</div>
+<p>which implies</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp MSE=\sum_{i=1}^n\frac{\lv\bar\x_i\rv^2}{n}-\u^T\Sg\u\)</span></p>
+</div>
+<p>Further, we have</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\rm{var}(\D)=tr(\Sg)=\sum_{i=1}^d\sg_i^2\)</span></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp MSE(\u)=\rm{var}(\D)-\u^T\Sg\u=\sum_{i=1}^d\sg_i^2-\u^T\Sg\u\)</span></p>
+</div>
+<p>The principal component <span class="math notranslate nohighlight">\(\u_1\)</span>, which is the direction that maximizes the
+projected variance, is also the direction that minimizes the mean squared error.</p>
+<div class="math notranslate nohighlight">
+\[MSE(\u_1)=\rm{var}(\D)-\u_1^T\Sg\u_1=\rm{var}(\D)=\u_1^T\ld_1\u_1=\rm{var}(\D)-\ld_1\]</div>
+</div>
+<div class="section" id="best-2-dimensional-approximation">
+<h3>7.2.2 Best 2-dimensional Approximation<a class="headerlink" href="#best-2-dimensional-approximation" title="Permalink to this headline">¶</a></h3>
+<p>We are now interested in the best two-dimensional approximation to <span class="math notranslate nohighlight">\(\D\)</span>.
+We now want to find another direction <span class="math notranslate nohighlight">\(\v\)</span>, which also maximizes the
+projected variance, but is orthogonal to <span class="math notranslate nohighlight">\(\u_1\)</span>.
+The projected variance along <span class="math notranslate nohighlight">\(\v\)</span> is given as</p>
+<div class="math notranslate nohighlight">
+\[\sg_\v^2=\v^T\Sg\v\]</div>
+<p>We further require that <span class="math notranslate nohighlight">\(\v\)</span> be a unit vector orthogonal to <span class="math notranslate nohighlight">\(\u_1\)</span>.
+The optimization condition then becomes</p>
+<div class="math notranslate nohighlight">
+\[\max_\v J(\v)=\v^T\Sg\v-\alpha(\v^T\v-1)-\beta(\v^T\u_1-0)\]</div>
+<p>Taking the derivative of <span class="math notranslate nohighlight">\(J(\v)\)</span> with respect to <span class="math notranslate nohighlight">\(\v\)</span>, and setting
+it to the zero vector, finally gives that <span class="math notranslate nohighlight">\(\v\)</span> is the second largest
+eigenvector of <span class="math notranslate nohighlight">\(\Sg\)</span>.</p>
+<p><strong>Total Projected Variance</strong></p>
+<p>Let <span class="math notranslate nohighlight">\(\U_2\)</span> be the matrix whose columns correspond to the two principal components.
+Given the point <span class="math notranslate nohighlight">\(\bar\x_i\in\bar\D\)</span> its coordinates in the two-dimensional
+subspace spanned by <span class="math notranslate nohighlight">\(\u_1\)</span> and <span class="math notranslate nohighlight">\(\u_2\)</span> can be computed as follows:</p>
+<div class="math notranslate nohighlight">
+\[\a_i=\U_2^T\bar\x_i\]</div>
+<p>Assume that each point <span class="math notranslate nohighlight">\(\bar\x_i\in\R^d\)</span> in <span class="math notranslate nohighlight">\(\bar\D\)</span> has been
+projected to obtain its coordinates <span class="math notranslate nohighlight">\(\a_i\in\R^2\)</span>, yielding the new
+dataset <span class="math notranslate nohighlight">\(\A\)</span>.
+The total variance for <span class="math notranslate nohighlight">\(\A\)</span> is given as</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\rm{var}(\A)&amp;=\frac{1}{n}\sum_{i=1}^n\lv\a_i-\0\rv^2=
+\frac{1}{n}\sum_{i=1}^n(\U_2^T\bar\x_i)^T(\U_2^T\bar\x_i)=
+\frac{1}{n}\sum_{i=1}^n\bar\x_i^T(\U_2\U_2^T)\bar\x_i\\&amp;=\frac{1}{n}\sum_{i=1}^n\bar\x_i^T\P_2\bar\x_i\end{aligned}\end{align} \]</div>
+<p>where <span class="math notranslate nohighlight">\(\P_2\)</span> is the orthogonal projection matrix given as</p>
+<div class="math notranslate nohighlight">
+\[\P_2=\U_2\U_2^T=\u_1\u_1^T+\u_2\u_2^T\]</div>
+<p>The projected total variance is then given as</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\rm{var}(\A)&amp;=\frac{1}{n}\sum_{i=1}^n\bar\x_i^T\P_2\bar\x_i\\&amp;=\u_1^T\Sg\u_1+\u_2^T\Sg\u_2=\u_1^T\ld_1\u_1+\u_2^T\ld_2\u_2=\ld_1+\ld_2\end{aligned}\end{align} \]</div>
+<p><strong>Mean Squared Error</strong></p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}MSE&amp;=\frac{1}{n}\sum_{i=1}^n\lv\bar\x_i-\x_i\pr\rv^2\\&amp;=\frac{1}{n}\sum_{i=1}^n(\lv\bar\x_i\rv^2-2\bar\x_i^T\x_i\pr+(\x_i\pr)^T\x_i\pr)\\&amp;=\rm{var}(\D)+\frac{1}{n}\sum_{i=1}^n(-2\bar\x_i^T\P_2\bar\x_i+(\P_2\bar\x_i)^T\P_2\bar\x_i)\\&amp;=\rm{var}(\D)-\frac{1}{n}\sum_{i=1}^n(\bar\x_i^T\P_2\bar\x_i)\\&amp;=\rm{var}(\D)-\rm{var}(\A)\\&amp;=\rm{var}(\D)-\ld_1-\ld_2\end{aligned}\end{align} \]</div>
+</div>
+<div class="section" id="best-r-dimensional-approximation">
+<h3>7.2.3 Best <span class="math notranslate nohighlight">\(r\)</span>-dimensional Approximation<a class="headerlink" href="#best-r-dimensional-approximation" title="Permalink to this headline">¶</a></h3>
+<p>To find the best <span class="math notranslate nohighlight">\(r\)</span>-dimensional approximation to <span class="math notranslate nohighlight">\(\D\)</span>, we compute the eigenvalue of <span class="math notranslate nohighlight">\(\Sg\)</span>.
+Because <span class="math notranslate nohighlight">\(\Sg\)</span> is positive semidefinite, its eigenvalues are non-negative and can be sorted in decreasing order</p>
+<div class="math notranslate nohighlight">
+\[\ld_1\geq\ld_2\geq\cds\ld_r\geq\ld_{r+1}\cds\geq\ld_d\geq 0\]</div>
+<p>We then select the <span class="math notranslate nohighlight">\(r\)</span> largest eigenvalues, and their corresponding
+eigenvectors to form the best <span class="math notranslate nohighlight">\(r\)</span>-dimensional approximation.</p>
+<p><strong>Total Projected Variance</strong></p>
+<div class="math notranslate nohighlight">
+\[\rm{var}(\A)=\frac{1}{n}\sum_{i=1}^n\bar\x_i^T\P_r\bar\x_i=\sum_{i=1}^r\u_i^T\Sg\u_i=\sum_{i=1}^r\ld_i\]</div>
+<p><strong>Mean Squared Error</strong></p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}MSE&amp;=\frac{1}{n}\sum_{i=1}^n\lv\bar\x_i-\x_i\pr\rv^2=\rm{var}(\D)-\rm{var}(\A)\\&amp;=\rm{var}(\D)-\sum_{i=1}^r\u_i^T\Sg\u_i=\rm{var}(\D)-\sum_{i=1}^r\ld_i\end{aligned}\end{align} \]</div>
+<p><strong>Total Variance</strong></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\rm{var}(\D)=\sum_{i=1}^d\sg_i^2=\sum_{i=1}^d\ld_i\)</span></p>
+</div>
+<p><strong>Choosing the Dimensionality</strong></p>
+<p>One criteria for choosing <span class="math notranslate nohighlight">\(r\)</span> is to compute the fraction of the total
+variance captured by the first <span class="math notranslate nohighlight">\(r\)</span> principal components, computed as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp f(r)=\frac{\ld_1+\ld_2+\cds+\ld_r}{\ld_1+\ld_2+\cds+\ld_d}=\)</span>
+<span class="math notranslate nohighlight">\(\dp\frac{\sum_{i=1}^r\ld_i}{\sum_{i=1}^d\ld_i}=\frac{\sum_{i=1}^r\ld_i}{\rm{var}(\D)}\)</span></p>
+</div>
+<p>Given a certain desired variance threshold, say <span class="math notranslate nohighlight">\(\alpha\)</span>, starting from
+the first principal component, we keep on adding additional components, and stop
+at the smallest value <span class="math notranslate nohighlight">\(r\)</span> for which <span class="math notranslate nohighlight">\(f(r)\geq\alpha\)</span>, given as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(r=\min\{r\pr|f(r\pr)\geq\alpha\}\)</span></p>
+</div>
+</div>
+<div class="section" id="geometry-of-pca">
+<h3>7.2.4 Geometry of PCA<a class="headerlink" href="#geometry-of-pca" title="Permalink to this headline">¶</a></h3>
+<p>Geometrically, when <span class="math notranslate nohighlight">\(r=d\)</span>, PCA corresponds to a orthogonal change of basis,
+so that the total variance is captured by the sum of the variances along each of
+the principal direction <span class="math notranslate nohighlight">\(\u_1,\u_2,\cds,\u_d\)</span>, and further, all
+covariances are zero.
+This can be seen by looking at the collective action of the full set of
+principal components, which can be arranged in the <span class="math notranslate nohighlight">\(d\times d\)</span> orthogonal
+matrix with <span class="math notranslate nohighlight">\(\U\im=\U^T\)</span>.</p>
+<p>Each principal component <span class="math notranslate nohighlight">\(\u_i\)</span> corresponds to an eigenvector of the
+covariance matrix <span class="math notranslate nohighlight">\(\Sg\)</span>, which can be written compactly as</p>
+<div class="math notranslate nohighlight">
+\[\Sg\U=\U\Ld\]</div>
+<p>Multiply above equation on the left by <span class="math notranslate nohighlight">\(\U\im=\U^T\)</span> we obtain</p>
+<div class="math notranslate nohighlight">
+\[\U^T\Sg\U=\U^T\U\Ld=\Ld\]</div>
+<p>This means that if we change the basis to <span class="math notranslate nohighlight">\(\U\)</span>, we change the covariance
+matrix <span class="math notranslate nohighlight">\(\Sg\)</span> to a similar matrix <span class="math notranslate nohighlight">\(\Ld\)</span>, which in fact is the
+covariance matrix in the new basis.</p>
+<p>It is worth noting that in the new basis, the equation</p>
+<div class="math notranslate nohighlight">
+\[\x^T\Sg\im\x=1\]</div>
+<p>defines a <span class="math notranslate nohighlight">\(d\)</span>-dimensional ellipsoid (or hyper-ellipse).
+The eigenvectors <span class="math notranslate nohighlight">\(\u_i\)</span> of <span class="math notranslate nohighlight">\(\Sg\)</span>, that is, the principal components,
+are the directions for the principal axes of the ellipsoid.
+The square roots of the eigenvalues, that is, <span class="math notranslate nohighlight">\(\sqrt{\ld_i}\)</span>, give the lengths of the semi-axes.</p>
+<p>The <em>eigen-decomposition</em> of <span class="math notranslate nohighlight">\(\Sg\)</span> is</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\Sg=\U\Ld\U^T=\ld_1\u_1\u_1^T+\ld_2\u_2\u_2^T+\cds+\ld_d\u_d\u_d^T=\sum_{i=1}^d\ld_i\u_i\u_i^T\)</span></p>
+</div>
+<p>Assuming that <span class="math notranslate nohighlight">\(\Sg\)</span> is invertible or nonsingular, we have</p>
+<div class="math notranslate nohighlight">
+\[\Sg\im=(\U\Ld\U^T)\im=(\U\im)^T\Ld\im\U\im=\U\Ld\im\U^T\]</div>
+<p>Using the fact that <span class="math notranslate nohighlight">\(\x=\U\a\)</span>, we get</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\x^T\Sg\im\x&amp;=1\\(\a^T\U^T)\U\Ld\im\U^T(\U\a)&amp;=1\\\a^T\Ld\im\a&amp;=1\\\sum_{i=1}^d\frac{a_i^2}{\ld_i}&amp;=1\end{aligned}\end{align} \]</div>
+<p>which is precisely the equation for an ellipse centered at <span class="math notranslate nohighlight">\(\0\)</span>, with semi-axes lengths <span class="math notranslate nohighlight">\(\sqrt{\ld_i}\)</span>.
+Thus <span class="math notranslate nohighlight">\(\x^T\Sg\im\x=1\)</span>, or equivalently <span class="math notranslate nohighlight">\(\a^T\Ld\im\a=1\)</span> in the new
+principal components basis, defines an ellipsoid in <span class="math notranslate nohighlight">\(d\)</span>-dimensions, where
+the semi-axes lengths equal the standard deviations along each axis.
+Likewise, the equation <span class="math notranslate nohighlight">\(\x^T\Sg\im\x=s\)</span>, or equivalently
+<span class="math notranslate nohighlight">\(\a^T\Ld\im\a=s\)</span>, for different values of the scalar <span class="math notranslate nohighlight">\(s\)</span>, represents
+concentric ellipsoids.</p>
+</div>
 </div>
 <div class="section" id="kernel-principal-component-analysis">
 <h2>7.3 Kernel Principal Component Analysis<a class="headerlink" href="#kernel-principal-component-analysis" title="Permalink to this headline">¶</a></h2>
+<p>Principal component analysis can be extended to find nonlinear “directions” in the data using kernel methods.
+Kernel PCA finds the directions of most variance in the feature space instead of the input space.</p>
+<p>In feature space, we can find the first kernel principal component <span class="math notranslate nohighlight">\(\u_1\)</span>,
+by solving for the eigenvector corresponding to the largest eigenvalue of the
+covariance matrix in feature space:</p>
+<div class="math notranslate nohighlight">
+\[\Sg_\phi\u_1=\ld_1\u_1\]</div>
+<p>where <span class="math notranslate nohighlight">\(\Sg_\phi\)</span>, the covariance matrix in feature space, is given as</p>
+<div class="math notranslate nohighlight">
+\[\Sg_\phi=\frac{1}{n}\sum_{i=1}^n(\phi(\x_i)-\mmu_\phi)(\phi(\x_i)-
+\mmu_\phi)^T=\frac{1}{n}\sum_{i=1}^n\bar\phi(\x_i)\bar\phi(\x_i)^T\]</div>
+<p>Plugging the expansion of <span class="math notranslate nohighlight">\(\Sg_\phi\)</span>, we get</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\bigg(\frac{1}{n}\sum_{i=1}^n\bar\phi(\x_i)\bar\phi(\x_i)^T\bigg)\u_1&amp;=\ld_1\u_1\\\frac{1}{n}\sum_{i=1}^n\bar\phi(\x_i)(\bar\phi(\x_i)^T\u_1)&amp;=\ld_1\u_1\\\sum_{i=1}^n\bigg(\frac{\bar\phi(\x_i)^T\u_1}{n\ld_1}\bigg)\bar\phi(\x_i)&amp;=\u_1\\\sum_{i=1}^nc_i\bar\phi(\x_i)=\u_1\end{aligned}\end{align} \]</div>
+<p>where <span class="math notranslate nohighlight">\(c_i=\frac{\bar\phi(\x_i)^T\u_1}{n\ld_1}\)</span> is a scalar value.</p>
 </div>
 <div class="section" id="singular-value-decomposition">
 <h2>7.4 Singular Value Decomposition<a class="headerlink" href="#singular-value-decomposition" title="Permalink to this headline">¶</a></h2>
