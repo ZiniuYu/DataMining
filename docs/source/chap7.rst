@@ -371,6 +371,8 @@ at the smallest value :math:`r` for which :math:`f(r)\geq\alpha`, given as
 
     :math:`r=\min\{r\pr|f(r\pr)\geq\alpha\}`
 
+.. image:: ./_static/Algo7.1.png
+
 7.2.4 Geometry of PCA
 ^^^^^^^^^^^^^^^^^^^^^
 
@@ -512,18 +514,121 @@ We can compactly represent it as follows:
 
     \bar\K^2\c=n\ld_1\bar\K\c
 
+If :math:`\eta_1` is the largest eigenvalue of :math:`\bar\K` corresponding to 
+the dominant eigenvector :math:`\c`, we can verify that
 
+.. math::
 
+    \bar\K(\bar\K\c)&=n\ld_1\bar\K\c
 
+    \bar\K(\eta_1\cd\c)&=n\ld_1\eta_1\c
 
+    \bar\K\c&=n\ld_1\c
 
+which implies
 
+.. note::
 
+    :math:`\bar\K\c=\eta_1\c`
 
+where :math:`\eta_1=n\cd\ld_1`.
 
+If we sort the eigenvalues of :math:`\K` in decreasing order 
+:math:`\eta_1\geq\eta_2\geq\cds\geq\eta_n\geq 0`, we can obtain the :math:`j`\ 
+th principal component as the corresponding eigenvector :math:`\c_j`, which has
+to be normalized so that the norm is :math:`\lv\c_j\rv=\sqrt{\frac{1}{\eta_j}}`,
+provided :math:`\eta_j>0`.
+Also, because :math:`\eta_j=n\ld_j`, the variance along the :math:`j`\ th
+principal component is given as :math:`\ld_j=\frac{\eta_j}{n}`.
+To obtain a reduced dimensional dataset, say with dimensionality :math:`r\ll n`,
+we can compute the scalar projection of :math:`\bar\phi(\x_i)` for each point
+:math:`\x_i` onto the principal component :math:`\u_j`, for :math:`j=1,2,\cds,r`
+, as follows:
 
+.. math::
 
+    a_{ij}=\u_j^T\bar\phi(\x_i)=\bar\K_i^T\c_j
 
+We can obtain :math:`\a_i\in\R^r` as follows:
+
+.. note::
+
+    :math:`\a_i=\bs{\rm{C}}_r^T\bar\K_i`
+
+where :math:`\bs{\rm{C}}_r` is the weight matrix whose columns comprise the top 
+:math:`r` eigenvectors, :math:`\c_1,\c_2,\cds,\c_r`.
+
+.. image:: ./_static/Algo7.2.png
 
 7.4 Singular Value Decomposition
 --------------------------------
+
+Principal omponents analysis is a special case of a more general matrix 
+decomposition method called *Singular Value Decomposition (SVD)*.
+PCA yields the following decomposition of the covariance matrix:
+
+.. math::
+
+    \Sg=\U\Ld\U^T
+
+SVD generalizes the above factorization for any matrix.
+In particular for an :math:`n\times d` data matrix :math:`\D` with :math:`n` 
+points and :math:`d` columns, SVD factorizes :math:`\D` as follows:
+
+.. note::
+
+    :math:`\D=\bs{\rm{L\Delta R}}^T`
+
+The columns of :math:`\bs{\rm{L}}` are called the *left singular vectors*, and 
+the columns of :math:`\bs{\rm{R}}` are called the *right singular vectors*.
+The matrix :math:`\bs{\rm{\Delta}}` is defined as
+
+.. math::
+
+    \bs{\rm{\Delta}}=\left\{\begin{array}{lr}\delta_i\quad\rm{if\ }i=j\\0\quad\rm{if\ }i\neq j\end{array}\right.
+
+The entries :math:`\Delta(i,i)=\delta_i` along the main diagonal of 
+:math:`\Delta` are called the *singular value* of :math:`\D`.
+
+One can discard those left and right singular vectors that correspond to zero 
+singular values, to obtain the *reduced SVD* as
+
+.. note::
+
+    :math:`\D=\bs{\rm{L}}_r\bs{\rm{\Delta}}_r\bs{\rm{R}}_r^T`
+
+The reduced SVD leads directly to the *spectral decomposition* of :math:`\D`, given as
+
+.. note::
+
+    :math:`\dp\D=\sum_{i=1}^r\delta_i\bs{l}_i\bs{\rm{r}}_i^T`
+
+By selecting the :math:`q` largest singular values 
+:math:`\delta_1,\delta_2,\cds,\delta_q` and the corresponding left and right
+singular vectors, we obtain the best rank :math:`q` approximation to the 
+original matrix :math:`\D`.
+That is, if :math:`\D_q` is the matrix defined as
+
+.. math::
+
+    \D_q=\sum_{i=1}^q\delta_i\bs{l}_i\bs{\rm{r}}_i^T
+
+then it can be shown that :math:`\D_q` is the rank :math:`q` matrix that minimizes the expression
+
+.. math::
+
+    \lv\D-\D_q\rv_F
+
+where :math:`\lv\A\rv_F` is called the *Frobenius Norm* of the :math:`n\times d` matrix :math:`\A`, defined as
+
+.. math::
+
+    \lv\A\rv_F=\sqrt{\sum_{i=1}^n\sum_{j=1}^D\A(i,j)^2}
+
+7.4.1 Geometry of SVD
+^^^^^^^^^^^^^^^^^^^^^
+
+
+
+7.4.2 Connection between SVD and PCA
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

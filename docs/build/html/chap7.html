@@ -87,7 +87,7 @@
               
             
             
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+              <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="chap1.html">Chapter 1 Data Matrix</a></li>
 <li class="toctree-l1"><a class="reference internal" href="chap2.html">Chapter 2 Numeric Attributes</a></li>
@@ -105,7 +105,11 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#kernel-principal-component-analysis">7.3 Kernel Principal Component Analysis</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#singular-value-decomposition">7.4 Singular Value Decomposition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#singular-value-decomposition">7.4 Singular Value Decomposition</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#geometry-of-svd">7.4.1 Geometry of SVD</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#connection-between-svd-and-pca">7.4.2 Connection between SVD and PCA</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -464,6 +468,7 @@ at the smallest value <span class="math notranslate nohighlight">\(r\)</span> fo
 <p class="admonition-title">Note</p>
 <p><span class="math notranslate nohighlight">\(r=\min\{r\pr|f(r\pr)\geq\alpha\}\)</span></p>
 </div>
+<img alt="_images/Algo7.1.png" src="_images/Algo7.1.png" />
 </div>
 <div class="section" id="geometry-of-pca">
 <h3>7.2.4 Geometry of PCA<a class="headerlink" href="#geometry-of-pca" title="Permalink to this headline">¶</a></h3>
@@ -544,9 +549,88 @@ covariance matrix in feature space:</p>
 <p>We can compactly represent it as follows:</p>
 <div class="math notranslate nohighlight">
 \[\bar\K^2\c=n\ld_1\bar\K\c\]</div>
+<p>If <span class="math notranslate nohighlight">\(\eta_1\)</span> is the largest eigenvalue of <span class="math notranslate nohighlight">\(\bar\K\)</span> corresponding to
+the dominant eigenvector <span class="math notranslate nohighlight">\(\c\)</span>, we can verify that</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\bar\K(\bar\K\c)&amp;=n\ld_1\bar\K\c\\\bar\K(\eta_1\cd\c)&amp;=n\ld_1\eta_1\c\\\bar\K\c&amp;=n\ld_1\c\end{aligned}\end{align} \]</div>
+<p>which implies</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\bar\K\c=\eta_1\c\)</span></p>
+</div>
+<p>where <span class="math notranslate nohighlight">\(\eta_1=n\cd\ld_1\)</span>.</p>
+<p>If we sort the eigenvalues of <span class="math notranslate nohighlight">\(\K\)</span> in decreasing order
+<span class="math notranslate nohighlight">\(\eta_1\geq\eta_2\geq\cds\geq\eta_n\geq 0\)</span>, we can obtain the <span class="math notranslate nohighlight">\(j\)</span>th principal component as the corresponding eigenvector <span class="math notranslate nohighlight">\(\c_j\)</span>, which has
+to be normalized so that the norm is <span class="math notranslate nohighlight">\(\lv\c_j\rv=\sqrt{\frac{1}{\eta_j}}\)</span>,
+provided <span class="math notranslate nohighlight">\(\eta_j&gt;0\)</span>.
+Also, because <span class="math notranslate nohighlight">\(\eta_j=n\ld_j\)</span>, the variance along the <span class="math notranslate nohighlight">\(j\)</span>th
+principal component is given as <span class="math notranslate nohighlight">\(\ld_j=\frac{\eta_j}{n}\)</span>.
+To obtain a reduced dimensional dataset, say with dimensionality <span class="math notranslate nohighlight">\(r\ll n\)</span>,
+we can compute the scalar projection of <span class="math notranslate nohighlight">\(\bar\phi(\x_i)\)</span> for each point
+<span class="math notranslate nohighlight">\(\x_i\)</span> onto the principal component <span class="math notranslate nohighlight">\(\u_j\)</span>, for <span class="math notranslate nohighlight">\(j=1,2,\cds,r\)</span>
+, as follows:</p>
+<div class="math notranslate nohighlight">
+\[a_{ij}=\u_j^T\bar\phi(\x_i)=\bar\K_i^T\c_j\]</div>
+<p>We can obtain <span class="math notranslate nohighlight">\(\a_i\in\R^r\)</span> as follows:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\a_i=\bs{\rm{C}}_r^T\bar\K_i\)</span></p>
+</div>
+<p>where <span class="math notranslate nohighlight">\(\bs{\rm{C}}_r\)</span> is the weight matrix whose columns comprise the top
+<span class="math notranslate nohighlight">\(r\)</span> eigenvectors, <span class="math notranslate nohighlight">\(\c_1,\c_2,\cds,\c_r\)</span>.</p>
+<img alt="_images/Algo7.2.png" src="_images/Algo7.2.png" />
 </div>
 <div class="section" id="singular-value-decomposition">
 <h2>7.4 Singular Value Decomposition<a class="headerlink" href="#singular-value-decomposition" title="Permalink to this headline">¶</a></h2>
+<p>Principal omponents analysis is a special case of a more general matrix
+decomposition method called <em>Singular Value Decomposition (SVD)</em>.
+PCA yields the following decomposition of the covariance matrix:</p>
+<div class="math notranslate nohighlight">
+\[\Sg=\U\Ld\U^T\]</div>
+<p>SVD generalizes the above factorization for any matrix.
+In particular for an <span class="math notranslate nohighlight">\(n\times d\)</span> data matrix <span class="math notranslate nohighlight">\(\D\)</span> with <span class="math notranslate nohighlight">\(n\)</span>
+points and <span class="math notranslate nohighlight">\(d\)</span> columns, SVD factorizes <span class="math notranslate nohighlight">\(\D\)</span> as follows:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\D=\bs{\rm{L\Delta R}}^T\)</span></p>
+</div>
+<p>The columns of <span class="math notranslate nohighlight">\(\bs{\rm{L}}\)</span> are called the <em>left singular vectors</em>, and
+the columns of <span class="math notranslate nohighlight">\(\bs{\rm{R}}\)</span> are called the <em>right singular vectors</em>.
+The matrix <span class="math notranslate nohighlight">\(\bs{\rm{\Delta}}\)</span> is defined as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\bs{\rm{\Delta}}=\left\{\begin{array}{lr}\delta_i\quad\rm{if\ }i=j\\0\quad\rm{if\ }i\neq j\end{array}\right.\end{split}\]</div>
+<p>The entries <span class="math notranslate nohighlight">\(\Delta(i,i)=\delta_i\)</span> along the main diagonal of
+<span class="math notranslate nohighlight">\(\Delta\)</span> are called the <em>singular value</em> of <span class="math notranslate nohighlight">\(\D\)</span>.</p>
+<p>One can discard those left and right singular vectors that correspond to zero
+singular values, to obtain the <em>reduced SVD</em> as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\D=\bs{\rm{L}}_r\bs{\rm{\Delta}}_r\bs{\rm{R}}_r^T\)</span></p>
+</div>
+<p>The reduced SVD leads directly to the <em>spectral decomposition</em> of <span class="math notranslate nohighlight">\(\D\)</span>, given as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\D=\sum_{i=1}^r\delta_i\bs{l}_i\bs{\rm{r}}_i^T\)</span></p>
+</div>
+<p>By selecting the <span class="math notranslate nohighlight">\(q\)</span> largest singular values
+<span class="math notranslate nohighlight">\(\delta_1,\delta_2,\cds,\delta_q\)</span> and the corresponding left and right
+singular vectors, we obtain the best rank <span class="math notranslate nohighlight">\(q\)</span> approximation to the
+original matrix <span class="math notranslate nohighlight">\(\D\)</span>.
+That is, if <span class="math notranslate nohighlight">\(\D_q\)</span> is the matrix defined as</p>
+<div class="math notranslate nohighlight">
+\[\D_q=\sum_{i=1}^q\delta_i\bs{l}_i\bs{\rm{r}}_i^T\]</div>
+<p>then it can be shown that <span class="math notranslate nohighlight">\(\D_q\)</span> is the rank <span class="math notranslate nohighlight">\(q\)</span> matrix that minimizes the expression</p>
+<div class="math notranslate nohighlight">
+\[\lv\D-\D_q\rv_F\]</div>
+<p>where <span class="math notranslate nohighlight">\(\lv\A\rv_F\)</span> is called the <em>Frobenius Norm</em> of the <span class="math notranslate nohighlight">\(n\times d\)</span> matrix <span class="math notranslate nohighlight">\(\A\)</span>, defined as</p>
+<div class="math notranslate nohighlight">
+\[\lv\A\rv_F=\sqrt{\sum_{i=1}^n\sum_{j=1}^D\A(i,j)^2}\]</div>
+<div class="section" id="geometry-of-svd">
+<h3>7.4.1 Geometry of SVD<a class="headerlink" href="#geometry-of-svd" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="connection-between-svd-and-pca">
+<h3>7.4.2 Connection between SVD and PCA<a class="headerlink" href="#connection-between-svd-and-pca" title="Permalink to this headline">¶</a></h3>
+</div>
 </div>
 </div>
 
