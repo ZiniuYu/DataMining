@@ -628,7 +628,57 @@ where :math:`\lv\A\rv_F` is called the *Frobenius Norm* of the :math:`n\times d`
 7.4.1 Geometry of SVD
 ^^^^^^^^^^^^^^^^^^^^^
 
-
+SVD is a special factorization of the matrix :math:`\D`, such that any basis 
+vector :math:`\bs{\rm{r}}_i` for the row space is mapped to the corresponding 
+basis vector :math:`\bs{l}_i` in the column space, scaled by the singular value 
+:math:`\delta_i`.
+We can think of the SVD as a mapping from an orthonormal basis 
+:math:`(\bs{\rm{r}}_1,\bs{\rm{r}}_2,\cds,\bs{\rm{r}}_r)` in :math:`\R^d` (the
+row space) to an orthonormal basis :math:`(\bs{l}_1,\bs{l}_2,\cds,\bs{l}_r)` in
+:math:`\R^n` (the column space), with the corresponding axes scaled according to
+the singular values :math:`\delta_1,\delta_2,\cds,\delta_r`.
 
 7.4.2 Connection between SVD and PCA
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Assume that the matrix :math:`\D` has been centered, and assume that the 
+centered matrix :math:`\bar\D` has been factorized as 
+:math:`\bar\D=\bs{\rm{L\Delta R}}^T`.
+Consider the *scatter matrix* for :math:`\bar\D`, given as :math:`\bar\D^T\bar\D`.
+We have
+
+.. math::
+
+    \bar\D^T\bar\D&=(\bs{\rm{L\Delta R}}^T)^T(\bs{\rm{L\Delta R}}^T)
+
+    &=\bs{\rm{R\Delta}}^T\bs{\rm{L}}^T\bs{\rm{L\Delta R}}^T
+
+    &=\bs{\rm{R}}(\bs{\rm{\Delta}}^T\bs{\rm{\Delta}})\bs{\rm{R}}^T
+
+    &=\bs{\rm{R\Delta}}_d^2\bs{\rm{R}}^T
+
+where :math:`\bs{\rm{R\Delta}}_d^2` is the :math:`d\times d` diagonal matrix 
+defined as :math:`\bs{\rm{R\Delta}}_d^2(i,i)=\delta_i^2`, for :math:`i=1,\cds,d`.
+
+Because the covariance matrix of :math:`\bar\D` is given as :math:`\Sg=\frac{1}{n}\bar\D^T\bar\D`, we have
+
+.. math::
+
+    \bar\D^T\bar\D&=n\Sg
+
+    &=n\U\Ld\U^T
+
+    &=\U(n\Ld)\U^T
+
+The right singular vectors :math:`\bs{\rm{R}}` are the same as the eigenvectors of :math:`\Sg`.
+The cooresponding singular values of :math:`\bar\D` are related to the eigenvalues of :math:`\Sg` by the expression
+
+.. math::
+
+    n\ld_i=\delta_i^2
+
+    \rm{\or}, \ld_i=\frac{\delta_i^2}{n},\rm{\ for\ }i=1,\cds,d
+
+Likewise the left singular vectors in :math:`\bs{\rm{L}}` are the eigenvectors 
+of the matrix :math:`n\times n` matrix :math:`\bar\D\bar\D^T`, and the 
+corresponding eigenvalues are given as :math:`\delta_i^2`.

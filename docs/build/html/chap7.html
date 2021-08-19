@@ -627,9 +627,37 @@ That is, if <span class="math notranslate nohighlight">\(\D_q\)</span> is the ma
 \[\lv\A\rv_F=\sqrt{\sum_{i=1}^n\sum_{j=1}^D\A(i,j)^2}\]</div>
 <div class="section" id="geometry-of-svd">
 <h3>7.4.1 Geometry of SVD<a class="headerlink" href="#geometry-of-svd" title="Permalink to this headline">¶</a></h3>
+<p>SVD is a special factorization of the matrix <span class="math notranslate nohighlight">\(\D\)</span>, such that any basis
+vector <span class="math notranslate nohighlight">\(\bs{\rm{r}}_i\)</span> for the row space is mapped to the corresponding
+basis vector <span class="math notranslate nohighlight">\(\bs{l}_i\)</span> in the column space, scaled by the singular value
+<span class="math notranslate nohighlight">\(\delta_i\)</span>.
+We can think of the SVD as a mapping from an orthonormal basis
+<span class="math notranslate nohighlight">\((\bs{\rm{r}}_1,\bs{\rm{r}}_2,\cds,\bs{\rm{r}}_r)\)</span> in <span class="math notranslate nohighlight">\(\R^d\)</span> (the
+row space) to an orthonormal basis <span class="math notranslate nohighlight">\((\bs{l}_1,\bs{l}_2,\cds,\bs{l}_r)\)</span> in
+<span class="math notranslate nohighlight">\(\R^n\)</span> (the column space), with the corresponding axes scaled according to
+the singular values <span class="math notranslate nohighlight">\(\delta_1,\delta_2,\cds,\delta_r\)</span>.</p>
 </div>
 <div class="section" id="connection-between-svd-and-pca">
 <h3>7.4.2 Connection between SVD and PCA<a class="headerlink" href="#connection-between-svd-and-pca" title="Permalink to this headline">¶</a></h3>
+<p>Assume that the matrix <span class="math notranslate nohighlight">\(\D\)</span> has been centered, and assume that the
+centered matrix <span class="math notranslate nohighlight">\(\bar\D\)</span> has been factorized as
+<span class="math notranslate nohighlight">\(\bar\D=\bs{\rm{L\Delta R}}^T\)</span>.
+Consider the <em>scatter matrix</em> for <span class="math notranslate nohighlight">\(\bar\D\)</span>, given as <span class="math notranslate nohighlight">\(\bar\D^T\bar\D\)</span>.
+We have</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\bar\D^T\bar\D&amp;=(\bs{\rm{L\Delta R}}^T)^T(\bs{\rm{L\Delta R}}^T)\\&amp;=\bs{\rm{R\Delta}}^T\bs{\rm{L}}^T\bs{\rm{L\Delta R}}^T\\&amp;=\bs{\rm{R}}(\bs{\rm{\Delta}}^T\bs{\rm{\Delta}})\bs{\rm{R}}^T\\&amp;=\bs{\rm{R\Delta}}_d^2\bs{\rm{R}}^T\end{aligned}\end{align} \]</div>
+<p>where <span class="math notranslate nohighlight">\(\bs{\rm{R\Delta}}_d^2\)</span> is the <span class="math notranslate nohighlight">\(d\times d\)</span> diagonal matrix
+defined as <span class="math notranslate nohighlight">\(\bs{\rm{R\Delta}}_d^2(i,i)=\delta_i^2\)</span>, for <span class="math notranslate nohighlight">\(i=1,\cds,d\)</span>.</p>
+<p>Because the covariance matrix of <span class="math notranslate nohighlight">\(\bar\D\)</span> is given as <span class="math notranslate nohighlight">\(\Sg=\frac{1}{n}\bar\D^T\bar\D\)</span>, we have</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\bar\D^T\bar\D&amp;=n\Sg\\&amp;=n\U\Ld\U^T\\&amp;=\U(n\Ld)\U^T\end{aligned}\end{align} \]</div>
+<p>The right singular vectors <span class="math notranslate nohighlight">\(\bs{\rm{R}}\)</span> are the same as the eigenvectors of <span class="math notranslate nohighlight">\(\Sg\)</span>.
+The cooresponding singular values of <span class="math notranslate nohighlight">\(\bar\D\)</span> are related to the eigenvalues of <span class="math notranslate nohighlight">\(\Sg\)</span> by the expression</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}n\ld_i=\delta_i^2\\\rm{\or}, \ld_i=\frac{\delta_i^2}{n},\rm{\ for\ }i=1,\cds,d\end{aligned}\end{align} \]</div>
+<p>Likewise the left singular vectors in <span class="math notranslate nohighlight">\(\bs{\rm{L}}\)</span> are the eigenvectors
+of the matrix <span class="math notranslate nohighlight">\(n\times n\)</span> matrix <span class="math notranslate nohighlight">\(\bar\D\bar\D^T\)</span>, and the
+corresponding eigenvalues are given as <span class="math notranslate nohighlight">\(\delta_i^2\)</span>.</p>
 </div>
 </div>
 </div>
