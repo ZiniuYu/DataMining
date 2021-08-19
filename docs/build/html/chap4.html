@@ -88,7 +88,7 @@
               
             
             
-              <p class="caption"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="chap1.html">Chapter 1 Data Matrix</a></li>
 <li class="toctree-l1"><a class="reference internal" href="chap2.html">Chapter 2 Numeric Attributes</a></li>
@@ -96,7 +96,7 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Chapter 4 Graph Data</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#graph-concepts">4.1 Graph Concepts</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#topological-attributes">4.2 Topological Attributes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#centrality-analisys">4.3 Centrality Analisys</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#centrality-analysis">4.3 Centrality Analysis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#graph-models">4.4 Graph Models</a></li>
 </ul>
 </li>
@@ -335,9 +335,100 @@ Euclidean distance between the points via the transformation</p>
 </div>
 <div class="section" id="topological-attributes">
 <h2>4.2 Topological Attributes<a class="headerlink" href="#topological-attributes" title="Permalink to this headline">¶</a></h2>
+<p>The topological attributes of graphs are <em>local</em> if they apply to only a single
+node, or <em>global</em> if they refer to the entire graph.</p>
+<p><strong>Degree</strong></p>
+<p>The degree of a node <span class="math notranslate nohighlight">\(\v_i\)</span> is defined as the number of its neighbors.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp d_i=\sum_j\A(i,j)\)</span></p>
 </div>
-<div class="section" id="centrality-analisys">
-<h2>4.3 Centrality Analisys<a class="headerlink" href="#centrality-analisys" title="Permalink to this headline">¶</a></h2>
+<p>One of the simplest global attribute is the <em>average degree</em>:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp \mu_d=\frac{\sum_id_i}{n}\)</span></p>
+</div>
+<p><strong>Average Path Length</strong></p>
+<p>The <em>average path length</em>, also called the <em>characteristic path length</em>, of a connected graph is given as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\mu_L=\frac{\sum_i\sum_{j&gt;i}d(v_i,v_j)}{\bp n\\2 \ep}=\frac{2}{n(n-1)}\sum_i\sum_{j&gt;i}d(v_i,v_j)\)</span></p>
+</div>
+<p>For a directed graph, the average is over all ordered pairs of vertices:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\mu_L=\frac{1}{n(n-1)}\sum_i\sum_jd(v_i,v_j)\)</span></p>
+</div>
+<p>For a disconnected graph the average is taken over only the connected pairs of vertices.</p>
+<p><strong>Eccentricity</strong></p>
+<p>The <em>eccentricity</em> of a node <span class="math notranslate nohighlight">\(v_i\)</span> is the maximum distance from <span class="math notranslate nohighlight">\(v_i\)</span> to any other node in the graph:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp e(v_i)=\max_j\{d(v_i,v_j)\}\)</span></p>
+</div>
+<p>If the graph is disconnected the eccentricity is computed only over pairs of
+vertices with finite distance, that is, only for verticese connected by a path.</p>
+<p><strong>Radius and Diameter</strong></p>
+<p>The <em>radius</em> of a connected graph, denoted <span class="math notranslate nohighlight">\(r(G)\)</span>, is the minimum eccentricity of any node in the graph:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(r(G)=\min_i\{e(v_i)\}=\min_i\{\max_j\{d(v_i,v_j)\}\}\)</span></p>
+</div>
+<p>The <em>diameter</em>, denoted <span class="math notranslate nohighlight">\(d(G)\)</span>, is the maximum eccentricity of any vertex in the graph:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(d(G)=\max_i\{e(v_i)\}=\max_{i,j}\{d(v_i,v_j)\}\)</span></p>
+</div>
+<p>For a disconnected graph, the diameter is the maximum eccentricity over all the connected components of the graph.</p>
+<p>The diameter of a graph <span class="math notranslate nohighlight">\(G\)</span> is sensitive to outliers.
+A more robust notion is <em>effective diameter</em>, defined as the minimum number of
+hops for which a large fraction, typically <span class="math notranslate nohighlight">\(90\%\)</span>, of all connected pairs
+of nodes can reach each other.</p>
+<p><strong>Clustering Coefficient</strong></p>
+<p>The <em>clustering coefficient</em> of a node <span class="math notranslate nohighlight">\(v_i\)</span> is a measure of the density
+of edges in the neighborhood of <span class="math notranslate nohighlight">\(v_i\)</span>.
+Let <span class="math notranslate nohighlight">\(G_i=(V_i,E_i)\)</span> be the subgraph induced by the neighbors of vertex <span class="math notranslate nohighlight">\(v_i\)</span>.
+Note that <span class="math notranslate nohighlight">\(v_i\notin V_i\)</span>, as we assume that <span class="math notranslate nohighlight">\(G\)</span> is simple.
+Let <span class="math notranslate nohighlight">\(|V_i|=n_i\)</span> be the number of neighbors of <span class="math notranslate nohighlight">\(v_i\)</span> and
+<span class="math notranslate nohighlight">\(|E_i|=m_i\)</span> be the number of edges among the neighbors of <span class="math notranslate nohighlight">\(v_i\)</span>.
+The clustering coefficient of <span class="math notranslate nohighlight">\(v_i\)</span> is defined as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp C(v_i)=\frac{\rm{no.\ of\ edges\ in\ }G_i}{\rm{maximum\ number\ of\ edges\ in\ }G_i}=\)</span>
+<span class="math notranslate nohighlight">\(\dp\frac{m_i}{\bp n_i\\2 \ep}=\frac{2\cd m_i}{n_i(n_i-1)}\)</span></p>
+</div>
+<p>The <em>clustering coefficient</em> of a graph <span class="math notranslate nohighlight">\(G\)</span> is simply the average
+clustering coefficient over all the nodes, given as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp C(G)=\frac{1}{n}\sum_iC(v_i)\)</span></p>
+</div>
+<p>Because <span class="math notranslate nohighlight">\(C(v_i)\)</span> is well defined only for nodes with degree
+<span class="math notranslate nohighlight">\(d(v_i)\geq 2\)</span>, we can define <span class="math notranslate nohighlight">\(C(v_i)=0\)</span> for nodes with degree less
+than 2.</p>
+<p>Define the subgraph composed of the edges <span class="math notranslate nohighlight">\((v_i,v_j)\)</span> and <span class="math notranslate nohighlight">\((v_i,v_k)\)</span>
+to be a <em>connected triple</em> centered at <span class="math notranslate nohighlight">\(v_i\)</span>.
+A connected triple centered at <span class="math notranslate nohighlight">\(v_i\)</span> that includes <span class="math notranslate nohighlight">\((v_j,v_k)\)</span> is called a <em>triangle</em>.
+The clustering coefficient of node <span class="math notranslate nohighlight">\(v_i\)</span> can be expressed as</p>
+<div class="math notranslate nohighlight">
+\[C(v_i)=\frac{\rm{no.\ of\ triangles\ including\ }v_i}{\rm{no.\ of\ connected\ triples\ centered\ at\ }v_i}\]</div>
+<p>The <em>transitivity</em> of the graph is defined as</p>
+<div class="math notranslate nohighlight">
+\[T(G)=\frac{3\times\rm{no.\ of\ triangles\ in\ }G}{\rm{no.\ of\ connected\ triples\ in\ }G}\]</div>
+<p><strong>Efficiency</strong></p>
+<p>The <em>efficiency</em> for a pair of nodes <span class="math notranslate nohighlight">\(v_i\)</span> and <span class="math notranslate nohighlight">\(v_j\)</span> is defined as <span class="math notranslate nohighlight">\(\frac{1}{d(v_i,v_j)\)</span>/
+If <span class="math notranslate nohighlight">\(v_i\)</span> and <span class="math notranslate nohighlight">\(v_j\)</span> are not connected, then <span class="math notranslate nohighlight">\(d(v_i,v_j)=\infty\)</span>
+and the efficiency is <span class="math notranslate nohighlight">\(1/\infty=0\)</span>.
+The <em>efficiency</em> of a graph <span class="math notranslate nohighlight">\(G\)</span> is  the average efficiency over all pairs
+of nodes, whether connected or not, given as</p>
+<div class="math notranslate nohighlight">
+\[\frac{2}{n(n-1)}\sum_i\sum_{j&gt;i}\frac{1}{d(v_i,v_j)}\]</div>
+<p>The maximum efficiency value is 1, which holds for a complete graph.</p>
+<p>The <em>local efficiency</em> for a node <span class="math notranslate nohighlight">\(v_i\)</span> is defined as the efficiency of
+the subgraph <span class="math notranslate nohighlight">\(G_i\)</span> induced by the neighbors of <span class="math notranslate nohighlight">\(v_i\)</span>.</p>
+</div>
+<div class="section" id="centrality-analysis">
+<h2>4.3 Centrality Analysis<a class="headerlink" href="#centrality-analysis" title="Permalink to this headline">¶</a></h2>
 <img alt="_images/Algo4.1.png" src="_images/Algo4.1.png" />
 </div>
 <div class="section" id="graph-models">

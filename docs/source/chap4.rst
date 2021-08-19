@@ -151,26 +151,130 @@ where :math:`\sg` is the spread parameter.
 4.2 Topological Attributes
 --------------------------
 
+The topological attributes of graphs are *local* if they apply to only a single 
+node, or *global* if they refer to the entire graph.
 
+**Degree**
 
+The degree of a node :math:`\v_i` is defined as the number of its neighbors.
 
+.. note::
 
+    :math:`\dp d_i=\sum_j\A(i,j)`
 
+One of the simplest global attribute is the *average degree*:
 
+.. note::
 
+    :math:`\dp \mu_d=\frac{\sum_id_i}{n}`
 
+**Average Path Length**
 
+The *average path length*, also called the *characteristic path length*, of a connected graph is given as
 
+.. note::
 
+    :math:`\dp\mu_L=\frac{\sum_i\sum_{j>i}d(v_i,v_j)}{\bp n\\2 \ep}=\frac{2}{n(n-1)}\sum_i\sum_{j>i}d(v_i,v_j)`
 
+For a directed graph, the average is over all ordered pairs of vertices:
 
+.. note::
 
+    :math:`\dp\mu_L=\frac{1}{n(n-1)}\sum_i\sum_jd(v_i,v_j)`
 
+For a disconnected graph the average is taken over only the connected pairs of vertices.
 
+**Eccentricity**
 
+The *eccentricity* of a node :math:`v_i` is the maximum distance from :math:`v_i` to any other node in the graph:
 
+.. note::
 
-4.3 Centrality Analisys
+    :math:`\dp e(v_i)=\max_j\{d(v_i,v_j)\}`
+
+If the graph is disconnected the eccentricity is computed only over pairs of 
+vertices with finite distance, that is, only for verticese connected by a path.
+
+**Radius and Diameter**
+
+The *radius* of a connected graph, denoted :math:`r(G)`, is the minimum eccentricity of any node in the graph:
+
+.. note::
+
+    :math:`r(G)=\min_i\{e(v_i)\}=\min_i\{\max_j\{d(v_i,v_j)\}\}`
+
+The *diameter*, denoted :math:`d(G)`, is the maximum eccentricity of any vertex in the graph:
+
+.. note::
+
+    :math:`d(G)=\max_i\{e(v_i)\}=\max_{i,j}\{d(v_i,v_j)\}`
+
+For a disconnected graph, the diameter is the maximum eccentricity over all the connected components of the graph.
+
+The diameter of a graph :math:`G` is sensitive to outliers.
+A more robust notion is *effective diameter*, defined as the minimum number of 
+hops for which a large fraction, typically :math:`90\%`, of all connected pairs
+of nodes can reach each other.
+
+**Clustering Coefficient**
+
+The *clustering coefficient* of a node :math:`v_i` is a measure of the density 
+of edges in the neighborhood of :math:`v_i`.
+Let :math:`G_i=(V_i,E_i)` be the subgraph induced by the neighbors of vertex :math:`v_i`.
+Note that :math:`v_i\notin V_i`, as we assume that :math:`G` is simple.
+Let :math:`|V_i|=n_i` be the number of neighbors of :math:`v_i` and 
+:math:`|E_i|=m_i` be the number of edges among the neighbors of :math:`v_i`.
+The clustering coefficient of :math:`v_i` is defined as
+
+.. note::
+
+    :math:`\dp C(v_i)=\frac{\rm{no.\ of\ edges\ in\ }G_i}{\rm{maximum\ number\ of\ edges\ in\ }G_i}=`
+    :math:`\dp\frac{m_i}{\bp n_i\\2 \ep}=\frac{2\cd m_i}{n_i(n_i-1)}`
+
+The *clustering coefficient* of a graph :math:`G` is simply the average 
+clustering coefficient over all the nodes, given as
+
+.. note::
+
+    :math:`\dp C(G)=\frac{1}{n}\sum_iC(v_i)`
+
+Because :math:`C(v_i)` is well defined only for nodes with degree 
+:math:`d(v_i)\geq 2`, we can define :math:`C(v_i)=0` for nodes with degree less 
+than 2.
+
+Define the subgraph composed of the edges :math:`(v_i,v_j)` and :math:`(v_i,v_k)` 
+to be a *connected triple* centered at :math:`v_i`.
+A connected triple centered at :math:`v_i` that includes :math:`(v_j,v_k)` is called a *triangle*.
+The clustering coefficient of node :math:`v_i` can be expressed as
+
+.. math::
+
+    C(v_i)=\frac{\rm{no.\ of\ triangles\ including\ }v_i}{\rm{no.\ of\ connected\ triples\ centered\ at\ }v_i}
+
+The *transitivity* of the graph is defined as
+
+.. math::
+
+    T(G)=\frac{3\times\rm{no.\ of\ triangles\ in\ }G}{\rm{no.\ of\ connected\ triples\ in\ }G}
+
+**Efficiency**
+
+The *efficiency* for a pair of nodes :math:`v_i` and :math:`v_j` is defined as :math:`\frac{1}{d(v_i,v_j)`/
+If :math:`v_i` and :math:`v_j` are not connected, then :math:`d(v_i,v_j)=\infty` 
+and the efficiency is :math:`1/\infty=0`.
+The *efficiency* of a graph :math:`G` is  the average efficiency over all pairs 
+of nodes, whether connected or not, given as
+
+.. math::
+
+    \frac{2}{n(n-1)}\sum_i\sum_{j>i}\frac{1}{d(v_i,v_j)}
+
+The maximum efficiency value is 1, which holds for a complete graph.
+
+The *local efficiency* for a node :math:`v_i` is defined as the efficiency of 
+the subgraph :math:`G_i` induced by the neighbors of :math:`v_i`.
+
+4.3 Centrality Analysis
 -----------------------
 
 
