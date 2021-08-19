@@ -65,13 +65,14 @@ rst_prolog = r'''
     \newcommand{\cd}{\cdot}
     \newcommand{\cds}{\cdots}
     \newcommand{\dds}{\ddots}
-    \newcommand{\vds}{\vdots}
     \newcommand{\lv}{\lVert}
-    \newcommand{\rv}{\rVert}
-    \newcommand{\wh}{\widehat}
     \newcommand{\ol}{\overline}
     \newcommand{\ra}{\rightarrow}
-    
+    \newcommand{\rv}{\rVert}
+    \newcommand{\seq}{\subseteq}
+    \newcommand{\vds}{\vdots}
+    \newcommand{\wh}{\widehat}
+
     \newcommand{\0}{\boldsymbol{0}}
     \newcommand{\1}{\boldsymbol{1}}
     \newcommand{\a}{\boldsymbol{\mathrm{a}}}

@@ -178,12 +178,13 @@
 \newcommand{\pd}{\partial}\\\newcommand{\cd}{\cdot}
 \newcommand{\cds}{\cdots}
 \newcommand{\dds}{\ddots}
-\newcommand{\vds}{\vdots}
 \newcommand{\lv}{\lVert}
-\newcommand{\rv}{\rVert}
-\newcommand{\wh}{\widehat}
 \newcommand{\ol}{\overline}
-\newcommand{\ra}{\rightarrow}\\\newcommand{\0}{\boldsymbol{0}}
+\newcommand{\ra}{\rightarrow}
+\newcommand{\rv}{\rVert}
+\newcommand{\seq}{\subseteq}
+\newcommand{\vds}{\vdots}
+\newcommand{\wh}{\widehat}\\\newcommand{\0}{\boldsymbol{0}}
 \newcommand{\1}{\boldsymbol{1}}
 \newcommand{\a}{\boldsymbol{\mathrm{a}}}
 \newcommand{\b}{\boldsymbol{\mathrm{b}}}
@@ -228,12 +229,116 @@
 <h1>Chapter 4 Graph Data<a class="headerlink" href="#chapter-4-graph-data" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="graph-concepts">
 <h2>4.1 Graph Concepts<a class="headerlink" href="#graph-concepts" title="Permalink to this headline">¶</a></h2>
+<p><strong>Graph</strong></p>
+<p>A <em>graph</em> <span class="math notranslate nohighlight">\(G=(V,E)\)</span> is a mathematical structure consisting of a finite
+nonempty set <span class="math notranslate nohighlight">\(V\)</span> of <em>vertices</em> or <em>nodes</em>, and a set
+<span class="math notranslate nohighlight">\(E\seq V\times V\)</span> of <em>edges</em> consisting of <em>unordered</em> pairs of
+vertices.
+An edge from a node to itself, <span class="math notranslate nohighlight">\((v_i,v_i)\)</span>, is called a <em>loop</em>.
+An undirected graph without loops is called a <em>simple graph</em>.
+An edge <span class="math notranslate nohighlight">\(e=(v_i,v_j)\)</span> between <span class="math notranslate nohighlight">\(v_i\)</span> and <span class="math notranslate nohighlight">\(v_j\)</span> is said to be
+<em>incident with</em> nodes <span class="math notranslate nohighlight">\(v_i\)</span> and <span class="math notranslate nohighlight">\(v_j\)</span> and <span class="math notranslate nohighlight">\(v_j\)</span> are <em>adjacent</em> to one another, and that they are
+<em>neighbors</em>.
+The number of nodes in the graph <span class="math notranslate nohighlight">\(G\)</span>, given as <span class="math notranslate nohighlight">\(|V|=n\)</span> is called the
+<em>order</em> of the graph, and the number of edges in the graph, given as
+<span class="math notranslate nohighlight">\(|E|=m\)</span>, is called the <em>size</em> of <span class="math notranslate nohighlight">\(G\)</span>.</p>
+<p>A <em>directed graph</em> or <em>digraph</em> has an edge set <span class="math notranslate nohighlight">\(E\)</span> consisting of <em>ordered</em> pairs of vertices.
+A directed edge <span class="math notranslate nohighlight">\((v_i,v_j)\)</span> is also called an <em>arc</em>, and is said to be <em>from</em> <span class="math notranslate nohighlight">\(v_i\)</span> <em>to</em> <span class="math notranslate nohighlight">\(v_j\)</span>.
+We also say that <span class="math notranslate nohighlight">\(v_i\)</span> is the <em>tail</em> and <span class="math notranslate nohighlight">\(v_j\)</span> the <em>head</em> of the arc.</p>
+<p>A <em>weight graph</em> consists of a graph together with a weight <span class="math notranslate nohighlight">\(w_{ij}\)</span> for each edge <span class="math notranslate nohighlight">\((v_i,v_j)\in E\)</span>.</p>
+<p><strong>Subgraphs</strong></p>
+<p>A graph <span class="math notranslate nohighlight">\(H=(V_H,E_H)\)</span> is called a <em>subgraph</em> of <span class="math notranslate nohighlight">\(G=(V,E)\)</span> if
+<span class="math notranslate nohighlight">\(V_H\seq V\)</span> and <span class="math notranslate nohighlight">\(E_H\seq E\)</span>.
+We also say that <span class="math notranslate nohighlight">\(G\)</span> is a <em>supergraph</em> of <span class="math notranslate nohighlight">\(H\)</span>.
+Given a subset of the vertices <span class="math notranslate nohighlight">\(V\pr\seq V\)</span>, the <em>induced subgraph</em>
+<span class="math notranslate nohighlight">\(G\pr=(V\pr,E\pr)\)</span> consists exactly of all the edges present in <span class="math notranslate nohighlight">\(G\)</span>
+between vertices in <span class="math notranslate nohighlight">\(V\pr\)</span>.
+A (sub)graph is called <em>complete</em> (or a <em>clique</em>) if there exists an edge between all pairs of nodes.</p>
+<p><strong>Degree</strong></p>
+<p>The <em>degree</em> of a node <span class="math notranslate nohighlight">\(v_i\in V\)</span> is the number of edges incident with it,
+and is denoted as <span class="math notranslate nohighlight">\(d(v_i)\)</span> or just <span class="math notranslate nohighlight">\(d_i\)</span>.
+The <em>degree sequence</em> of a graph is the list of the degrees of the nodes sorted in non-increasing order.</p>
+<p>Let <span class="math notranslate nohighlight">\(N_k\)</span> denote the number of vertices with degree <span class="math notranslate nohighlight">\(k\)</span>.
+The <em>degree frequency distribution</em> of a graph is given as</p>
+<div class="math notranslate nohighlight">
+\[(N_0,N_1,\cds,N_t)\]</div>
+<p>where <span class="math notranslate nohighlight">\(t\)</span> is the maximum degree for a node in <span class="math notranslate nohighlight">\(G\)</span>.
+Let <span class="math notranslate nohighlight">\(X\)</span> be a random variable donoting the degree of a node.
+The <em>degree distribution</em> of a graph gives the probability mass function <span class="math notranslate nohighlight">\(f\)</span> for <span class="math notranslate nohighlight">\(X\)</span>, given as</p>
+<div class="math notranslate nohighlight">
+\[(f(0),f(1),\cds,f(t))\]</div>
+<p>where <span class="math notranslate nohighlight">\(f(k)=P(X=k)=\frac{N_k}{n}\)</span> is the probability of a node with degree <span class="math notranslate nohighlight">\(k\)</span>.</p>
+<p>For directed graphs, the <em>indegree</em> of node <span class="math notranslate nohighlight">\(v_i\)</span> denoted as
+<span class="math notranslate nohighlight">\(id(v_i)\)</span>, is the number of edges with <span class="math notranslate nohighlight">\(v_i\)</span> as head, that is, the
+number of incoming edges at <span class="math notranslate nohighlight">\(v_i\)</span>.
+The <em>outdegree</em> of <span class="math notranslate nohighlight">\(v_i\)</span>, denoted <span class="math notranslate nohighlight">\(od(v_i)\)</span>, is the number of edges
+with <span class="math notranslate nohighlight">\(v_i\)</span> as the tail, that is, the number of outgoing edges from
+<span class="math notranslate nohighlight">\(v_i\)</span>.</p>
+<p><strong>Path and Distance</strong></p>
+<p>A <em>walk</em> in a graph <span class="math notranslate nohighlight">\(G\)</span> between nodes <span class="math notranslate nohighlight">\(x\)</span> and <span class="math notranslate nohighlight">\(y\)</span> is an
+ordered sequence of vertices, starting at <span class="math notranslate nohighlight">\(x\)</span> and ending at <span class="math notranslate nohighlight">\(y\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[x=v_0,v_1,\cds,v_{t-1},v_t=y\]</div>
+<p>such that there is an edge between every pair of consecutive verices, that is
+<span class="math notranslate nohighlight">\((v_{i-1},v_i)\in E\)</span> for all <span class="math notranslate nohighlight">\(i=1,2,\cds,t\)</span>.
+The length of the walk, <span class="math notranslate nohighlight">\(t\)</span>, is measured in terms of <em>hops</em>–the number of edges along the walk.
+Both the vertices and edges may be repeated in a walk.
+A walk starting and ending at the same vertex is called <em>closed</em>.
+A <em>trail</em> is a walk with distinct edges, and a <em>path</em> is a walk with <em>distinct</em>
+vertices (with the exception of the start and end vertices).
+A closed path with length <span class="math notranslate nohighlight">\(t\geq 3\)</span> is called a <em>cycle</em>.</p>
+<p>A path of minumum length between nodes <span class="math notranslate nohighlight">\(x\)</span> and <span class="math notranslate nohighlight">\(y\)</span> is called a
+<em>shortest path</em>, and the length of the shortest path is called the <em>distance</em>
+between <span class="math notranslate nohighlight">\(x\)</span> and <span class="math notranslate nohighlight">\(y\)</span>, denoted as <span class="math notranslate nohighlight">\(d(x,y)\)</span>.
+If no path exists between the two nodes, the distance is assumed to be <span class="math notranslate nohighlight">\(d(x,y)=\infty\)</span>.</p>
+<p><strong>Connectedness</strong></p>
+<p>Two nodes <span class="math notranslate nohighlight">\(v_i\)</span> and <span class="math notranslate nohighlight">\(v_j\)</span> are said to be <em>connected</em> if there exists a path between them.
+A graph is <em>connected</em> if there is a path between all pairs of vertices.
+A <em>connected component</em>, or just <em>component</em>, of a graph is a maximal connected subgraph.
+If a graph has only one component it is connected; otherwise it is <em>disconnected</em>.</p>
+<p>For a directed graph, we say that it is <em>strongly connected</em> if there is a
+(directed) path between all ordered pairs of vertices.
+We say that it is <em>weakly connected</em> if there exists a path between node pairs only by considering edges as undirected.</p>
+<p><strong>Adjacency Matrix</strong></p>
+<p>A graph <span class="math notranslate nohighlight">\(G=(V,E)\)</span>, with <span class="math notranslate nohighlight">\(|V|=n\)</span> vertices, can be conveniently
+represented in the form of an <span class="math notranslate nohighlight">\(n\times n\)</span>, symmetric binary
+<em>adjacency matrix</em>, <span class="math notranslate nohighlight">\(\A\)</span>, defined as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\A(i,j)=\left\{\begin{array}{lr}1\quad\rm{if\ }v_i\rm{\ is\ adjacent\ to\ }v_j\\0\quad\rm{otherwise}\end{array}\right.\)</span></p>
+</div>
+<p>If the graph is directed, then the adjacency matrix <span class="math notranslate nohighlight">\(\A\)</span> is not symmetric,
+as <span class="math notranslate nohighlight">\((v_i,v_j)\in E\)</span> does not imply that <span class="math notranslate nohighlight">\((v_j,v_i)\in E\)</span>.</p>
+<p>If the graph is weighted, then we obtain an <span class="math notranslate nohighlight">\(n\times n\)</span> <em>weighted adjacency matrix</em>, <span class="math notranslate nohighlight">\(\A\)</span>, defined as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\A(i,j)=\left\{\begin{array}{lr}w_{ij}\quad\rm{if\ }v_i\rm{\ is\ adjacent\ to\ }v_j\\0\quad\rm{otherwise}\end{array}\right.\)</span></p>
+</div>
+<p>where <span class="math notranslate nohighlight">\(w_{ij}\)</span> is the weight on edge <span class="math notranslate nohighlight">\((v_i,v_j)\in E\)</span>.
+A weighted adjacency matrix can always be converted into a binary one, if
+desired, by using some threshold <span class="math notranslate nohighlight">\(\tau\)</span> on the edge weights</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\A(i,j)=\left\{\begin{array}{lr}1\quad\rm{if\ }w_{ij}\geq\tau\\0\quad\rm{otherwise}\end{array}\right.\end{split}\]</div>
+<p><strong>Graph from Data Matrix</strong></p>
+<p>Let <span class="math notranslate nohighlight">\(\D\)</span> be a dataset consisting of <span class="math notranslate nohighlight">\(n\)</span> points <span class="math notranslate nohighlight">\(\x_i\in\R^d\)</span> in a <span class="math notranslate nohighlight">\(d\)</span>-dimensional space.
+We can define a weighted graph <span class="math notranslate nohighlight">\(G=(V,E)\)</span>, where there exists a node for
+each point in <span class="math notranslate nohighlight">\(\D\)</span>, and there exists a node for each point in <span class="math notranslate nohighlight">\(\D\)</span>,
+and there exists an edge between each pair of points, with weight</p>
+<div class="math notranslate nohighlight">
+\[w_{ij}=sim(\x_i,\x_j)\]</div>
+<p>where <span class="math notranslate nohighlight">\(sim(\x_i,\x_j)\)</span> denotes the similarity between points <span class="math notranslate nohighlight">\(\x_i\)</span> and <span class="math notranslate nohighlight">\(\x_j\)</span>.
+For instance, similarity can be defined as being inversely related to the
+Euclidean distance between the points via the transformation</p>
+<div class="math notranslate nohighlight">
+\[w_{ij}=sim(\x_i,\x_j)=\exp\bigg\{-\frac{\lv\x_i-\x_j\rv^2}{2\sg^2}\bigg\}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\sg\)</span> is the spread parameter.</p>
 </div>
 <div class="section" id="topological-attributes">
 <h2>4.2 Topological Attributes<a class="headerlink" href="#topological-attributes" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="centrality-analisys">
 <h2>4.3 Centrality Analisys<a class="headerlink" href="#centrality-analisys" title="Permalink to this headline">¶</a></h2>
+<img alt="_images/Algo4.1.png" src="_images/Algo4.1.png" />
 </div>
 <div class="section" id="graph-models">
 <h2>4.4 Graph Models<a class="headerlink" href="#graph-models" title="Permalink to this headline">¶</a></h2>

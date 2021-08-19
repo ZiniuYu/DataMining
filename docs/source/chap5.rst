@@ -121,7 +121,7 @@ a linear combination of any subset of feature points, defined as
     \cl{F}&=span\{K(\x,\cd)|\x\in\cl{I}\}
 
     &=\bigg\{\bs{\rm{f}}=f(\cd)=\sum_{i=1}^m\alpha_iK(\x_i,\cd)|m\in\mathbb{N},
-    \alpha_i\in\R,\{\x_1,\cds,\x_m\}\subseteq\cl{I}\bigg\}
+    \alpha_i\in\R,\{\x_1,\cds,\x_m\}\seq\cl{I}\bigg\}
 
 Let :math:`\f,\g\in\cl{F}` be any two points in feature space:
 

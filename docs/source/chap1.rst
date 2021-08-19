@@ -582,7 +582,7 @@ joint probability density function is given as
 
     P((X_1,X_2,\cds,X_d)^T\in W)&=\underset{(x_1,x_2,\cds,x_d)^T\in W}{\int\cds\int}f(x_1,x_2,\cds,x_d)dx_1dx_2\cds dx_d
 
-for any :math:`d`-dimensional region :math:`W\subseteq\R^d`.
+for any :math:`d`-dimensional region :math:`W\seq\R^d`.
 
 We say that :math:`X_1,X_2,\cds,X_d` are independent random variables if any only if, for every region :math:`W_i\in\R`:
 
