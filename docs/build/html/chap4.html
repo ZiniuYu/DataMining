@@ -96,7 +96,11 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Chapter 4 Graph Data</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#graph-concepts">4.1 Graph Concepts</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#topological-attributes">4.2 Topological Attributes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#centrality-analysis">4.3 Centrality Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#centrality-analysis">4.3 Centrality Analysis</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#basic-centralities">4.3.1 Basic Centralities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web-centralities">4.3.2 Web Centralities</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#graph-models">4.4 Graph Models</a></li>
 </ul>
 </li>
@@ -429,7 +433,145 @@ the subgraph <span class="math notranslate nohighlight">\(G_i\)</span> induced b
 </div>
 <div class="section" id="centrality-analysis">
 <h2>4.3 Centrality Analysis<a class="headerlink" href="#centrality-analysis" title="Permalink to this headline">¶</a></h2>
+<p>The notion of <em>centrality</em> is used to rank the vertices of a graph in terms of how “central” or important they are.
+A centrality can be formally defined as a function <span class="math notranslate nohighlight">\(c:V\ra\R\)</span>, that induces a total order on <span class="math notranslate nohighlight">\(V\)</span>.
+We say that <span class="math notranslate nohighlight">\(v_i\)</span> is at least as central as <span class="math notranslate nohighlight">\(v_j\)</span> if <span class="math notranslate nohighlight">\(c(v_i)\geq c(v_j)\)</span>.</p>
+<div class="section" id="basic-centralities">
+<h3>4.3.1 Basic Centralities<a class="headerlink" href="#basic-centralities" title="Permalink to this headline">¶</a></h3>
+<p><strong>Degree Centrality</strong></p>
+<p>The simplest notion of centrality is the degree <span class="math notranslate nohighlight">\(d_i\)</span> of a vertex
+<span class="math notranslate nohighlight">\(v_i\)</span>–the higher the degree, the more important or central the vertex.</p>
+<p><strong>Eccentricity Centrality</strong></p>
+<p>Eccentricity centrality is defined as follows:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp c(v_i)\frac{1}{e(v_i)}=\frac{1}{\max_j\{d(v_i,v_j)\}}\)</span></p>
+</div>
+<p>A node <a href="#id1"><span class="problematic" id="id2">:matj:`v_i`</span></a> that has the least eccentricity, that is, for which the
+eccentricity equals the graph radius, <span class="math notranslate nohighlight">\(e(v_i)=r(G)\)</span>, is called a
+<em>center node</em>, whereas a node that has the highest eccentricity, that is, for
+which eccentricity equals the graph diameter, <span class="math notranslate nohighlight">\(e(v_i)=d(G)\)</span>, is called a
+<em>periphery node</em>.</p>
+<p>Eccentricity centrality is related to the problem of <em>facility location</em>, that
+is, choosing the optimum location for a resource or facility.</p>
+<p><strong>Closeness Centrality</strong></p>
+<p>Closeness centrality uses the sum of all the distances to rank how central a node is</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp c(v_i)=\frac{1}{\sum_jd(v_i,v_j)}\)</span></p>
+</div>
+<p>A node <span class="math notranslate nohighlight">\(v_i\)</span> with the smallest total distance, <span class="math notranslate nohighlight">\(\sum_jd(v_i,v_j)\)</span> is called the <em>median node</em>.</p>
+<p><strong>Betweenness Centrality</strong></p>
+<p>The Betweenness centrality measures how many shortest paths between all pairs of vertices include <span class="math notranslate nohighlight">\(v_i\)</span>.
+This gives an indication as to the central “monitoring” role played by <span class="math notranslate nohighlight">\(v_i\)</span> for various pairs of nodes.
+Let <span class="math notranslate nohighlight">\(\eta_{jk}\)</span> denote the number of shortest paths between vertices
+<span class="math notranslate nohighlight">\(v_j\)</span> and <span class="math notranslate nohighlight">\(v_k\)</span>, and let <span class="math notranslate nohighlight">\(\eta_{jk}(v_j)\)</span> denote the number of
+such paths that include or contain <span class="math notranslate nohighlight">\(v_i\)</span>.
+Then the fraction of paths through <span class="math notranslate nohighlight">\(v_i\)</span> is denoted as</p>
+<div class="math notranslate nohighlight">
+\[\gamma_{jk}(v_i)=\frac{\eta_{jk}(v_i)}{\eta_{ij}}\]</div>
+<p>If the two vertices <span class="math notranslate nohighlight">\(v_i\)</span> and <span class="math notranslate nohighlight">\(v_k\)</span> are not connected, we assume <span class="math notranslate nohighlight">\(\gamma_{jk}(v_i)=0\)</span>.</p>
+<p>The betweenness centrality for a node <span class="math notranslate nohighlight">\(v_i\)</span> is defined as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp c(v_i)=\sum_{j\neq i}\sum_{k\neq i,k&gt;j}\gamma_{jk}(v_i)=\)</span>
+<span class="math notranslate nohighlight">\(\dp\sum_{j\neq i}\sum_{k\neq i,k&gt;j}\frac{\eta_{jk}(v_i)}{\eta_{jk}}\)</span></p>
+</div>
+</div>
+<div class="section" id="web-centralities">
+<h3>4.3.2 Web Centralities<a class="headerlink" href="#web-centralities" title="Permalink to this headline">¶</a></h3>
+<p><strong>Prestige</strong></p>
+<p>Let <span class="math notranslate nohighlight">\(G=(V,E)\)</span> be a directed graph, with <span class="math notranslate nohighlight">\(|V|=n\)</span>.
+The adjacency matrix of <span class="math notranslate nohighlight">\(G\)</span> is an <span class="math notranslate nohighlight">\(n\times n\)</span> asymmetric matrix <span class="math notranslate nohighlight">\(\A\)</span> givne as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\A(u,v)=\left\{\begin{array}{lr}1\quad\rm{if\ }(u,v)\in E\\0\quad\rm{if\ }(u,v)\notin E\end{array}\right.\end{split}\]</div>
+<p>Let <span class="math notranslate nohighlight">\(p(u)\)</span> be a positive real number, called the <em>prestige</em> or <em>eigenvector centrality</em> score for node <span class="math notranslate nohighlight">\(u\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[p(u)=\sum_u\A(u,v)\cd p(u)=\sum_u\A^T(v,u)\cd p(u)\]</div>
+<p>Across all the nodes, we can recursively express the prestige scores as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\p\pr=\A^T\p\)</span></p>
+</div>
+<p>where <span class="math notranslate nohighlight">\(\p\)</span> is an <span class="math notranslate nohighlight">\(n\)</span>-dimensional column vector corresponding to the prestige scores for each vertex.</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\p_k&amp;=\A^T\p_{k-1}\\&amp;=\A^T(\A^T\p_{k-2})=(\A^T)^2\p_{k-2}\\&amp;=(\A^T)^2(\A^T\p_{k-3})=(\A^T)^3\p_{k-3}\\&amp;\vds\\&amp;=(\A^T)^k\p_0\end{aligned}\end{align} \]</div>
+<p>The dominant eigenvector of <span class="math notranslate nohighlight">\(\A^T\)</span> and the corresponding eigenvalue can be computed using the <em>power iteration</em>
+approach.</p>
 <img alt="_images/Algo4.1.png" src="_images/Algo4.1.png" />
+<p><strong>PageRank</strong></p>
+<p>The PageRank of a Web page is defined to be the probability of a random web surfer landing at that page.</p>
+<p><strong>Normalized Prestige</strong></p>
+<p>We assume for the moment that each node <span class="math notranslate nohighlight">\(u\)</span> has outdegree at least 1.
+Let <span class="math notranslate nohighlight">\(od(u)=\sum_v\A(u,v)\)</span> denote the outdegree of node <span class="math notranslate nohighlight">\(u\)</span>.
+Because a randodm surfer can choose among any of its outgoing links, if there is
+a link from <span class="math notranslate nohighlight">\(u\)</span> to <span class="math notranslate nohighlight">\(v\)</span>, then the probability of visiting <span class="math notranslate nohighlight">\(v\)</span>
+from <span class="math notranslate nohighlight">\(u\)</span> is <span class="math notranslate nohighlight">\(\frac{1}{od(u)}\)</span></p>
+<p>Staring from an initial probability or PageRank <span class="math notranslate nohighlight">\(p_0(u)\)</span> for each node, such that</p>
+<div class="math notranslate nohighlight">
+\[\sum_up_0(u)=1\]</div>
+<p>we can compute an updated PageRank vector for <span class="math notranslate nohighlight">\(v\)</span> as follows:</p>
+<div class="math notranslate nohighlight">
+\[p(v)=\sum_u\frac{\A(u,v)}{od(u)}\cd p(u)=\sum_u\N(u,v)\cd p(u)=\sum_u\N^T(v,u)\cd p(u)\]</div>
+<p>where <span class="math notranslate nohighlight">\(\N\)</span> is the normalized adjacency matrix of the graph, given as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\N(u,v)=\left\{\begin{array}{lr}\frac{1}{od(u)}\quad\rm{if\ }(u,v)\in E\\0\quad\rm{if\ }(u,v)\notin E\end{array}\right.\end{split}\]</div>
+<p>Across all nodes, we can express the PageRank vector as follows:</p>
+<div class="math notranslate nohighlight">
+\[\p\pr=\N^T\p\]</div>
+<p><strong>Random Jumps</strong></p>
+<p>In the random surfing approach, there is a small probability of jumping from one
+node to any of the other nodes in the graph, even if they do not have a link
+between them.
+For the random surfer matrix, the outdegree of each node is <span class="math notranslate nohighlight">\(od(u)=n\)</span>, and
+the probability of jumping from <span class="math notranslate nohighlight">\(u\)</span> to any node <span class="math notranslate nohighlight">\(v\)</span> is simply
+<span class="math notranslate nohighlight">\(\frac{1}{od(u)}=\frac{1}{n}\)</span>.
+The PageRank can then be computed analogously as</p>
+<div class="math notranslate nohighlight">
+\[p(v)=\sum_u\frac{\A_r(u,v)}{od(u)}\cd p(u)=\sum_u\N_r(u,v)\cd p(u)=\sum_u\N_r^T(v,u)\cd p(u)\]</div>
+<p>where <span class="math notranslate nohighlight">\(\N_r\)</span> is the normalized adjacency matrix of the fully connected Web graph, given as</p>
+<div class="math notranslate nohighlight">
+\[\N_r=\frac{1}{n}\A_r=\frac{1}{n}\1_{n\times n}\]</div>
+<p>Across all the nodes the random jump PageRank vector can be represented as</p>
+<div class="math notranslate nohighlight">
+\[\p\pr=\N_r^T\p\]</div>
+<p><strong>PageRank</strong></p>
+<p>The full PageRank is computed by assuming that with some small probability,
+<span class="math notranslate nohighlight">\(\alpha\)</span>, a random Web surfer jumps from the current node <span class="math notranslate nohighlight">\(u\)</span> to any
+other random node <span class="math notranslate nohighlight">\(v\)</span>, and with probability <span class="math notranslate nohighlight">\(1-\alpha\)</span> the user
+follows an existing link from <span class="math notranslate nohighlight">\(u\)</span> to <span class="math notranslate nohighlight">\(v\)</span>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\p\pr=(1-\alpha)\N^T\p+\alpha\N_r^T\p=((1-\alpha)\N^T+\alpha\N_r^T)\p=\bs{\rm{M}}^T\p\)</span></p>
+</div>
+<p>When a node <span class="math notranslate nohighlight">\(u\)</span> does not have any outgoing edges, that is, when
+<span class="math notranslate nohighlight">\(od(u)=0\)</span>, it acts like a sink for the normalized prestige score, and it
+can only jump to another random node.
+Thus, we need to make sure that if <span class="math notranslate nohighlight">\(od(u)=0\)</span> then for the row
+corresponding to <span class="math notranslate nohighlight">\(u\)</span> in <span class="math notranslate nohighlight">\(\bs{\rm{M}}\)</span>, denoted as
+<span class="math notranslate nohighlight">\(\bs{\rm{M}}_u\)</span>, we set <span class="math notranslate nohighlight">\(\alpha=1\)</span>, that is</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\bs{\rm{M}}_u=\left\{\begin{array}{lr}\bs{\rm{M}}_u\quad\rm{if\ }od(u)&gt;0\\
+\frac{1}{n}\1_n^T\quad\rm{if\ }od(u)=0\end{array}\right.\end{split}\]</div>
+<p><strong>Hub and Authority Scores</strong></p>
+<p>The <em>authority score</em> of a page is analogous to PageRank or prestige, and it
+depends on how many “good” pages point to it.
+The <em>hub score</em> of a  page is based on how many “good” pages it points to.</p>
+<p>We denote by <span class="math notranslate nohighlight">\(a(u)\)</span> the authority score and by <span class="math notranslate nohighlight">\(h(u)\)</span> the hub score of node <span class="math notranslate nohighlight">\(u\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}a(v)=\sum_u\A^T(v,u)\cd h(u)\\h(v)=\sum_u\A(v,u)\cd a(u)\end{aligned}\end{align} \]</div>
+<p>In matrix notation, we obtain</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\a\pr=\A^T\bs{\rm{h}}\quad\bs{\rm{h}}\pr=\A\a\)</span></p>
+</div>
+<p>In fact, we can write the above recursively as follows:</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\a_k=\A^T\bs{\rm{h}}_{k-1}=\A^T(\A\a_{k-1})=(\A^T\A)\a_{k-1}\\\bs{\rm{h}}_k=\A\a_{k-1}=\A(\A^T\bs{\rm{h}}_{k-1})=(\A\A^T)\bs{\rm{h}}_{k-1}\end{aligned}\end{align} \]</div>
+<p>In other words, as <span class="math notranslate nohighlight">\(k\ra\infty\)</span>, the authority score converges to the
+dominant eigenvector of <span class="math notranslate nohighlight">\(\A^T\A\)</span>, whereas the hub score converges to the
+dominant eigenvector of <span class="math notranslate nohighlight">\(\A\A^T\)</span>.</p>
+</div>
 </div>
 <div class="section" id="graph-models">
 <h2>4.4 Graph Models<a class="headerlink" href="#graph-models" title="Permalink to this headline">¶</a></h2>
