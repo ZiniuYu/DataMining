@@ -500,3 +500,24 @@ dominant eigenvector of :math:`\A\A^T`.
 
 4.4 Graph Models
 ----------------
+
+**Small-world Property**
+
+A graph :math:`G` exhibits small-world behavior if the average path length 
+:math:`\mu_L` scales logarithmically with the number of nodes in the graph, that
+is, if
+
+.. note::
+
+    :math:`\mu_L\varpropto\log n`
+
+A graph is said to have *ultra-small-world* property if the average path length 
+is much smaller than :math:`\log n`, that is, if :math:`\mu_L\ll\log n`.
+
+**Scale-free Property**
+
+In many real-world graphs, the probability that a node has degree :math:`k` satisfies the condition
+
+.. note::
+
+    :math:`f(k)\varpropto k^{-\gamma}`
