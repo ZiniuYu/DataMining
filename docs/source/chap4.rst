@@ -799,3 +799,93 @@ The total number of edges in the graph is :math:`m+mr=(1+r)m=(1+r)kn`.
 
 **Degree Distribution**
 
+Let :math:`X` denote the random variable denoting the number of shortcuts for each node.
+Then the probability of a node with :math:`j` shortcut edges is given as
+
+.. math::
+
+    f(j)=P(X=j)=\bp n\pr\\j \ep p^j(1-p)^{n\pr-j}
+
+with :math:`E[X]=n\pr p=2kr` and :math:`p=\frac{2kr}{n-2k-1}=\frac{2kr}{n\pr}`
+The expected degree of each node in the network is therefore
+
+.. math::
+
+    2k+E[X]=2k+2kr=2k(1+r)
+
+It is clear that the degree distribution of the WS graph does not adhere to a power law.
+Thus, such networks are not scale-free.
+
+**Clustering Coefficient**
+
+The clustering coefficient is
+
+.. math::
+
+    C(v)\simeq\frac{3(k-1)}{(1+r)(4kr+2(2k-1))}=\frac{3k-3}{4k-2+2r(2kr+4k-1)}
+
+For small values of :math:`r` the clustering coefficient remains high.
+
+**Diameter**
+
+Small values of shortcut edge probability :math:`r` are enough to reduce the 
+diameter from :math:`O(n)` to :math:`O(\log n)`.
+
+4.4.3 Barabási–Albert Scale-free Model
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The Barabási–Albert(BA) model tries to capture the scale-free degree 
+distributions of real-world graphs via a generative process that adds new nodes
+and edges at each time step.
+The edge growth is based on the concept of *preferential attachment*; that is,
+edges from the new vertex are more likely to link to nodes with higher degrees.
+
+Let :math:`G_t` denote the graph at time :math:`t`, and let :math:`n_t` denote 
+the number of nodes, and :math:`m_t` the number of edges in :math:`G_t`.
+
+**Initialization**
+
+The BA model starts with :math:`G_0`, with each node connected to its left and right neighbors in a circular layout.
+Thus :math:`m_0=n_0`.
+
+**Growth and Preferential Attachment**
+
+The BA model derives a new graph :math:`G_{t+1}` from :math:`G_t` by adding 
+exactly one new node :math:`u` and adding :math:`q\leq n_0` new edges from
+:math:`u` to :math:`q` distinct nodes :math:`v_j\in G_t`, where node :math:`v_j`
+is chosen with probability :math:`\pi_t(v_j)` proportional to its degree in
+:math:`G_t`, given as
+
+.. math::
+
+    \pi_t(v_j)=\frac{d_j}{\sum_{v_j\in G_t}d_i}
+
+**Degree Distribution**
+
+The degree distribution for BA graphs is given as
+
+.. math::
+
+    f(k)=\frac{(q+2)(q+1)q}{(k+2)(k+1)k}\cd\frac{2}{(q+2)}=\frac{2q(q+1)}{k(k+1)(k+2)}
+
+For constant :math:`q` and large :math:`k`, the degree distribution scales as
+
+.. note::
+
+    :math:`f(k)\varpropto k^{-3}`
+
+The BA model yields a power-law degree distribution with :math:`\gamma=3`, especially for large degrees.
+
+**Clustering Coefficient and Diameter**
+
+The diameter of BA graphs scales as
+
+.. math::
+
+    d(G_t)=O\bigg(\frac{\log n_t}{\log\log n_t}\bigg)
+
+The expected clustering coefficient of the BA graphs scales as
+
+.. math::
+
+    E[C(G_t)]=O\bigg(\frac{(\log n_t)^2}{n_t}\bigg)
