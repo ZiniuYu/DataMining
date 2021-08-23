@@ -101,7 +101,11 @@
 <li class="toctree-l3"><a class="reference internal" href="#web-centralities">4.3.2 Web Centralities</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#graph-models">4.4 Graph Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#graph-models">4.4 Graph Models</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#erdosrenyi-random-graph-model">4.4.1 Erdös–Rényi Random Graph Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#watts-strogatz-small-world-graph-model">4.4.2 Watts-Strogatz Small-world Graph Model</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="chap5.html">Chapter 5 Kernel Methods</a></li>
@@ -420,7 +424,7 @@ The clustering coefficient of node <span class="math notranslate nohighlight">\(
 <div class="math notranslate nohighlight">
 \[T(G)=\frac{3\times\rm{no.\ of\ triangles\ in\ }G}{\rm{no.\ of\ connected\ triples\ in\ }G}\]</div>
 <p><strong>Efficiency</strong></p>
-<p>The <em>efficiency</em> for a pair of nodes <span class="math notranslate nohighlight">\(v_i\)</span> and <span class="math notranslate nohighlight">\(v_j\)</span> is defined as <span class="math notranslate nohighlight">\(\frac{1}{d(v_i,v_j)\)</span>/
+<p>The <em>efficiency</em> for a pair of nodes <span class="math notranslate nohighlight">\(v_i\)</span> and <span class="math notranslate nohighlight">\(v_j\)</span> is defined as <span class="math notranslate nohighlight">\(\frac{1}{d(v_i,v_j)}\)</span>.
 If <span class="math notranslate nohighlight">\(v_i\)</span> and <span class="math notranslate nohighlight">\(v_j\)</span> are not connected, then <span class="math notranslate nohighlight">\(d(v_i,v_j)=\infty\)</span>
 and the efficiency is <span class="math notranslate nohighlight">\(1/\infty=0\)</span>.
 The <em>efficiency</em> of a graph <span class="math notranslate nohighlight">\(G\)</span> is  the average efficiency over all pairs
@@ -482,7 +486,7 @@ Then the fraction of paths through <span class="math notranslate nohighlight">\(
 <h3>4.3.2 Web Centralities<a class="headerlink" href="#web-centralities" title="Permalink to this headline">¶</a></h3>
 <p><strong>Prestige</strong></p>
 <p>Let <span class="math notranslate nohighlight">\(G=(V,E)\)</span> be a directed graph, with <span class="math notranslate nohighlight">\(|V|=n\)</span>.
-The adjacency matrix of <span class="math notranslate nohighlight">\(G\)</span> is an <span class="math notranslate nohighlight">\(n\times n\)</span> asymmetric matrix <span class="math notranslate nohighlight">\(\A\)</span> givne as</p>
+The adjacency matrix of <span class="math notranslate nohighlight">\(G\)</span> is an <span class="math notranslate nohighlight">\(n\times n\)</span> asymmetric matrix <span class="math notranslate nohighlight">\(\A\)</span> given as</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\A(u,v)=\left\{\begin{array}{lr}1\quad\rm{if\ }(u,v)\in E\\0\quad\rm{if\ }(u,v)\notin E\end{array}\right.\end{split}\]</div>
 <p>Let <span class="math notranslate nohighlight">\(p(u)\)</span> be a positive real number, called the <em>prestige</em> or <em>eigenvector centrality</em> score for node <span class="math notranslate nohighlight">\(u\)</span>.</p>
@@ -590,6 +594,177 @@ is much smaller than <span class="math notranslate nohighlight">\(\log n\)</span
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p><span class="math notranslate nohighlight">\(f(k)\varpropto k^{-\gamma}\)</span></p>
+</div>
+<p>Rewrite above equality by introducing a proportionality constant <span class="math notranslate nohighlight">\(\alpha\)</span>
+that does not depend on <span class="math notranslate nohighlight">\(k\)</span>, that is</p>
+<div class="math notranslate nohighlight">
+\[f(k)=\alpha K^{-\gamma}\]</div>
+<p>Then we have</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}f(ck)=\alpha(ck)^{-\gamma}&amp;=(\alpha c^{-\gamma})k^{-\gamma}\varpropto\alpha k^{-\gamma}\\\log f(k)&amp;=\log(\alpha k^{-\gamma})\\\rm{or\ }\log f(k)&amp;=-\gamma\log k+\log\alpha\end{aligned}\end{align} \]</div>
+<p>which is the equation of a straight line in the log-log plot of <span class="math notranslate nohighlight">\(k\)</span> versus
+<span class="math notranslate nohighlight">\(f(k)\)</span>, with <span class="math notranslate nohighlight">\(-\gamma\)</span> giving the slope of the line.</p>
+<p>A power-law relationship leads to a scale-free or scale invariant behavior
+because scaling the argument by some constant <span class="math notranslate nohighlight">\(c\)</span> does not change the
+proportionality.</p>
+<p><strong>Clustering Effect</strong></p>
+<p>Real-world graphs often also exhibit a <em>clustering effect</em>, that is, two nodes
+are more likely to be connected if they share a common neighbor.
+The clustering effect is captured by a high clustering coefficient for the graph <span class="math notranslate nohighlight">\(G\)</span>.
+Let <span class="math notranslate nohighlight">\(C(k)\)</span> denote the average clustering coefficient for all nodes with
+degree <span class="math notranslate nohighlight">\(k\)</span>; then the clustering effect also manifests itself as a
+power-law relationship between <span class="math notranslate nohighlight">\(C(k)\)</span> and <span class="math notranslate nohighlight">\(k\)</span>:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(C(k)\varpropto k^{-\gamma}\)</span></p>
+</div>
+<p>In other words, a log-log plot of <span class="math notranslate nohighlight">\(j\)</span> versus <span class="math notranslate nohighlight">\(C(k)\)</span> exhibits a
+straight line behavior with negative slop <span class="math notranslate nohighlight">\(-\gamma\)</span>.</p>
+<div class="section" id="erdosrenyi-random-graph-model">
+<h3>4.4.1 Erdös–Rényi Random Graph Model<a class="headerlink" href="#erdosrenyi-random-graph-model" title="Permalink to this headline">¶</a></h3>
+<p>The Erdös–Rényi(ER) model generates a random graph such that any of the possible
+graph with a fixed number of nodes and edges has equal probability of being
+chosen.</p>
+<p>Let <span class="math notranslate nohighlight">\(M\)</span> denote the maximum number of edges possible among the <span class="math notranslate nohighlight">\(n\)</span> nodes, that is,</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}M=\bp n\\2 \ep=\frac{n(n-1)}{2}\end{split}\]</div>
+<p>The ER model specifies a collection of graphs <span class="math notranslate nohighlight">\(\cl{G}(n,m)\)</span> with <span class="math notranslate nohighlight">\(n\)</span>
+nodes and <span class="math notranslate nohighlight">\(m\)</span> edges, such that each graph <span class="math notranslate nohighlight">\(G\in\cl{G}\)</span> has equal
+probability of being selected:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}P(G)=\frac{1}{\bp M\\m \ep}=\bp M\\m \ep\im\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\bp M\\m \ep\)</span> is the number of possible graphs with <span class="math notranslate nohighlight">\(m\)</span> edges
+corresponding to the way s of choosing the <span class="math notranslate nohighlight">\(m\)</span> edges out of a total of
+<span class="math notranslate nohighlight">\(M\)</span> possible edges.</p>
+<p>Let <span class="math notranslate nohighlight">\(V=\{v_1,v_2,\cds,v_n\}\)</span> denote the set of <span class="math notranslate nohighlight">\(n\)</span> nodes.
+The ER method chooses a random graph <span class="math notranslate nohighlight">\(G=(V,E)=\cl{G}\)</span> via a generative process.
+At each step, it randomly selects two distinct vertices <span class="math notranslate nohighlight">\(v_i,v_j\in V\)</span>,
+and adds an edge <span class="math notranslate nohighlight">\((v_i,v_j)\)</span> to <span class="math notranslate nohighlight">\(E\)</span>, provided the edge is not
+already in the graph <span class="math notranslate nohighlight">\(G\)</span>.
+The process is repeated until exactly <span class="math notranslate nohighlight">\(m\)</span> edges have been added to the graph.</p>
+<p>Let <span class="math notranslate nohighlight">\(X\)</span> be a random variable denoting the degree of a node for <span class="math notranslate nohighlight">\(G\in\cl{G}\)</span>.
+Let <span class="math notranslate nohighlight">\(p\)</span> denote the probability of an edge in <span class="math notranslate nohighlight">\(G\)</span>, which can be computed as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}p=\frac{m}{M}=\frac{m}{\bp n\\2 \ep}=\frac{2m}{n(n-1)}\end{split}\]</div>
+<p><strong>Average Degree</strong></p>
+<p>For any given node in <span class="math notranslate nohighlight">\(G\)</span> its degree can be at most <span class="math notranslate nohighlight">\(n-1\)</span>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(f(k)=P(X=k)=\bp n-1\\k \ep p^k(1-p)^{n-1-k}\)</span></p>
+</div>
+<p>The average degree <span class="math notranslate nohighlight">\(\mu_d\)</span> is then given as the expected value of <span class="math notranslate nohighlight">\(X\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\mu_d=E[x]=(n-1)p\]</div>
+<p>We can also compute the variance of the degrees among the nodes by computing the variance of <span class="math notranslate nohighlight">\(X\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\sg_d^2=\rm{var}(X)=(n-1)p(1-p)\]</div>
+<p><strong>Degree Distribution</strong></p>
+<p>As <span class="math notranslate nohighlight">\(n\ra\infty\)</span> and <span class="math notranslate nohighlight">\(p\ra 0\)</span>, the expected value and variance of <span class="math notranslate nohighlight">\(X\)</span> can be written as</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}E[x]&amp;=(n-1)p\simeq np\rm{\ as\ }n\ra\infty\\\rm{var}(X)&amp;=(n-1)p(1-p)\simeq np\rm{\ as\ }n\ra\infty\rm{\ and\ }p\ra 0\end{aligned}\end{align} \]</div>
+<p>In other words, for large and sparse graphs the expectation and variance of <span class="math notranslate nohighlight">\(X\)</span> are the same:</p>
+<div class="math notranslate nohighlight">
+\[E[x]=\rm{var}(X)=np\]</div>
+<p>and the binomial distribution can be approximated by a Poisson distribution with parameter <span class="math notranslate nohighlight">\(\ld\)</span>, give as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp f(k)=\frac{\ld^ke^{-\ld}}{k!}\)</span></p>
+</div>
+<p>where <span class="math notranslate nohighlight">\(\ld=np\)</span> represents both the expected value and variance of the distribution.
+Using Stirling’s approximation of the factorial <span class="math notranslate nohighlight">\(k!\simeq k^ke^{-k}\sqrt{2\pi k}\)</span> we obtain</p>
+<div class="math notranslate nohighlight">
+\[f(k)=\frac{\ld^ke^{-\ld}}{k!}\simeq
+\frac{\ld^ke^{-\ld}}{k^ke^{-k}\sqrt{2\pi k}}=
+\frac{e^{-\ld}}{\sqrt{2\pi}}\frac{(\ld e)^k}{\sqrt{k}k^k}\]</div>
+<p>In other words, we have</p>
+<div class="math notranslate nohighlight">
+\[f(k)\varpropto a^kk^{-\frac{1}{2}}k^{-k}\]</div>
+<p>for <span class="math notranslate nohighlight">\(\alpha=\ld e=npe\)</span>.
+The ER random graph model is not adequate to describe real-world scale-free graphs.</p>
+<p><strong>Clustering Coefficient</strong></p>
+<p>Let us cosinder a node <span class="math notranslate nohighlight">\(v_i\)</span> in <span class="math notranslate nohighlight">\(G\)</span> with degree <span class="math notranslate nohighlight">\(k\)</span>.
+The clustering coefficient of <span class="math notranslate nohighlight">\(v_i\)</span> is given as</p>
+<div class="math notranslate nohighlight">
+\[C(v_i)=\frac{2m_i}{k(k-1)}\]</div>
+<p>where <span class="math notranslate nohighlight">\(k=n_i\)</span> also denotes the number of nodes and <span class="math notranslate nohighlight">\(m_i\)</span> denotes the
+number of edges in the subgraph induced by neighbors of <span class="math notranslate nohighlight">\(v_i\)</span>.
+However, because <span class="math notranslate nohighlight">\(p\)</span> is the probability of an edge, the expected number of
+edges <span class="math notranslate nohighlight">\(m_i\)</span> among the neighbors of <span class="math notranslate nohighlight">\(v_i\)</span> is simply</p>
+<div class="math notranslate nohighlight">
+\[m_i=\frac{pk(k-1)}{2}\]</div>
+<p>Thus, we obtain</p>
+<div class="math notranslate nohighlight">
+\[C(v_i)=\frac{2m_i}{k(k-1)}=p\]</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp C(G)=\frac{1}{n}\sum_iC(v_i)=p\)</span></p>
+</div>
+<p>For sparse graphs we have <span class="math notranslate nohighlight">\(p\ra 0\)</span>, which in turn implies that <span class="math notranslate nohighlight">\(C(G)=C(v_i)\ra 0\)</span>.</p>
+<p><strong>Diameter</strong></p>
+<p>The expected degree of a node is <span class="math notranslate nohighlight">\(\mu_d=\ld\)</span>, and we can estimate the
+number of nodes at a distance of <span class="math notranslate nohighlight">\(k\)</span> hops away from a starting node
+<span class="math notranslate nohighlight">\(v_i\)</span> as <span class="math notranslate nohighlight">\(\ld^k\)</span>.
+However, because there are a total of <span class="math notranslate nohighlight">\(n\)</span> distinct vertices in the graph, we have</p>
+<div class="math notranslate nohighlight">
+\[\sum_{k=1}^t\ld^k=n\]</div>
+<p>where <span class="math notranslate nohighlight">\(t\)</span> denotes the maximum number of hops from <span class="math notranslate nohighlight">\(v_i\)</span>.
+We have</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\sum_{k=1}^t\ld^k=\frac{\ld^{t+1}-1}{\ld-1}&amp;\simeq \ld^t\\\ld^t&amp;\simeq n\rm{\ or}\\t\log\ld&amp;\simeq\log n\rm{\ which\ implies}\\t&amp;\simeq\frac{\log n}{\log\ld}\varpropto\log n\end{aligned}\end{align} \]</div>
+<p>Because the path length from a node to the farthest node is bounded by
+<span class="math notranslate nohighlight">\(t\)</span>, it follows that the diameter of the graph is also bounded by that
+value, that is,</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(d(G)\varpropto\log n\)</span></p>
+</div>
+</div>
+<div class="section" id="watts-strogatz-small-world-graph-model">
+<h3>4.4.2 Watts-Strogatz Small-world Graph Model<a class="headerlink" href="#watts-strogatz-small-world-graph-model" title="Permalink to this headline">¶</a></h3>
+<p>The WS model starts with a <em>regular</em> graph of degree <span class="math notranslate nohighlight">\(2k\)</span>, where each node
+is connected to its <span class="math notranslate nohighlight">\(k\)</span> neighbors on the right and <span class="math notranslate nohighlight">\(k\)</span> neighbors on
+the left.</p>
+<p><strong>Clustering Coefficient and Diameter of Regular Graph</strong></p>
+<p>Consider the subgraph <span class="math notranslate nohighlight">\(G_v\)</span> induced by the <span class="math notranslate nohighlight">\(2k\)</span> neighbors of a node <span class="math notranslate nohighlight">\(v\)</span>.
+The clustering coefficient of <span class="math notranslate nohighlight">\(v\)</span> is given as</p>
+<div class="math notranslate nohighlight">
+\[C(v)=\frac{m_v}{M_v}\]</div>
+<p>where <span class="math notranslate nohighlight">\(m_v\)</span> is the actual number of edges, and <span class="math notranslate nohighlight">\(M_v\)</span> is the maximum
+possible number of edges, among the neighbors of <span class="math notranslate nohighlight">\(v\)</span>.</p>
+<p>The degree of any node in <span class="math notranslate nohighlight">\(G_v\)</span> that is <span class="math notranslate nohighlight">\(i\)</span> backbone hops away from <span class="math notranslate nohighlight">\(v\)</span> is given as</p>
+<div class="math notranslate nohighlight">
+\[d_i=(k-i)+(k-1)=2k-i-1\]</div>
+<p>Because each edge contributes to the degree of its two incident nodes, summing
+the degrees of all neighbors of <span class="math notranslate nohighlight">\(v\)</span> to obtain</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}m_v&amp;=2\bigg(\sum_{i=1}^k2k-i-1\bigg)\\m_v&amp;=2k^2-\frac{k(k+1)}{2}-k\\m_v&amp;=\frac{3}{2}k(k-1)\end{aligned}\end{align} \]</div>
+<p>On the other hand, the number of possible edges among the <span class="math notranslate nohighlight">\(2k\)</span> neighbors of <span class="math notranslate nohighlight">\(v\)</span> is given as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}M_v=\bp 2k\\2 \ep=\frac{2k(2k-1)}{2}=k(2k-1)\end{split}\]</div>
+<p>The clustering coefficient of a node <span class="math notranslate nohighlight">\(v\)</span> is given as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(C(v)=\frac{m_v}{M_v}=\frac{3k-3}{4k-2}\)</span></p>
+</div>
+<p>As <span class="math notranslate nohighlight">\(k\)</span> increases, the clustering coefficient approahces <span class="math notranslate nohighlight">\(\frac{3}{4}\)</span>.</p>
+<p>The diameter of a regular WS graph is given as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(d(G)=\left\{\begin{array}{lr}\lceil\frac{n}{2k}\rceil\quad\rm{if\ }n\rm{\ is\ even}\\\lceil\frac{n-1}{2k}\rceil\quad\rm{if\ }n\rm{\ is\ odd}\end{array}\right.\)</span></p>
+</div>
+<p><strong>Random Perturbation of Regular Graph</strong></p>
+<p><strong>Edge Rewiring</strong></p>
+<p>For each <span class="math notranslate nohighlight">\((u,v)\)</span> in the graph, with probability <span class="math notranslate nohighlight">\(r\)</span>, replace
+<span class="math notranslate nohighlight">\(v\)</span> with another randomly chosen node avoiding loops and duplicate edges.
+Because the WS regular graph has <span class="math notranslate nohighlight">\(m=kn\)</span> total edges, after rewiring,
+<span class="math notranslate nohighlight">\(rm\)</span> of the edges are random, and <span class="math notranslate nohighlight">\((1-r)m\)</span> are regular.</p>
+<p><strong>Edge shortcuts</strong></p>
+<p>Add a few shortcut edges between random pairs of nodes, with <span class="math notranslate nohighlight">\(r\)</span> being the
+probability, per edge, of adding a shortcut edge.
+The total number of randum shortcut edges added to the network is <span class="math notranslate nohighlight">\(mr=knr\)</span>.
+The total number of edges in the graph is <span class="math notranslate nohighlight">\(m+mr=(1+r)m=(1+r)kn\)</span>.</p>
+<p><strong>Properties of Watts-Strogatz Graphs</strong></p>
+<p><strong>Degree Distribution</strong></p>
 </div>
 </div>
 </div>

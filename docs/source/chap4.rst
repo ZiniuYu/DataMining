@@ -259,7 +259,7 @@ The *transitivity* of the graph is defined as
 
 **Efficiency**
 
-The *efficiency* for a pair of nodes :math:`v_i` and :math:`v_j` is defined as :math:`\frac{1}{d(v_i,v_j)`/
+The *efficiency* for a pair of nodes :math:`v_i` and :math:`v_j` is defined as :math:`\frac{1}{d(v_i,v_j)}`.
 If :math:`v_i` and :math:`v_j` are not connected, then :math:`d(v_i,v_j)=\infty` 
 and the efficiency is :math:`1/\infty=0`.
 The *efficiency* of a graph :math:`G` is  the average efficiency over all pairs 
@@ -344,7 +344,7 @@ The betweenness centrality for a node :math:`v_i` is defined as
 **Prestige**
 
 Let :math:`G=(V,E)` be a directed graph, with :math:`|V|=n`.
-The adjacency matrix of :math:`G` is an :math:`n\times n` asymmetric matrix :math:`\A` givne as
+The adjacency matrix of :math:`G` is an :math:`n\times n` asymmetric matrix :math:`\A` given as
 
 .. math::
 
@@ -521,3 +521,281 @@ In many real-world graphs, the probability that a node has degree :math:`k` sati
 .. note::
 
     :math:`f(k)\varpropto k^{-\gamma}`
+
+Rewrite above equality by introducing a proportionality constant :math:`\alpha` 
+that does not depend on :math:`k`, that is
+
+.. math::
+
+    f(k)=\alpha K^{-\gamma}
+
+Then we have
+
+.. math::
+
+    f(ck)=\alpha(ck)^{-\gamma}&=(\alpha c^{-\gamma})k^{-\gamma}\varpropto\alpha k^{-\gamma}
+
+    \log f(k)&=\log(\alpha k^{-\gamma})
+
+    \rm{or\ }\log f(k)&=-\gamma\log k+\log\alpha
+
+which is the equation of a straight line in the log-log plot of :math:`k` versus 
+:math:`f(k)`, with :math:`-\gamma` giving the slope of the line.
+
+A power-law relationship leads to a scale-free or scale invariant behavior 
+because scaling the argument by some constant :math:`c` does not change the 
+proportionality.
+
+**Clustering Effect**
+
+Real-world graphs often also exhibit a *clustering effect*, that is, two nodes
+are more likely to be connected if they share a common neighbor.
+The clustering effect is captured by a high clustering coefficient for the graph :math:`G`.
+Let :math:`C(k)` denote the average clustering coefficient for all nodes with 
+degree :math:`k`; then the clustering effect also manifests itself as a 
+power-law relationship between :math:`C(k)` and :math:`k`:
+
+.. note::
+
+    :math:`C(k)\varpropto k^{-\gamma}`
+
+In other words, a log-log plot of :math:`j` versus :math:`C(k)` exhibits a 
+straight line behavior with negative slop :math:`-\gamma`.
+
+4.4.1 Erdös–Rényi Random Graph Model
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The Erdös–Rényi(ER) model generates a random graph such that any of the possible
+graph with a fixed number of nodes and edges has equal probability of being
+chosen.
+
+Let :math:`M` denote the maximum number of edges possible among the :math:`n` nodes, that is,
+
+.. math::
+
+    M=\bp n\\2 \ep=\frac{n(n-1)}{2}
+
+The ER model specifies a collection of graphs :math:`\cl{G}(n,m)` with :math:`n`
+nodes and :math:`m` edges, such that each graph :math:`G\in\cl{G}` has equal
+probability of being selected:
+
+.. math::
+
+    P(G)=\frac{1}{\bp M\\m \ep}=\bp M\\m \ep\im
+
+where :math:`\bp M\\m \ep` is the number of possible graphs with :math:`m` edges 
+corresponding to the way s of choosing the :math:`m` edges out of a total of
+:math:`M` possible edges.
+
+Let :math:`V=\{v_1,v_2,\cds,v_n\}` denote the set of :math:`n` nodes.
+The ER method chooses a random graph :math:`G=(V,E)=\cl{G}` via a generative process.
+At each step, it randomly selects two distinct vertices :math:`v_i,v_j\in V`,
+and adds an edge :math:`(v_i,v_j)` to :math:`E`, provided the edge is not 
+already in the graph :math:`G`.
+The process is repeated until exactly :math:`m` edges have been added to the graph.
+
+Let :math:`X` be a random variable denoting the degree of a node for :math:`G\in\cl{G}`.
+Let :math:`p` denote the probability of an edge in :math:`G`, which can be computed as
+
+.. math::
+
+    p=\frac{m}{M}=\frac{m}{\bp n\\2 \ep}=\frac{2m}{n(n-1)}
+
+**Average Degree**
+
+For any given node in :math:`G` its degree can be at most :math:`n-1`.
+
+.. note::
+
+    :math:`f(k)=P(X=k)=\bp n-1\\k \ep p^k(1-p)^{n-1-k}`
+
+The average degree :math:`\mu_d` is then given as the expected value of :math:`X`:
+
+.. math::
+
+    \mu_d=E[x]=(n-1)p
+
+We can also compute the variance of the degrees among the nodes by computing the variance of :math:`X`:
+
+.. math::
+
+    \sg_d^2=\rm{var}(X)=(n-1)p(1-p)
+
+**Degree Distribution**
+
+As :math:`n\ra\infty` and :math:`p\ra 0`, the expected value and variance of :math:`X` can be written as
+
+.. math::
+
+    E[x]&=(n-1)p\simeq np\rm{\ as\ }n\ra\infty
+
+    \rm{var}(X)&=(n-1)p(1-p)\simeq np\rm{\ as\ }n\ra\infty\rm{\ and\ }p\ra 0
+
+In other words, for large and sparse graphs the expectation and variance of :math:`X` are the same:
+
+.. math::
+
+    E[x]=\rm{var}(X)=np
+
+and the binomial distribution can be approximated by a Poisson distribution with parameter :math:`\ld`, give as
+
+.. note::
+
+    :math:`\dp f(k)=\frac{\ld^ke^{-\ld}}{k!}`
+
+where :math:`\ld=np` represents both the expected value and variance of the distribution.
+Using Stirling's approximation of the factorial :math:`k!\simeq k^ke^{-k}\sqrt{2\pi k}` we obtain
+
+.. math::
+
+    f(k)=\frac{\ld^ke^{-\ld}}{k!}\simeq
+    \frac{\ld^ke^{-\ld}}{k^ke^{-k}\sqrt{2\pi k}}=
+    \frac{e^{-\ld}}{\sqrt{2\pi}}\frac{(\ld e)^k}{\sqrt{k}k^k}
+
+In other words, we have
+
+.. math::
+
+    f(k)\varpropto a^kk^{-\frac{1}{2}}k^{-k}
+
+for :math:`\alpha=\ld e=npe`.
+The ER random graph model is not adequate to describe real-world scale-free graphs.
+
+**Clustering Coefficient**
+
+Let us cosinder a node :math:`v_i` in :math:`G` with degree :math:`k`.
+The clustering coefficient of :math:`v_i` is given as
+
+.. math::
+
+    C(v_i)=\frac{2m_i}{k(k-1)}
+
+where :math:`k=n_i` also denotes the number of nodes and :math:`m_i` denotes the
+number of edges in the subgraph induced by neighbors of :math:`v_i`.
+However, because :math:`p` is the probability of an edge, the expected number of 
+edges :math:`m_i` among the neighbors of :math:`v_i` is simply
+
+.. math::
+
+    m_i=\frac{pk(k-1)}{2}
+
+Thus, we obtain
+
+.. math::
+
+    C(v_i)=\frac{2m_i}{k(k-1)}=p
+
+.. note::
+
+    :math:`\dp C(G)=\frac{1}{n}\sum_iC(v_i)=p`
+
+For sparse graphs we have :math:`p\ra 0`, which in turn implies that :math:`C(G)=C(v_i)\ra 0`.
+
+**Diameter**
+
+The expected degree of a node is :math:`\mu_d=\ld`, and we can estimate the 
+number of nodes at a distance of :math:`k` hops away from a starting node 
+:math:`v_i` as :math:`\ld^k`.
+However, because there are a total of :math:`n` distinct vertices in the graph, we have
+
+.. math::
+
+    \sum_{k=1}^t\ld^k=n
+
+where :math:`t` denotes the maximum number of hops from :math:`v_i`.
+We have
+
+.. math::
+
+    \sum_{k=1}^t\ld^k=\frac{\ld^{t+1}-1}{\ld-1}&\simeq \ld^t
+
+    \ld^t&\simeq n\rm{\ or}
+
+    t\log\ld&\simeq\log n\rm{\ which\ implies}
+
+    t&\simeq\frac{\log n}{\log\ld}\varpropto\log n
+
+Because the path length from a node to the farthest node is bounded by 
+:math:`t`, it follows that the diameter of the graph is also bounded by that
+value, that is,
+
+.. note::
+
+    :math:`d(G)\varpropto\log n`
+
+4.4.2 Watts-Strogatz Small-world Graph Model
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The WS model starts with a *regular* graph of degree :math:`2k`, where each node
+is connected to its :math:`k` neighbors on the right and :math:`k` neighbors on
+the left.
+
+**Clustering Coefficient and Diameter of Regular Graph**
+
+Consider the subgraph :math:`G_v` induced by the :math:`2k` neighbors of a node :math:`v`.
+The clustering coefficient of :math:`v` is given as
+
+.. math::
+
+    C(v)=\frac{m_v}{M_v}
+
+where :math:`m_v` is the actual number of edges, and :math:`M_v` is the maximum
+possible number of edges, among the neighbors of :math:`v`.
+
+The degree of any node in :math:`G_v` that is :math:`i` backbone hops away from :math:`v` is given as
+
+.. math::
+
+    d_i=(k-i)+(k-1)=2k-i-1
+
+Because each edge contributes to the degree of its two incident nodes, summing 
+the degrees of all neighbors of :math:`v` to obtain
+
+.. math::
+
+    m_v&=2\bigg(\sum_{i=1}^k2k-i-1\bigg)
+
+    m_v&=2k^2-\frac{k(k+1)}{2}-k
+
+    m_v&=\frac{3}{2}k(k-1)
+
+On the other hand, the number of possible edges among the :math:`2k` neighbors of :math:`v` is given as
+
+.. math::
+
+    M_v=\bp 2k\\2 \ep=\frac{2k(2k-1)}{2}=k(2k-1)
+
+The clustering coefficient of a node :math:`v` is given as
+
+.. note::
+
+    :math:`C(v)=\frac{m_v}{M_v}=\frac{3k-3}{4k-2}`
+
+As :math:`k` increases, the clustering coefficient approahces :math:`\frac{3}{4}`.
+
+The diameter of a regular WS graph is given as
+
+.. note::
+
+    :math:`d(G)=\left\{\begin{array}{lr}\lceil\frac{n}{2k}\rceil\quad\rm{if\ }n\rm{\ is\ even}\\\lceil\frac{n-1}{2k}\rceil\quad\rm{if\ }n\rm{\ is\ odd}\end{array}\right.`
+
+**Random Perturbation of Regular Graph**
+
+**Edge Rewiring**
+
+For each :math:`(u,v)` in the graph, with probability :math:`r`, replace 
+:math:`v` with another randomly chosen node avoiding loops and duplicate edges.
+Because the WS regular graph has :math:`m=kn` total edges, after rewiring,
+:math:`rm` of the edges are random, and :math:`(1-r)m` are regular.
+
+**Edge shortcuts**
+
+Add a few shortcut edges between random pairs of nodes, with :math:`r` being the
+probability, per edge, of adding a shortcut edge.
+The total number of randum shortcut edges added to the network is :math:`mr=knr`.
+The total number of edges in the graph is :math:`m+mr=(1+r)m=(1+r)kn`.
+
+**Properties of Watts-Strogatz Graphs**
+
+**Degree Distribution**
+

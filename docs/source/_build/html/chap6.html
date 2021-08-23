@@ -1,0 +1,511 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Chapter 6 High-dimensional Data &mdash; DataMining  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Chapter 7 Dimensionality Reduction" href="chap7.html" />
+    <link rel="prev" title="Chapter 5 Kernel Methods" href="chap5.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> DataMining
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="chap1.html">Chapter 1 Data Matrix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chap2.html">Chapter 2 Numeric Attributes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chap3.html">Chapter 3 Categorical Attributes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chap4.html">Chapter 4 Graph Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chap5.html">Chapter 5 Kernel Methods</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Chapter 6 High-dimensional Data</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#high-dimensional-objects">6.1 High-Dimensional Objects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#high-dimensional-volumes">6.2 High-Dimensional Volumes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#hypersphere-inscribed-within-hypercube">6.3 Hypersphere Inscribed Within Hypercube</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#volume-of-thin-hypersphere-shell">6.4 Volume of Thin Hypersphere Shell</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#diagonals-in-hyperspace">6.5 Diagonals in Hyperspace</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#density-of-the-multivariate-normal">6.6 Density of The Multivariate Normal</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="chap7.html">Chapter 7 Dimensionality Reduction</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">DataMining</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Chapter 6 High-dimensional Data</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/chap6.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\newcommand{\bs}{\boldsymbol}
+\newcommand{\dp}{\displaystyle}
+\newcommand{\rm}{\mathrm}
+\newcommand{\cl}{\mathcal}
+\newcommand{\pd}{\partial}\\\newcommand{\cd}{\cdot}
+\newcommand{\cds}{\cdots}
+\newcommand{\dds}{\ddots}
+\newcommand{\lv}{\lVert}
+\newcommand{\ol}{\overline}
+\newcommand{\ra}{\rightarrow}
+\newcommand{\rv}{\rVert}
+\newcommand{\seq}{\subseteq}
+\newcommand{\vds}{\vdots}
+\newcommand{\wh}{\widehat}\\\newcommand{\0}{\boldsymbol{0}}
+\newcommand{\1}{\boldsymbol{1}}
+\newcommand{\a}{\boldsymbol{\mathrm{a}}}
+\newcommand{\b}{\boldsymbol{\mathrm{b}}}
+\newcommand{\c}{\boldsymbol{\mathrm{c}}}
+\newcommand{\e}{\boldsymbol{\mathrm{e}}}
+\newcommand{\f}{\boldsymbol{\mathrm{f}}}
+\newcommand{\g}{\boldsymbol{\mathrm{g}}}
+\newcommand{\i}{\boldsymbol{\mathrm{i}}}
+\newcommand{\j}{\boldsymbol{j}}
+\newcommand{\n}{\boldsymbol{\mathrm{n}}}
+\newcommand{\p}{\boldsymbol{\mathrm{p}}}
+\newcommand{\q}{\boldsymbol{\mathrm{q}}}
+\newcommand{\r}{\boldsymbol{\mathrm{r}}}
+\newcommand{\u}{\boldsymbol{\mathrm{u}}}
+\newcommand{\v}{\boldsymbol{\mathrm{v}}}
+\newcommand{\w}{\boldsymbol{w}}
+\newcommand{\x}{\boldsymbol{\mathrm{x}}}
+\newcommand{\y}{\boldsymbol{\mathrm{y}}}\\\newcommand{\A}{\boldsymbol{\mathrm{A}}}
+\newcommand{\B}{\boldsymbol{B}}
+\newcommand{\C}{\boldsymbol{C}}
+\newcommand{\D}{\boldsymbol{\mathrm{D}}}
+\newcommand{\I}{\boldsymbol{\mathrm{I}}}
+\newcommand{\K}{\boldsymbol{\mathrm{K}}}
+\newcommand{\N}{\boldsymbol{\mathrm{N}}}
+\newcommand{\P}{\boldsymbol{\mathrm{P}}}
+\newcommand{\S}{\boldsymbol{\mathrm{S}}}
+\newcommand{\U}{\boldsymbol{\mathrm{U}}}
+\newcommand{\W}{\boldsymbol{\mathrm{W}}}
+\newcommand{\X}{\boldsymbol{\mathrm{X}}}\\\newcommand{\R}{\mathbb{R}}\\\newcommand{\ld}{\lambda}
+\newcommand{\Ld}{\boldsymbol{\mathrm{\Lambda}}}
+\newcommand{\sg}{\sigma}
+\newcommand{\Sg}{\boldsymbol{\mathrm{\Sigma}}}
+\newcommand{\th}{\theta}\\\newcommand{\mmu}{\boldsymbol{\mu}}\\\newcommand{\bb}{\begin{bmatrix}}
+\newcommand{\eb}{\end{bmatrix}}
+\newcommand{\bp}{\begin{pmatrix}}
+\newcommand{\ep}{\end{pmatrix}}
+\newcommand{\bv}{\begin{vmatrix}}
+\newcommand{\ev}{\end{vmatrix}}\\\newcommand{\im}{^{-1}}
+\newcommand{\pr}{^{\prime}}
+\newcommand{\ppr}{^{\prime\prime}}\end{aligned}\end{align} \]</div>
+<section id="chapter-6-high-dimensional-data">
+<h1>Chapter 6 High-dimensional Data<a class="headerlink" href="#chapter-6-high-dimensional-data" title="Permalink to this headline">¶</a></h1>
+<section id="high-dimensional-objects">
+<h2>6.1 High-Dimensional Objects<a class="headerlink" href="#high-dimensional-objects" title="Permalink to this headline">¶</a></h2>
+<p>Consider the <span class="math notranslate nohighlight">\(n\times d\)</span> data matrix</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\left(\begin{array}{c|cccc}&amp;X_1&amp;X_2&amp;\cds&amp;X_d\\ \hline
+\x_1&amp;x_{11}&amp;x_{12}&amp;\cds&amp;x_{1d}\\\x_2&amp;x_{21}&amp;x_{22}&amp;\cds&amp;x_{2d}\\
+\vds&amp;\vds&amp;\vds&amp;\dds&amp;\vds\\\x_n&amp;x_{n1}&amp;x_{n2}&amp;\cds&amp;x_{nd}\end{array}\right)\end{split}\]</div>
+<p>where each point <span class="math notranslate nohighlight">\(\x\in\R^d\)</span> and each attribute <span class="math notranslate nohighlight">\(X_j\in\R^n\)</span>.</p>
+<p><strong>Hypercube</strong></p>
+<p>let the minimum and amximum values for each attribute <span class="math notranslate nohighlight">\(X_j\)</span> be given as</p>
+<div class="math notranslate nohighlight">
+\[\min(X_j)=\min_i\{x_{ij}\}\quad\max(X_j)=\max_i\{x_{ij}\}\]</div>
+<p>The data hyperspace can be considered as a <span class="math notranslate nohighlight">\(d\)</span>-dimensional <em>hyper-rectangle</em>, defined as</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}R_d&amp;=\prod_{j=1}^d[\min(X_j),\max(X_j)]\\&amp;=\{\x=(x_1,x_2,\cds,x_d)^T|x_j\in[\min(X_j),\max(X_j)],\rm{\ for\ }j=1,\cds,d\}\end{aligned}\end{align} \]</div>
+<p>Assume the data is centered to have mean <span class="math notranslate nohighlight">\(\mmu=\0\)</span>.
+Let <span class="math notranslate nohighlight">\(m\)</span> denote the largest absolute value in <span class="math notranslate nohighlight">\(\D\)</span>, given as</p>
+<div class="math notranslate nohighlight">
+\[m=\max_{j=1}^d\max_{i=1}^n\{|x_{ij}|\}\]</div>
+<p>The data hyperspace can be represented as a <em>hypercube</em>, centered at <span class="math notranslate nohighlight">\(\0\)</span>,
+with all sides of length <span class="math notranslate nohighlight">\(l=2m\)</span>, given as</p>
+<div class="math notranslate nohighlight">
+\[H_d(l)=\{\x=(x_1,x_2,\cds,x_d)^T|\forall i,x_i\in[-l/2,l/2]\}\]</div>
+<p>The <em>unit hypercube</em> has all sides of length <span class="math notranslate nohighlight">\(l=1\)</span>, and is denoted as <span class="math notranslate nohighlight">\(H_d(1)\)</span>.</p>
+<p><strong>Hypersphere</strong></p>
+<p>Assume that the data has been centered, so that <span class="math notranslate nohighlight">\(\mmu=\0\)</span>.
+Let <span class="math notranslate nohighlight">\(r\)</span> denote the largest magnitude among all points:</p>
+<div class="math notranslate nohighlight">
+\[r=\max_i\{\lv\x_i\rv\}\]</div>
+<p>The data hyperspace can also be represented as a <span class="math notranslate nohighlight">\(d\)</span>-dimensional
+<em>hyperball</em> centered at <span class="math notranslate nohighlight">\(\0\)</span> with radius <span class="math notranslate nohighlight">\(r\)</span>, defined as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(B_d(r)=\{\x|\lv\x\rv\leq r\}\)</span></p>
+</div>
+<div class="math notranslate nohighlight">
+\[\rm{or\ }B_d(r)=\{\x=(x_1,x_2,\cds,x_d)^T|\sum_{j=1}^dx_j^2\leq r^2\}\]</div>
+<p>The surface of the hyperball is called a <em>hypersphere</em>, and it consists of all
+the points exactly at distance <span class="math notranslate nohighlight">\(r\)</span> from the center of the hyperball,
+defined, as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(S_d(r)=\{\x|\lv\x\rv=r\}\)</span></p>
+</div>
+<div class="math notranslate nohighlight">
+\[\rm{or\ }S_d(r)=\{\x=(x_1,x_2,\cds,x_d)^T|\sum_{j=1}^d(x_j)^2=r^2\}\]</div>
+<p>Because the hyperball consists of all the surface and interior points, it is also called a <em>closed hypersphere</em>.</p>
+<p><strong>Hyperplanes</strong></p>
+<p>A hyperplane in <span class="math notranslate nohighlight">\(d\)</span> dimensions is given as the set of all points
+<span class="math notranslate nohighlight">\(\x\in\R^d\)</span> that satisfy the equation <span class="math notranslate nohighlight">\(h(\x)=0\)</span>, where <span class="math notranslate nohighlight">\(h(\x)\)</span>
+is the <em>hyperplane function</em>, defined as follows:</p>
+<div class="math notranslate nohighlight">
+\[h(\x)=\w^T\x+b=w_1x_1+w_2x_2+\cds+w_dx_d+b\]</div>
+<p>Here, <span class="math notranslate nohighlight">\(\w\)</span> is a <span class="math notranslate nohighlight">\(d\)</span> dimensional <em>weight vector</em> and <span class="math notranslate nohighlight">\(b\)</span> is a scalar, called the <em>bias</em>.
+For points that comprise the hyperplane, we have</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(h(\x)=\w^T\x+b=0\)</span></p>
+</div>
+<p>The hyperplane is thus defined as the set of all points such that <span class="math notranslate nohighlight">\(\w^T\x=-b\)</span>.</p>
+<p>Note that a hyperplane in <span class="math notranslate nohighlight">\(d\)</span>-dimensions has dimension <span class="math notranslate nohighlight">\(d-1\)</span>.
+A hyperplane splits the original <span class="math notranslate nohighlight">\(d\)</span>-dimensional space into two <em>half-space</em>.
+Points on one side satisfy the equation <span class="math notranslate nohighlight">\(h(\x)&gt;0\)</span>, points on the other
+side satisfy the equation <span class="math notranslate nohighlight">\(h(\x)&lt;0\)</span>, and points on the hyperplane satisfy
+the condition <span class="math notranslate nohighlight">\(h(\x)=0\)</span>.</p>
+</section>
+<section id="high-dimensional-volumes">
+<h2>6.2 High-Dimensional Volumes<a class="headerlink" href="#high-dimensional-volumes" title="Permalink to this headline">¶</a></h2>
+<p><strong>Hypercube</strong></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\rm{vol}(H_d(l))=l^d\)</span></p>
+</div>
+<p><strong>Hypersphere</strong></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\rm{vol}(S_d(r))=K_d\cd r^d=\bigg(\frac{\pi^{\frac{d}{2}}}{\Gamma(\frac{d}{2}+1)}\bigg)r^d\)</span></p>
+</div>
+<p>where</p>
+<div class="math notranslate nohighlight">
+\[K_d=\frac{\pi^{\frac{d}{2}}}{\Gamma(\frac{d}{2}+1)}\]</div>
+<p>is a scalar that depends on the dimenionality <span class="math notranslate nohighlight">\(d\)</span>, and <span class="math notranslate nohighlight">\(\Gamma\)</span> is the gamma function defined as</p>
+<div class="math notranslate nohighlight">
+\[\Gamma(\alpha)=\int_0^\infty x^{\alpha-1}e^{-x}dx\]</div>
+<p>The gamma function has the following property for any <span class="math notranslate nohighlight">\(\alpha&gt;1\)</span></p>
+<div class="math notranslate nohighlight">
+\[\Gamma(\alpha)=(\alpha-1)\Gamma(\alpha-1)\]</div>
+<p>For any integer <span class="math notranslate nohighlight">\(n\geq 1\)</span>, we immediately have</p>
+<div class="math notranslate nohighlight">
+\[\Gamma(n)=(n-1)!\]</div>
+<p>When <span class="math notranslate nohighlight">\(d\)</span> is even, then <span class="math notranslate nohighlight">\(\frac{d}{2}+1\)</span> is an integer, and we have</p>
+<div class="math notranslate nohighlight">
+\[\Gamma\bigg(\frac{d}{2}+1\bigg)=\bigg(\frac{d}{2}\bigg)!\]</div>
+<p>and when <span class="math notranslate nohighlight">\(d\)</span> is odd, we have</p>
+<div class="math notranslate nohighlight">
+\[\Gamma\bigg(\frac{d}{2}+1\bigg)=\bigg(\frac{d}{2}\bigg)\bigg(\frac{d-2}{2}
+\cds\bigg(\frac{d-(d-1)}{2}\bigg)\Gamma\bigg(\frac{1}{2}\bigg)=
+\bigg(\frac{d!!}{2^{(d+1)/2}}\bigg)\sqrt\pi\]</div>
+<p>where <span class="math notranslate nohighlight">\(d!!\)</span> denotes the double factorial (or multifactorial), given as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}d!!=\left\{\begin{array}{lr}1\quad\rm{if\ }d=0\rm{\ or\ }d=1\\d\cd(d-2)!!\quad\rm{if\ }d\geq 2\end{array}\right.\end{split}\]</div>
+<p>Putting it all together we have</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\Gamma\bigg(\frac{d}{2}+1\bigg)=\)</span>
+<span class="math notranslate nohighlight">\(\left\{\begin{array}{lr}(\frac{d}{2})!\quad\rm{if\ }d\rm{\ is\ even}\\\sqrt\pi(\frac{d!!}{2^{(d+1)/2}})\quad\rm{if\ }d\rm{\ is\ odd}\end{array}\right.\)</span></p>
+</div>
+<p><strong>Surface Area</strong></p>
+<p>The <em>surface area</em> of the hypersphere can be obtained by differentiating its volume with respect to <span class="math notranslate nohighlight">\(r\)</span>, given as</p>
+<div class="math notranslate nohighlight">
+\[\rm{area}(S_d(r))=\frac{d}{dr}\rm{vol}(S_d(r))=
+\bigg(\frac{\pi^{\frac{d}{2}}}{\Gamma(\frac{d}{2}+1)}\bigg)dr^{d-1}=
+\bigg(\frac{2\pi^{\frac{d}{2}}}{\Gamma(\frac{d}{2})}\bigg)r^{d-1}\]</div>
+<p><strong>Asymptotic Volume</strong></p>
+<p>For the unit hypersphere with <span class="math notranslate nohighlight">\(r=1\)</span></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\lim_{d\ra\infty}\rm{vol}(S_d(1))=\lim_{d\ra\infty}\frac{\pi^{\frac{d}{2}}}{\Gamma(\frac{d}{2}+1)}\ra 0\)</span></p>
+</div>
+</section>
+<section id="hypersphere-inscribed-within-hypercube">
+<h2>6.3 Hypersphere Inscribed Within Hypercube<a class="headerlink" href="#hypersphere-inscribed-within-hypercube" title="Permalink to this headline">¶</a></h2>
+<p>In two dimensions, we have</p>
+<div class="math notranslate nohighlight">
+\[\frac{\rm{vol}(S_2(r))}{\rm{vol}(H_2(2r))}=\frac{\pi r^2}{4r^2}=\frac{\pi}{4}=78.5\%\]</div>
+<p>In three dimensions, we have</p>
+<div class="math notranslate nohighlight">
+\[\frac{\rm{vol}(S_3(r))}{\rm{vol}(H_3(2r))}=\frac{\frac{4}{3}\pi r^3}{8r^3}=\frac{\pi}{6}=52.4\%\]</div>
+<p>As the dimensionality <span class="math notranslate nohighlight">\(d\)</span> increases asymptotically, we get</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\lim_{d\ra\infty}\frac{\rm{vol}(S_d(r))}{\rm{vol}(H_d(2r))}=\)</span>
+<span class="math notranslate nohighlight">\(\dp\lim_{d\ra\infty}\frac{\pi^{\frac{d}{2}}}{2^d\Gamma(\frac{d}{2}+1)}\ra 0\)</span></p>
+</div>
+<p>This means that as the dimensionality increases, most of the volume of the
+hypercube is in the “corners”, whereas the center is essentially empty.</p>
+</section>
+<section id="volume-of-thin-hypersphere-shell">
+<h2>6.4 Volume of Thin Hypersphere Shell<a class="headerlink" href="#volume-of-thin-hypersphere-shell" title="Permalink to this headline">¶</a></h2>
+<p>Let <span class="math notranslate nohighlight">\(S_d(r,\epsilon)\)</span> denote the thin hypershell of width <span class="math notranslate nohighlight">\(\epsilon\)</span>.
+Its volume is given as</p>
+<div class="math notranslate nohighlight">
+\[\rm{vol}(S_d(r,\epsilon))=\rm{vol}(S_d(r))-\rm{vol}(S_d(r-\epsilon))=K_dr^d-K_d(r-\epsilon)^d.\]</div>
+<p>Let us consider the ratio of the volume of the thin shell to the volume of the outer sphere:</p>
+<div class="math notranslate nohighlight">
+\[\frac{\rm{vol}(S_d(r,\epsilon))}{\rm{vol}(S_d(r))}=
+\frac{K_dr^d-K_d(r-\epsilon)^d}{K_dr^d}=1-\bigg(1-\frac{\epsilon}{r}\bigg)^d\]</div>
+<p><strong>Asymptotic Volume</strong></p>
+<p>As <span class="math notranslate nohighlight">\(d\)</span> increases, in the limit we obtain</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\lim_{d\ra\infty}\frac{\rm{vol}(S_d(r,\epsilon))}{\rm{vol}(S_d(r))}=\)</span>
+<span class="math notranslate nohighlight">\(\dp\lim_{d\ra\infty}1-\bigg(1-\frac{\epsilon}{r}\bigg)^d\ra 1\)</span></p>
+</div>
+<p>That is, almoast all of the volume of the hypersphere is contained in the thin shell as <span class="math notranslate nohighlight">\(d\ra\infty\)</span>.
+This means that in high-dimensional spaces, unlike in lower dimensions, most of
+the volume is concentrated around the surface (within <span class="math notranslate nohighlight">\(\epsilon\)</span>) of the
+hypersphere, and the center is essentially void.</p>
+</section>
+<section id="diagonals-in-hyperspace">
+<h2>6.5 Diagonals in Hyperspace<a class="headerlink" href="#diagonals-in-hyperspace" title="Permalink to this headline">¶</a></h2>
+<p>Consider the angle <span class="math notranslate nohighlight">\(\th_d\)</span> betwen the ones vector <span class="math notranslate nohighlight">\(\1\)</span> and the first
+standard basis vector <span class="math notranslate nohighlight">\(\e_1\)</span>, in <span class="math notranslate nohighlight">\(d\)</span> dimensions:</p>
+<div class="math notranslate nohighlight">
+\[\cos\th_d=\frac{\e_1^T\1}{\lv\e_1\rv\lv\1\rv}=
+\frac{\e_1^T\1}{\sqrt{\e_1^T\e_1}\sqrt{\1^T\1}}=\frac{1}{\sqrt{1}\sqrt{d}}=
+\frac{1}{\sqrt{d}}\]</div>
+<p><strong>Asymptotic Angle</strong></p>
+<p>As <span class="math notranslate nohighlight">\(d\)</span> increases, the angle between the <span class="math notranslate nohighlight">\(d\)</span>-dimensional ones vector
+<span class="math notranslate nohighlight">\(\1\)</span> and the first axis vector <span class="math notranslate nohighlight">\(\e_1\)</span> is given as</p>
+<div class="math notranslate nohighlight">
+\[\lim_{d\ra\infty}\cos\th_d=\lim_{d\ra\infty}\frac{1}{\sqrt{d}}\ra 0\]</div>
+<p>which implies that</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\lim_{d\ra\infty}\th_d\ra\frac{\pi}{2}=90^\circ\)</span></p>
+</div>
+<p>This implies that in high dimensions all of the diagonal vectors are
+perpendicular (or orthogonal) to all the coordinates axes.
+Because there are <span class="math notranslate nohighlight">\(2^d\)</span> corners in a <span class="math notranslate nohighlight">\(d\)</span>-dimensional hyperspace,
+there are <span class="math notranslate nohighlight">\(2^d\)</span> diagonal vectors from the origin to each of the corners.
+Because the diagonal vectors in opposite directions define a new axis, we obtain
+<span class="math notranslate nohighlight">\(2^{d-1}\)</span> new axes, each of which is essentially orthogonal to all of the
+<span class="math notranslate nohighlight">\(d\)</span> principal coordinate axes.</p>
+</section>
+<section id="density-of-the-multivariate-normal">
+<h2>6.6 Density of The Multivariate Normal<a class="headerlink" href="#density-of-the-multivariate-normal" title="Permalink to this headline">¶</a></h2>
+<p>Consider the probability of a point being with a fraction <span class="math notranslate nohighlight">\(\alpha&gt;0\)</span>, of the peack density at the mean.</p>
+<p>For a multivariate normal distribution, with <span class="math notranslate nohighlight">\(\mmu=\0_d\)</span>, and <span class="math notranslate nohighlight">\(\Sg=\I_d\)</span>, we have</p>
+<div class="math notranslate nohighlight">
+\[f(\x)=\frac{1}{(\sqrt{2\pi})^d}\exp\bigg\{-\frac{\x^T\x}{2}\bigg\}\]</div>
+<p>At the mean <span class="math notranslate nohighlight">\(\mmu=\0_d\)</span>, the peak density is <span class="math notranslate nohighlight">\(f(\0_d)=\frac{1}{(\sqrt{2\pi})^d}\)</span>.
+Thus, the set of points <span class="math notranslate nohighlight">\(\x\)</span> with density at least <span class="math notranslate nohighlight">\(\alpha\)</span> fraction
+of the density at the mean, with <span class="math notranslate nohighlight">\(0&lt;\alpha&lt;1\)</span>, is given as</p>
+<div class="math notranslate nohighlight">
+\[\frac{f(\x)}{f(\0)}\geq\alpha\]</div>
+<p>which implies that</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\exp\bigg\{-\frac{\x^T\x}{2}\bigg\}&amp;\geq\alpha\\\rm{or\ }\x^T\x&amp;\leq-2\ln(\alpha)\\\rm{and\ thus\ }\sum_{i=1}^d(x_i)^2&amp;\leq-2\ln(\alpha)\end{aligned}\end{align} \]</div>
+<p>The probability that a point <span class="math notranslate nohighlight">\(\x\)</span> is within <span class="math notranslate nohighlight">\(\alpha\)</span> times the
+density at the mean can be computed from the <span class="math notranslate nohighlight">\(\chi_d^2\)</span> density function</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp P\bigg(\frac{f(\x)}{f(\0)}\geq\alpha\bigg)=P(\x^T\x\leq-2\ln(\alpha))=\)</span>
+<span class="math notranslate nohighlight">\(\dp\int_0^{-2\ln(\alpha)}f_{\chi_d^2}(\x^T\x)=F_{\chi_d^2}(-2\ln(\alpha))\)</span></p>
+</div>
+<p>where <span class="math notranslate nohighlight">\(f_{\chi_d^2}\)</span> is the chi-squared probability density function with <span class="math notranslate nohighlight">\(q\)</span> degrees of freedom:</p>
+<div class="math notranslate nohighlight">
+\[f_{\chi_d^2}(x)=\frac{1}{2^{q/2}\Gamma(q/2)}x^{\frac{q}{2}-1}e^{-\frac{x}{2}}\]</div>
+<p>and <span class="math notranslate nohighlight">\(F_{\chi_d^2}\)</span> is its cumulative distribution function.</p>
+<p>As dimensionality increases, this probability decreases sharply, and eventually tends to zero, that is,</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\lim_{d\ra\infty}P(\x^T\x\leq-2\ln(\alpha))\ra 0\)</span></p>
+</div>
+<p>Thus, in higher dimensions the probability density around the mean decreases
+very rapidly as one moves away from the mean.
+In essence the entire probability mass migrates to the tail regions.</p>
+<p><strong>Distance of Points from the Mean</strong></p>
+<p>Let <span class="math notranslate nohighlight">\(r^2\)</span> denote the square of the distance of a point <span class="math notranslate nohighlight">\(\x\)</span> to the center <span class="math notranslate nohighlight">\(\mmu=\0\)</span>, given as</p>
+<div class="math notranslate nohighlight">
+\[r^2=\lv\x-\0\rv^2=\x^T\x=\sum_{i=1}^dx_i^2\]</div>
+<p><span class="math notranslate nohighlight">\(\x^T\x\)</span> follows a <span class="math notranslate nohighlight">\(\chi^2\)</span> distribution with <span class="math notranslate nohighlight">\(d\)</span> degress of
+freedom, which has mean <span class="math notranslate nohighlight">\(d\)</span> and variance <span class="math notranslate nohighlight">\(2d\)</span>.
+It follows that the mean and variance of the random variable <span class="math notranslate nohighlight">\(r^2\)</span> is</p>
+<div class="math notranslate nohighlight">
+\[\mu_{r^2}=d\quad\sg_{r^2}^2=2d\]</div>
+<p>We conclude that for large <span class="math notranslate nohighlight">\(d\)</span>, the radius <span class="math notranslate nohighlight">\(r\)</span> follows a normal
+distribution with mean <span class="math notranslate nohighlight">\(\sqrt{d}\)</span> and standard deviation
+<span class="math notranslate nohighlight">\(1/\sqrt{2}\)</span>.
+The density at the mean distance <span class="math notranslate nohighlight">\(r=\sqrt{d}\)</span> is exponentially smaller than that at the peak density because</p>
+<div class="math notranslate nohighlight">
+\[\frac{f(\x)}{f(\0)}=\exp\{-\x^T\x/2\}=\exp\{-d/2\}\]</div>
+<p>Whereas the density of the standard multivariate normal is maximized at the
+center <span class="math notranslate nohighlight">\(\0\)</span>, most of the probability mass is concentrated in a small band
+around the mean distance of <span class="math notranslate nohighlight">\(\sqrt{d}\)</span> from the center.</p>
+</section>
+</section>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="chap7.html" class="btn btn-neutral float-right" title="Chapter 7 Dimensionality Reduction" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="chap5.html" class="btn btn-neutral float-left" title="Chapter 5 Kernel Methods" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2021, Ziniu Yu
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
