@@ -1,0 +1,718 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Chapter 7 Dimensionality Reduction &mdash; DataMining  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Chapter 6 High-dimensional Data" href="chap6.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> DataMining
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index1.html">Part 1 Data Analysis Foundations</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="chap1.html">Chapter 1 Data Matrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chap2.html">Chapter 2 Numeric Attributes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chap3.html">Chapter 3 Categorical Attributes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chap4.html">Chapter 4 Graph Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chap5.html">Chapter 5 Kernel Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chap6.html">Chapter 6 High-dimensional Data</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Chapter 7 Dimensionality Reduction</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#background">7.1 Background</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#principal-component-analysis">7.2 Principal Component Analysis</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#best-line-approximation">7.2.1 Best Line approximation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#best-2-dimensional-approximation">7.2.2 Best 2-dimensional Approximation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#best-r-dimensional-approximation">7.2.3 Best <span class="math notranslate nohighlight">\(r\)</span>-dimensional Approximation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#geometry-of-pca">7.2.4 Geometry of PCA</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#kernel-principal-component-analysis">7.3 Kernel Principal Component Analysis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#singular-value-decomposition">7.4 Singular Value Decomposition</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#geometry-of-svd">7.4.1 Geometry of SVD</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#connection-between-svd-and-pca">7.4.2 Connection between SVD and PCA</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">DataMining</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index1.html">Part 1 Data Analysis Foundations</a> &raquo;</li>
+        
+      <li>Chapter 7 Dimensionality Reduction</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/part1/chap7.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\newcommand{\bs}{\boldsymbol}
+\newcommand{\dp}{\displaystyle}
+\newcommand{\rm}{\mathrm}
+\newcommand{\cl}{\mathcal}
+\newcommand{\pd}{\partial}\\\newcommand{\cd}{\cdot}
+\newcommand{\cds}{\cdots}
+\newcommand{\dds}{\ddots}
+\newcommand{\lv}{\lVert}
+\newcommand{\ol}{\overline}
+\newcommand{\ra}{\rightarrow}
+\newcommand{\rv}{\rVert}
+\newcommand{\seq}{\subseteq}
+\newcommand{\vds}{\vdots}
+\newcommand{\wh}{\widehat}\\\newcommand{\0}{\boldsymbol{0}}
+\newcommand{\1}{\boldsymbol{1}}
+\newcommand{\a}{\boldsymbol{\mathrm{a}}}
+\newcommand{\b}{\boldsymbol{\mathrm{b}}}
+\newcommand{\c}{\boldsymbol{\mathrm{c}}}
+\newcommand{\e}{\boldsymbol{\mathrm{e}}}
+\newcommand{\f}{\boldsymbol{\mathrm{f}}}
+\newcommand{\g}{\boldsymbol{\mathrm{g}}}
+\newcommand{\i}{\boldsymbol{\mathrm{i}}}
+\newcommand{\j}{\boldsymbol{j}}
+\newcommand{\n}{\boldsymbol{\mathrm{n}}}
+\newcommand{\p}{\boldsymbol{\mathrm{p}}}
+\newcommand{\q}{\boldsymbol{\mathrm{q}}}
+\newcommand{\r}{\boldsymbol{\mathrm{r}}}
+\newcommand{\u}{\boldsymbol{\mathrm{u}}}
+\newcommand{\v}{\boldsymbol{\mathrm{v}}}
+\newcommand{\w}{\boldsymbol{w}}
+\newcommand{\x}{\boldsymbol{\mathrm{x}}}
+\newcommand{\y}{\boldsymbol{\mathrm{y}}}\\\newcommand{\A}{\boldsymbol{\mathrm{A}}}
+\newcommand{\B}{\boldsymbol{B}}
+\newcommand{\C}{\boldsymbol{C}}
+\newcommand{\D}{\boldsymbol{\mathrm{D}}}
+\newcommand{\I}{\boldsymbol{\mathrm{I}}}
+\newcommand{\K}{\boldsymbol{\mathrm{K}}}
+\newcommand{\N}{\boldsymbol{\mathrm{N}}}
+\newcommand{\P}{\boldsymbol{\mathrm{P}}}
+\newcommand{\S}{\boldsymbol{\mathrm{S}}}
+\newcommand{\U}{\boldsymbol{\mathrm{U}}}
+\newcommand{\W}{\boldsymbol{\mathrm{W}}}
+\newcommand{\X}{\boldsymbol{\mathrm{X}}}\\\newcommand{\R}{\mathbb{R}}\\\newcommand{\ld}{\lambda}
+\newcommand{\Ld}{\boldsymbol{\mathrm{\Lambda}}}
+\newcommand{\sg}{\sigma}
+\newcommand{\Sg}{\boldsymbol{\mathrm{\Sigma}}}
+\newcommand{\th}{\theta}\\\newcommand{\mmu}{\boldsymbol{\mu}}\\\newcommand{\bb}{\begin{bmatrix}}
+\newcommand{\eb}{\end{bmatrix}}
+\newcommand{\bp}{\begin{pmatrix}}
+\newcommand{\ep}{\end{pmatrix}}
+\newcommand{\bv}{\begin{vmatrix}}
+\newcommand{\ev}{\end{vmatrix}}\\\newcommand{\im}{^{-1}}
+\newcommand{\pr}{^{\prime}}
+\newcommand{\ppr}{^{\prime\prime}}\end{aligned}\end{align} \]</div>
+<div class="section" id="chapter-7-dimensionality-reduction">
+<h1>Chapter 7 Dimensionality Reduction<a class="headerlink" href="#chapter-7-dimensionality-reduction" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="background">
+<h2>7.1 Background<a class="headerlink" href="#background" title="Permalink to this headline">¶</a></h2>
+<p>Let the data <span class="math notranslate nohighlight">\(\D\)</span> consist of <span class="math notranslate nohighlight">\(n\)</span> points over <span class="math notranslate nohighlight">\(d\)</span> attributes,
+that is, it is an <span class="math notranslate nohighlight">\(n\times d\)</span> matrix, given as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\D=\left(\begin{array}{c|cccc}&amp;X_1&amp;X_2&amp;\cds&amp;X_d\\ \hline
+\x_1&amp;x_{11}&amp;x_{12}&amp;\cds&amp;x_{1d}\\\x_2&amp;x_{21}&amp;x_{22}&amp;\cds&amp;x_{2d}\\
+\vds&amp;\vds&amp;\vds&amp;\dds&amp;\vds\\\x_n&amp;x_{n1}&amp;x_{n2}&amp;\cds&amp;x_{nd}\end{array}\right)\end{split}\]</div>
+<p>Each point <span class="math notranslate nohighlight">\(\x_i=(x_{i1},x_{i2},\cds,x_{id})^T\)</span> is a vector in the ambient
+<span class="math notranslate nohighlight">\(d\)</span>-dimensional vector space spanned by the <span class="math notranslate nohighlight">\(d\)</span> standard basis
+vectors <span class="math notranslate nohighlight">\(\e_1,\e_2,\cds,\e_d\)</span>, where <span class="math notranslate nohighlight">\(\e_i\)</span> corresponds to the
+<span class="math notranslate nohighlight">\(i\)</span>.</p>
+<p>Given any other set of <span class="math notranslate nohighlight">\(d\)</span> orthonormal vectors <span class="math notranslate nohighlight">\(\u_1,\u_2,\cds,\u_d\)</span>,
+with <span class="math notranslate nohighlight">\(\u_i^T\u_j=0\)</span> and <span class="math notranslate nohighlight">\(\lv\u_i\rv=1\)</span> (or <span class="math notranslate nohighlight">\(\u_i^T\u_i=1\)</span>), we
+can re-express each point <span class="math notranslate nohighlight">\(x\)</span> as the linear combination</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\x=a_1\u_1+a_2\u_2+\cds+a_d\u_d\)</span></p>
+</div>
+<p>where the vector <span class="math notranslate nohighlight">\(\a=(a_1,a_2,\cds,a_d)^T\)</span> represents the coordinates of
+<span class="math notranslate nohighlight">\(\x\)</span> in the new basis.
+The above linear combination can also be expressed as a matrix multiplication:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\x=\U\a\)</span>.</p>
+</div>
+<p>where <span class="math notranslate nohighlight">\(\U\)</span> is an <em>orthonormal</em> matrix whose <span class="math notranslate nohighlight">\(i\)</span>th column comprises
+the <span class="math notranslate nohighlight">\(i\)</span>th basis vector <span class="math notranslate nohighlight">\(\u_i\)</span>.</p>
+<p>Because <span class="math notranslate nohighlight">\(\U\)</span> is orthogonal, we have</p>
+<div class="math notranslate nohighlight">
+\[\U\im=\U^T\]</div>
+<p>which implies that <span class="math notranslate nohighlight">\(\U^T\U=\I\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[\U^T\x=\U^T\U\a\]</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\a=\U^T\x\)</span></p>
+</div>
+<p>Becuase there are potentially infinite choices for the set of orthonormal basis
+vectors, one natural question is whether ther exists an <em>optimal</em> basis, for a
+suitable notion of optimality.
+We are interested in finding the optimal <span class="math notranslate nohighlight">\(r\)</span>-dimensional representation of <span class="math notranslate nohighlight">\(\D\)</span> with <span class="math notranslate nohighlight">\(r\ll d\)</span>.
+Projection of <span class="math notranslate nohighlight">\(\x\)</span> onto the first <span class="math notranslate nohighlight">\(r\)</span> basis vectors is given as</p>
+<div class="math notranslate nohighlight">
+\[\x\pr=a_1\u_1+a_2\u_2+\cds+a_r\u_r+\sum_{i=1}^ra_i\u_i\]</div>
+<p>which can be written in matrix notaion as follows</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\x\pr=\bp|&amp;|&amp;&amp;|\\\u_1&amp;\u_2&amp;\cds&amp;\u_r\\|&amp;|&amp;&amp;|\ep\bp a_1\\a_2\\\vds\\a_r \ep=\U_r\a_r\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\U_r\)</span> is the matrix comprising the first <span class="math notranslate nohighlight">\(r\)</span> basis vectors,
+and <span class="math notranslate nohighlight">\(\a_r\)</span> is a vectgor comprising the first <span class="math notranslate nohighlight">\(r\)</span> coordinates.
+Because <span class="math notranslate nohighlight">\(\a=\U^T\x\)</span>, restricting it to the first <span class="math notranslate nohighlight">\(r\)</span> terms, we get</p>
+<div class="math notranslate nohighlight">
+\[\a_r=\U_r^T\x\]</div>
+<p>The projection of <span class="math notranslate nohighlight">\(\x\)</span> onto the first <span class="math notranslate nohighlight">\(r\)</span> basis vectors can be compactly written as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\x\pr=\U_r\U_r^T\x=\P_r\x\)</span></p>
+</div>
+<p>where <span class="math notranslate nohighlight">\(\P_r=\U_r\U_r^T\)</span> is the <em>orthogonal projection matrix</em> for the
+subspace spanned by the first <span class="math notranslate nohighlight">\(r\)</span> basis vectors.
+The projection matrix <span class="math notranslate nohighlight">\(\P_r\)</span> can also be written as the decomposition</p>
+<div class="math notranslate nohighlight">
+\[P_r=\U_r\U_r^T=\sum_{i=1}^r\u_i\u_i^T\]</div>
+<p>The projection of <span class="math notranslate nohighlight">\(\x\)</span> onto the remaining dimensions comprises the <em>error vector</em></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\bs\epsilon=\sum_{i=r+1}^da_i\u_i=\x-\x\pr\)</span></p>
+</div>
+<p>It is worth noting that <span class="math notranslate nohighlight">\(\x\pr\)</span> and <span class="math notranslate nohighlight">\(\bs\epsilon\)</span> are orthogonal vectors:</p>
+<div class="math notranslate nohighlight">
+\[{\x\pr}^T\bs\epsilon=\sum_{i=1}^r\sum_{j=r+1}^da_ia_j\u_i^T\u_j=0\]</div>
+<p>The subspace spanned by the first <span class="math notranslate nohighlight">\(r\)</span> basis vectors and the subspace
+spanned by the remaining basis vectors are <em>orthogonal subspaces</em>.
+They are <em>orthogonal complement</em> of each other.</p>
+<p>The goal of dimensionality reduction is to seek an <span class="math notranslate nohighlight">\(r\)</span>-dimensional basis
+that gives the best possible approximation <span class="math notranslate nohighlight">\(\x_i\pr\)</span> over all the points
+<span class="math notranslate nohighlight">\(\x_i\in\D\)</span>.
+Alternatively, we may seek to minimize the error <span class="math notranslate nohighlight">\(\bs\epsilon_i=\x_i-\x_i\pr\)</span> over all the points.</p>
+</div>
+<div class="section" id="principal-component-analysis">
+<h2>7.2 Principal Component Analysis<a class="headerlink" href="#principal-component-analysis" title="Permalink to this headline">¶</a></h2>
+<p>Principal Component Analysis (PCA) is a technique that seeks a <span class="math notranslate nohighlight">\(r\)</span>
+-dimensional basis that best captures the variance in the data.</p>
+<div class="section" id="best-line-approximation">
+<h3>7.2.1 Best Line approximation<a class="headerlink" href="#best-line-approximation" title="Permalink to this headline">¶</a></h3>
+<p>Assume that <span class="math notranslate nohighlight">\(\u\)</span> is a unit vector, and the data matrix <span class="math notranslate nohighlight">\(\D\)</span> has been
+centered by subtracting the mean <span class="math notranslate nohighlight">\(\mu\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[\bar\D=\D-\1\cd\mmu^T\]</div>
+<p>The projection of the centered point <span class="math notranslate nohighlight">\(\bar\x_i\in\bar\D\)</span> on the vector <span class="math notranslate nohighlight">\(\u\)</span> is given as</p>
+<div class="math notranslate nohighlight">
+\[\x_i\pr=\bigg(\frac{\u^T\bar\x_i}{\u^T\u}\bigg)\u=(\u^T\bar\x_i)\u=a_i\u\]</div>
+<p>where</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(a_i=\u^T\bar\x_i\)</span></p>
+</div>
+<p>is the offset or scalar projection of <span class="math notranslate nohighlight">\(\x_i\)</span> on <span class="math notranslate nohighlight">\(\u\)</span>.
+We also call <span class="math notranslate nohighlight">\(a_i\)</span> a <em>projected point</em>.
+Note that the scalar projection of the mean <span class="math notranslate nohighlight">\(\bar\mmu\)</span> is 0.
+Therefore, the mean of the projected points <span class="math notranslate nohighlight">\(a_i\)</span> is also zero, since</p>
+<div class="math notranslate nohighlight">
+\[\mu_a=\frac{1}{n}\sum_{i=1}^na_i=\frac{1}{n}\sum_{i=1}^n\u^T(\bar\x_i)=\u^T\bar\mmu=0\]</div>
+<p>We have to choose the direction <span class="math notranslate nohighlight">\(\u\)</span> such that the variance of the projected points is maximized.
+The projected variance along <span class="math notranslate nohighlight">\(\u\)</span> is given as</p>
+<div class="math notranslate nohighlight">
+\[\sg_\u^2=\frac{1}{n}\sum_{i=1}^n(a_i-\mu_a)^2=\frac{1}{n}\sum_{i=1}^n
+(\u^T\bar\x_i)^2=\frac{1}{n}\sum_{i=1}^n\u^T(\bar\x_i\bar\x_i^T)\u=\u^T
+\bigg(\frac{1}{n}\sum_{i=1}^n\bar\x_i\bar\x_i^T\bigg)\u\]</div>
+<p>Thus, we get</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\sg_\u^2=\u^T\Sg\u\)</span></p>
+</div>
+<p>where <span class="math notranslate nohighlight">\(\Sg\)</span> is the sample covariance matrix for the centered data <span class="math notranslate nohighlight">\(\bar\D\)</span>.</p>
+<p>We have to find the optimal basis vector <span class="math notranslate nohighlight">\(\u\)</span> that maximizes the projected
+variance <span class="math notranslate nohighlight">\(\sg_\u^2\)</span> subject to the constraint that <span class="math notranslate nohighlight">\(\u^T\u=1\)</span>.
+This can be solved by introducing a Lagrangian multiplier <span class="math notranslate nohighlight">\(\alpha\)</span> for the
+constraint, to obtain the unconstrained maximization problem</p>
+<div class="math notranslate nohighlight">
+\[\max_\u J(\u)=\u^T\Sg\u-\alpha(\u^T\u-1)\]</div>
+<p>Setting the derivative of <span class="math notranslate nohighlight">\(J(\u)\)</span> with respect to <span class="math notranslate nohighlight">\(\u\)</span> to the zero vector, we obtain</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\frac{\pd}{\pd\u}J(\u)&amp;=\0\\\frac{\pd}{\pd\u}(\u^T\Sg\u-\alpha(\u^T\u-1))&amp;=\0\\2\Sg\u-2\alpha\u&amp;=\0\end{aligned}\end{align} \]</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\Sg\u=\alpha\u\)</span></p>
+</div>
+<div class="math notranslate nohighlight">
+\[\u^T\Sg\u=\u^T\alpha\u=\alpha\u^T\u=\alpha\]</div>
+<p>The dominant eigenvector <span class="math notranslate nohighlight">\(\u_1\)</span> specifies the direction of most variance,
+also called the <em>first principal component</em>, that is, <span class="math notranslate nohighlight">\(\u=\u_1\)</span>.
+Further, the largest eigenvalue <span class="math notranslate nohighlight">\(\ld_1\)</span> specifies the projected variance, that is, <span class="math notranslate nohighlight">\(\sg_\u^2=\alpha=\ld_1\)</span>.</p>
+<p><strong>Minimum Squared Error Approach</strong></p>
+<p>The direction that maximizes the projected variance is also the one that minimizes the average squared error.
+The mean squared error (MSE) optimization condition is defined as</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}MSE(\u)&amp;=\frac{1}{n}\sum_{i=1}^n\lv\epsilon_i\rv^2=
+\frac{1}{n}\sum_{i=1}^n\lv\bar\x_i-\x_i\pr\rv^2=
+\frac{1}{n}\sum_{i=1}^n(\bar\x_i-\x_i\pr)^T(\bar\x_i-\x_i\pr)\\&amp;=\frac{1}{n}\sum_{i=1}^n(\lv\bar\x_i\rv^2-2\bar\x_i^T\x_i\pr+(\x_i\pr)^T\x_i\pr)\\&amp;=\frac{1}{n}\sum_{i=1}^n(\lv\bar\x_i\rv^2-2\bar\x_i^T(\u^T\bar\x_i)\u+
+((\u^T\bar\x_i)\u)^T(\u^T\bar\x_i)\u),\rm{since\ }\x_i\pr=(\u^T\bar\x_i)\u\\&amp;=\frac{1}{n}\sum_{i=1}^n(\lv\bar\x_i\rv^2-2(\u^T\bar\x_i)(\bar\x_i^T\u)+(\u^T\bar\x_i)(\bar\x_i^T\u)\u^T\u)\\&amp;=\frac{1}{n}\sum_{i=1}^n(\lv\bar\rv^2-(\u^T\bar\x_i)\bar\x_i^T\u))\\&amp;=\frac{1}{n}\sum_{i=1}^n\lv\bar\x_i\rv^2-\frac{1}{n}\sum_{i=1}^n\u^T(\bar\x_i\bar\x_i^T)\u\\&amp;=\frac{1}{n}\sum_{i=1}^n\lv\bar\x_i\rv^2-\u^T\bigg(\frac{1}{n}\sum_{i=1}^n\bar\x_i\bar\x_i^T\bigg)\u\end{aligned}\end{align} \]</div>
+<p>which implies</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp MSE=\sum_{i=1}^n\frac{\lv\bar\x_i\rv^2}{n}-\u^T\Sg\u\)</span></p>
+</div>
+<p>Further, we have</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\rm{var}(\D)=tr(\Sg)=\sum_{i=1}^d\sg_i^2\)</span></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp MSE(\u)=\rm{var}(\D)-\u^T\Sg\u=\sum_{i=1}^d\sg_i^2-\u^T\Sg\u\)</span></p>
+</div>
+<p>The principal component <span class="math notranslate nohighlight">\(\u_1\)</span>, which is the direction that maximizes the
+projected variance, is also the direction that minimizes the mean squared error.</p>
+<div class="math notranslate nohighlight">
+\[MSE(\u_1)=\rm{var}(\D)-\u_1^T\Sg\u_1=\rm{var}(\D)=\u_1^T\ld_1\u_1=\rm{var}(\D)-\ld_1\]</div>
+</div>
+<div class="section" id="best-2-dimensional-approximation">
+<h3>7.2.2 Best 2-dimensional Approximation<a class="headerlink" href="#best-2-dimensional-approximation" title="Permalink to this headline">¶</a></h3>
+<p>We are now interested in the best two-dimensional approximation to <span class="math notranslate nohighlight">\(\D\)</span>.
+We now want to find another direction <span class="math notranslate nohighlight">\(\v\)</span>, which also maximizes the
+projected variance, but is orthogonal to <span class="math notranslate nohighlight">\(\u_1\)</span>.
+The projected variance along <span class="math notranslate nohighlight">\(\v\)</span> is given as</p>
+<div class="math notranslate nohighlight">
+\[\sg_\v^2=\v^T\Sg\v\]</div>
+<p>We further require that <span class="math notranslate nohighlight">\(\v\)</span> be a unit vector orthogonal to <span class="math notranslate nohighlight">\(\u_1\)</span>.
+The optimization condition then becomes</p>
+<div class="math notranslate nohighlight">
+\[\max_\v J(\v)=\v^T\Sg\v-\alpha(\v^T\v-1)-\beta(\v^T\u_1-0)\]</div>
+<p>Taking the derivative of <span class="math notranslate nohighlight">\(J(\v)\)</span> with respect to <span class="math notranslate nohighlight">\(\v\)</span>, and setting
+it to the zero vector, finally gives that <span class="math notranslate nohighlight">\(\v\)</span> is the second largest
+eigenvector of <span class="math notranslate nohighlight">\(\Sg\)</span>.</p>
+<p><strong>Total Projected Variance</strong></p>
+<p>Let <span class="math notranslate nohighlight">\(\U_2\)</span> be the matrix whose columns correspond to the two principal components.
+Given the point <span class="math notranslate nohighlight">\(\bar\x_i\in\bar\D\)</span> its coordinates in the two-dimensional
+subspace spanned by <span class="math notranslate nohighlight">\(\u_1\)</span> and <span class="math notranslate nohighlight">\(\u_2\)</span> can be computed as follows:</p>
+<div class="math notranslate nohighlight">
+\[\a_i=\U_2^T\bar\x_i\]</div>
+<p>Assume that each point <span class="math notranslate nohighlight">\(\bar\x_i\in\R^d\)</span> in <span class="math notranslate nohighlight">\(\bar\D\)</span> has been
+projected to obtain its coordinates <span class="math notranslate nohighlight">\(\a_i\in\R^2\)</span>, yielding the new
+dataset <span class="math notranslate nohighlight">\(\A\)</span>.
+The total variance for <span class="math notranslate nohighlight">\(\A\)</span> is given as</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\rm{var}(\A)&amp;=\frac{1}{n}\sum_{i=1}^n\lv\a_i-\0\rv^2=
+\frac{1}{n}\sum_{i=1}^n(\U_2^T\bar\x_i)^T(\U_2^T\bar\x_i)=
+\frac{1}{n}\sum_{i=1}^n\bar\x_i^T(\U_2\U_2^T)\bar\x_i\\&amp;=\frac{1}{n}\sum_{i=1}^n\bar\x_i^T\P_2\bar\x_i\end{aligned}\end{align} \]</div>
+<p>where <span class="math notranslate nohighlight">\(\P_2\)</span> is the orthogonal projection matrix given as</p>
+<div class="math notranslate nohighlight">
+\[\P_2=\U_2\U_2^T=\u_1\u_1^T+\u_2\u_2^T\]</div>
+<p>The projected total variance is then given as</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\rm{var}(\A)&amp;=\frac{1}{n}\sum_{i=1}^n\bar\x_i^T\P_2\bar\x_i\\&amp;=\u_1^T\Sg\u_1+\u_2^T\Sg\u_2=\u_1^T\ld_1\u_1+\u_2^T\ld_2\u_2=\ld_1+\ld_2\end{aligned}\end{align} \]</div>
+<p><strong>Mean Squared Error</strong></p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}MSE&amp;=\frac{1}{n}\sum_{i=1}^n\lv\bar\x_i-\x_i\pr\rv^2\\&amp;=\frac{1}{n}\sum_{i=1}^n(\lv\bar\x_i\rv^2-2\bar\x_i^T\x_i\pr+(\x_i\pr)^T\x_i\pr)\\&amp;=\rm{var}(\D)+\frac{1}{n}\sum_{i=1}^n(-2\bar\x_i^T\P_2\bar\x_i+(\P_2\bar\x_i)^T\P_2\bar\x_i)\\&amp;=\rm{var}(\D)-\frac{1}{n}\sum_{i=1}^n(\bar\x_i^T\P_2\bar\x_i)\\&amp;=\rm{var}(\D)-\rm{var}(\A)\\&amp;=\rm{var}(\D)-\ld_1-\ld_2\end{aligned}\end{align} \]</div>
+</div>
+<div class="section" id="best-r-dimensional-approximation">
+<h3>7.2.3 Best <span class="math notranslate nohighlight">\(r\)</span>-dimensional Approximation<a class="headerlink" href="#best-r-dimensional-approximation" title="Permalink to this headline">¶</a></h3>
+<p>To find the best <span class="math notranslate nohighlight">\(r\)</span>-dimensional approximation to <span class="math notranslate nohighlight">\(\D\)</span>, we compute the eigenvalue of <span class="math notranslate nohighlight">\(\Sg\)</span>.
+Because <span class="math notranslate nohighlight">\(\Sg\)</span> is positive semidefinite, its eigenvalues are non-negative and can be sorted in decreasing order</p>
+<div class="math notranslate nohighlight">
+\[\ld_1\geq\ld_2\geq\cds\ld_r\geq\ld_{r+1}\cds\geq\ld_d\geq 0\]</div>
+<p>We then select the <span class="math notranslate nohighlight">\(r\)</span> largest eigenvalues, and their corresponding
+eigenvectors to form the best <span class="math notranslate nohighlight">\(r\)</span>-dimensional approximation.</p>
+<p><strong>Total Projected Variance</strong></p>
+<div class="math notranslate nohighlight">
+\[\rm{var}(\A)=\frac{1}{n}\sum_{i=1}^n\bar\x_i^T\P_r\bar\x_i=\sum_{i=1}^r\u_i^T\Sg\u_i=\sum_{i=1}^r\ld_i\]</div>
+<p><strong>Mean Squared Error</strong></p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}MSE&amp;=\frac{1}{n}\sum_{i=1}^n\lv\bar\x_i-\x_i\pr\rv^2=\rm{var}(\D)-\rm{var}(\A)\\&amp;=\rm{var}(\D)-\sum_{i=1}^r\u_i^T\Sg\u_i=\rm{var}(\D)-\sum_{i=1}^r\ld_i\end{aligned}\end{align} \]</div>
+<p><strong>Total Variance</strong></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\rm{var}(\D)=\sum_{i=1}^d\sg_i^2=\sum_{i=1}^d\ld_i\)</span></p>
+</div>
+<p><strong>Choosing the Dimensionality</strong></p>
+<p>One criteria for choosing <span class="math notranslate nohighlight">\(r\)</span> is to compute the fraction of the total
+variance captured by the first <span class="math notranslate nohighlight">\(r\)</span> principal components, computed as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp f(r)=\frac{\ld_1+\ld_2+\cds+\ld_r}{\ld_1+\ld_2+\cds+\ld_d}=\)</span>
+<span class="math notranslate nohighlight">\(\dp\frac{\sum_{i=1}^r\ld_i}{\sum_{i=1}^d\ld_i}=\frac{\sum_{i=1}^r\ld_i}{\rm{var}(\D)}\)</span></p>
+</div>
+<p>Given a certain desired variance threshold, say <span class="math notranslate nohighlight">\(\alpha\)</span>, starting from
+the first principal component, we keep on adding additional components, and stop
+at the smallest value <span class="math notranslate nohighlight">\(r\)</span> for which <span class="math notranslate nohighlight">\(f(r)\geq\alpha\)</span>, given as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(r=\min\{r\pr|f(r\pr)\geq\alpha\}\)</span></p>
+</div>
+<img alt="part1/_static/Algo7.1.png" src="part1/_static/Algo7.1.png" />
+</div>
+<div class="section" id="geometry-of-pca">
+<h3>7.2.4 Geometry of PCA<a class="headerlink" href="#geometry-of-pca" title="Permalink to this headline">¶</a></h3>
+<p>Geometrically, when <span class="math notranslate nohighlight">\(r=d\)</span>, PCA corresponds to a orthogonal change of basis,
+so that the total variance is captured by the sum of the variances along each of
+the principal direction <span class="math notranslate nohighlight">\(\u_1,\u_2,\cds,\u_d\)</span>, and further, all
+covariances are zero.
+This can be seen by looking at the collective action of the full set of
+principal components, which can be arranged in the <span class="math notranslate nohighlight">\(d\times d\)</span> orthogonal
+matrix with <span class="math notranslate nohighlight">\(\U\im=\U^T\)</span>.</p>
+<p>Each principal component <span class="math notranslate nohighlight">\(\u_i\)</span> corresponds to an eigenvector of the
+covariance matrix <span class="math notranslate nohighlight">\(\Sg\)</span>, which can be written compactly as</p>
+<div class="math notranslate nohighlight">
+\[\Sg\U=\U\Ld\]</div>
+<p>Multiply above equation on the left by <span class="math notranslate nohighlight">\(\U\im=\U^T\)</span> we obtain</p>
+<div class="math notranslate nohighlight">
+\[\U^T\Sg\U=\U^T\U\Ld=\Ld\]</div>
+<p>This means that if we change the basis to <span class="math notranslate nohighlight">\(\U\)</span>, we change the covariance
+matrix <span class="math notranslate nohighlight">\(\Sg\)</span> to a similar matrix <span class="math notranslate nohighlight">\(\Ld\)</span>, which in fact is the
+covariance matrix in the new basis.</p>
+<p>It is worth noting that in the new basis, the equation</p>
+<div class="math notranslate nohighlight">
+\[\x^T\Sg\im\x=1\]</div>
+<p>defines a <span class="math notranslate nohighlight">\(d\)</span>-dimensional ellipsoid (or hyper-ellipse).
+The eigenvectors <span class="math notranslate nohighlight">\(\u_i\)</span> of <span class="math notranslate nohighlight">\(\Sg\)</span>, that is, the principal components,
+are the directions for the principal axes of the ellipsoid.
+The square roots of the eigenvalues, that is, <span class="math notranslate nohighlight">\(\sqrt{\ld_i}\)</span>, give the lengths of the semi-axes.</p>
+<p>The <em>eigen-decomposition</em> of <span class="math notranslate nohighlight">\(\Sg\)</span> is</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\Sg=\U\Ld\U^T=\ld_1\u_1\u_1^T+\ld_2\u_2\u_2^T+\cds+\ld_d\u_d\u_d^T=\sum_{i=1}^d\ld_i\u_i\u_i^T\)</span></p>
+</div>
+<p>Assuming that <span class="math notranslate nohighlight">\(\Sg\)</span> is invertible or nonsingular, we have</p>
+<div class="math notranslate nohighlight">
+\[\Sg\im=(\U\Ld\U^T)\im=(\U\im)^T\Ld\im\U\im=\U\Ld\im\U^T\]</div>
+<p>Using the fact that <span class="math notranslate nohighlight">\(\x=\U\a\)</span>, we get</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\x^T\Sg\im\x&amp;=1\\(\a^T\U^T)\U\Ld\im\U^T(\U\a)&amp;=1\\\a^T\Ld\im\a&amp;=1\\\sum_{i=1}^d\frac{a_i^2}{\ld_i}&amp;=1\end{aligned}\end{align} \]</div>
+<p>which is precisely the equation for an ellipse centered at <span class="math notranslate nohighlight">\(\0\)</span>, with semi-axes lengths <span class="math notranslate nohighlight">\(\sqrt{\ld_i}\)</span>.
+Thus <span class="math notranslate nohighlight">\(\x^T\Sg\im\x=1\)</span>, or equivalently <span class="math notranslate nohighlight">\(\a^T\Ld\im\a=1\)</span> in the new
+principal components basis, defines an ellipsoid in <span class="math notranslate nohighlight">\(d\)</span>-dimensions, where
+the semi-axes lengths equal the standard deviations along each axis.
+Likewise, the equation <span class="math notranslate nohighlight">\(\x^T\Sg\im\x=s\)</span>, or equivalently
+<span class="math notranslate nohighlight">\(\a^T\Ld\im\a=s\)</span>, for different values of the scalar <span class="math notranslate nohighlight">\(s\)</span>, represents
+concentric ellipsoids.</p>
+</div>
+</div>
+<div class="section" id="kernel-principal-component-analysis">
+<h2>7.3 Kernel Principal Component Analysis<a class="headerlink" href="#kernel-principal-component-analysis" title="Permalink to this headline">¶</a></h2>
+<p>Principal component analysis can be extended to find nonlinear “directions” in the data using kernel methods.
+Kernel PCA finds the directions of most variance in the feature space instead of the input space.</p>
+<p>In feature space, we can find the first kernel principal component <span class="math notranslate nohighlight">\(\u_1\)</span>,
+by solving for the eigenvector corresponding to the largest eigenvalue of the
+covariance matrix in feature space:</p>
+<div class="math notranslate nohighlight">
+\[\Sg_\phi\u_1=\ld_1\u_1\]</div>
+<p>where <span class="math notranslate nohighlight">\(\Sg_\phi\)</span>, the covariance matrix in feature space, is given as</p>
+<div class="math notranslate nohighlight">
+\[\Sg_\phi=\frac{1}{n}\sum_{i=1}^n(\phi(\x_i)-\mmu_\phi)(\phi(\x_i)-
+\mmu_\phi)^T=\frac{1}{n}\sum_{i=1}^n\bar\phi(\x_i)\bar\phi(\x_i)^T\]</div>
+<p>Plugging the expansion of <span class="math notranslate nohighlight">\(\Sg_\phi\)</span>, we get</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\bigg(\frac{1}{n}\sum_{i=1}^n\bar\phi(\x_i)\bar\phi(\x_i)^T\bigg)\u_1&amp;=\ld_1\u_1\\\frac{1}{n}\sum_{i=1}^n\bar\phi(\x_i)(\bar\phi(\x_i)^T\u_1)&amp;=\ld_1\u_1\\\sum_{i=1}^n\bigg(\frac{\bar\phi(\x_i)^T\u_1}{n\ld_1}\bigg)\bar\phi(\x_i)&amp;=\u_1\\\sum_{i=1}^nc_i\bar\phi(\x_i)&amp;=\u_1\end{aligned}\end{align} \]</div>
+<p>where <span class="math notranslate nohighlight">\(c_i=\frac{\bar\phi(\x_i)^T\u_1}{n\ld_1}\)</span> is a scalar value.</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\bigg(\frac{1}{n}\sum_{i=1}^n\bar\phi(\x_i)\bar\phi(\x_i)^T\bigg)\bigg(
+\sum_{j=1}^nc_j\bar\phi(\x_j)\bigg)&amp;=\ld_1\sum_{i=1}^nc_i\bar\phi(\x_i)\\\frac{1}{n}\sum_{i=1}^n\sum_{j=1}^nc_i\bar\phi(\x_i)\bar\phi(\x_i)^T\bar\phi
+(\x_j)&amp;=\ld_1\sum_{i=1}^nc_i\bar\phi(\x_i)\\\sum_{i=1}^n\bigg(\bar\phi(\x_i)\sum_{j=1}^nc_j\bar\phi(\x_i)^T\bar\phi
+(\x_j)\bigg)&amp;=n\ld_1\sum_{i=1}^nc_i\bar\phi(\x_i)\\\sum_{i=1}^n\bigg(\bar\phi(\x_i)\sum_{j=1}^nc_j\bar{K}(\x_i,\x_j)\bigg)&amp;=n\ld_1\sum_{i=1}^nc_i\bar\phi(\x_i)\end{aligned}\end{align} \]</div>
+<p>We assume that the kernel matrix <span class="math notranslate nohighlight">\(\K\)</span> has already been centered using</p>
+<div class="math notranslate nohighlight">
+\[\bar\K=\bigg(\I-\frac{1}{n}\1_{n\times n}\bigg)\K\bigg(\I-\frac{1}{n}\1_{n\times n}\bigg)\]</div>
+<p>Take any point, say <span class="math notranslate nohighlight">\(\bar\phi(\x_k)\)</span> and multiply by <span class="math notranslate nohighlight">\(\bar\phi(\x_k)^T\)</span> on both sides to obtain</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\sum_{i=1}^n\bigg(\bar\phi(\x_k)^T\bar\phi(\x_i)\sum_{j=1}^nc_j\bar{K}
+(\x_i,\x_j)\bigg)&amp;=n\ld_1\sum_{i=1}^nc_i\bar\phi(\x_k)^T\bar\phi(\x_i)\\\sum_{i=1}^n\bigg(\bar{K}(\x_k,\x_i)\sum_{j=1}^nc_j\bar{K}
+(\x_i,\x_j)\bigg)&amp;=n\ld_1\sum_{i=1}^nc_i\bar{K}(\x_k,\x_i)\end{aligned}\end{align} \]</div>
+<p>We can compactly represent it as follows:</p>
+<div class="math notranslate nohighlight">
+\[\bar\K^2\c=n\ld_1\bar\K\c\]</div>
+<p>If <span class="math notranslate nohighlight">\(\eta_1\)</span> is the largest eigenvalue of <span class="math notranslate nohighlight">\(\bar\K\)</span> corresponding to
+the dominant eigenvector <span class="math notranslate nohighlight">\(\c\)</span>, we can verify that</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\bar\K(\bar\K\c)&amp;=n\ld_1\bar\K\c\\\bar\K(\eta_1\cd\c)&amp;=n\ld_1\eta_1\c\\\bar\K\c&amp;=n\ld_1\c\end{aligned}\end{align} \]</div>
+<p>which implies</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\bar\K\c=\eta_1\c\)</span></p>
+</div>
+<p>where <span class="math notranslate nohighlight">\(\eta_1=n\cd\ld_1\)</span>.</p>
+<p>If we sort the eigenvalues of <span class="math notranslate nohighlight">\(\K\)</span> in decreasing order
+<span class="math notranslate nohighlight">\(\eta_1\geq\eta_2\geq\cds\geq\eta_n\geq 0\)</span>, we can obtain the <span class="math notranslate nohighlight">\(j\)</span>th principal component as the corresponding eigenvector <span class="math notranslate nohighlight">\(\c_j\)</span>, which has
+to be normalized so that the norm is <span class="math notranslate nohighlight">\(\lv\c_j\rv=\sqrt{\frac{1}{\eta_j}}\)</span>,
+provided <span class="math notranslate nohighlight">\(\eta_j&gt;0\)</span>.
+Also, because <span class="math notranslate nohighlight">\(\eta_j=n\ld_j\)</span>, the variance along the <span class="math notranslate nohighlight">\(j\)</span>th
+principal component is given as <span class="math notranslate nohighlight">\(\ld_j=\frac{\eta_j}{n}\)</span>.
+To obtain a reduced dimensional dataset, say with dimensionality <span class="math notranslate nohighlight">\(r\ll n\)</span>,
+we can compute the scalar projection of <span class="math notranslate nohighlight">\(\bar\phi(\x_i)\)</span> for each point
+<span class="math notranslate nohighlight">\(\x_i\)</span> onto the principal component <span class="math notranslate nohighlight">\(\u_j\)</span>, for <span class="math notranslate nohighlight">\(j=1,2,\cds,r\)</span>
+, as follows:</p>
+<div class="math notranslate nohighlight">
+\[a_{ij}=\u_j^T\bar\phi(\x_i)=\bar\K_i^T\c_j\]</div>
+<p>We can obtain <span class="math notranslate nohighlight">\(\a_i\in\R^r\)</span> as follows:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\a_i=\bs{\rm{C}}_r^T\bar\K_i\)</span></p>
+</div>
+<p>where <span class="math notranslate nohighlight">\(\bs{\rm{C}}_r\)</span> is the weight matrix whose columns comprise the top
+<span class="math notranslate nohighlight">\(r\)</span> eigenvectors, <span class="math notranslate nohighlight">\(\c_1,\c_2,\cds,\c_r\)</span>.</p>
+<img alt="part1/_static/Algo7.2.png" src="part1/_static/Algo7.2.png" />
+</div>
+<div class="section" id="singular-value-decomposition">
+<h2>7.4 Singular Value Decomposition<a class="headerlink" href="#singular-value-decomposition" title="Permalink to this headline">¶</a></h2>
+<p>Principal omponents analysis is a special case of a more general matrix
+decomposition method called <em>Singular Value Decomposition (SVD)</em>.
+PCA yields the following decomposition of the covariance matrix:</p>
+<div class="math notranslate nohighlight">
+\[\Sg=\U\Ld\U^T\]</div>
+<p>SVD generalizes the above factorization for any matrix.
+In particular for an <span class="math notranslate nohighlight">\(n\times d\)</span> data matrix <span class="math notranslate nohighlight">\(\D\)</span> with <span class="math notranslate nohighlight">\(n\)</span>
+points and <span class="math notranslate nohighlight">\(d\)</span> columns, SVD factorizes <span class="math notranslate nohighlight">\(\D\)</span> as follows:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\D=\bs{\rm{L\Delta R}}^T\)</span></p>
+</div>
+<p>The columns of <span class="math notranslate nohighlight">\(\bs{\rm{L}}\)</span> are called the <em>left singular vectors</em>, and
+the columns of <span class="math notranslate nohighlight">\(\bs{\rm{R}}\)</span> are called the <em>right singular vectors</em>.
+The matrix <span class="math notranslate nohighlight">\(\bs{\rm{\Delta}}\)</span> is defined as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\bs{\rm{\Delta}}=\left\{\begin{array}{lr}\delta_i\quad\rm{if\ }i=j\\0\quad\rm{if\ }i\neq j\end{array}\right.\end{split}\]</div>
+<p>The entries <span class="math notranslate nohighlight">\(\Delta(i,i)=\delta_i\)</span> along the main diagonal of
+<span class="math notranslate nohighlight">\(\Delta\)</span> are called the <em>singular value</em> of <span class="math notranslate nohighlight">\(\D\)</span>.</p>
+<p>One can discard those left and right singular vectors that correspond to zero
+singular values, to obtain the <em>reduced SVD</em> as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\D=\bs{\rm{L}}_r\bs{\rm{\Delta}}_r\bs{\rm{R}}_r^T\)</span></p>
+</div>
+<p>The reduced SVD leads directly to the <em>spectral decomposition</em> of <span class="math notranslate nohighlight">\(\D\)</span>, given as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\D=\sum_{i=1}^r\delta_i\bs{l}_i\bs{\rm{r}}_i^T\)</span></p>
+</div>
+<p>By selecting the <span class="math notranslate nohighlight">\(q\)</span> largest singular values
+<span class="math notranslate nohighlight">\(\delta_1,\delta_2,\cds,\delta_q\)</span> and the corresponding left and right
+singular vectors, we obtain the best rank <span class="math notranslate nohighlight">\(q\)</span> approximation to the
+original matrix <span class="math notranslate nohighlight">\(\D\)</span>.
+That is, if <span class="math notranslate nohighlight">\(\D_q\)</span> is the matrix defined as</p>
+<div class="math notranslate nohighlight">
+\[\D_q=\sum_{i=1}^q\delta_i\bs{l}_i\bs{\rm{r}}_i^T\]</div>
+<p>then it can be shown that <span class="math notranslate nohighlight">\(\D_q\)</span> is the rank <span class="math notranslate nohighlight">\(q\)</span> matrix that minimizes the expression</p>
+<div class="math notranslate nohighlight">
+\[\lv\D-\D_q\rv_F\]</div>
+<p>where <span class="math notranslate nohighlight">\(\lv\A\rv_F\)</span> is called the <em>Frobenius Norm</em> of the <span class="math notranslate nohighlight">\(n\times d\)</span> matrix <span class="math notranslate nohighlight">\(\A\)</span>, defined as</p>
+<div class="math notranslate nohighlight">
+\[\lv\A\rv_F=\sqrt{\sum_{i=1}^n\sum_{j=1}^D\A(i,j)^2}\]</div>
+<div class="section" id="geometry-of-svd">
+<h3>7.4.1 Geometry of SVD<a class="headerlink" href="#geometry-of-svd" title="Permalink to this headline">¶</a></h3>
+<p>SVD is a special factorization of the matrix <span class="math notranslate nohighlight">\(\D\)</span>, such that any basis
+vector <span class="math notranslate nohighlight">\(\bs{\rm{r}}_i\)</span> for the row space is mapped to the corresponding
+basis vector <span class="math notranslate nohighlight">\(\bs{l}_i\)</span> in the column space, scaled by the singular value
+<span class="math notranslate nohighlight">\(\delta_i\)</span>.
+We can think of the SVD as a mapping from an orthonormal basis
+<span class="math notranslate nohighlight">\((\bs{\rm{r}}_1,\bs{\rm{r}}_2,\cds,\bs{\rm{r}}_r)\)</span> in <span class="math notranslate nohighlight">\(\R^d\)</span> (the
+row space) to an orthonormal basis <span class="math notranslate nohighlight">\((\bs{l}_1,\bs{l}_2,\cds,\bs{l}_r)\)</span> in
+<span class="math notranslate nohighlight">\(\R^n\)</span> (the column space), with the corresponding axes scaled according to
+the singular values <span class="math notranslate nohighlight">\(\delta_1,\delta_2,\cds,\delta_r\)</span>.</p>
+</div>
+<div class="section" id="connection-between-svd-and-pca">
+<h3>7.4.2 Connection between SVD and PCA<a class="headerlink" href="#connection-between-svd-and-pca" title="Permalink to this headline">¶</a></h3>
+<p>Assume that the matrix <span class="math notranslate nohighlight">\(\D\)</span> has been centered, and assume that the
+centered matrix <span class="math notranslate nohighlight">\(\bar\D\)</span> has been factorized as
+<span class="math notranslate nohighlight">\(\bar\D=\bs{\rm{L\Delta R}}^T\)</span>.
+Consider the <em>scatter matrix</em> for <span class="math notranslate nohighlight">\(\bar\D\)</span>, given as <span class="math notranslate nohighlight">\(\bar\D^T\bar\D\)</span>.
+We have</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\bar\D^T\bar\D&amp;=(\bs{\rm{L\Delta R}}^T)^T(\bs{\rm{L\Delta R}}^T)\\&amp;=\bs{\rm{R\Delta}}^T\bs{\rm{L}}^T\bs{\rm{L\Delta R}}^T\\&amp;=\bs{\rm{R}}(\bs{\rm{\Delta}}^T\bs{\rm{\Delta}})\bs{\rm{R}}^T\\&amp;=\bs{\rm{R\Delta}}_d^2\bs{\rm{R}}^T\end{aligned}\end{align} \]</div>
+<p>where <span class="math notranslate nohighlight">\(\bs{\rm{R\Delta}}_d^2\)</span> is the <span class="math notranslate nohighlight">\(d\times d\)</span> diagonal matrix
+defined as <span class="math notranslate nohighlight">\(\bs{\rm{R\Delta}}_d^2(i,i)=\delta_i^2\)</span>, for <span class="math notranslate nohighlight">\(i=1,\cds,d\)</span>.</p>
+<p>Because the covariance matrix of <span class="math notranslate nohighlight">\(\bar\D\)</span> is given as <span class="math notranslate nohighlight">\(\Sg=\frac{1}{n}\bar\D^T\bar\D\)</span>, we have</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\bar\D^T\bar\D&amp;=n\Sg\\&amp;=n\U\Ld\U^T\\&amp;=\U(n\Ld)\U^T\end{aligned}\end{align} \]</div>
+<p>The right singular vectors <span class="math notranslate nohighlight">\(\bs{\rm{R}}\)</span> are the same as the eigenvectors of <span class="math notranslate nohighlight">\(\Sg\)</span>.
+The cooresponding singular values of <span class="math notranslate nohighlight">\(\bar\D\)</span> are related to the eigenvalues of <span class="math notranslate nohighlight">\(\Sg\)</span> by the expression</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}n\ld_i=\delta_i^2\\\rm{\or}, \ld_i=\frac{\delta_i^2}{n},\rm{\ for\ }i=1,\cds,d\end{aligned}\end{align} \]</div>
+<p>Likewise the left singular vectors in <span class="math notranslate nohighlight">\(\bs{\rm{L}}\)</span> are the eigenvectors
+of the matrix <span class="math notranslate nohighlight">\(n\times n\)</span> matrix <span class="math notranslate nohighlight">\(\bar\D\bar\D^T\)</span>, and the
+corresponding eigenvalues are given as <span class="math notranslate nohighlight">\(\delta_i^2\)</span>.</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="chap6.html" class="btn btn-neutral float-left" title="Chapter 6 High-dimensional Data" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Ziniu Yu.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,727 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Chapter 3 Categorical Attributes &mdash; DataMining  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> DataMining
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">Chapter 3 Categorical Attributes</a><ul>
+<li><a class="reference internal" href="#univariate-analysis">3.1 Univariate Analysis</a><ul>
+<li><a class="reference internal" href="#bernoulli-variable">3.1.1 Bernoulli Variable</a></li>
+<li><a class="reference internal" href="#multivariate-bernoulli-variable">3.1.2 Multivariate Bernoulli Variable</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bivariate-analysis">3.2 Bivariate Analysis</a><ul>
+<li><a class="reference internal" href="#attribute-dependence-contingency-analysis">3.2.1 Attribute Dependence: Contingency Analysis</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#multivariate-analysis">3.3 Multivariate Analysis</a><ul>
+<li><a class="reference internal" href="#multiway-contingency-analysis">3.3.1 Multiway Contingency Analysis</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#distance-and-angle">3.4 Distance and Angle</a></li>
+<li><a class="reference internal" href="#discretization">3.5 Discretization</a></li>
+</ul>
+</li>
+</ul>
+</div>
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">DataMining</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Chapter 3 Categorical Attributes</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/part1/chap3.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\newcommand{\bs}{\boldsymbol}
+\newcommand{\dp}{\displaystyle}
+\newcommand{\rm}{\mathrm}
+\newcommand{\cl}{\mathcal}
+\newcommand{\pd}{\partial}\\\newcommand{\cd}{\cdot}
+\newcommand{\cds}{\cdots}
+\newcommand{\dds}{\ddots}
+\newcommand{\lv}{\lVert}
+\newcommand{\ol}{\overline}
+\newcommand{\ra}{\rightarrow}
+\newcommand{\rv}{\rVert}
+\newcommand{\seq}{\subseteq}
+\newcommand{\vds}{\vdots}
+\newcommand{\wh}{\widehat}\\\newcommand{\0}{\boldsymbol{0}}
+\newcommand{\1}{\boldsymbol{1}}
+\newcommand{\a}{\boldsymbol{\mathrm{a}}}
+\newcommand{\b}{\boldsymbol{\mathrm{b}}}
+\newcommand{\c}{\boldsymbol{\mathrm{c}}}
+\newcommand{\e}{\boldsymbol{\mathrm{e}}}
+\newcommand{\f}{\boldsymbol{\mathrm{f}}}
+\newcommand{\g}{\boldsymbol{\mathrm{g}}}
+\newcommand{\i}{\boldsymbol{\mathrm{i}}}
+\newcommand{\j}{\boldsymbol{j}}
+\newcommand{\n}{\boldsymbol{\mathrm{n}}}
+\newcommand{\p}{\boldsymbol{\mathrm{p}}}
+\newcommand{\q}{\boldsymbol{\mathrm{q}}}
+\newcommand{\r}{\boldsymbol{\mathrm{r}}}
+\newcommand{\u}{\boldsymbol{\mathrm{u}}}
+\newcommand{\v}{\boldsymbol{\mathrm{v}}}
+\newcommand{\w}{\boldsymbol{w}}
+\newcommand{\x}{\boldsymbol{\mathrm{x}}}
+\newcommand{\y}{\boldsymbol{\mathrm{y}}}\\\newcommand{\A}{\boldsymbol{\mathrm{A}}}
+\newcommand{\B}{\boldsymbol{B}}
+\newcommand{\C}{\boldsymbol{C}}
+\newcommand{\D}{\boldsymbol{\mathrm{D}}}
+\newcommand{\I}{\boldsymbol{\mathrm{I}}}
+\newcommand{\K}{\boldsymbol{\mathrm{K}}}
+\newcommand{\N}{\boldsymbol{\mathrm{N}}}
+\newcommand{\P}{\boldsymbol{\mathrm{P}}}
+\newcommand{\S}{\boldsymbol{\mathrm{S}}}
+\newcommand{\U}{\boldsymbol{\mathrm{U}}}
+\newcommand{\W}{\boldsymbol{\mathrm{W}}}
+\newcommand{\X}{\boldsymbol{\mathrm{X}}}\\\newcommand{\R}{\mathbb{R}}\\\newcommand{\ld}{\lambda}
+\newcommand{\Ld}{\boldsymbol{\mathrm{\Lambda}}}
+\newcommand{\sg}{\sigma}
+\newcommand{\Sg}{\boldsymbol{\mathrm{\Sigma}}}
+\newcommand{\th}{\theta}\\\newcommand{\mmu}{\boldsymbol{\mu}}\\\newcommand{\bb}{\begin{bmatrix}}
+\newcommand{\eb}{\end{bmatrix}}
+\newcommand{\bp}{\begin{pmatrix}}
+\newcommand{\ep}{\end{pmatrix}}
+\newcommand{\bv}{\begin{vmatrix}}
+\newcommand{\ev}{\end{vmatrix}}\\\newcommand{\im}{^{-1}}
+\newcommand{\pr}{^{\prime}}
+\newcommand{\ppr}{^{\prime\prime}}\end{aligned}\end{align} \]</div>
+<div class="section" id="chapter-3-categorical-attributes">
+<h1>Chapter 3 Categorical Attributes<a class="headerlink" href="#chapter-3-categorical-attributes" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="univariate-analysis">
+<h2>3.1 Univariate Analysis<a class="headerlink" href="#univariate-analysis" title="Permalink to this headline">¶</a></h2>
+<p>Consider a single categorical attribute, <span class="math notranslate nohighlight">\(X\)</span>, with domain
+<span class="math notranslate nohighlight">\(dom(X)=\{a_1,a_2,\cds,a_m\}\)</span> comprising <span class="math notranslate nohighlight">\(m\)</span> symbolic values.
+The data <span class="math notranslate nohighlight">\(\D\)</span> is an <span class="math notranslate nohighlight">\(n\times 1\)</span> symbolic data matrix given as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\D=\bp X\\\hline x_1\\x_2\\\vds\\x_n \ep\end{split}\]</div>
+<p>where each point <span class="math notranslate nohighlight">\(x_i\in dom(X)\)</span>.</p>
+<div class="section" id="bernoulli-variable">
+<h3>3.1.1 Bernoulli Variable<a class="headerlink" href="#bernoulli-variable" title="Permalink to this headline">¶</a></h3>
+<p>When the categorical attribute <span class="math notranslate nohighlight">\(X\)</span> has domain <span class="math notranslate nohighlight">\(\{a_1,a_2\}\)</span>, with <span class="math notranslate nohighlight">\(m=2\)</span>.
+We can model <span class="math notranslate nohighlight">\(X\)</span> as a Bernoulli random variables, which takes on two
+distinct values, 1 and 0, according to the mapping</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}X(v)=\left\{\begin{array}{lr}1\quad\rm{if\ }v=a_1\\0\quad\rm{if\ }v=a_2\end{array}\right.\end{split}\]</div>
+<p>The probability mass funciton (PMF) of <span class="math notranslate nohighlight">\(X\)</span> is given as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}P(X=x)=f(x)=\left\{\begin{array}{lr}p_1\quad\rm{if\ }x=1\\p_0\quad\rm{if\ }x=0\end{array}\right.\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(p_1\)</span> and <span class="math notranslate nohighlight">\(p_0\)</span> are the parameters of the distribution, which must satisfy the condition</p>
+<div class="math notranslate nohighlight">
+\[p_1+p_0=1\]</div>
+<p>Denote <span class="math notranslate nohighlight">\(p_1=p\)</span>, from which it follows that <span class="math notranslate nohighlight">\(p_0=1-p\)</span>.
+The PMF of Bernoulli random variable <span class="math notranslate nohighlight">\(X\)</span> can then be written compactly as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(P(X=x)=f(x)=p^x(1-p)^{1-x}\)</span></p>
+</div>
+<p><strong>Mean and Variance</strong></p>
+<p>The expected value of <span class="math notranslate nohighlight">\(X\)</span> is given as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\mu=E[X]=1\cd p+0\cd(1-p)=0\)</span></p>
+</div>
+<p>and the variance of <span class="math notranslate nohighlight">\(X\)</span> is given as</p>
+<div class="math notranslate nohighlight">
+\[\sg^2=\rm{var}(X)=E[X^2]-(E[X])^2=(1^2\cd p+0^2\cd (1-p))-p^2=p-p^2\]</div>
+<p>which implies</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\sg^2=p(1-p)\)</span></p>
+</div>
+<p><strong>Sample Mean and Variance</strong></p>
+<p>The sample mean is given as</p>
+<div class="math notranslate nohighlight">
+\[\hat\mu=\frac{1}{n}\sum_{i=1}^nx_i=\frac{n_1}{n}=\hat{p}\]</div>
+<p>Let <span class="math notranslate nohighlight">\(n_0=n-n_1\)</span> denote the number of points with <span class="math notranslate nohighlight">\(x_i=0\)</span> in the random sample.
+The sample variance is given as</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\hat\sg^2&amp;=\frac{1}{n}\sum_{i=1}^n(x_i-\hat\mu)^2\\&amp;=\frac{n_1}{n}(1-\hat p)^2+\frac{n-n_1}{n}(0-\hat p)^2=\hat p(1-\hat p)^2+(1-\hat p)\hat p^2\\&amp;= \hat p(1-\hat p)(1-\hat p+\hat p)=\hat p(1-\hat p)\end{aligned}\end{align} \]</div>
+<p><strong>Bionomial Distribution: Number of Occurrences</strong></p>
+<p>Given the Bernoulli variable <span class="math notranslate nohighlight">\(X\)</span>, let <span class="math notranslate nohighlight">\(\{x_1,x_2,\cds,x_n\}\)</span> denote
+a random sample of size <span class="math notranslate nohighlight">\(n\)</span> drawn from <span class="math notranslate nohighlight">\(X\)</span>.
+Let <span class="math notranslate nohighlight">\(N\)</span> be the random variable denoting the number of occurrences of the
+symbol <span class="math notranslate nohighlight">\(a_1\)</span> (value <span class="math notranslate nohighlight">\(X=1\)</span>) in the sample.
+<span class="math notranslate nohighlight">\(N\)</span> has a binomial distribution, given as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(f(N=n_1|n,p)=\bp n\\n_1 \ep p^{n_1}(1-p)^{n-n_1}\)</span></p>
+</div>
+<p><span class="math notranslate nohighlight">\(N\)</span> is the sum of the <span class="math notranslate nohighlight">\(n\)</span> independent Bernoulli random variables
+<span class="math notranslate nohighlight">\(x_i\)</span> IID with <span class="math notranslate nohighlight">\(X\)</span>, that is, <span class="math notranslate nohighlight">\(N=\sum_{i=1}^nx_i\)</span>.
+The mean or expected number of occurrences of symbol <span class="math notranslate nohighlight">\(a_1\)</span> is given as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\mu_N=E[N]=E\bigg[\sum_{i=1}^nx_i\bigg]=\sum_{i=1}^nE[x_i]=\sum_{i=1}^np=np\)</span></p>
+</div>
+<p>Because <span class="math notranslate nohighlight">\(x_i\)</span> are all independent, the variance of <span class="math notranslate nohighlight">\(N\)</span> is given as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\sg_N^2=\rm{var}(N)=\sum_{i=1}^n\rm{var}(x_i)=\sum_{i=1}^np(1-p)=np(1-p)\)</span></p>
+</div>
+</div>
+<div class="section" id="multivariate-bernoulli-variable">
+<h3>3.1.2 Multivariate Bernoulli Variable<a class="headerlink" href="#multivariate-bernoulli-variable" title="Permalink to this headline">¶</a></h3>
+<p>For the general case when <span class="math notranslate nohighlight">\(dom(X)=\{a_1,a_2,\cds,a_m\}\)</span>, we model
+<span class="math notranslate nohighlight">\(X\)</span> as an <span class="math notranslate nohighlight">\(m\)</span>-dimensional Bernoulli random variable
+<span class="math notranslate nohighlight">\(\X=(A_1,A_2,\cds,A_m)^T\)</span>, where each <span class="math notranslate nohighlight">\(A_i\)</span> is a Bernoulli variable
+with parameter <span class="math notranslate nohighlight">\(p_i\)</span> denoting the probability of observing symbol
+<span class="math notranslate nohighlight">\(a_i\)</span>.
+However, <span class="math notranslate nohighlight">\(X\)</span> can assume only one of the symbolic values at any one time.
+Thus,</p>
+<div class="math notranslate nohighlight">
+\[\X(b)=\e_i\rm{\ if\ }v=a_i\]</div>
+<p>where <span class="math notranslate nohighlight">\(\e_i\)</span> is the <span class="math notranslate nohighlight">\(i\)</span>-th standard basis vector in <span class="math notranslate nohighlight">\(m\)</span> dimensions.
+The range of <span class="math notranslate nohighlight">\(\X\)</span> consists of <span class="math notranslate nohighlight">\(m\)</span> distinct vector values <span class="math notranslate nohighlight">\(\{\e_1,\e_2,\cds,\e_m\}\)</span>.</p>
+<p>The PMF of <span class="math notranslate nohighlight">\(\X\)</span> is given as</p>
+<div class="math notranslate nohighlight">
+\[p(\X=\e_i)=f(\e_i)=p_i\]</div>
+<p>where <span class="math notranslate nohighlight">\(p_i\)</span> is the probability of observing value <span class="math notranslate nohighlight">\(a_i\)</span>.
+These parameters must satisfy the condition</p>
+<div class="math notranslate nohighlight">
+\[\sum_{i=1}^m p_i=1\]</div>
+<p>The PMF can be written compactly as follows:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp P(\X=\e_i)=f(\e_i)=\prod_{j=1}^m p_i^{e_{ij}}\)</span></p>
+</div>
+<p>Because <span class="math notranslate nohighlight">\(e_{ii}=1\)</span> and <span class="math notranslate nohighlight">\(e_{ij}=0\)</span> for <span class="math notranslate nohighlight">\(j\neq i\)</span>, we can see that, as expected, we have</p>
+<div class="math notranslate nohighlight">
+\[f(\e_i)=\prod_{j=1}^mp_j^{e_{ij}}=p_1^{e_{i0}}\times\cds p_i^{e_{ii}}\cds
+\times p_m^{e_{im}}=p_1^0\times\cds p_i^1\cds\times p_m^0=p_i\]</div>
+<p><strong>Mean</strong></p>
+<p>The mean or expected value of <span class="math notranslate nohighlight">\(\X\)</span> can be obtained as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\mmu=E[\X]=\sum_{i=1}^m\e_if(\e_i)=\sum_{i=1}^m\e_ip_i=\bp 1\\0\\\vds\\0\ep
+p_1+\cds+\bp 0\\0\\\vds\\1\ep p_m=\bp p_1\\p_2\\\vds\\p_m\ep=\p\end{split}\]</div>
+<p><strong>Sample Mean</strong></p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\hat\mmu=\frac{1}{n}\sum_{i=1}^n\x_i=\sum_{i=1}^m\frac{n_i}{n}\e_i=
+\bp n_1/n\\n_2/n\\\vds\\n_m/n\ep=\bp\hat{p}_1\\\hat{p}_2\\\vds\\\hat{p}_m\ep
+=\hat\p\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(n_i\)</span> is the number of occurrences of the vector value <span class="math notranslate nohighlight">\(\e_i\)</span>
+in the sample, which is equivalent to the number of occurrences of the symnbol
+<span class="math notranslate nohighlight">\(a_i\)</span>.
+Furthermore, we have <span class="math notranslate nohighlight">\(\sum_{i=1}^mn_i=n\)</span>.</p>
+<p><strong>Covariance Matrix</strong></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\sg_i^2=\rm{var}(A_i)=p_i(1-p_i)\)</span></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\sg_{ij}=E[A_iA_j]-E[A_i]\cd E[A_j]=0-p_ip_j=-p_ip_j\)</span></p>
+</div>
+<p>which follows from the fact taht <span class="math notranslate nohighlight">\(E[A_iA_j]=0\)</span>, as <span class="math notranslate nohighlight">\(A_i\)</span> and <span class="math notranslate nohighlight">\(A_j\)</span> cannot both be 1 at the same time.</p>
+<p>The <span class="math notranslate nohighlight">\(m\times m\)</span> covariance matrix for <span class="math notranslate nohighlight">\(\X\)</span> is given as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\Sg=\bp\sg_1^2&amp;\sg_{12}&amp;\cds&amp;\sg_{1m}\\\sg_{21}&amp;\sg_{2}^2&amp;\cds&amp;\sg_{2m}\\
+\vds&amp;\vds&amp;\dds&amp;\vds\\\sg_{1m}&amp;\sg_{2m}&amp;\cds&amp;\sg_m^2\ep=
+\bp p_1(1-p_1)&amp;-p_1p_2&amp;\cds&amp;-p_1p_m\\-p_1p_2&amp;p_2(1-p_2)&amp;\cds&amp;-p_2p_m\\
+\vds&amp;\vds&amp;\dds&amp;\vds\\-p_1p_m&amp;-p_2p_m&amp;\cds&amp;p_m(1-p_m) \ep\end{split}\]</div>
+<p>Define <span class="math notranslate nohighlight">\(\\)</span> diagonal matrix:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\P=\rm{diag}(\p)=\rm{diag}(p_1,p_2,\cds,p_m)=
+\bp p_1&amp;0&amp;\cds&amp;0\\0&amp;p_2&amp;\cds&amp;0\\\vds&amp;\vds&amp;\dds&amp;\vds\\0&amp;0&amp;\cds&amp;p_m \ep\end{split}\]</div>
+<p>We can compactly write the covariance matrix of <span class="math notranslate nohighlight">\(\X\)</span> as</p>
+<div class="math notranslate nohighlight">
+\[\Sg=\P-\p\cd\p^T\]</div>
+<p><strong>Sample Covariance Matrix</strong></p>
+<div class="math notranslate nohighlight">
+\[\hat\Sg=\hat\P-\hat\p\cd\hat\p^T\]</div>
+<p>where <span class="math notranslate nohighlight">\(\hat\P=\rm{diag}(\hat\p)\)</span>, and
+<span class="math notranslate nohighlight">\(\hat\p=\hat\mmu=(\hat{p}_1,\hat{p}_2,\cds,\hat{p}_m)^T\)</span> denotes the
+empirical probability mass function for <span class="math notranslate nohighlight">\(\X\)</span>.</p>
+<p><strong>Multinomial Distribution: Number of Occurrences</strong></p>
+<p>Let <span class="math notranslate nohighlight">\(\{\x_1,\x_2,\cds,\x_n\}\)</span> drawn from <span class="math notranslate nohighlight">\(\X\)</span>.
+Let <span class="math notranslate nohighlight">\(N_i\)</span> be the random variable corresponding to the number of
+occurrences of symbol <span class="math notranslate nohighlight">\(a_i\)</span> in the sample, and let
+<span class="math notranslate nohighlight">\(\N=(N_1,N_2,\cds,N_m)^T\)</span> denote the vector random variable
+corresponding to the joint distribution of the number of occurrences over all
+the symbols.
+Then <span class="math notranslate nohighlight">\(\N\)</span> has a multinomial distribution, given as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp f(\N=(n_1,n_2,\cds,n_m)|\p)=\bp n\\n_1n_2\cds n_m \ep\prod_{i=1}^mp_i^{n_i}\)</span></p>
+</div>
+<p>The term</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\bp n\\n_1n_2\cds n_m \ep=\frac{n!}{n_1!n_2!\cds n_m!}\end{split}\]</div>
+<p>denotes the number of ways of choosing <span class="math notranslate nohighlight">\(n_i\)</span> occurrences of each symbol
+<span class="math notranslate nohighlight">\(a_i\)</span> from a sample of size <span class="math notranslate nohighlight">\(n\)</span>, with <span class="math notranslate nohighlight">\(\sum_{i=1}^mn_i=n\)</span>.</p>
+<p>The mean of <span class="math notranslate nohighlight">\(\N\)</span> is given as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\mmu_\N=E[\N]=nE[\X]=n\cd\mmu=n\cd\p=\bp np_1\\\vds\\np_m \ep\end{split}\]</div>
+<p>and its covariance matrix is given as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\Sg_\N=n\cd(\P=\p\p^T)=
+\bp np_1(1-p_1)&amp;-np_1p_2&amp;\cds&amp;-np_1p_m\\-np_1p_2&amp;np_2(1-p_2)&amp;\cds&amp;-np_2p_m\\
+\vds&amp;\vds&amp;\dds&amp;\vds\\-np_1p_m&amp;-np_2p_m&amp;\cds&amp;np_m(1-p_m) \ep\end{split}\]</div>
+<p>The sample mean and covariance matrix for <span class="math notranslate nohighlight">\(\N\)</span> are given as</p>
+<div class="math notranslate nohighlight">
+\[\hat\mmu_\N=n\hat\p\quad\hat\Sg_\N=n(\hat\P-\hat\p\hat\p^T)\]</div>
+</div>
+</div>
+<div class="section" id="bivariate-analysis">
+<h2>3.2 Bivariate Analysis<a class="headerlink" href="#bivariate-analysis" title="Permalink to this headline">¶</a></h2>
+<p>Assume that the data comprises two categorical attributes, <span class="math notranslate nohighlight">\(X_1\)</span> and <span class="math notranslate nohighlight">\(X_2\)</span>, with</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}dom(X_1)=\{a_{11},a_{12},\cds,a_{1m_1}\}\\dom(X_2)=\{a_{21},a_{22},\cds,a_{2m_2}\}\end{aligned}\end{align} \]</div>
+<p>The dataset is now an <span class="math notranslate nohighlight">\(n\times 2\)</span> symbolic data matrix:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\D=\bp X_1&amp;X_2\\\hline x_{11}&amp;x_{12}\\x_{21}&amp;x_{22}\\\vds&amp;\vds\\x_{n1}&amp;x_{n2} \ep\end{split}\]</div>
+<p>We model <span class="math notranslate nohighlight">\(X_1\)</span> and <span class="math notranslate nohighlight">\(X_2\)</span> as multivariate Bernoulli variables
+<span class="math notranslate nohighlight">\(\X_1\)</span> and <span class="math notranslate nohighlight">\(\X_2\)</span> with dimensions <span class="math notranslate nohighlight">\(m_1\)</span> and <span class="math notranslate nohighlight">\(m_2\)</span>.
+The probability mass funcitons for <span class="math notranslate nohighlight">\(\X_1\)</span> and <span class="math notranslate nohighlight">\(\X_2\)</span> are given as</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}P(\X_1=\e_{1i})=f_1(\e_{1i})=p_i^1=\prod_{k=1}^{m1}(p_i^1)^{e_{ik}^1}\\P(\X_2=\e_{2j})=f_2(\e_{2j})=p_j^2=\prod_{k=1}^{m2}(p_j^2)^{e_{jk}^2}\end{aligned}\end{align} \]</div>
+<p>where</p>
+<div class="math notranslate nohighlight">
+\[\sum_{i=1}^{m1}p_i^1=1\quad\rm{and}\quad\sum_{j=1}^{m2}p_j^2=1\]</div>
+<p>The joint distribution of <span class="math notranslate nohighlight">\(\X_1\)</span> and <span class="math notranslate nohighlight">\(\X_2\)</span> is modeled as the
+<span class="math notranslate nohighlight">\(d\pr=m_1+m_2\)</span> dimensional vector variable <span class="math notranslate nohighlight">\(\X=\bp \X_1,\X_2 \ep\)</span></p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\X((v_1,v_2)^T)=\bp \X_1(v_1)\\\X_2(v_2) \ep=\bp \e_{1i}\\\e_{2j} \ep\end{split}\]</div>
+<p>provided that <span class="math notranslate nohighlight">\(v_1=a_{1i}\)</span> and <span class="math notranslate nohighlight">\(v_2=a_{2j}\)</span>.
+The joint PMF of <span class="math notranslate nohighlight">\(\X\)</span> is given as</p>
+<div class="math notranslate nohighlight">
+\[P(\X=(\e_{1i},\e_{2j})^T)=f(\e_{1i},\e_{2j})=p_{ij}=\prod_{r=1}^{m1}\prod_{s=1}^{m2}p_{ij}^{e_{ir}^1\cd e_{is}^2}\]</div>
+<p>where <span class="math notranslate nohighlight">\(p_{ij}\)</span> the probability of observing the symbol pair <span class="math notranslate nohighlight">\((a_{1i},a_{2j})\)</span>.
+The probability paramemters must satisfy <span class="math notranslate nohighlight">\(\sum_{i=1}^{m1}\sum_{j=1}^{m2}p_{ij}=1\)</span>.
+The joint PMF for <span class="math notranslate nohighlight">\(\X\)</span> can be expressed as the <span class="math notranslate nohighlight">\(m_1\times m_2\)</span> matrix</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\P_{12}=\bp p_{11}&amp;p_{12}&amp;\cds&amp;p_{1m_2}\\p_{21}&amp;p_{22}&amp;\cds&amp;
+p_{2m_2}\\\vds&amp;\vds&amp;\dds&amp;\vds\\p_{m_11}&amp;p_{m_12}&amp;\cds&amp;p_{m_1m_2} \ep\end{split}\]</div>
+<p><strong>Mean</strong></p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\mmu=E[\X]=E\bigg[\bp\X_1\\\X_2\ep\bigg]=\bp E[\X_1]\\E[\X_2] \ep=\bp\mmu_1\\\mmu_2\ep=\bp\p_1\\\p_2\ep\end{split}\]</div>
+<p><strong>Sample Mean</strong></p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\hat\mmu=\frac{1}{n}\sum_{i=1}^n\x_i=
+\frac{1}{n}\bp\sum_{i=1}^{m_1}n_i^1\e_{1i}\\\sum_{j=1}^{m_2}n_j^2\e_{2j}\ep
+=\frac{1}{n}\bp n_1^1\\\vds\\n_{m_1}^1\\n_1^2\\\vds\\n_{m_2}^2 \ep=
+\bp\hat{p}_1^1\\\vds\\\hat{p}_{m_1}^1\\\hat{p}_1^2\\\vds\\\hat{p}_{m_2}^2\ep
+=\bp\hat\p_1\\\hat\p_2\ep=\bp\hat\mmu_1\\\hat\mmu_2\ep\end{split}\]</div>
+<p><strong>Covariance Matrix</strong></p>
+<p>The covariance matrix for <span class="math notranslate nohighlight">\(\X\)</span> is the <span class="math notranslate nohighlight">\(d\pr\times d\pr=(m_1+m_2)\times(m_1+m_2)\)</span> matrix given as</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\begin{split}\Sg=\bp \Sg_{11}&amp;\Sg_{12}\\\Sg_{12}^T&amp;\Sg_{22} \ep\end{split}\\\Sg_{11}=\P_1-\p_1\p_1^T\\\Sg_{22}=\P_2-\p_2\p_2^T\end{aligned}\end{align} \]</div>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\Sg_{12}&amp;=E[(\X_1-\mmu_1)(\X_2-\mmu_2)^T]\\&amp;=E[\X_1\X_2^T]-E[\X_1]E[\X_2]^T\\&amp;=\P_{12}-\mmu_1\mmu_2^T\\&amp;=\P_{12}-\p_1\p_2^T\end{aligned}\end{align} \]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}=\bp p_{11}-p_1^1p_1^2&amp;p_{12}-p_1^1p_2^2&amp;\cds&amp;p_{1m_2}-p_1^1p_{m_2}^2\\
+p_{21}-p_1^2p_1^2&amp;p_{22}-p_2^1p_2^2&amp;\cds&amp;p_{2m_2}-p_2^1p_{m_2}^2\\
+\vds&amp;\vds&amp;\dds&amp;\vds\\p_{m_11}-p_{m_1}^1p_1^2&amp;p_{m_12}-p_{m_1}^1p_2^2&amp;\cds
+&amp;p_{m_1m_2}-p_{m_1}^1p_{m_2}^2 \ep\end{split}\]</div>
+<p>Each row and each column of <span class="math notranslate nohighlight">\(\Sg_{12}\)</span> sums to zero.
+Consider row <span class="math notranslate nohighlight">\(i\)</span> and column <span class="math notranslate nohighlight">\(j\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\sum_{k=1}^{m_2}(p_{ik}-p_i^1p_k^2)=\bigg(\sum_{k=1}^{m_2}p_{ik}\bigg)-p_i^1=p_i^1-p_i^1=0\\\sum_{k=1}^{m_1}(p_{kj}-p_k^1p_j^2)=\bigg(\sum_{k=1}^{m_1}p_{kj}\bigg)-p_k^2=p_j^2-p_j^2=0\end{aligned}\end{align} \]</div>
+<p><strong>Sample Covariance Matrix</strong></p>
+<p>The sample covariance matrix is given as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\hat\Sg=\bp \hat\Sg_{11}&amp;\hat\Sg_{12}\\\hat\Sg_{12}^T&amp;\hat\Sg_{22} \ep\end{split}\]</div>
+<p>where</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\hat\Sg_{11}&amp;=\hat\P_1-\hat\p_1\hat\p_1^T\\\hat\Sg_{22}&amp;=\hat\P_2-\hat\p_2\hat\p_2^T\\\hat\Sg_{12}&amp;=\hat\P_{12}-\hat\p_1\hat\p_2^T\end{aligned}\end{align} \]</div>
+<p><span class="math notranslate nohighlight">\(\hat\P_{12}\)</span> specifies the empirical joint PMF for <span class="math notranslate nohighlight">\(\X_1\)</span> and <span class="math notranslate nohighlight">\(\X_2\)</span>, given as</p>
+<div class="math notranslate nohighlight">
+\[\hat\P_{12}(i,j)=\hat{f}(\e_{1i},\e_{2j})=
+\frac{1}{n}\sum_{k=1}^nI_{ij}(\x_k)=\frac{n_{ij}}{n}=\hat{p}_{ij}\]</div>
+<p>where <span class="math notranslate nohighlight">\(I_{ij}\)</span> is the indicator variable</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}I_{ij}(\x_k)=\left\{\begin{array}{lr}1\quad\rm{if\ }x_{k1}=\e_{1i}
+\rm{\ and\ }\x_{k2}=\e_{2j}\\0\quad\rm{otherwise}\end{array}\right.\end{split}\]</div>
+<div class="section" id="attribute-dependence-contingency-analysis">
+<h3>3.2.1 Attribute Dependence: Contingency Analysis<a class="headerlink" href="#attribute-dependence-contingency-analysis" title="Permalink to this headline">¶</a></h3>
+<p>Testing for the independence of the two categorical random variables <span class="math notranslate nohighlight">\(X_1\)</span>
+and <span class="math notranslate nohighlight">\(X_2\)</span> can be down via <em>contingency table analysis</em>.</p>
+<p><strong>Contingency Table</strong></p>
+<p>A contingency table for <span class="math notranslate nohighlight">\(\X_1\)</span> and <span class="math notranslate nohighlight">\(\X_2\)</span> is the
+<span class="math notranslate nohighlight">\(m_1\times m_2\)</span> matrix of observed counts <span class="math notranslate nohighlight">\(n_{ij}\)</span> for all pairs of
+values <span class="math notranslate nohighlight">\((\e_{1i},\e_{2j})\)</span> in the given sample of size <span class="math notranslate nohighlight">\(n\)</span>, defined
+as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\N_{12}=n\cd\hat\P_{12}=\bp n_{11}&amp;n_{12}&amp;\cds&amp;n_{1m_2}\\
+n_{21}&amp;n_{22}&amp;\cds&amp;n_{2m_2}\\\vds&amp;\vds&amp;\dds&amp;\vds\\
+n_{m_11}&amp;n_{m_12}&amp;\cds&amp;n_{m_1m_2} \ep\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\hat\P_{12}\)</span> is the empirical joint PMF for <span class="math notranslate nohighlight">\(\X_1\)</span> and <span class="math notranslate nohighlight">\(\X_2\)</span>.
+The contingency table is then augmented with row and column marginal counts, as follows:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\N_1=n\cd\hat\p_1=\bp n_1^1\\\vds\\n_{m_1}^1\ep\quad\N_2=n\cd\hat\p_2=\bp n_1^2\\\vds\\n_{m_2}^2 \ep\end{split}\]</div>
+<p>Note that the marginal row and column entries and the sample size satisfy the following constraints:</p>
+<div class="math notranslate nohighlight">
+\[n_i^1=\sum_{j=1}^{m_2}n_{ij}\quad n_j^2=\sum_{i=1}^{m_1}n_{ij}\quad n=
+\sum_{j=1}^{m_1}n_i^1=\sum_{j=1}^{m_2}n_j^2=
+\sum_{i=1}^{m_1}\sum_{j=1}^{m_2}n_{ij}\]</div>
+<p>It is worth noting that both <span class="math notranslate nohighlight">\(\N_1\)</span> and <span class="math notranslate nohighlight">\(\N_2\)</span> have a multinomial
+distribution with parameters <span class="math notranslate nohighlight">\(\p_1=(p_1^1,\cds,p_{m_1}^1)\)</span> and
+<span class="math notranslate nohighlight">\(\p_2=(p_1^2,\cds,p_{m_2}^2)\)</span>, respectively.
+Further, <span class="math notranslate nohighlight">\(\N_{12}\)</span> also has a multinomial distribution with parameters
+<span class="math notranslate nohighlight">\(\P_{12}=\{p_{ij}\}\)</span>, for <span class="math notranslate nohighlight">\(1\leq i\leq m_i\)</span> and
+<span class="math notranslate nohighlight">\(1\leq j\leq m_2\)</span>.</p>
+<p><span class="math notranslate nohighlight">\(\bs{\chi^2}\)</span> <strong>Statistic and Hypothesis Testing</strong></p>
+<p>Under the null hypothesis <span class="math notranslate nohighlight">\(\X_1\)</span> and <span class="math notranslate nohighlight">\(\X_2\)</span> are assumed to be
+independent, which means that their joint probability mass function is given as</p>
+<div class="math notranslate nohighlight">
+\[\hat{p}_{ij}=\hat{p}_i^1\cd\hat{p}_j^2\]</div>
+<p>Under this independence assumption, the expected frequency for each pair of values is given as</p>
+<div class="math notranslate nohighlight">
+\[e_{ij}=n\cd\hat{p}_{ij}=n\cd\hat{p}_i^1\cd\hat{p}_j^2=n\cd\frac{n_i^1}{n}\cd\frac{n_j^2}{n}=\frac{n_i^1n_j^2}{n}\]</div>
+<p>The <span class="math notranslate nohighlight">\(\chi^2\)</span> statistic quantifies the difference between observed and
+expected counts for each pair of values; it is defined as follows:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\chi^2=\sum_{i=1}^{m_1}\sum_{j=1}^{m_2}\frac{(n_{ij}-e{ij})^2}{e_{ij}}\)</span></p>
+</div>
+<p>For the <span class="math notranslate nohighlight">\(\chi^2\)</span> statistic it is known that its sampling distribution
+follows the <em>chi-squared</em> density function with <span class="math notranslate nohighlight">\(q\)</span> degrees of freedom:</p>
+<div class="math notranslate nohighlight">
+\[f(x|q)=\frac{1}{2^{q/2}\Gamma(q/2)}x^{\frac{q}{2}-1}e^{-\frac{x}{2}}\]</div>
+<p>where the gamma function <span class="math notranslate nohighlight">\(\Gamma\)</span> is defined as</p>
+<div class="math notranslate nohighlight">
+\[\Gamma(k&gt;0)=\int_0^\infty x^{k-1}e^{-x}dx\]</div>
+<p>The total degrees of freedom is</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}q&amp;=|dom(X_1)|\times|dom(X_2)|-(|dom(X_1)|+|dom(X_2)|)+1\\&amp;=m_1m_2-m_1-m_2+1\\&amp;=(m_1-1)(m_2-1)\end{aligned}\end{align} \]</div>
+<p><strong>p-value</strong></p>
+<p>The <em>p-value</em> of a statistic is defined as the probability of obtaining a value
+at least as extreme as the observed value under the null hypothesis.
+For the <span class="math notranslate nohighlight">\(\chi^2\)</span> statistic computed above, its p-value is defined as follows</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>p-value<span class="math notranslate nohighlight">\((\chi^2)=P(x\geq\chi^2)=1-F_1(\chi^2)\)</span></p>
+</div>
+<p>where <span class="math notranslate nohighlight">\(F_q\)</span> is the cumulative <span class="math notranslate nohighlight">\(\chi^2\)</span> probability distribution with <span class="math notranslate nohighlight">\(q\)</span> degrees of freedom.</p>
+<p>The null hypothesis is rejected if the p-value is below some <em>significance level</em>, <span class="math notranslate nohighlight">\(\alpha\)</span>.
+The value <span class="math notranslate nohighlight">\(1-\alpha\)</span> is also called the <em>confidence level</em>.</p>
+<p>For a given significance level <span class="math notranslate nohighlight">\(\alpha\)</span> (or equivalently, confidence level
+<span class="math notranslate nohighlight">\(1-\alpha\)</span>), define the corresponding <em>critical value</em>, <span class="math notranslate nohighlight">\(v_\alpha\)</span>,
+of the test statistic as follows:</p>
+<div class="math notranslate nohighlight">
+\[P(x\geq v_\alpha)=1-F_q(v_\alpha)=\alpha,\rm{\ or\ equivalently\ }F_q(v_\alpha)=1-\alpha\]</div>
+<p>For the given significance value <span class="math notranslate nohighlight">\(\alpha\)</span>, we can find the critical value from the quantile funtion <span class="math notranslate nohighlight">\(F_q\im\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[v_\alpha=F_q\im(1-\alpha)\]</div>
+<p>An alternative test for rejection of the null hypothesis is to check if
+<span class="math notranslate nohighlight">\(\chi^2\geq v_\alpha\)</span>, as in that case
+<span class="math notranslate nohighlight">\(P(x\geq\chi^2)\leq P(x\geq v_\alpha)\)</span>, and therefore, the p-value of the
+observed <span class="math notranslate nohighlight">\(\chi^2\)</span> value is bounded above by <span class="math notranslate nohighlight">\(\alpha\)</span>, that is,
+p-value<span class="math notranslate nohighlight">\((\chi^2)\leq\)</span> p-value<span class="math notranslate nohighlight">\((v_\alpha)=\alpha\)</span>.</p>
+</div>
+</div>
+<div class="section" id="multivariate-analysis">
+<h2>3.3 Multivariate Analysis<a class="headerlink" href="#multivariate-analysis" title="Permalink to this headline">¶</a></h2>
+<p>For an <span class="math notranslate nohighlight">\(n\times d\)</span> symbolic matrix</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\D=\bp X_1&amp;X_2&amp;\cds&amp;X_d\\\hline x_{11}&amp;x_{12}&amp;\cds&amp;x_{1d}\\
+x_{21}&amp;x_{22}&amp;\cds&amp;x_{2d}\\\vds&amp;\vds&amp;\dds&amp;\vds\\x_{n1}&amp;x_{n2}&amp;\cds&amp;x_{nd}\ep\end{split}\]</div>
+<p>The joint distribution is modeled as a <span class="math notranslate nohighlight">\(d\pr=\sum_{j=1}^dm_j\)</span> dimensional vector random variable</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\X=\bp \X_1\\\vds\\\X_d \ep\end{split}\]</div>
+<p>Each categorical data point <span class="math notranslate nohighlight">\(\v=(v_1,v_2,\cds,v_d)^T\)</span> is represented as a <span class="math notranslate nohighlight">\(d\pr\)</span>-dimensional binary vector</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\X(\v)=\bp\X_1(v_1)\\\vds\\\X_d(v_d)\ep=\bp\e_{1k_1}\\\vds\\\e_{dk_d}\ep\end{split}\]</div>
+<p>provided <span class="math notranslate nohighlight">\(v_i=a_{ik_i}\)</span>, the <span class="math notranslate nohighlight">\(k_i\)</span>th symbol of <span class="math notranslate nohighlight">\(X_i\)</span>.</p>
+<p><strong>Mean</strong></p>
+<p>The mean and sample mean for <span class="math notranslate nohighlight">\(\X\)</span> are given as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\mmu=E[\X]=\bp\mmu_1\\\vds\\\mmu_d\ep=\bp\p_1\\\vds\\\p_d\ep\quad
+\hat\mmu=\bp\hat\mmu_1\\\vds\\\hat\mmu_d\ep=\bp\hat\p_1\\\vds\\\hat\p_d\ep\end{split}\]</div>
+<p>The covariance matrix for <span class="math notranslate nohighlight">\(\X\)</span>, and its estimate from the sample, are
+given as the <span class="math notranslate nohighlight">\(d\pr\times d\pr\)</span> matrices:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\Sg=\bp\Sg_{11}&amp;\Sg_{12}&amp;\cds&amp;\Sg_{1d}\\\Sg_{12}^T&amp;\Sg_{12}&amp;\cds&amp;\Sg_{2d}\\
+\vds&amp;\vds&amp;\dds&amp;\vds\\\Sg_{1d}^T&amp;\Sg_{2d}^T&amp;\cds&amp;\Sg_{dd}\ep\quad
+\hat\Sg=\bp\hat\Sg_{11}&amp;\hat\Sg_{12}&amp;\cds&amp;\hat\Sg_{1d}\\
+\hat\Sg_{12}^T&amp;\hat\Sg_{12}&amp;\cds&amp;\hat\Sg_{2d}\\\vds&amp;\vds&amp;\dds&amp;\vds\\
+\hat\Sg_{1d}^T&amp;\hat\Sg_{2d}^T&amp;\cds&amp;\hat\Sg_{dd}\ep\end{split}\]</div>
+<p>where</p>
+<div class="math notranslate nohighlight">
+\[\Sg_{ij}=\P_{ij}-\p_i\p_j^T\quad\hat\Sg_{ij}=\hat\P_{ij}-\hat\p_i\hat\p_j^T\]</div>
+<div class="section" id="multiway-contingency-analysis">
+<h3>3.3.1 Multiway Contingency Analysis<a class="headerlink" href="#multiway-contingency-analysis" title="Permalink to this headline">¶</a></h3>
+<p>The empirical joint probability mass function for <span class="math notranslate nohighlight">\(\X\)</span> is</p>
+<div class="math notranslate nohighlight">
+\[\hat{f}(\e_{1i_1},\e_{2i_2},\cds,\e_{di_d})=
+\frac{1}{n}\sum_{k=1}^nI_{i_1i_2\cds i_d}(\x_k)=
+\frac{n_{i_1i_2\cds i_d}}{n}=\hat{p}_{i_1i_2\cds i_d}\]</div>
+<p>where <span class="math notranslate nohighlight">\(I_{i_1i_2\cds i_d}\)</span> is the indicator variable</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}I_{i_1i_2\cds i_d}(\x_k)=\left\{\begin{array}{lr}1\quad\rm{if\ }
+x_{k1}=\e_{1i_1},x_{k2}=\e_{2i_2},\cds,x_{kd}=\e_{di_d}\\
+0\quad\rm{otherwise}\end{array}\right.\end{split}\]</div>
+<p>Using the notation <span class="math notranslate nohighlight">\(\i=(i_1,i_2,\cds,i_d)\)</span> to denote the index tuple, we
+can write the joint empirical PMF as the <span class="math notranslate nohighlight">\(d\)</span>-dimensional matrix
+<span class="math notranslate nohighlight">\(\hat\P\)</span> of size
+<span class="math notranslate nohighlight">\(m_1\times m_2\times\cds\times m_d=\prod_{i=1}^dm_i\)</span>, given as</p>
+<div class="math notranslate nohighlight">
+\[\hat\P(\i)=\{\hat{p}_\i\}\rm{\ for\ all\ index\ tuples\ }\i,\rm{\ with\ }1\leq i_1\leq m_1,\cds,1\leq i_d\leq m_d\]</div>
+<p>where <span class="math notranslate nohighlight">\(\hat{p}_\i=\hat{p}_{i_1i_2\cds i_d}\)</span>.
+The <span class="math notranslate nohighlight">\(d\)</span>-dimensional contingency table is then given as</p>
+<div class="math notranslate nohighlight">
+\[\N=n\times\hat\P=\{n_\i\}\rm{\ for\ all\ index\ tuples\ }\i,\rm{\ with\ }1\leq i_1\leq m_1,\cds,1\leq i_d\leq m_d\]</div>
+<p>where <span class="math notranslate nohighlight">\(n_\i=n_{i_1i_2\cds i_d}\)</span>.
+The contingency table is augmented with the marginal count vectors <span class="math notranslate nohighlight">\(\N_i\)</span>
+for all <span class="math notranslate nohighlight">\(d\)</span> attributes <span class="math notranslate nohighlight">\(\X_i\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\N_i=n\hat\p_i=\bp n_1^i\\\vds\\n_{m_i}^i \ep\end{split}\]</div>
+<p><span class="math notranslate nohighlight">\(\bs{\chi^2}\)</span><strong>-Test</strong></p>
+<p>The null hypothesis <span class="math notranslate nohighlight">\(H_0\)</span> is that the attributes are <span class="math notranslate nohighlight">\(d\)</span>-way independent.
+The alternative hypothesis <span class="math notranslate nohighlight">\(H_1\)</span> is that they are dependent in some way.</p>
+<p>The expected number of occurrences of the symbol tuple <span class="math notranslate nohighlight">\((a_{1i_1},a_{2i_2},\cds,a_{di_d})\)</span> is given as</p>
+<div class="math notranslate nohighlight">
+\[e_\i=n\cd\hat\p_\i=n\cd\prod_{j=1}^d\hat{p}_{i_j}^j=\frac{n_{i_1}^1n_{i_2}^2\cds n_{i_d}^d}{n^{d-1}}\]</div>
+<p>The chi-squared statistic measures the difference between the observed counts
+<span class="math notranslate nohighlight">\(n_\i\)</span> and the expected count <span class="math notranslate nohighlight">\(e_\i\)</span>:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\chi^2=\sum_\i\frac{(n_\i-e_\i)^2}{e_\i}=\sum_{i_1=1}^{m_1}\sum_{i_2=1}^{m_2}\cds\sum_{i_d=1}^{m_d}\)</span>
+<span class="math notranslate nohighlight">\(\dp\frac{(n_{i_1,i_2,\cds,i_d}-e_{i_1,i_2,\cds,i_d})^2}{e_{i_1,i_2,\cds,i_d}}\)</span></p>
+</div>
+<p>The total number of degrees of freedom is given as</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}q&amp;=\prod_{i=1}^d|dom(X_i)|-\sum_{i=1}^d|dom(X_i)|+(d-1)\\&amp;=\bigg(\prod_{i=1}^dm_i\bigg)-\bigg(\sum_{i=1}^dm_i\bigg)+d-1\end{aligned}\end{align} \]</div>
+</div>
+</div>
+<div class="section" id="distance-and-angle">
+<h2>3.4 Distance and Angle<a class="headerlink" href="#distance-and-angle" title="Permalink to this headline">¶</a></h2>
+<p>With the modeling of categorical attributes as multivariate Bernoulli variables,
+it is possible to compute the distance or the angle between any two points
+<span class="math notranslate nohighlight">\(\x_i\)</span> and <span class="math notranslate nohighlight">\(\x_j\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\x_i=\bp\e_{1i_1}\\\vds\\\e_{di_d}\ep\quad\x_j=\bp\e_{1j_1}\\\vds\\\e_{dj_d}\ep\end{split}\]</div>
+<p>The number of matching values <span class="math notranslate nohighlight">\(s\)</span></p>
+<div class="math notranslate nohighlight">
+\[s=\x_i^T\x_j=\sum_{k=1}^d(\e_{ki_k)^T\e_{kj_k)\]</div>
+<p>The norm of each point</p>
+<div class="math notranslate nohighlight">
+\[\lv\x_i\rv^2=\x_i^T\x_i=d\]</div>
+<p><strong>Euclidean Distance</strong></p>
+<div class="math notranslate nohighlight">
+\[\lv\x_i-\x_j\rv=\sqrt{\x_i^T\x_i-2\x_i\x_j+\x_j^T\x_j}=\sqrt{2(d-s)}\]</div>
+<p><strong>Hamming Distance</strong></p>
+<div class="math notranslate nohighlight">
+\[\delta_H(\x_i,\x_j)=d-s=\frac{1}{2}\lv\x_i-\x_j\rv^2\]</div>
+<p><strong>Cosine Similarity</strong></p>
+<div class="math notranslate nohighlight">
+\[\cos\th=\frac{\x_i^T\x_j}{\lv\x_i\rv\cd\lv\x_j\rv}=\frac{s}{d}\]</div>
+<p><strong>Jaccard Coefficient</strong></p>
+<p>The <em>Jaccard Coefficient</em> is defined as the ratio of the number of matching
+values to the number of distinct values that appear in both <span class="math notranslate nohighlight">\(\x_i\)</span> and
+<span class="math notranslate nohighlight">\(\x_j\)</span>, across the <span class="math notranslate nohighlight">\(d\)</span> attributes:</p>
+<div class="math notranslate nohighlight">
+\[J(\x_i,\x_j)=\frac{s}{2(d-s)+s}=\frac{s}{2d-s}\]</div>
+</div>
+<div class="section" id="discretization">
+<h2>3.5 Discretization<a class="headerlink" href="#discretization" title="Permalink to this headline">¶</a></h2>
+<p><em>Discretization</em>, also called <em>binning</em>, converts numeric attributes into categorical ones.
+Formally, given a numeric attribute <span class="math notranslate nohighlight">\(X\)</span>, and a random sample
+<span class="math notranslate nohighlight">\(\{x_i\}_{i=1}^n\)</span> of size <span class="math notranslate nohighlight">\(n\)</span> drawn from <span class="math notranslate nohighlight">\(X\)</span>, the
+discretization task is to divide the value range of <span class="math notranslate nohighlight">\(X\)</span> into <span class="math notranslate nohighlight">\(k\)</span>
+consecutive intervals, also called <em>bins</em>, by finding <span class="math notranslate nohighlight">\(k-1\)</span> boundary
+values <span class="math notranslate nohighlight">\(v_1,v_2,\cds,v_{k-1}\)</span> that yield the <span class="math notranslate nohighlight">\(k\)</span> intervals:</p>
+<div class="math notranslate nohighlight">
+\[[x_\min,v_1],(v_1,v_2],\cds,(v_{k-1},x_\max]\]</div>
+<p>where the extremes of the range of <span class="math notranslate nohighlight">\(X\)</span> are given as</p>
+<div class="math notranslate nohighlight">
+\[x_\min=\min_i\{x_i\}\quad x_\max=\max_i\{x_i\}\]</div>
+<p><strong>Equal-Width Intervals</strong></p>
+<div class="math notranslate nohighlight">
+\[w=\frac{x_\max-x_\min}{k}\]</div>
+<p>The <span class="math notranslate nohighlight">\(i\)</span>th interval boundary is given as</p>
+<div class="math notranslate nohighlight">
+\[v_i=x_\min+iw,\rm{\ for\ }i=1,\cds,k-1\]</div>
+<p><strong>Equal-Frequency Intervals</strong></p>
+<div class="math notranslate nohighlight">
+\[v_i=\hat{F}\im(i/k)\rm{\ for\ }i=1,\cds,k-1\]</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Ziniu Yu.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
