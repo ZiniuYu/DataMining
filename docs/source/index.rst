@@ -13,6 +13,7 @@ Study notes of Data Mining and Machine Learning, 2nd Edition by Mohammed J. Zaki
    :caption: Contents:
    
    part1/index1
+   part3/index3
 
 .. Indices and tables
 .. ==================

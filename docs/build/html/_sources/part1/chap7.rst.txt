@@ -371,7 +371,7 @@ at the smallest value :math:`r` for which :math:`f(r)\geq\alpha`, given as
 
     :math:`r=\min\{r\pr|f(r\pr)\geq\alpha\}`
 
-.. image:: ./_static/Algo7.1.png
+.. image:: ../_static/Algo7.1.png
 
 7.2.4 Geometry of PCA
 ^^^^^^^^^^^^^^^^^^^^^
@@ -558,7 +558,7 @@ We can obtain :math:`\a_i\in\R^r` as follows:
 where :math:`\bs{\rm{C}}_r` is the weight matrix whose columns comprise the top 
 :math:`r` eigenvectors, :math:`\c_1,\c_2,\cds,\c_r`.
 
-.. image:: ./_static/Algo7.2.png
+.. image:: ../_static/Algo7.2.png
 
 7.4 Singular Value Decomposition
 --------------------------------

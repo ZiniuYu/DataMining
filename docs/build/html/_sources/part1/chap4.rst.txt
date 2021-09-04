@@ -379,7 +379,7 @@ where :math:`\p` is an :math:`n`-dimensional column vector corresponding to the 
 The dominant eigenvector of :math:`\A^T` and the corresponding eigenvalue can be computed using the *power iteration*
 approach.
 
-.. image:: ./_static/Algo4.1.png
+.. image:: ../_static/Algo4.1.png
 
 **PageRank**
 

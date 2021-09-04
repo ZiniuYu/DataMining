@@ -7,14 +7,14 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Data Mining and Machine Learning &mdash; DataMining  documentation</title>
+  <title>Chapter 13 Representative-based Clustering &mdash; DataMining  documentation</title>
   
 
   
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
 
   
   
@@ -26,23 +26,24 @@
 
   
   <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
+    <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
     
-      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/doctools.js"></script>
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
         <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     
-    <script type="text/javascript" src="_static/js/theme.js"></script>
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
 
     
-    <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Part 1 Data Analysis Foundations" href="part1/index1.html" /> 
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Chapter 14 Hierarchical Clustering" href="chap14.html" />
+    <link rel="prev" title="Part 3 Clustering" href="index3.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -56,7 +57,7 @@
           
 
           
-            <a href="#" class="icon icon-home"> DataMining
+            <a href="../index.html" class="icon icon-home"> DataMining
           
 
           
@@ -69,7 +70,7 @@
 
           
 <div role="search">
-  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
@@ -88,9 +89,21 @@
             
             
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="part1/index1.html">Part 1 Data Analysis Foundations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="part3/index3.html">Part 3 Clustering</a></li>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../part1/index1.html">Part 1 Data Analysis Foundations</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index3.html">Part 3 Clustering</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Chapter 13 Representative-based Clustering</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#k-means-algorithm">13.1 K-Means Algorithm</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#kernel-k-means">13.2 Kernel K-Means</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#expectation-maximization-clustering">13.3 Expectation-Maximization Clustering</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="chap14.html">Chapter 14 Hierarchical Clustering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chap15.html">Chapter 15 Density-based Clustering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chap16.html">Chapter 16 Spectral and Graph Clustering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chap17.html">Chapter 17 Clustering Validation</a></li>
+</ul>
+</li>
 </ul>
 
             
@@ -106,7 +119,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="#">DataMining</a>
+          <a href="../index.html">DataMining</a>
         
       </nav>
 
@@ -137,15 +150,17 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="#" class="icon icon-home"></a> &raquo;</li>
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
         
-      <li>Data Mining and Machine Learning</li>
+          <li><a href="index3.html">Part 3 Clustering</a> &raquo;</li>
+        
+      <li>Chapter 13 Representative-based Clustering</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/part3/chap13.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -213,31 +228,16 @@
 \newcommand{\ev}{\end{vmatrix}}\\\newcommand{\im}{^{-1}}
 \newcommand{\pr}{^{\prime}}
 \newcommand{\ppr}{^{\prime\prime}}\end{aligned}\end{align} \]</div>
-<div class="section" id="data-mining-and-machine-learning">
-<h1>Data Mining and Machine Learning<a class="headerlink" href="#data-mining-and-machine-learning" title="Permalink to this headline">¶</a></h1>
-<p>Study notes of Data Mining and Machine Learning, 2nd Edition by Mohammed J. Zaki and Magner Meira, JR</p>
-<div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="part1/index1.html">Part 1 Data Analysis Foundations</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="part1/chap1.html">Chapter 1 Data Matrix</a></li>
-<li class="toctree-l2"><a class="reference internal" href="part1/chap2.html">Chapter 2 Numeric Attributes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="part1/chap3.html">Chapter 3 Categorical Attributes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="part1/chap4.html">Chapter 4 Graph Data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="part1/chap5.html">Chapter 5 Kernel Methods</a></li>
-<li class="toctree-l2"><a class="reference internal" href="part1/chap6.html">Chapter 6 High-dimensional Data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="part1/chap7.html">Chapter 7 Dimensionality Reduction</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="part3/index3.html">Part 3 Clustering</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="part3/chap13.html">Chapter 13 Representative-based Clustering</a></li>
-<li class="toctree-l2"><a class="reference internal" href="part3/chap14.html">Chapter 14 Hierarchical Clustering</a></li>
-<li class="toctree-l2"><a class="reference internal" href="part3/chap15.html">Chapter 15 Density-based Clustering</a></li>
-<li class="toctree-l2"><a class="reference internal" href="part3/chap16.html">Chapter 16 Spectral and Graph Clustering</a></li>
-<li class="toctree-l2"><a class="reference internal" href="part3/chap17.html">Chapter 17 Clustering Validation</a></li>
-</ul>
-</li>
-</ul>
+<div class="section" id="chapter-13-representative-based-clustering">
+<h1>Chapter 13 Representative-based Clustering<a class="headerlink" href="#chapter-13-representative-based-clustering" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="k-means-algorithm">
+<h2>13.1 K-Means Algorithm<a class="headerlink" href="#k-means-algorithm" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="kernel-k-means">
+<h2>13.2 Kernel K-Means<a class="headerlink" href="#kernel-k-means" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="expectation-maximization-clustering">
+<h2>13.3 Expectation-Maximization Clustering<a class="headerlink" href="#expectation-maximization-clustering" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 
@@ -247,7 +247,8 @@
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="part1/index1.html" class="btn btn-neutral float-right" title="Part 1 Data Analysis Foundations" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="chap14.html" class="btn btn-neutral float-right" title="Chapter 14 Hierarchical Clustering" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="index3.html" class="btn btn-neutral float-left" title="Part 3 Clustering" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>
