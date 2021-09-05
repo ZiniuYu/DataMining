@@ -230,11 +230,74 @@
 \newcommand{\ppr}{^{\prime\prime}}\end{aligned}\end{align} \]</div>
 <div class="section" id="chapter-13-representative-based-clustering">
 <h1>Chapter 13 Representative-based Clustering<a class="headerlink" href="#chapter-13-representative-based-clustering" title="Permalink to this headline">¶</a></h1>
+<p>Given a dataset <span class="math notranslate nohighlight">\(\D\)</span> with <span class="math notranslate nohighlight">\(n\)</span> points <span class="math notranslate nohighlight">\(\x_i\)</span> in a
+<span class="math notranslate nohighlight">\(d\)</span>-dimensional space, and given the number of desired clusters <span class="math notranslate nohighlight">\(k\)</span>,
+the goal of representative-based clustering is to partition the dataset into
+<span class="math notranslate nohighlight">\(k\)</span> groups or clusters, which is called a <em>clustering</em> and is denoted as
+<span class="math notranslate nohighlight">\(\cl{C}=\{C_1,C_2,\cds,C_k\}\)</span>.
+Further, for each cluster <span class="math notranslate nohighlight">\(C_i\)</span> there exists a representative point that
+summarizes the cluster, a common choice being the mean (also called the
+<em>centroid</em>) <span class="math notranslate nohighlight">\(\mmu_i\)</span> of all points in the cluster, that is,</p>
+<div class="math notranslate nohighlight">
+\[\mmu_i=\frac{1}{n_i}\sum_{x_j\in C_i}\x_j\]</div>
+<p>where <span class="math notranslate nohighlight">\(n_i=|C_i|\)</span> is the number of points in cluster <span class="math notranslate nohighlight">\(C_i\)</span>.</p>
+<p>The <em>exact</em> number of ways of partitioning <span class="math notranslate nohighlight">\(n\)</span> points into <span class="math notranslate nohighlight">\(k\)</span>
+nonempty and disjoint parts is given by the <em>Stirling numbers of second kind</em>,
+given as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}S(n,k)=\frac{1}{k!}\sum_{t=0}^k(-1)^t\bp k\\t \ep(k-t)^n\end{split}\]</div>
 <div class="section" id="k-means-algorithm">
 <h2>13.1 K-Means Algorithm<a class="headerlink" href="#k-means-algorithm" title="Permalink to this headline">¶</a></h2>
+<p>Given a clustering <span class="math notranslate nohighlight">\(\cl{C}=\{C_1,C_2,\cds,C_k\}\)</span> we need some scoring
+function that evaluates its quality or goodness.
+This <em>sum of squared errors</em> scoring function is defined as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(SSE(\cl{c})=\sum_{i=1}^k\sum_{\x_j\in C_i}\lv\x_j-\mmu_i\rv^2\)</span></p>
+</div>
+<p>The goal is to find the clustering that minimizes the SSE scores:</p>
+<div class="math notranslate nohighlight">
+\[\cl{C}^*=\arg\min_{\cl{C}}\{SSE(\cl{C})\}\]</div>
+<p>K-means employs a greedy iterative approach to find a clustering that minimizes the SSE objective.</p>
+<p>The cluster assignment step take <span class="math notranslate nohighlight">\(O(nkd)\)</span> time because for each of the
+<span class="math notranslate nohighlight">\(n\)</span> points we have to compute its distance to each of the <span class="math notranslate nohighlight">\(k\)</span>
+clusters, which takes <span class="math notranslate nohighlight">\(d\)</span> operations in <span class="math notranslate nohighlight">\(d\)</span> dimensions.
+The centroid re-computation step takes <span class="math notranslate nohighlight">\(O(nd)\)</span> time because we have to
+add at total of <span class="math notranslate nohighlight">\(n\)</span> <span class="math notranslate nohighlight">\(d\)</span>-dimensional points.
+Assuming that there are <span class="math notranslate nohighlight">\(t\)</span> iterations, the total time for K-means is given as <span class="math notranslate nohighlight">\(O(tnkd)\)</span>.
+In terms of the I/O cost it requires <span class="math notranslate nohighlight">\(O(t)\)</span> full database scans, because
+we have to read the entire database in each iteration.</p>
 </div>
 <div class="section" id="kernel-k-means">
 <h2>13.2 Kernel K-Means<a class="headerlink" href="#kernel-k-means" title="Permalink to this headline">¶</a></h2>
+<p>Assume for the moment that all points <span class="math notranslate nohighlight">\(\x_i\in\D\)</span> have been mapped to
+their corresponding images <span class="math notranslate nohighlight">\(\phi(\x_i)\)</span> in feature space.
+Let <span class="math notranslate nohighlight">\(\K=\{K(\x_i,\x_j)\}_{i,j=1,\cds,n}\)</span> denote the <span class="math notranslate nohighlight">\(n\times n\)</span>
+matrix, where <span class="math notranslate nohighlight">\(K(\x_i,\x_j)=\phi(\x_i)^T\phi(\x_j)\)</span>.
+Let <span class="math notranslate nohighlight">\(\{C_1,\cds,C_k\}\)</span> specify the partitioning of the <span class="math notranslate nohighlight">\(n\)</span> points
+into <span class="math notranslate nohighlight">\(k\)</span> clusters, and let the corresponding cluster means in feature
+space be given as <span class="math notranslate nohighlight">\(\{\mmu_1^\phi,\cds,\mmu_k^\phi\}\)</span>, where</p>
+<div class="math notranslate nohighlight">
+\[\mmu_i^\phi=\frac{1}{n_i}\sum_{\x_j\in C_i}\phi(\x_j)\]</div>
+<p>is the mean of cluster <span class="math notranslate nohighlight">\(C_i\)</span> in feature space, with <span class="math notranslate nohighlight">\(n_i=|C_i|\)</span>.</p>
+<p>In feature space, the kernel K-means sum of squared errors objective can be written as</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\min_{\cl{C}}SSE(\cl{C})&amp;=\sum_{i=1}^k\sum_{\x_j\in C_i}\lv\phi(\x_j)-\mmu_i^\phi\rv^2\\&amp;=\sum_{i=1}^k\sum_{\x_j\in C_i}\lv\phi(\x_j)\rv^2-2\phi(\x_j)^T\mmu_i^\phi+\lv\mmu_i\rv^2\\&amp;=\sum_{i=1}^k\bigg(\bigg(\sum_{\x_j\in C_i}\lv\phi(\x_j)\rv^2\bigg)-2n_i
+\bigg(\frac{1}{n_i}\sum_{\x_j\in C_i}\phi(\x_j)\bigg)^T\mmu_i^\phi+
+n_i\lv\mmu_i^\phi\rv^2\bigg)\\&amp;=\bigg(\sum_{i=1}^k\sum_{\x_j\in C_i}\phi(\x_j)^T\phi(\x_j)\bigg)-\bigg(\sum_{i=1}^k n_i\lv\mmu_i^\phi\rv^2\bigg)\\&amp;=\sum_{i=1}^k\sum_{\x_j\in C_i}K(\x_j,\x_j)-\sum_{i=1}^k\frac{1}{n_i}
+\sum_{\x_a\in C_i}\sum_{\x_b\in C_i}K(\x_a,\x_b)\\&amp;=\sum_{j=1}^nK(\x_j,\x_j)-\sum_{i=1}^k\frac{1}{n_i}\sum_{\x_a\in C_i}\sum_{\x_b\in C_i}K(\x_a,\x_b)\end{aligned}\end{align} \]</div>
+<p>Consider the distance of a point <span class="math notranslate nohighlight">\(\phi(\x_j)\)</span> to the mean
+<span class="math notranslate nohighlight">\(\mmu_i^\phi\)</span> in feature space, which can be computed as</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\lv\phi(\x_j)-\mmu_i^\phi\rv^2&amp;=\lv\phi(\x_j)\rv^2-2\phi(\x_j)^T\mmu_i^\phi+\lv\mmu_i^\phi\rv^2\\&amp;=\phi(\x_j)^T\phi(\x_j)-\frac{2}{n_i}\sum_{\x_a\in C_i}\phi(\x_j)^T
+\phi(\x_a)+\frac{1}{n^2}\sum_{\x_a\in C_i}\sum_{\x_b\in C_i}
+\phi(\x_a)^T\phi(\x_b)\\&amp;=K(\x_j,\x_j)-\frac{2}{n_i}\sum_{\x_a\in C_i}K(\x_a,\x_j)+\frac{1}{n_i^2}
+\sum_{\x_a\in C_i}\sum_{\x_b\in C_i}K(\x_a,\x_b)\end{aligned}\end{align} \]</div>
+<p>In the cluster assignment step of kernel K-means, we assign a point to the closest cluster mean as follows:</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}C^*(\x_j)&amp;=\arg\min_i\{\lv\phi(\x_j)-\mmu_i^\phi\rv^2\}\\&amp;=\arg\min_i\bigg\{K(\x_j,\x_j)-\frac{2}{n_i}\sum_{\x_a\in C_i}K(\x_a,\x_j)+
+\frac{1}{n^2}\sum_{\x_a\in C_i}\sum_{\x_b\in C_i}K(\x_a,\x_b)\bigg\}\\&amp;=\arg\min_i\bigg\{\frac{1}{n_i^2}\sum_{\x_a\in C_i}\sum_{\x_b\in C_i}
+K(\x_a,\x_b)-\frac{2}{n_i}\sum_{\x_a\in C_i}K(\x_a,\x_j)\bigg\}\end{aligned}\end{align} \]</div>
 </div>
 <div class="section" id="expectation-maximization-clustering">
 <h2>13.3 Expectation-Maximization Clustering<a class="headerlink" href="#expectation-maximization-clustering" title="Permalink to this headline">¶</a></h2>
