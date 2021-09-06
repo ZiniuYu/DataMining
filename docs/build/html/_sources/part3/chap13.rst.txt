@@ -43,7 +43,7 @@ The goal is to find the clustering that minimizes the SSE scores:
 
 K-means employs a greedy iterative approach to find a clustering that minimizes the SSE objective.
 
-.. .. image:: ../_static/Algo13.1.png
+.. image:: ../_static/Algo13.1.png
 
 The cluster assignment step take :math:`O(nkd)` time because for each of the 
 :math:`n` points we have to compute its distance to each of the :math:`k` 

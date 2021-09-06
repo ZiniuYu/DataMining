@@ -297,7 +297,7 @@ Eccentricity centrality is defined as follows:
 
     :math:`\dp c(v_i)\frac{1}{e(v_i)}=\frac{1}{\max_j\{d(v_i,v_j)\}}`
 
-A node :matj:`v_i` that has the least eccentricity, that is, for which the
+A node :math:`v_i` that has the least eccentricity, that is, for which the
 eccentricity equals the graph radius, :math:`e(v_i)=r(G)`, is called a 
 *center node*, whereas a node that has the highest eccentricity, that is, for
 which eccentricity equals the graph diameter, :math:`e(v_i)=d(G)`, is called a

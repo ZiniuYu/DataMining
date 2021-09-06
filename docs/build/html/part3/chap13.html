@@ -259,6 +259,7 @@ This <em>sum of squared errors</em> scoring function is defined as</p>
 <div class="math notranslate nohighlight">
 \[\cl{C}^*=\arg\min_{\cl{C}}\{SSE(\cl{C})\}\]</div>
 <p>K-means employs a greedy iterative approach to find a clustering that minimizes the SSE objective.</p>
+<img alt="../_images/Algo13.1.png" src="../_images/Algo13.1.png" />
 <p>The cluster assignment step take <span class="math notranslate nohighlight">\(O(nkd)\)</span> time because for each of the
 <span class="math notranslate nohighlight">\(n\)</span> points we have to compute its distance to each of the <span class="math notranslate nohighlight">\(k\)</span>
 clusters, which takes <span class="math notranslate nohighlight">\(d\)</span> operations in <span class="math notranslate nohighlight">\(d\)</span> dimensions.
