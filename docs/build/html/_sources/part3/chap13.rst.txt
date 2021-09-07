@@ -116,6 +116,20 @@ In the cluster assignment step of kernel K-means, we assign a point to the close
     &=\arg\min_i\bigg\{\frac{1}{n_i^2}\sum_{\x_a\in C_i}\sum_{\x_b\in C_i}
     K(\x_a,\x_b)-\frac{2}{n_i}\sum_{\x_a\in C_i}K(\x_a,\x_j)\bigg\}
 
+.. image:: ../_static/Algo13.2.png
+
+The fraction of points reassigned to a different cluster in the current iteration is given as
+
+.. math::
+
+    \frac{n-\sum_{i=1}^k|C_i^T\cap C_i^{t-1}|}{n}=1-\frac{1}{n}\sum_{i=1}^k|C_i^T\cap C_i^{t-1}|
+
+**Computational Complexity**
+
+The total computational complexity of kernel K-means is :math:`O(tn^2)`, where 
+:math:`t` is the number of iterations until convergence.
+The I/O complexity is :math:`O(t)` scans of the kernel matrix :math:`\K`.
+
 13.3 Expectation-Maximization Clustering
 ----------------------------------------
 

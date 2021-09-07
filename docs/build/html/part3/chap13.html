@@ -305,6 +305,14 @@ n_i\lv\mmu_i^\phi\rv^2\bigg)\\&amp;=\bigg(\sum_{i=1}^k\sum_{\x_j\in C_i}\phi(\x_
 \[ \begin{align}\begin{aligned}C^*(\x_j)&amp;=\arg\min_i\{\lv\phi(\x_j)-\mmu_i^\phi\rv^2\}\\&amp;=\arg\min_i\bigg\{K(\x_j,\x_j)-\frac{2}{n_i}\sum_{\x_a\in C_i}K(\x_a,\x_j)+
 \frac{1}{n^2}\sum_{\x_a\in C_i}\sum_{\x_b\in C_i}K(\x_a,\x_b)\bigg\}\\&amp;=\arg\min_i\bigg\{\frac{1}{n_i^2}\sum_{\x_a\in C_i}\sum_{\x_b\in C_i}
 K(\x_a,\x_b)-\frac{2}{n_i}\sum_{\x_a\in C_i}K(\x_a,\x_j)\bigg\}\end{aligned}\end{align} \]</div>
+<img alt="../_images/Algo13.2.png" src="../_images/Algo13.2.png" />
+<p>The fraction of points reassigned to a different cluster in the current iteration is given as</p>
+<div class="math notranslate nohighlight">
+\[\frac{n-\sum_{i=1}^k|C_i^T\cap C_i^{t-1}|}{n}=1-\frac{1}{n}\sum_{i=1}^k|C_i^T\cap C_i^{t-1}|\]</div>
+<p><strong>Computational Complexity</strong></p>
+<p>The total computational complexity of kernel K-means is <span class="math notranslate nohighlight">\(O(tn^2)\)</span>, where
+<span class="math notranslate nohighlight">\(t\)</span> is the number of iterations until convergence.
+The I/O complexity is <span class="math notranslate nohighlight">\(O(t)\)</span> scans of the kernel matrix <span class="math notranslate nohighlight">\(\K\)</span>.</p>
 </div>
 <div class="section" id="expectation-maximization-clustering">
 <h2>13.3 Expectation-Maximization Clustering<a class="headerlink" href="#expectation-maximization-clustering" title="Permalink to this headline">¶</a></h2>
