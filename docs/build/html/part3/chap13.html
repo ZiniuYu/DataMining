@@ -95,7 +95,13 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Chapter 13 Representative-based Clustering</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#k-means-algorithm">13.1 K-Means Algorithm</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#kernel-k-means">13.2 Kernel K-Means</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#expectation-maximization-clustering">13.3 Expectation-Maximization Clustering</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#expectation-maximization-clustering">13.3 Expectation-Maximization Clustering</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#em-in-one-dimension">13.3.1 EM in One Dimension</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#em-in-d-dimensions">13.3.2 EM in <span class="math notranslate nohighlight">\(d\)</span> Dimensions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#maximum-likelihood-estimation">13.3.3 Maximum Likelihood Estimation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#em-approach">13.3.4 EM Approach</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="chap14.html">Chapter 14 Hierarchical Clustering</a></li>
@@ -203,7 +209,7 @@
 \newcommand{\r}{\boldsymbol{\mathrm{r}}}
 \newcommand{\u}{\boldsymbol{\mathrm{u}}}
 \newcommand{\v}{\boldsymbol{\mathrm{v}}}
-\newcommand{\w}{\boldsymbol{w}}
+\newcommand{\w}{\boldsymbol{\mathrm{w}}}
 \newcommand{\x}{\boldsymbol{\mathrm{x}}}
 \newcommand{\y}{\boldsymbol{\mathrm{y}}}\\\newcommand{\A}{\boldsymbol{\mathrm{A}}}
 \newcommand{\B}{\boldsymbol{B}}
@@ -302,6 +308,193 @@ K(\x_a,\x_b)-\frac{2}{n_i}\sum_{\x_a\in C_i}K(\x_a,\x_j)\bigg\}\end{aligned}\end
 </div>
 <div class="section" id="expectation-maximization-clustering">
 <h2>13.3 Expectation-Maximization Clustering<a class="headerlink" href="#expectation-maximization-clustering" title="Permalink to this headline">¶</a></h2>
+<p>Let <span class="math notranslate nohighlight">\(\D\)</span> consist of <span class="math notranslate nohighlight">\(n\)</span> points <span class="math notranslate nohighlight">\(\x_j\)</span> in <span class="math notranslate nohighlight">\(d\)</span>-dimensional space <span class="math notranslate nohighlight">\(\R^d\)</span>.
+Let <span class="math notranslate nohighlight">\(X_a\)</span> denote the random variable corresponding to the <span class="math notranslate nohighlight">\(a\)</span>th attribute.
+Let <span class="math notranslate nohighlight">\(\X=(X_1,X_2,\cds,X_d)\)</span> denote the vector random variable across the <span class="math notranslate nohighlight">\(d\)</span>-attributes, with <span class="math notranslate nohighlight">\(\x_j\)</span>
+being a data sample from <span class="math notranslate nohighlight">\(\X\)</span>.</p>
+<p><strong>Gaussian Mixture Model</strong></p>
+<p>Assume that each cluster <span class="math notranslate nohighlight">\(C_i\)</span> is characterized by a multivariate normal distribution, that is,</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp f_i(\x)=f(\x|\mmu_i,\Sg_i)=\frac{1}{(2\pi)^{\frac{d}{2}}|\Sg_i|^{\frac{1}{2}}}\)</span>
+<span class="math notranslate nohighlight">\(\dp\exp\bigg\{-\frac{(\x-\mmu_i)^T\Sg_i\im(\x-\mmu_i)}{2}\bigg\}\)</span></p>
+</div>
+<p>where the cluster mean <span class="math notranslate nohighlight">\(\mmu_i\in\R^d\)</span> and covariance matrix
+<span class="math notranslate nohighlight">\(\Sg_i\in\R^{d\times d}\)</span> are both unknown parameters.
+<span class="math notranslate nohighlight">\(f_i(\x)\)</span> is the probability density at <span class="math notranslate nohighlight">\(\x\)</span> attributable to cluster <span class="math notranslate nohighlight">\(C_i\)</span>.
+We assume that the probability density function of <span class="math notranslate nohighlight">\(\X\)</span> is given as a
+<em>Gaussian mixture model</em> over all the <span class="math notranslate nohighlight">\(k\)</span> cluster normals, defined as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp f(\x)=\sum_{i=1}^kf_i(\x)P(C_i)=\sum_{i=1}^kf(\x|\mmu_i,\Sg_i)P(C_i)\)</span></p>
+</div>
+<p>where the prior probabilities <span class="math notranslate nohighlight">\(P(C_i)\)</span> are called the <em>mixture parameters</em>, which must satisfy the condition</p>
+<div class="math notranslate nohighlight">
+\[\sum_{i=1}^kP(C_i)=1\]</div>
+<p>We write the set of all the model parameters compactly as</p>
+<div class="math notranslate nohighlight">
+\[\bs\theta=\{\mmu_1,\Sg_1,P(C_1),\cds,\mmu_k,\Sg_k,P(C_k)\}\]</div>
+<p><strong>Maximum Likelihood Estimation</strong></p>
+<p>Given the dataset <span class="math notranslate nohighlight">\(\D\)</span>, we define the <em>likelihood</em> of <span class="math notranslate nohighlight">\(\bs\th\)</span> as
+the conditional probability of the data <span class="math notranslate nohighlight">\(\D\)</span> given the model parameters
+<span class="math notranslate nohighlight">\(\bs\th\)</span>, denoted as <span class="math notranslate nohighlight">\(P(\D|\bs\th)\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[p(\D|\bs\th)=\prod_{j=1}^nf(\x_j)\]</div>
+<p>The goal of maximum likelihood estimation (MLE) is to choose the parameters <span class="math notranslate nohighlight">\(\bs\th\)</span> that maximize the likelihood</p>
+<div class="math notranslate nohighlight">
+\[\bs\th^*=\arg\max_{\bs\th}\{P(\D|\bs\th)\}\]</div>
+<p>It is typical the maximize the log of the likelihood function</p>
+<div class="math notranslate nohighlight">
+\[\bs\th^*=\arg\max_{\bs\th}\{\ln P(\D|\bs\th)\}\]</div>
+<p>where the <em>log-likelihood</em> function is given as</p>
+<div class="math notranslate nohighlight">
+\[\ln P(\D|\bs\th)=\sum_{j=1}^n\ln f(\x_j)=\sum_{j=1}^n\ln\bigg(\sum_{i=1}^kf(\x_j|\mmu_i,\Sg_i)P(C_i)\bigg)\]</div>
+<p>We can use the expectation-maximization (EM) approach for finding the maximum
+likelihood estimates for the parameters <span class="math notranslate nohighlight">\(\bs\th\)</span>.
+EM is a two-step iterative approach that starts from an initial guess for the parameters <span class="math notranslate nohighlight">\(\bs\th\)</span>.
+Given the current estimates for <span class="math notranslate nohighlight">\(\bs\th\)</span>, in the <em>expectation step</em> EM
+computes the cluster posterior probabilities <span class="math notranslate nohighlight">\(P(C_i|\x_j)\)</span> via the Bayes
+theorem:</p>
+<div class="math notranslate nohighlight">
+\[P(C_i|\x_j)=\frac{P(C_i\rm{\ and\ }\x_j)}{P(\x_j)}=\frac{P(\x_j|C_i)P(C_i)}{\sum_{a=1}^kP(\x_j|C_a)P(C_a)}\]</div>
+<p>Because each cluster is modeled as a multivariate normal distribution, the
+probability of <span class="math notranslate nohighlight">\(\x_j\)</span> given cluster <span class="math notranslate nohighlight">\(C_i\)</span> can be obtained by
+considering a small interval <span class="math notranslate nohighlight">\(\epsilon&gt;0\)</span> centered at <span class="math notranslate nohighlight">\(\x_j\)</span>, as
+follows:</p>
+<div class="math notranslate nohighlight">
+\[P(\x_j|C_i)\simeq 2\epsilon\cd f(\x_j|\mmu_i,\Sg_i)=2\epsilon\cd f_i(\x_j)\]</div>
+<p>The posterior probability of <span class="math notranslate nohighlight">\(C_i\)</span> given <span class="math notranslate nohighlight">\(\x_j\)</span> is thus given as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp P(C_i|\x_j)=\frac{f_i(\x_j)\cd P(C_i)}{\sum_{a=1}^kf_a(\x_j)\cd P(C_a)}\)</span></p>
+</div>
+<p>and <span class="math notranslate nohighlight">\(P(C_i|\x_j)\)</span> can be considered as the weight or contribution of the point <span class="math notranslate nohighlight">\(\x_j\)</span> to cluster <span class="math notranslate nohighlight">\(C_i\)</span>.
+Next, in the <em>maximization step</em>, using the weights <span class="math notranslate nohighlight">\(P(C_i|\x_j)\)</span> EM
+re-estimates <span class="math notranslate nohighlight">\(\bs\th\)</span>, for each cluster <span class="math notranslate nohighlight">\(C_i\)</span>.
+The re-estimated mean is given as the weighted average of all the points, the
+re-estimated covariance matrix is given as the weighted covariance over all
+pairs of dimensions, and the re0estimated prior probability for each cluster is
+given as the fraction of weights that contribute to that cluster.</p>
+<div class="section" id="em-in-one-dimension">
+<h3>13.3.1 EM in One Dimension<a class="headerlink" href="#em-in-one-dimension" title="Permalink to this headline">¶</a></h3>
+<p>Consider a dataset <span class="math notranslate nohighlight">\(\D\)</span> consisting of a single attribute <span class="math notranslate nohighlight">\(X\)</span>, where
+each point <span class="math notranslate nohighlight">\(x_j\in\R\)</span> (<span class="math notranslate nohighlight">\(j=1,\cds,n\)</span>) is a random sample from
+<span class="math notranslate nohighlight">\(X\)</span>.
+For the mixture model, we use univariate normals for each cluster:</p>
+<div class="math notranslate nohighlight">
+\[f_i(x)=f(x|\mu_i,\sg_i^2)=\frac{1}{\sqrt{2\pi}\sg_i}\exp\bigg\{-\frac{(x-\mu_i)^2}{2\sg_i^2}\bigg\}\]</div>
+<p>with the cluster parameters <span class="math notranslate nohighlight">\(\mu_i,\sg_i^2\)</span>, and <span class="math notranslate nohighlight">\(P(C_i)\)</span>.</p>
+<p><strong>Initialization</strong></p>
+<p>For each cluster <span class="math notranslate nohighlight">\(C_i\)</span>, with <span class="math notranslate nohighlight">\(i=1,2,\cds,k\)</span>, we can randomly
+initialize the cluster parameters <span class="math notranslate nohighlight">\(\mu,\sg_i^2\)</span>, and <span class="math notranslate nohighlight">\(P(C_i)\)</span>.</p>
+<p><strong>Expectation Step</strong></p>
+<p>The posterior probabilities are computed as</p>
+<div class="math notranslate nohighlight">
+\[P(C_i|x_j)=\frac{f(x_j|\mu_i,\sg_i^2)\cd P(C_i)}{\sum_{a=1}^kf(x_j|\mu_a,\sg_a^2)\cd P(C_a)}\]</div>
+<p>For convenience, we use the notation <span class="math notranslate nohighlight">\(w_{ij}=P(C_i|x_j)\)</span>, and let</p>
+<div class="math notranslate nohighlight">
+\[\w_i=(w_{i1},\cds,w_{in})^T\]</div>
+<p>denote the weight vector for cluster <span class="math notranslate nohighlight">\(C_i\)</span> across all the <span class="math notranslate nohighlight">\(n\)</span> points.</p>
+<p><strong>Maximization Step</strong></p>
+<p>The re-estimated value for the cluster mean, <span class="math notranslate nohighlight">\(\mu_i\)</span>, is computed as the weighted mean of all the points:</p>
+<div class="math notranslate nohighlight">
+\[\mu_i=\frac{\sum_{j=1}^nw_{ij}\cd x_j}{\sum_{j=1}^nw_{ij}}\]</div>
+<p>In terms of the weight vector <span class="math notranslate nohighlight">\(\w_i\)</span> and the attribute vector <span class="math notranslate nohighlight">\(X=(x_1,x_2,\cds,x_n)^T\)</span>, we can write as</p>
+<div class="math notranslate nohighlight">
+\[\mu_i=\frac{\w_i^TX}{\w_i^T\1}\]</div>
+<p>The re-estimated value of the cluster variance is computed as the weighted variance across all the points:</p>
+<div class="math notranslate nohighlight">
+\[\sg_i^2=\frac{\sum_{j=1}^nw_{ij}(x_j-\mu_i)^2}{\sum_{j=1}^nw_{ij}}\]</div>
+<p>Let <span class="math notranslate nohighlight">\(\bar{X}_i=X-\mu_i\1=(x_1-\mu_i,x_2-\mu_i,\cds,x_n-\mu_i)^T=\)</span>
+<span class="math notranslate nohighlight">\((\bar{x}_{i1},\bar{x}_{i2},\cds,\bar{x}_{in})^T\)</span> be the centered
+attribute vector for cluster <span class="math notranslate nohighlight">\(C_i\)</span>, and let <span class="math notranslate nohighlight">\(\bar{X}_i^s\)</span> be the
+squared vector given as
+<span class="math notranslate nohighlight">\(\bar{X}_i^s=(\bar{x}_{i1}^2,\cds,\bar{x}_{in}^2)^T\)</span>.
+The variance can be expressed compactly as</p>
+<div class="math notranslate nohighlight">
+\[\sg_i^2=\frac{\w_i^T\bar{X}_i^s}{\w_i^T\1}\]</div>
+<p>The prior probability of cluster <span class="math notranslate nohighlight">\(C_i\)</span> is re-estimated as the fraction of
+the total weight belonging to <span class="math notranslate nohighlight">\(C_i\)</span>, computed as</p>
+<div class="math notranslate nohighlight">
+\[P(C_i)=\frac{\sum_{j=1}^nw_{ij}}{\sum_{a=1}^k\sum_{j=1}^nw_{aj}}=
+\frac{\sum_{j=1}^nw_{ij}}{\sum_{j=1}^n1}=\frac{\sum_{j=1}^nw_{ij}}{n}\]</div>
+<p>where we made use of the fact that</p>
+<div class="math notranslate nohighlight">
+\[\sum_{i=1}^kw_{ij}=\sum_{i=1}^kP(C_i|x_j)=1\]</div>
+<p>In vector notation the prior probability can be written as</p>
+<div class="math notranslate nohighlight">
+\[P(C_i)=\frac{\w_i^T\1}{n}\]</div>
+<p><strong>Iteration</strong></p>
+<p>Starting from an initial set of values for the cluster parameters
+<span class="math notranslate nohighlight">\(\mu_i,\sg_i^2\)</span>, and <span class="math notranslate nohighlight">\(P(C_i)\)</span> for all <span class="math notranslate nohighlight">\(i=1,\cds,k\)</span>, the EM
+algorithm applies the expectation step to compute the weights
+<span class="math notranslate nohighlight">\(w_{ij}=P(C_i|x_j)\)</span>.</p>
+</div>
+<div class="section" id="em-in-d-dimensions">
+<h3>13.3.2 EM in <span class="math notranslate nohighlight">\(d\)</span> Dimensions<a class="headerlink" href="#em-in-d-dimensions" title="Permalink to this headline">¶</a></h3>
+<p>For each cluster <span class="math notranslate nohighlight">\(C_i\)</span>, we now need to estimate the <span class="math notranslate nohighlight">\(d\)</span>-dimensional mean vector:</p>
+<div class="math notranslate nohighlight">
+\[\mmu_i=(\mu_{i1},\mu_{i2},\cds,\mu_{id})^T\]</div>
+<p>and the <span class="math notranslate nohighlight">\(d\times d\)</span> covariance matrix:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\Sg_i=\bp (\sg_1^i)^2&amp;\sg_{12}^i&amp;\cds&amp;\sg_{id}^i\\
+\sg_{21}^i&amp;(\sg_2^i)^2&amp;\cds&amp;\sg_{2d}^i\\\vds&amp;\vds&amp;\dds&amp;\vds\\
+\sg_{d1}^i&amp;\sg_{d2}^i&amp;\cds&amp;(\sg_d^i)^2 \ep\end{split}\]</div>
+<p>One simplification is to assume that all dimensions are independent, which leads to a diagonal covariance matrix:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\Sg_i=\bp (\sg_1^i)^2&amp;0&amp;\cds&amp;0\\0&amp;(\sg_2^i)^2&amp;\cds&amp;0\\\vds&amp;\vds&amp;\dds&amp;\vds\\0&amp;0&amp;\cds&amp;(\sg_d^i)^2 \ep\end{split}\]</div>
+<p><strong>Initialization</strong></p>
+<p>For each cluster <span class="math notranslate nohighlight">\(C_i\)</span>, with <span class="math notranslate nohighlight">\(i=1,2,\cds,k\)</span>, we can randomly
+initialize the cluster parameters <span class="math notranslate nohighlight">\(\mmu,\Sg_i\)</span>, and <span class="math notranslate nohighlight">\(P(C_i)\)</span>.</p>
+<p><strong>Expectation Step</strong></p>
+<div class="math notranslate nohighlight">
+\[w_{ij}=P(C_i|\x_j)=\frac{f_i(\x_j)\cd P(C_i)}{\sum_{a=1}^kf_a(\x_j)\cd P(C_a)}\]</div>
+<p><strong>Maximization Step</strong></p>
+<p>The mena <span class="math notranslate nohighlight">\(\mmu_i\)</span> for cluster <span class="math notranslate nohighlight">\(C_i\)</span> can be estimated as</p>
+<div class="math notranslate nohighlight">
+\[\mmu_i=\frac{\sum_{j-1}^nw_{ij}\cd\x_j}{\sum_{j=1}^nw_{ij}}=\frac{\D^T\w_i}{\w_i^T\1}\]</div>
+<p>Let <span class="math notranslate nohighlight">\(\bar\D_i=\D-\1\cd\mmu_i^T\)</span> be the centered data matrix for cluster <span class="math notranslate nohighlight">\(C_i\)</span>.
+Let <span class="math notranslate nohighlight">\(\bar\x_{ji}=\x_j-\mmu_i\in\R^d\)</span> denote the <span class="math notranslate nohighlight">\(j\)</span>th centered point in <span class="math notranslate nohighlight">\(\bar\D_i\)</span>.
+We can express <span class="math notranslate nohighlight">\(\Sg_i\)</span> as</p>
+<div class="math notranslate nohighlight">
+\[\Sg_i=\frac{\sum_{j=1}^nw_{ij}\bar\x_{ji}\bar\x_{ji}^T}{\w_i^T\1}\]</div>
+<p>The covariance between dimensions <span class="math notranslate nohighlight">\(X_a\)</span> and <span class="math notranslate nohighlight">\(X_b\)</span> is estimated as</p>
+<div class="math notranslate nohighlight">
+\[\sg_{ab}^i=\frac{\sum_{j=1}^nw_{ji}(x_{ja}-\mu_{ia})(x_{jb}-\mu_{ib})}{\sum_{j=1}^nw_{ij}}\]</div>
+<p>The prior probability <span class="math notranslate nohighlight">\(P(C_i)\)</span> for each cluster is the same as in the one-dimensional case, given as</p>
+<div class="math notranslate nohighlight">
+\[P(C_i)=\frac{\sum_{j=1}^nw_{ij}}{n}=\frac{\w_i^T\1}{n}\]</div>
+<p><strong>EM Clustering Algorithm</strong></p>
+<img alt="../_images/Algo13.3.png" src="../_images/Algo13.3.png" />
+<p><strong>Computational Complexity</strong></p>
+<p>The computational complexity of the EM method is <span class="math notranslate nohighlight">\(O(t(kd^3+nkd^2))\)</span>, where <span class="math notranslate nohighlight">\(t\)</span> is the number of iterations.
+If we use a diagonal covariance matrix, then the complexity is therefore <span class="math notranslate nohighlight">\(O(tnkd)\)</span>.
+The I/O complexity for the EM algorithm is <span class="math notranslate nohighlight">\(O(t)\)</span> complete databases scans
+because we read the entire set of points in each iteration.</p>
+<p><strong>K-means as Specialization of EM</strong></p>
+<p>K-menas can be considered as a special case of the EM algorithm, obtained as follows:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}P(C_i|\x_j)=\left\{\begin{array}{lr}1\quad\rm{if\ }C_i=\arg\min_{C_a}
+\{\lv\x_j-\mmu_a\rv^2\}\\0\quad\rm{otherwise}\end{array}\right.\end{split}\]</div>
+<p>The posterior probability <span class="math notranslate nohighlight">\(P(C_i|\x_j)\)</span> is given as</p>
+<div class="math notranslate nohighlight">
+\[P(C_i|\x_j)=\frac{P(\x_j|C_i)P(C_i)}{\sum_{a=1}^kP(\x_j|C_a)P(C_a)}\]</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(P(C_i|\x_j)=\left\{\begin{array}{lr}1\quad\rm{if\ }\x_j\in C_i,\rm{\ i.e.,\ if\ }C_i=\arg\min_{C_a}\{\lv\x_j-\mmu_a\rv^2\}\\0\quad\rm{otherwise}\end{array}\right.\)</span></p>
+</div>
+</div>
+<div class="section" id="maximum-likelihood-estimation">
+<h3>13.3.3 Maximum Likelihood Estimation<a class="headerlink" href="#maximum-likelihood-estimation" title="Permalink to this headline">¶</a></h3>
+<p><strong>Estimation of Mean</strong></p>
+<p><strong>Estimation of Covariance Matrix</strong></p>
+<p><strong>Estimating the Prior Probability: Mixture Parameters</strong></p>
+</div>
+<div class="section" id="em-approach">
+<h3>13.3.4 EM Approach<a class="headerlink" href="#em-approach" title="Permalink to this headline">¶</a></h3>
+<p><strong>Expectation Step</strong></p>
+<p><strong>Maximization Step</strong></p>
+</div>
 </div>
 </div>
 

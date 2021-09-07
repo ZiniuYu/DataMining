@@ -89,7 +89,7 @@ rst_prolog = r'''
     \newcommand{\r}{\boldsymbol{\mathrm{r}}}
     \newcommand{\u}{\boldsymbol{\mathrm{u}}}
     \newcommand{\v}{\boldsymbol{\mathrm{v}}}
-    \newcommand{\w}{\boldsymbol{w}}
+    \newcommand{\w}{\boldsymbol{\mathrm{w}}}
     \newcommand{\x}{\boldsymbol{\mathrm{x}}}
     \newcommand{\y}{\boldsymbol{\mathrm{y}}}
 
