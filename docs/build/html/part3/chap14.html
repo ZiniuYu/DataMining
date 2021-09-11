@@ -95,6 +95,12 @@
 <li class="toctree-l2"><a class="reference internal" href="chap13.html">Chapter 13 Representative-based Clustering</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Chapter 14 Hierarchical Clustering</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#preliminaries">14.1 Preliminaries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#agglomerative-hierarchical-clustering">14.2 Agglomerative Hierarchical Clustering</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#distance-between-clusters">14.2.1 Distance between Clusters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#updating-distance-matrix">14.2.2 Updating Distance Matrix</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#computational-complexity">14.2.3 Computational Complexity</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="chap15.html">Chapter 15 Density-based Clustering</a></li>
@@ -269,6 +275,79 @@ nodes, and consequently <span class="math notranslate nohighlight">\(t−1=2m−
 The total number of different dendrograms with <span class="math notranslate nohighlight">\(n\)</span> leaves is obtained by the following product:</p>
 <div class="math notranslate nohighlight">
 \[\prod_{m=1}^{n-1}(2m-1)=1\times 3\times 5\times 7\times\cds\times(2n-3)=(2n-3)!!\]</div>
+</div>
+<div class="section" id="agglomerative-hierarchical-clustering">
+<h2>14.2 Agglomerative Hierarchical Clustering<a class="headerlink" href="#agglomerative-hierarchical-clustering" title="Permalink to this headline">¶</a></h2>
+<img alt="../_images/Algo13.2.png" src="../_images/Algo13.2.png" />
+<div class="section" id="distance-between-clusters">
+<h3>14.2.1 Distance between Clusters<a class="headerlink" href="#distance-between-clusters" title="Permalink to this headline">¶</a></h3>
+<p>The between-cluster distances are ultimately based on the distance between two
+points, which is typically computed using the Euclidean distance or <span class="math notranslate nohighlight">\(L_2\)</span>
+-<em>norm</em>, defined as</p>
+<div class="math notranslate nohighlight">
+\[\lv\x-\y\rv=\bigg(\sum_{i=1}^d(x_i-y_i)^2\bigg)^{1/2}\]</div>
+<p><strong>Single Link</strong></p>
+<p>Given two clusters <span class="math notranslate nohighlight">\(C_i\)</span> and <span class="math notranslate nohighlight">\(C_j\)</span>, the distance between them,
+denoted <span class="math notranslate nohighlight">\(\delta(C_i,C_j)\)</span>, is defined as the minimum distance between a
+point in <span class="math notranslate nohighlight">\(C_i\)</span> and a point in <span class="math notranslate nohighlight">\(C_j\)</span></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\delta(C_i,C_j)=\min\{\lv\x-\y\rv|\x\in C_i,\y\in C_j\}\)</span></p>
+</div>
+<p><strong>Complete Link</strong></p>
+<p>The distance between two clusters is defined as the maximum distance between a
+point in <span class="math notranslate nohighlight">\(C_i\)</span> and a point in <span class="math notranslate nohighlight">\(C_j\)</span>:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\delta(C_i,C_j)=\max\{\lv\x-\y\rv|\x\in C_i,\y\in C_j\}\)</span></p>
+</div>
+<p><strong>Group Average</strong></p>
+<p>The distance between two clusters is defined as the average pairwise distance
+between points in <span class="math notranslate nohighlight">\(C_i\)</span> and <span class="math notranslate nohighlight">\(C_j\)</span>:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\delta(C_i,C_j)=\frac{\sum_{\x\in C_i}\sum_{\y\in C_j}\lv\x-\y\rv}{n_i\cd n_j}\)</span></p>
+</div>
+<p>where <span class="math notranslate nohighlight">\(n_i=|C_i|\)</span> denotes the number of points in cluster <span class="math notranslate nohighlight">\(C_i\)</span>.</p>
+<p><strong>Mean Distance</strong></p>
+<p>The distance between two clusters is defined as the distance between the means or centroids of the two clusters:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\delta(C_i,C_j)=\lv\mmu_i-\mmu_j\rv\)</span></p>
+</div>
+<p>where <span class="math notranslate nohighlight">\(\mmu_i=\frac{1}{n_i}\sum_{\x\in C_i}\x\)</span>.</p>
+<p><strong>Minimum Variance: Ward’s Method</strong></p>
+<p>The sum of a squared errors (SSE) for a given cluster <span class="math notranslate nohighlight">\(C_i\)</span> is given as</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}SSE_i&amp;=\sum_{\x\in C_i}\lv\x-\mmu_i\rv^2\\&amp;=\sum_{\x\in C_i}\lv\x-\mmu_i\rv^2\\&amp;=\sum_{\x\in C_i}\x^T\x-2\sum_{\x\in C_i}\x^T\mmu_i+\sum_{\x\in C_i}\mmu_i^T\mmu_i\\&amp;=\bigg(\sum_{\x\in C_i}\x^T\x\bigg)-n_i\mmu_i^T\mmu_i\end{aligned}\end{align} \]</div>
+<p>The SSE for a clustering <span class="math notranslate nohighlight">\(\cl{C}=\{C_1,\cds,C_m\}\)</span> is given as</p>
+<div class="math notranslate nohighlight">
+\[SSE=\sum_{i=1}^mSSE_i=\sum_{i=1}^m\sum_{\x\in C_i}\lv\x-\mmu_i\rv^2\]</div>
+<p>After simplification, we get</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\delta(C_i,C_j)=\bigg(\frac{n_in_j}{n_i+n_j}\bigg)\lv\mmu_i-\mmu_j\rv^2\)</span></p>
+</div>
+</div>
+<div class="section" id="updating-distance-matrix">
+<h3>14.2.2 Updating Distance Matrix<a class="headerlink" href="#updating-distance-matrix" title="Permalink to this headline">¶</a></h3>
+<p>Whenever two clusters <span class="math notranslate nohighlight">\(C_i\)</span> and <span class="math notranslate nohighlight">\(C_j\)</span> are merged into
+<span class="math notranslate nohighlight">\(C_{ij}\)</span>, we need to update the distance matrix by recomputing the
+distances from the newly created cluster <span class="math notranslate nohighlight">\(C_{ij}\)</span> to all other clusters
+<span class="math notranslate nohighlight">\(C_r\)</span> (<span class="math notranslate nohighlight">\(r \ne i\)</span> and <span class="math notranslate nohighlight">\(r \ne j\)</span>).
+The Lance–Williams formula provides a general equation to recompute the
+distances for all of the cluster proximity measures we considered earlier; it is
+given as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\delta(C_{ij},C_r)=\alpha_i\cd\delta(C_i,C_r)+\alpha_j\cd\delta(C_j,C_r)+\beta\cd\delta(C_i,C_j)+\gamma\cd|\delta(C_i,C_r)-\delta(C_j,C_r)|\)</span></p>
+</div>
+<p>The coefficients <span class="math notranslate nohighlight">\(\alpha_i,\alpha_j,\beta\)</span> and <span class="math notranslate nohighlight">\(\gamma\)</span> differ from one measure to another.</p>
+</div>
+<div class="section" id="computational-complexity">
+<h3>14.2.3 Computational Complexity<a class="headerlink" href="#computational-complexity" title="Permalink to this headline">¶</a></h3>
+<p>The computational complexity of hierarchical clustering is <span class="math notranslate nohighlight">\(O(n^2\log n)\)</span>.</p>
+</div>
 </div>
 </div>
 
