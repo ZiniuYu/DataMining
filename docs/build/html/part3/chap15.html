@@ -94,7 +94,14 @@
 <li class="toctree-l1 current"><a class="reference internal" href="index3.html">Part 3 Clustering</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="chap13.html">Chapter 13 Representative-based Clustering</a></li>
 <li class="toctree-l2"><a class="reference internal" href="chap14.html">Chapter 14 Hierarchical Clustering</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Chapter 15 Density-based Clustering</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Chapter 15 Density-based Clustering</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#the-dbscan-algorithm">15.1 The DBSCAN Algorithm</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#kernel-density-estimation">15.2 Kernel Density Estimation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#univariate-density-estimation">15.2.1 Univariate Density Estimation</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="chap16.html">Chapter 16 Spectral and Graph Clustering</a></li>
 <li class="toctree-l2"><a class="reference internal" href="chap17.html">Chapter 17 Clustering Validation</a></li>
 </ul>
@@ -225,6 +232,65 @@
 \newcommand{\ppr}{^{\prime\prime}}\end{aligned}\end{align} \]</div>
 <div class="section" id="chapter-15-density-based-clustering">
 <h1>Chapter 15 Density-based Clustering<a class="headerlink" href="#chapter-15-density-based-clustering" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="the-dbscan-algorithm">
+<h2>15.1 The DBSCAN Algorithm<a class="headerlink" href="#the-dbscan-algorithm" title="Permalink to this headline">¶</a></h2>
+<p>Density-based clustering uses the local density of points to determine the
+clusters, rather than using only the distance between points.
+We define a ball of radius <span class="math notranslate nohighlight">\(\epsilon\)</span> around a point <span class="math notranslate nohighlight">\(\x\in\R^d\)</span>,
+called the <span class="math notranslate nohighlight">\(\epsilon\)</span>-<em>neighborhood</em> of <span class="math notranslate nohighlight">\(\x\)</span>, as follows:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(N_\epsilon(\x)=B_d(\x, \epsilon)=\{\y|\lv\x-\y\rv\leq\epsilon\}\)</span></p>
+</div>
+<p>Here <span class="math notranslate nohighlight">\(\lv\x-\y\rv\)</span> is the Euclidean distance between points <span class="math notranslate nohighlight">\(\x\)</span> and <span class="math notranslate nohighlight">\(\y\)</span>.
+However, other distance metrics can also be used.</p>
+<p>For any point <span class="math notranslate nohighlight">\(\x\in\D\)</span>, we say that <span class="math notranslate nohighlight">\(x\)</span> is a <em>core point</em> if there
+are at least <em>minpts</em> points in its <span class="math notranslate nohighlight">\(\epsilon\)</span>-neighborhood.
+A <em>border point</em> is defined as a point that does not meet the <em>minpts</em>
+threshold, but it belongs to the <span class="math notranslate nohighlight">\(\epsilon\)</span>-neighborhood of some core
+point <span class="math notranslate nohighlight">\(\bs{\rm{z}}\)</span>.
+If a point is neight a core nor a border point, then it is called a <em>noise point</em> or an outlier.</p>
+<p>We say that a point <span class="math notranslate nohighlight">\(\x\)</span> is <em>directly density reachable</em> from another
+point <span class="math notranslate nohighlight">\(y\)</span> if <span class="math notranslate nohighlight">\(\x\in N_\epsilon(\y)\)</span> and <span class="math notranslate nohighlight">\(\y\)</span> is a core point.
+We say that <span class="math notranslate nohighlight">\(\x\)</span> is <em>density reachable</em> from <span class="math notranslate nohighlight">\(y\)</span> if there exists a
+chain of points, <span class="math notranslate nohighlight">\(\x_0,\x_1,\cds,\x_l\)</span>, such that <span class="math notranslate nohighlight">\(\x=\x_0\)</span> and
+<span class="math notranslate nohighlight">\(y=\x_l\)</span> and <span class="math notranslate nohighlight">\(\x_i\)</span> is directly density reachable from
+<span class="math notranslate nohighlight">\(\x_{i-1}\)</span> for all <span class="math notranslate nohighlight">\(i=1,\cds,l\)</span>.
+Define any two points <span class="math notranslate nohighlight">\(\x\)</span> and <span class="math notranslate nohighlight">\(\y\)</span> to be <em>density connected</em> if
+there exists a core point <span class="math notranslate nohighlight">\(\bs{rm{z}\)</span>, such that both <span class="math notranslate nohighlight">\(\x\)</span> and
+<span class="math notranslate nohighlight">\(\y\)</span> are density reachable from <span class="math notranslate nohighlight">\(\bs{\rm{z}}\)</span>.
+A <em>density-based cluster</em> is defined as a maximal set of density connected points.</p>
+<p>One limitation of DBSCAN is that it is sensitive to the choice of
+<span class="math notranslate nohighlight">\(\epsilon\)</span>, in particular if clusters have different densities.
+If <span class="math notranslate nohighlight">\(\epsilon\)</span> is too small, sparser clusters will be categorized as noise.
+If <span class="math notranslate nohighlight">\(\epsilon\)</span> is too large, denser clusters may be merged together.</p>
+<img alt="../_images/Algo15.1.png" src="../_images/Algo15.1.png" />
+<p><strong>Computational Complexity</strong></p>
+<p>The overall complexity of DBSCAN is <span class="math notranslate nohighlight">\(O(n^2)\)</span> is the worst-case.</p>
+</div>
+<div class="section" id="kernel-density-estimation">
+<h2>15.2 Kernel Density Estimation<a class="headerlink" href="#kernel-density-estimation" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="univariate-density-estimation">
+<h3>15.2.1 Univariate Density Estimation<a class="headerlink" href="#univariate-density-estimation" title="Permalink to this headline">¶</a></h3>
+<p>We can directly estimate the cumulative distribution function from the data by
+counting how many points are less than or equal to <span class="math notranslate nohighlight">\(x\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\hat{F}(x)=\frac{1}{n}\sum_{i=1}^nI(x_i\leq x)\]</div>
+<p>We can estimate the density funciton by taking the derivative of
+<span class="math notranslate nohighlight">\(\hat{F}(x)\)</span>, by considering a window of small width <span class="math notranslate nohighlight">\(h\)</span> centered at
+<span class="math notranslate nohighlight">\(x\)</span>, that is,</p>
+<div class="math notranslate nohighlight">
+\[\hat{f}(x)=\frac{\hat{F}(x+\frac{h}{2})-\hat{F}(x-\frac{h}{2})}{h}=\frac{k/n}{h}=\frac{k}{nh}\]</div>
+<p>where <span class="math notranslate nohighlight">\(k\)</span> is the number of points that lie in the window of width
+<span class="math notranslate nohighlight">\(h\)</span> centered at <span class="math notranslate nohighlight">\(x\)</span>, that is, with the closed interval
+<span class="math notranslate nohighlight">\([x-\frac{h}{2},x+\frac{h}{2}]\)</span></p>
+<p><strong>Kernel Estimator</strong></p>
+<p>Kernel density estimation relies on a <em>density kernel function</em> <span class="math notranslate nohighlight">\(K\)</span> that
+is non-negative, symmetric, and integrates to 1, that is,
+<span class="math notranslate nohighlight">\(K(x)\geq 0, K(-x)=K(x)\)</span> for all values <span class="math notranslate nohighlight">\(x\)</span>, and <span class="math notranslate nohighlight">\(\int K(x)dx=1\)</span>.
+Thus, <span class="math notranslate nohighlight">\(K\)</span> is essentially a probability density function.</p>
+</div>
+</div>
 </div>
 
 

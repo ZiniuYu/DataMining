@@ -53,7 +53,7 @@ The total number of different dendrograms with :math:`n` leaves is obtained by t
 14.2 Agglomerative Hierarchical Clustering
 ------------------------------------------
 
-.. image:: ../_static/Algo13.2.png
+.. image:: ../_static/Algo14.1.png
 
 14.2.1 Distance between Clusters
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
