@@ -98,8 +98,11 @@
 <li class="toctree-l3"><a class="reference internal" href="#the-dbscan-algorithm">15.1 The DBSCAN Algorithm</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#kernel-density-estimation">15.2 Kernel Density Estimation</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#univariate-density-estimation">15.2.1 Univariate Density Estimation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#multivariate-density-estimation">15.2.2 Multivariate Density Estimation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#nearest-neighbor-density-estimation">15.2.3 Nearest Neighbor Density Estimation</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="#density-based-clustering-denclue">15.3 Density-Based Clustering: DENCLUE</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="chap16.html">Chapter 16 Spectral and Graph Clustering</a></li>
@@ -207,7 +210,8 @@
 \newcommand{\v}{\boldsymbol{\mathrm{v}}}
 \newcommand{\w}{\boldsymbol{\mathrm{w}}}
 \newcommand{\x}{\boldsymbol{\mathrm{x}}}
-\newcommand{\y}{\boldsymbol{\mathrm{y}}}\\\newcommand{\A}{\boldsymbol{\mathrm{A}}}
+\newcommand{\y}{\boldsymbol{\mathrm{y}}}
+\newcommand{\z}{\boldsymbol{\mathrm{z}}}\\\newcommand{\A}{\boldsymbol{\mathrm{A}}}
 \newcommand{\B}{\boldsymbol{B}}
 \newcommand{\C}{\boldsymbol{C}}
 \newcommand{\D}{\boldsymbol{\mathrm{D}}}
@@ -289,7 +293,127 @@ counting how many points are less than or equal to <span class="math notranslate
 is non-negative, symmetric, and integrates to 1, that is,
 <span class="math notranslate nohighlight">\(K(x)\geq 0, K(-x)=K(x)\)</span> for all values <span class="math notranslate nohighlight">\(x\)</span>, and <span class="math notranslate nohighlight">\(\int K(x)dx=1\)</span>.
 Thus, <span class="math notranslate nohighlight">\(K\)</span> is essentially a probability density function.</p>
+<p><strong>Discrete Kernel</strong></p>
+<p>The density estimate <span class="math notranslate nohighlight">\(\hat{f}(x)\)</span> can also be rewritten in terms of the kernel function as follows:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\hat{f}(x)=\frac{1}{nh}\sum_{i=1}^nK\bigg(\frac{x-x_i}{h}\bigg)\)</span></p>
 </div>
+<p>where the <strong>discrete kernel</strong> function <span class="math notranslate nohighlight">\(K\)</span> computes the number of points
+in a window of width <span class="math notranslate nohighlight">\(h\)</span>, and is defined as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(K(z)=\left\{\begin{array}{lr}1\quad\rm{if\ }|z|\leq\frac{1}{2}\\0\quad\rm{Otherwise}\end{array}\right.\)</span></p>
+</div>
+<p><strong>Gaussian Kernel</strong></p>
+<p>Instead of the discrete kernel, we can define a more smooth transition of influence via a Gaussian kernel:</p>
+<div class="math notranslate nohighlight">
+\[K(z)=\frac{1}{\sqrt{2\pi}}\exp\bigg\{-\frac{z^2}{2}\bigg\}\]</div>
+<p>Thus, we have</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp K\bigg(\frac{x-x_i}{h}\bigg)=\frac{1}{\sqrt{2\pi}}\exp\bigg\{-\frac{(x-x_i)^2}{2h^2}\bigg\}\)</span></p>
+</div>
+<p>Here <span class="math notranslate nohighlight">\(x\)</span>, which is at the center of the window, plays the role of the
+mean, and <span class="math notranslate nohighlight">\(h\)</span> acts as the standard deviation.</p>
+</div>
+<div class="section" id="multivariate-density-estimation">
+<h3>15.2.2 Multivariate Density Estimation<a class="headerlink" href="#multivariate-density-estimation" title="Permalink to this headline">¶</a></h3>
+<p>The volume of a <span class="math notranslate nohighlight">\(d\)</span>-dimensional hypercube is given as</p>
+<div class="math notranslate nohighlight">
+\[\rm{vol}(H_d(h))=h^d\]</div>
+<p>The density is then estimated as the fraction of the point weight lying within
+the <span class="math notranslate nohighlight">\(d\)</span>-dimensional window centered at <span class="math notranslate nohighlight">\(\x\)</span>, divided by the volume
+of the hypercube:</p>
+<div class="math notranslate nohighlight">
+\[\hat{f}(\x)=\frac{1}{nh^d}\sum_{i=1}^nK\bigg(\frac{\x-\x_i}{h}\bigg)\]</div>
+<p>where the multivariate kernel function <span class="math notranslate nohighlight">\(K\)</span> satisfies the condition <span class="math notranslate nohighlight">\(\int K(\z)d\z=1\)</span>.</p>
+<p><strong>Discrete Kernel</strong></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(K(\z)=\left\{\begin{array}{lr}1\quad\rm{if\ }|z_j|\leq\frac{1}{2},\rm{for\ all\ dimensions\ }j=1,\cds,d\\0\quad\rm{Otherwise}\end{array}\right.\)</span></p>
+</div>
+<p><strong>Gaussian Kernel</strong></p>
+<p>The <span class="math notranslate nohighlight">\(d\)</span>-dimensional Gaussian kernel is given as</p>
+<div class="math notranslate nohighlight">
+\[K(\z)=\frac{1}{(2\pi)^{d/2}}\exp\bigg\{-\frac{\z^T\z}{2}\bigg\}\]</div>
+<p>where we assume that the covariance matrix is the <span class="math notranslate nohighlight">\(d\times d\)</span> identity matrix, that is, <span class="math notranslate nohighlight">\(\Sg=\I_d\)</span>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp K\bigg(\frac{\x-\x_i}{h}\bigg)=\frac{1}{(2\pi)^{d/2}}\exp\bigg\{-\frac{(\x-\x_i)^T(\x-\x_i)}{2h^2}\bigg\}\)</span></p>
+</div>
+<p>Each point contributes a weight to the density estimate inversely proportional
+to its distance from <span class="math notranslate nohighlight">\(\x\)</span> termpered by the width parameter <span class="math notranslate nohighlight">\(h\)</span>.</p>
+</div>
+<div class="section" id="nearest-neighbor-density-estimation">
+<h3>15.2.3 Nearest Neighbor Density Estimation<a class="headerlink" href="#nearest-neighbor-density-estimation" title="Permalink to this headline">¶</a></h3>
+<p>An alternative approach to density estimation is to fix <span class="math notranslate nohighlight">\(k\)</span>, the number of
+points required to estimate the density, and allow the volume of the enclosing
+region to vary to accomodate those <span class="math notranslate nohighlight">\(k\)</span> points.
+This apporach is called the <span class="math notranslate nohighlight">\(k\)</span> nearest neighbors (KNN) approach to density estimation.</p>
+<p>Given <span class="math notranslate nohighlight">\(k\)</span>, the number of neighbors, we estimate the density at <span class="math notranslate nohighlight">\(\x\)</span> as follows:</p>
+<div class="math notranslate nohighlight">
+\[\hat{f}(\x)=\frac{k}{n\rm{\ vol}(S_d(h_\x))}\]</div>
+<p>where <span class="math notranslate nohighlight">\(h_\x\)</span> is the distance from <span class="math notranslate nohighlight">\(\x\)</span> to its <span class="math notranslate nohighlight">\(k\)</span>th nearest
+neighbor, and <span class="math notranslate nohighlight">\(\rm{vol}(S_d(h_\x))\)</span> is the volume of the
+<span class="math notranslate nohighlight">\(d\)</span>-dimensional hypersphere <span class="math notranslate nohighlight">\(S_d(h\x)\)</span> centered at <span class="math notranslate nohighlight">\(\x\)</span>, with
+radius <span class="math notranslate nohighlight">\(h_\x\)</span>.</p>
+</div>
+</div>
+<div class="section" id="density-based-clustering-denclue">
+<h2>15.3 Density-Based Clustering: DENCLUE<a class="headerlink" href="#density-based-clustering-denclue" title="Permalink to this headline">¶</a></h2>
+<p><strong>Density Attractors and Gradient</strong></p>
+<p>A point <span class="math notranslate nohighlight">\(\x^*\)</span> is called a <em>density attractor</em> if it is a local maxima of
+the probability density funciton <span class="math notranslate nohighlight">\(f\)</span>.</p>
+<p>The gradient at a point <span class="math notranslate nohighlight">\(\x\)</span> can be computed as the multivariate
+derivative of the probability density, given as</p>
+<div class="math notranslate nohighlight">
+\[\nabla\hat{f}(\x)=\frac{\pd}{\pd\x}\hat{f}(\x)=\frac{1}{nh^d}\sum_{i=1}^n\frac{\pd}{\pd\x}K\bigg(\frac{\x-\x_i}{h}\bigg)\]</div>
+<p>For the Gaussian kernel, we have</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\frac{\pd}{\pd\x}K(\z)&amp;=\bigg(\frac{1}{(2\pi)^{d/2}}\exp
+\bigg\{-\frac{\z^T\z}{2}\bigg\}\bigg)\cd-\z\cd\frac{\pd\z}{\pd\x}\\&amp;=K(\z)\cd-\z\cd\frac{\pd\z}{\pd\x}\end{aligned}\end{align} \]</div>
+<p>Setting <span class="math notranslate nohighlight">\(\z=\frac{\x-\x_i}{h}\)</span> above, we get</p>
+<div class="math notranslate nohighlight">
+\[\frac{\pd}{\pd\x}K\bigg(\frac{\x-\x_i}{h}\bigg)=K\bigg(\frac{\x-\x_i}{h}
+\bigg)\cd\bigg(\frac{\x_i-\x}{h}\bigg)\cd\bigg(\frac{1}{h}\bigg)\]</div>
+<p>The gradient at a point <span class="math notranslate nohighlight">\(\x\)</span> is given as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\nabla\hat{f}{\x}=\frac{1}{nh^{d+2}}\sum_{i=1}^nK\bigg(\frac{\x-\x_i}{h}\bigg)\cd(\x_i-\x)\)</span></p>
+</div>
+<p>We say that <span class="math notranslate nohighlight">\(\x^*\)</span> is a <em>density attractor</em> for <span class="math notranslate nohighlight">\(\x\)</span>,
+or alternatively that <span class="math notranslate nohighlight">\(\x\)</span> is <em>density attracted</em> to <span class="math notranslate nohighlight">\(\x^*\)</span>, if a
+hill climbing process started at <span class="math notranslate nohighlight">\(\x\)</span> converges to <span class="math notranslate nohighlight">\(\x^*\)</span>.</p>
+<p>The typical approach is to use the graident-ascent method to compute
+<span class="math notranslate nohighlight">\(\x^*\)</span>, that is, starting from <span class="math notranslate nohighlight">\(\x\)</span>, we iteratively update it at
+each step <span class="math notranslate nohighlight">\(t\)</span> via the update rule:</p>
+<div class="math notranslate nohighlight">
+\[\x_{t+1}=\x_t+\eta\cd\nabla\hat{f}(\x_t)\]</div>
+<p>where <span class="math notranslate nohighlight">\(\eta&gt;0\)</span> is the step size.
+One can directly optimize the move direction by setting the gradient to the zero vector:</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\nabla\hat{f}(\x)&amp;=\0\\\frac{1}{nh^{d+2}}\sum_{i=1}^nK\bigg(\frac{\x-\x_i}{h}\bigg)\cd(\x_i-\x)&amp;=\0\\\x\cd\sum_{i=1}^nK\bigg(\frac{\x-\x_i}{h}\bigg)&amp;=\sum_{i=1}^nK\bigg(\frac{\x-\x_i}{h}\bigg)\x_i\\\x&amp;=\frac{\sum_{i=1}^nK(\frac{\x-\x_i}{h})\x_i}{\sum_{i=1}^nK(\frac{\x-\x_i}{h})}\end{aligned}\end{align} \]</div>
+<p>The point <span class="math notranslate nohighlight">\(\x\)</span> is involved on both the left- and right-hand sides above;
+however, it can be used to obtain the following iterative update rule:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\x_{t+1}=\frac{\sum_{i=1}^nK(\frac{\x_t-\x_i}{h})\x_i}{\sum_{i=1}^nK(\frac{\x_t-\x_i}{h})}\)</span></p>
+</div>
+<p><strong>Center-defined Cluster</strong></p>
+<p>A cluster <span class="math notranslate nohighlight">\(C\subseteq\D\)</span> is called a <em>density-based cluster</em> if there
+exists a set of density attractors <span class="math notranslate nohighlight">\(\x_1^*,\x_2^*,\cds,\x_m^*\)</span>, such that</p>
+<ol class="arabic simple">
+<li><p>Each point <span class="math notranslate nohighlight">\(\x\in C\)</span> is attracted to some attractor <span class="math notranslate nohighlight">\(\x_i^*\)</span>.</p></li>
+<li><p>Each density attractor has density above <span class="math notranslate nohighlight">\(\xi\)</span>.
+That is, <span class="math notranslate nohighlight">\(\hat{f}(\x_i^*)\geq\xi\)</span>.</p></li>
+<li><p>Any two density attractors <span class="math notranslate nohighlight">\(\x_i^*\)</span> and <span class="math notranslate nohighlight">\(\x_j^*\)</span> are
+<em>density reachable</em>, that is, there exists a path from <span class="math notranslate nohighlight">\(\x_i^*\)</span> to
+<span class="math notranslate nohighlight">\(\x_j^*\)</span>, such that for all points <span class="math notranslate nohighlight">\(\y\)</span> on the path,
+<span class="math notranslate nohighlight">\(\hat{f}(\y)\geq\xi\)</span>.</p></li>
+</ol>
+<p><strong>DENCLUE Algorithm</strong></p>
+<img alt="../_images/Algo15.2.png" src="../_images/Algo15.2.png" />
 </div>
 </div>
 

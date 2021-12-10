@@ -92,6 +92,7 @@ rst_prolog = r'''
     \newcommand{\w}{\boldsymbol{\mathrm{w}}}
     \newcommand{\x}{\boldsymbol{\mathrm{x}}}
     \newcommand{\y}{\boldsymbol{\mathrm{y}}}
+    \newcommand{\z}{\boldsymbol{\mathrm{z}}}
 
     \newcommand{\A}{\boldsymbol{\mathrm{A}}}
     \newcommand{\B}{\boldsymbol{B}}
