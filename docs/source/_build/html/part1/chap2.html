@@ -1,0 +1,837 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Chapter 2 Numeric Attributes &mdash; DataMining  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Chapter 3 Categorical Attributes" href="chap3.html" />
+    <link rel="prev" title="Chapter 1 Data Matrix" href="chap1.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> DataMining
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index1.html">Part 1 Data Analysis Foundations</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="chap1.html">Chapter 1 Data Matrix</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Chapter 2 Numeric Attributes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#univariate-analysis">2.1 Univariate Analysis</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#measures-of-central-tendency">2.1.1 Measures of Central Tendency</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#measures-of-dispersion">2.1.2 Measures of Dispersion</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#bivariate-analysis">2.2 Bivariate Analysis</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#measures-of-location-and-dispersion">2.2.1 Measures of Location and Dispersion</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#measures-of-association">2.2.2 Measures of Association</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#multivariate-analysis">2.3 Multivariate Analysis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#data-normalization">2.4 Data Normalization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#normal-distribution">2.5 Normal Distribution</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#univariate-normal-distribution">2.5.1 Univariate Normal Distribution</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#multivariate-normal-distribution">2.5.2 Multivariate Normal Distribution</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="chap3.html">Chapter 3 Categorical Attributes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chap4.html">Chapter 4 Graph Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chap5.html">Chapter 5 Kernel Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chap6.html">Chapter 6 High-dimensional Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chap7.html">Chapter 7 Dimensionality Reduction</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../part3/index3.html">Part 3 Clustering</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">DataMining</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index1.html">Part 1 Data Analysis Foundations</a> &raquo;</li>
+        
+      <li>Chapter 2 Numeric Attributes</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/part1/chap2.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\newcommand{\bs}{\boldsymbol}
+\newcommand{\dp}{\displaystyle}
+\newcommand{\rm}{\mathrm}
+\newcommand{\cl}{\mathcal}
+\newcommand{\pd}{\partial}\\\newcommand{\cd}{\cdot}
+\newcommand{\cds}{\cdots}
+\newcommand{\dds}{\ddots}
+\newcommand{\lv}{\lVert}
+\newcommand{\ol}{\overline}
+\newcommand{\ra}{\rightarrow}
+\newcommand{\rv}{\rVert}
+\newcommand{\seq}{\subseteq}
+\newcommand{\vds}{\vdots}
+\newcommand{\wh}{\widehat}\\\newcommand{\0}{\boldsymbol{0}}
+\newcommand{\1}{\boldsymbol{1}}
+\newcommand{\a}{\boldsymbol{\mathrm{a}}}
+\newcommand{\b}{\boldsymbol{\mathrm{b}}}
+\newcommand{\c}{\boldsymbol{\mathrm{c}}}
+\newcommand{\e}{\boldsymbol{\mathrm{e}}}
+\newcommand{\f}{\boldsymbol{\mathrm{f}}}
+\newcommand{\g}{\boldsymbol{\mathrm{g}}}
+\newcommand{\i}{\boldsymbol{\mathrm{i}}}
+\newcommand{\j}{\boldsymbol{j}}
+\newcommand{\n}{\boldsymbol{\mathrm{n}}}
+\newcommand{\p}{\boldsymbol{\mathrm{p}}}
+\newcommand{\q}{\boldsymbol{\mathrm{q}}}
+\newcommand{\r}{\boldsymbol{\mathrm{r}}}
+\newcommand{\u}{\boldsymbol{\mathrm{u}}}
+\newcommand{\v}{\boldsymbol{\mathrm{v}}}
+\newcommand{\w}{\boldsymbol{\mathrm{w}}}
+\newcommand{\x}{\boldsymbol{\mathrm{x}}}
+\newcommand{\y}{\boldsymbol{\mathrm{y}}}
+\newcommand{\z}{\boldsymbol{\mathrm{z}}}\\\newcommand{\A}{\boldsymbol{\mathrm{A}}}
+\newcommand{\B}{\boldsymbol{B}}
+\newcommand{\C}{\boldsymbol{C}}
+\newcommand{\D}{\boldsymbol{\mathrm{D}}}
+\newcommand{\I}{\boldsymbol{\mathrm{I}}}
+\newcommand{\K}{\boldsymbol{\mathrm{K}}}
+\newcommand{\N}{\boldsymbol{\mathrm{N}}}
+\newcommand{\P}{\boldsymbol{\mathrm{P}}}
+\newcommand{\S}{\boldsymbol{\mathrm{S}}}
+\newcommand{\U}{\boldsymbol{\mathrm{U}}}
+\newcommand{\W}{\boldsymbol{\mathrm{W}}}
+\newcommand{\X}{\boldsymbol{\mathrm{X}}}\\\newcommand{\R}{\mathbb{R}}\\\newcommand{\ld}{\lambda}
+\newcommand{\Ld}{\boldsymbol{\mathrm{\Lambda}}}
+\newcommand{\sg}{\sigma}
+\newcommand{\Sg}{\boldsymbol{\mathrm{\Sigma}}}
+\newcommand{\th}{\theta}\\\newcommand{\mmu}{\boldsymbol{\mu}}\\\newcommand{\bb}{\begin{bmatrix}}
+\newcommand{\eb}{\end{bmatrix}}
+\newcommand{\bp}{\begin{pmatrix}}
+\newcommand{\ep}{\end{pmatrix}}
+\newcommand{\bv}{\begin{vmatrix}}
+\newcommand{\ev}{\end{vmatrix}}\\\newcommand{\im}{^{-1}}
+\newcommand{\pr}{^{\prime}}
+\newcommand{\ppr}{^{\prime\prime}}\end{aligned}\end{align} \]</div>
+<div class="section" id="chapter-2-numeric-attributes">
+<h1>Chapter 2 Numeric Attributes<a class="headerlink" href="#chapter-2-numeric-attributes" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="univariate-analysis">
+<h2>2.1 Univariate Analysis<a class="headerlink" href="#univariate-analysis" title="Permalink to this headline">¶</a></h2>
+<p>Univariate analysis focuses on a single attribute at a time; thus the data
+matrix <span class="math notranslate nohighlight">\(\D\)</span> can be thought of as an <span class="math notranslate nohighlight">\(n\times 1\)</span> matrix, or simply a
+column vector, given as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\D=\bp X\\\hline x_1\\x_2\\\vds\\x_n \ep\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(X\)</span> is the numeric attribute of interest, with <span class="math notranslate nohighlight">\(x+i\in\R\)</span>.
+<span class="math notranslate nohighlight">\(X\)</span> is assumed to be a random variable, with each point
+<span class="math notranslate nohighlight">\(x_i(1\leq i\leq b)\)</span> itself treated as an identity random variable.</p>
+<p><strong>Empirical Cumulative Distribution Function</strong></p>
+<p>The <em>empirical cumulative distribution function (CDF)</em> of <span class="math notranslate nohighlight">\(X\)</span> is given as</p>
+<div class="math notranslate nohighlight">
+\[\hat{F}(x)=\frac{1}{n}\sum_{i=1}^nI(x_i\leq x)\]</div>
+<p>where</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}I(x_i\leq x)=\left\{\begin{array}{lr}1\quad\rm{if\ }x_i\leq x\\0\quad\rm{if\ }x_i&gt;x\end{array}\right.\end{split}\]</div>
+<p>is a binary <em>indicator variable</em> that indicates whether the given condition is satisfied or not.
+Note that we use the notation <span class="math notranslate nohighlight">\(\hat{F}\)</span> to denote the fact that the
+empirical CDF is an estimate for the unknown population CDF <span class="math notranslate nohighlight">\(F\)</span>.</p>
+<p><strong>Inverse Cumulative Distribution Function</strong></p>
+<p>Define the <em>inverse cumulative distribution function</em> or <em>quantile function</em> for a random variable <span class="math notranslate nohighlight">\(X\)</span> as follows:</p>
+<div class="math notranslate nohighlight">
+\[F\im(q)=\min\{x|F(x)\geq q\}\quad\rm{for\ }q\in[0,1]\]</div>
+<p><strong>Empirical Probability Mass Function</strong></p>
+<p>The <em>empirical probability mass function (PMF)</em> of <span class="math notranslate nohighlight">\(X\)</span> is given as</p>
+<div class="math notranslate nohighlight">
+\[\hat{f}(x)=P(X=x)=\frac{1}{n}\sum_{i=1}^nI(x_i=x)\]</div>
+<p>where</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}I(x_i=x)=\left\{\begin{array}{lr}1\quad\rm{if\ }x_i=x\\0\quad\rm{if\ }x_i\neq x\end{array}\right.\end{split}\]</div>
+<div class="section" id="measures-of-central-tendency">
+<h3>2.1.1 Measures of Central Tendency<a class="headerlink" href="#measures-of-central-tendency" title="Permalink to this headline">¶</a></h3>
+<p><strong>Mean</strong>
+The <em>mean</em>, also called the <em>expected value</em>, of a random variable <span class="math notranslate nohighlight">\(X\)</span> is
+the arithmetic average of the values of <span class="math notranslate nohighlight">\(X\)</span>.
+It provides a one-number summary of the <em>location</em> or <em>central tendency</em> for the distribution of <span class="math notranslate nohighlight">\(X\)</span>.</p>
+<p>The mean or expected value of a discrete random variable <span class="math notranslate nohighlight">\(X\)</span> is definede as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\mu=E[X]=\sum_xx\cd f(x)\)</span></p>
+</div>
+<p>where <span class="math notranslate nohighlight">\(f(x)\)</span> is the probability mass function of <span class="math notranslate nohighlight">\(X\)</span>.</p>
+<p>The expected vvalue of a continuous random variable <span class="math notranslate nohighlight">\(X\)</span> is defined as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\mu=E[x]=\int_{-\infty}^\infty x\cd f(x)dx\)</span></p>
+</div>
+<p>where <span class="math notranslate nohighlight">\(f(x)\)</span> is the probability density function of <span class="math notranslate nohighlight">\(X\)</span>.</p>
+<p><strong>Sample Mean</strong></p>
+<p>The <em>sample mean</em> is a statistic, that is, a function
+<span class="math notranslate nohighlight">\(\hat\mu:\{x_1,x_2,\cds,x_n\}\ra\R\)</span>, defined as the average value of
+<span class="math notranslate nohighlight">\(x_i\)</span>‘s:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\hat\mu=\frac{1}{n}\sum_{i=1}^nx_i\)</span></p>
+</div>
+<p>It serves as an estimator for the unknown mean value <span class="math notranslate nohighlight">\(\mu\)</span> of <span class="math notranslate nohighlight">\(X\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[\hat\mu=\sum_xx\cd\hat{f}(x)=\sum_xx\bigg(\frac{1}{n}\sum_{i=1}^nI(x_i=x)\bigg)=\frac{1}{n}\sum_{i=1}^nx_i\]</div>
+<p><strong>Sample Mean Is Unbiased</strong></p>
+<p>An estimator <span class="math notranslate nohighlight">\(\hat\th\)</span> is called an <em>unbiased estimator</em> for parameter
+<span class="math notranslate nohighlight">\(\th\)</span> if <span class="math notranslate nohighlight">\(E[\hat\th]=\th\)</span> forr every possible value of <span class="math notranslate nohighlight">\(\th\)</span>.
+The sample mean <span class="math notranslate nohighlight">\(\hat\mu\)</span> is an unbiased estimator for the population mean <span class="math notranslate nohighlight">\(\mu\)</span>, as</p>
+<div class="math notranslate nohighlight">
+\[E[\hat\mu]=E\bigg[\frac{1}{n}\sum_{i=1}^nx_i\bigg]=\frac{1}{n}\sum_{i=1}^nE[x_i]=\frac{1}{n}\sum_{i=1}^n\mu=\mu\]</div>
+<p><strong>Robustness</strong></p>
+<p>We say that a statistic is <em>robust</em> if it is not affected by extreme values (such as outliers) in the data.
+The sample mean is not robust because a single large value (an outlier) can skew the average.
+A more robust measure is the <em>trimmed mean</em> obtained after discarding a small
+fraction of extreme values on one or both ends.</p>
+<p><strong>Geometric Interpretation of Sample Mean</strong></p>
+<p>Consider the projection of <span class="math notranslate nohighlight">\(X\)</span> onto the vector <span class="math notranslate nohighlight">\(\bs{1}\)</span>, we have</p>
+<div class="math notranslate nohighlight">
+\[\p=\bigg(\frac{X^T\bs{1}}{\bs{1}^T\bs{1}}\bigg)\cd\bs{1}=
+\bigg(\frac{\sum_{i=1}^nx_i}{n}\bigg)\cd\bs{1}=\hat\mu\cd\bs{1}\]</div>
+<p>Thus, the sample mean is simply the offset or the scalar projection of <span class="math notranslate nohighlight">\(X\)</span> on the vector <span class="math notranslate nohighlight">\(\bs{1}\)</span>:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\hat\mu=\rm{proj}_{\bs{1}}(X)=\bigg(\frac{X^T\bs{1}}{\bs{1}^T\bs{1}}\bigg)\)</span></p>
+</div>
+<p>The sample mean can be used to center the attribute <span class="math notranslate nohighlight">\(X\)</span>.
+Define the <em>centered attribute vector</em>, <span class="math notranslate nohighlight">\(\bar{X}\)</span>, as follows:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\bar{X}=X-\hat\mu\cd\bs{1}=\bp x_1-\hat\mu\\x_2-\hat\mu\\\vds\\x_n-\hat\mu \ep\end{split}\]</div>
+<p>We can see that <span class="math notranslate nohighlight">\(\bs{1}\)</span> and <span class="math notranslate nohighlight">\(\bar{X}\)</span> are orthogonal to each other, since</p>
+<div class="math notranslate nohighlight">
+\[\bs{1}^T\bar{X}=\bs{1}^T(X-\hat\mu\cd\bs{1})=\bs{1}^TX-
+\bigg(\frac{X^T\bs{1}}{\bs{1}^T\bs{1}}\bigg)\cd\bs{1}^T\bs{1}=0\]</div>
+<p>If fact, the subspace containing <span class="math notranslate nohighlight">\(\bar{X}\)</span> is an <em>orthogonal complement</em> of the space spanned by <span class="math notranslate nohighlight">\(bs{1}\)</span>.</p>
+<p><strong>Median</strong></p>
+<p>The <em>median</em> of a random variable is defined as the value <span class="math notranslate nohighlight">\(m\)</span> such that</p>
+<div class="math notranslate nohighlight">
+\[P(X\leq m)\geq\frac{1}{2}\quad\rm{and}\quad P(X\geq m)\geq\frac{1}{2}\]</div>
+<p>In terms of the (inverse) cumulative distribution function, the median is therefore the value <span class="math notranslate nohighlight">\(m\)</span> for which</p>
+<div class="math notranslate nohighlight">
+\[F(m)=0.5\quad\rm{or}\quad m=F\im(0.5)\]</div>
+<p>The <em>sample median</em> can be obtained from the empirical CDF or the empirical inverse CDF by computing</p>
+<div class="math notranslate nohighlight">
+\[\hat{F}(m)=0.5\quad\rm{or}\quad m=\hat{F}\im(0.5)\]</div>
+<p>Median is robust, as it is not affected very much by extreme values.</p>
+<p><strong>Mode</strong></p>
+<p>The <em>mode</em> of a random variable <span class="math notranslate nohighlight">\(X\)</span> is the value at which the probability
+mass function or the probability density function attains its maximum value,
+depending on whether <span class="math notranslate nohighlight">\(X\)</span> is discrete or continuous, respectively.</p>
+</div>
+<div class="section" id="measures-of-dispersion">
+<h3>2.1.2 Measures of Dispersion<a class="headerlink" href="#measures-of-dispersion" title="Permalink to this headline">¶</a></h3>
+<p><strong>Range</strong></p>
+<p>The <em>value range</em> or simply <em>range</em> of a random variable <span class="math notranslate nohighlight">\(X\)</span> is the
+difference between the maximum and minimum values of <span class="math notranslate nohighlight">\(X\)</span>, given as</p>
+<div class="math notranslate nohighlight">
+\[r=\max\{X\}-\min\{X\}\]</div>
+<p>The <em>sample range</em> is a statistic, given as</p>
+<div class="math notranslate nohighlight">
+\[\hat{r}=\max_{i=1}^n\{x_i\}-\min_{i=1}^n\{x_i\}\]</div>
+<p>By definition, range is sensitive to extreme values, and thus is not robust.</p>
+<p><strong>Interquartile Range</strong></p>
+<p><em>Quartiles</em> are special values of the quantile function that divide the data into four equal parts.
+A more robust measure of the dispersion of <span class="math notranslate nohighlight">\(X\)</span> is the <em>interquartile range (IQR)</em>, defined as</p>
+<div class="math notranslate nohighlight">
+\[IQR=q_3-q_1=F\im(0.75)-F\im(0.25)\]</div>
+<p>The <em>sample</em> IQR can be obtained by plugging in the empirical inverse CDF:</p>
+<div class="math notranslate nohighlight">
+\[\wh{IQR}=\hat{q}_3-\hat{q}_1=\hat{F}\im(0.75)-\hat{F}\im(0.25)\]</div>
+<p><strong>Variance and Standard Deviation</strong></p>
+<p>The <em>variance</em> of a random variable <span class="math notranslate nohighlight">\(X\)</span> provides a measure of how much the
+values <span class="math notranslate nohighlight">\(X\)</span> deviate from the mean or expected value of <span class="math notranslate nohighlight">\(X\)</span></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\sg^2=\rm{var}(X)=E[(X-\mu)^2]=\)</span>
+<span class="math notranslate nohighlight">\(\dp\left\{\begin{array}{lr}\dp\sum_x(x-\mu)^2f(x)\quad\rm{if\ }X\rm{\ is\ discrete}\\\dp\int_{-\infty}^\infty(x-\mu)^2f(x)dx\quad\rm{if\ }X\rm{\ is\ continuous}\end{array}\right.\)</span></p>
+</div>
+<p>The <em>standard deviation</em>, <span class="math notranslate nohighlight">\(\sg\)</span>, is defined as the positive square root of the variance, <span class="math notranslate nohighlight">\(\sg^2\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\sg^2&amp;=\rm{var}(X)=E[(X-\mu)^2]=E[X^2-2\mu X+\mu^2]\\&amp;=E[X^2]-2\mu E[X]+\mu^2=E[X^2]-2\mu^2+\mu^2\\&amp;=E[X^2]-(E[X])^2\end{aligned}\end{align} \]</div>
+<p>It is worth noting that variance is in fact the <em>second moment about the mean</em>,
+corresponding to <span class="math notranslate nohighlight">\(r=2\)</span>, which is a special case of the <span class="math notranslate nohighlight">\(r\)</span><em>th moment about the mean</em> for a random variable <span class="math notranslate nohighlight">\(X\)</span>, defined as
+<span class="math notranslate nohighlight">\(E[(X-\mu)^r]\)</span>.</p>
+<p><strong>Sample Variance</strong></p>
+<p>The <em>sample variance</em> is defined as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\sg^2=\frac{1}{n}\sum_{i=1}^n(x_i-\mu)^2\)</span></p>
+</div>
+<div class="math notranslate nohighlight">
+\[\hat\sg^2=\sum_x(x-\hat\mu)^2\hat{f}(x)=\sum_x(x-\hat\mu)^2\bigg(\frac{1}{n}
+\sum_{i=1}^nI(x_i=x)\bigg)=\frac{1}{n}\sum_{i=1}^n(x_i-\hat\mu)^2\]</div>
+<p>The <em>sample standard deviation</em> is given as the positive square root of the sample variance:</p>
+<div class="math notranslate nohighlight">
+\[\hat\sg=\sqrt{\frac{1}{n}\sum_{i=1}^n(x_u-\hat\mu)^2}\]</div>
+<p>The <em>standard score</em>, also called the <span class="math notranslate nohighlight">\(z\)</span><em>-score</em>, of a sample value
+<span class="math notranslate nohighlight">\(x_i\)</span> is the number of standard deviations the value is away from the mean:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp z_i=\frac{x_i-\hat\mu}{\hat\sg}\)</span></p>
+</div>
+<p><strong>Variance of the Sample Mean</strong></p>
+<p>The expected value of the sample mean is simply <span class="math notranslate nohighlight">\(\mu\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[\rm{var}\bigg(\sum_{i=1}^nx_i\bigg)=\sum_{i=1}^n\rm{var}(x_i)=\sum_{i=1}^n\sg^2=n\sg^2\]</div>
+<p>Further, note that</p>
+<div class="math notranslate nohighlight">
+\[E\bigg[\sum_{i=1}^nx_i\bigg]=n\mu\]</div>
+<p>The variance of the sample mean <span class="math notranslate nohighlight">\(\hat\mu\)</span> can be computed as</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\rm{var}(\hat\mu)&amp;=E[(\hat\mu-\mu)^2]=E[\hat\mu^2]-\mu^2-
+E\bigg[\bigg(\frac{1}{n}\sum_{i=1}^nx_i\bigg)^2\bigg]-
+\frac{1}{n^2}E\bigg[\sum_{i=1}^nx_i\bigg]^2\\&amp;=\frac{1}{n^2}\bigg(E\bigg[\bigg(\sum_{i=1}^nx_i\bigg)^2\bigg]-
+E\bigg[\sum_{i=1}^nx_i\bigg]^2\bigg)-\frac{1}{n^2}\rm{var}
+\bigg(\sum_{i=1}^nx_i\bigg)\\&amp;=\frac{\sg^2}{n}\end{aligned}\end{align} \]</div>
+<p><strong>Bias of Sample Variance</strong></p>
+<p>The sample variance is a <em>biased estimator</em> for the true population variance,
+<span class="math notranslate nohighlight">\(\sg^2\)</span>, that is, <span class="math notranslate nohighlight">\(E[\hat\sg^2]\neq\sg^2\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[\sum_{i=1}^n(x_i-\mu)^2=n(\hat\mu-\mu)^2+\sum_{i=1}^n(x_i-\hat\mu)^2\]</div>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}E[\hat\sg]^2&amp;=E\bigg[\frac{1}{n}\sum_{i=1}^n(x_i-\hat\mu)^2\bigg]=
+E\bigg[\frac{1}{n}\sum_{i=1}^n(x_i-\mu)^2\bigg]-E[(\hat\mu-\mu)^2]\\&amp;=\frac{1}{n}n\sg^2-\frac{\sg^2}{n}=\bigg(\frac{n-1}{n}\bigg)\sg^2\end{aligned}\end{align} \]</div>
+<p>The sample variance <span class="math notranslate nohighlight">\(\hat\sg^2\)</span> is a biased estimator of <span class="math notranslate nohighlight">\(\sg^2\)</span>,
+as its expected value differs from the population variance by a factor of
+<span class="math notranslate nohighlight">\(\frac{n-1}{n}\)</span>.
+However, it is <em>asymptotically unbiased</em>, that is, the bias vanishes as <span class="math notranslate nohighlight">\(n\ra\infty\)</span> because</p>
+<div class="math notranslate nohighlight">
+\[\lim_{n\ra\infty}\frac{n-1}{n}=\lim_{n\ra\infty}1-\frac{1}{n}=1\]</div>
+<p>Put differently, as the sample size increases, we have</p>
+<div class="math notranslate nohighlight">
+\[E[\hat\sg^2]\ra\sg^2\quad\rm{as\ }n\ra\infty\]</div>
+<p>If we eant an unbiased estimate of the sample variance, denoted
+<span class="math notranslate nohighlight">\(\hat\sg_u^2\)</span>, we must divide by <span class="math notranslate nohighlight">\(n-1\)</span> instead of <span class="math notranslate nohighlight">\(n\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\hat\sg_u^2=\frac{1}{n-1}\sum_{i=1}^n(x_i-\hat\mu)^2\]</div>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}E[\hat\sg_u^2]&amp;=E\bigg[\frac{1}{n-1}\sum_{i=1}^n(x_i-\hat\mu)^2\bigg]=
+\frac{1}{n-1}\cd E\bigg[\sum_{i=1}^n(x_i-\mu)^2\bigg]-\frac{n}{n-1}\cd
+E[(\hat\mu-\mu)^2]\\&amp;=\frac{n}{n-1}\sg^2-\frac{n}{n-1}\cd\frac{\sg^2}{n}\\&amp;=\frac{n}{n-1}\sg^2-\frac{1}{n-1}\sg^2=\sg^2\end{aligned}\end{align} \]</div>
+<p><strong>Geometric Interpretation of Sample Variance</strong></p>
+<p>Let <span class="math notranslate nohighlight">\(\bar{X}\)</span> denote the centered attribute vector</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\bar{X}=X-\hat\mu\cd\bs{1}=\bp x_1-\hat\mu\\x_2-\hat\mu\\\vds\\x_n-\hat\mu \ep\end{split}\]</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\hat\sg^2=\frac{1}{n}\lv\bar{X}\rv^2=\frac{1}{n}\bar{X}^T\bar{X}=\frac{1}{n}\sum_{i=1}^n(x_i-\bar\mu)^2\)</span></p>
+</div>
+<p>Define the <em>degress of freedom</em> (dof) of a statistical vector as the
+dimensionality of the subspace that contains the vector.
+Notice that the centered attribute vector <span class="math notranslate nohighlight">\(\bar{X}=X-\hat\mu\cd\bs{1}\)</span>
+lies in a <span class="math notranslate nohighlight">\(n-1\)</span> dimensional subspace that is an orthogonal complement of
+the 1 dimensional subspace spanned by the ones vector <span class="math notranslate nohighlight">\(\bs{1}\)</span>.
+Thus, the vector <span class="math notranslate nohighlight">\(\bar{X}\)</span> has only <span class="math notranslate nohighlight">\(n-1\)</span> degrees of freedom, and
+the unbiased sample variance is simply the mean or expected squared length of
+<span class="math notranslate nohighlight">\(\bar{X}\)</span> per dimension</p>
+<div class="math notranslate nohighlight">
+\[\sg_u^2=\frac{\lv X\rv^2}{n-1}=\frac{\bar{X}^T\bar{X}}{n-1}=\frac{1}{n-1}\cd\sum_{i=1}^n(x_i-\hat\mu)^2\]</div>
+</div>
+</div>
+<div class="section" id="bivariate-analysis">
+<h2>2.2 Bivariate Analysis<a class="headerlink" href="#bivariate-analysis" title="Permalink to this headline">¶</a></h2>
+<p>In bivariate analysis, we consider two attributes at the same time.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\D=\bp X_1&amp;X_2\\\hline x_{11}&amp;x_{12}\\x_{21}&amp;x_{22}\\\vds&amp;\vds\\x_{n1}&amp;x_{n2} \ep\end{split}\]</div>
+<p>It can be viewed as <span class="math notranslate nohighlight">\(n\)</span> points or vectors in 2-dimensional space over the
+attributes <span class="math notranslate nohighlight">\(X_1\)</span> and <span class="math notranslate nohighlight">\(X_2\)</span>, that is,
+<span class="math notranslate nohighlight">\(\x_i=(x_{i1},x_{i2})^T\in\R^2\)</span>.
+Alternatively, it can be viewed as two points or vectors in an <span class="math notranslate nohighlight">\(n\)</span>-dimensional space comprising the points, that is, each column is a vector in
+<span class="math notranslate nohighlight">\(\R\)</span>, as follows:</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}X_1=(x_{11},x_{21},\cds,x_{n1})^T\\X_2=(x_{12},x_{22},\cds,x_{n2})^T\end{aligned}\end{align} \]</div>
+<p>In the probabilistic view, the column vector <span class="math notranslate nohighlight">\(\X=(X_1,X_2)^T\)</span> is
+considered a bivariate vector random variable, and the points
+<span class="math notranslate nohighlight">\(\x_i (1\leq i\leq n)\)</span> are treated as a random sample drawn from
+<span class="math notranslate nohighlight">\(\X\)</span>, that is, <span class="math notranslate nohighlight">\(\x_i\)</span>’s are considered independent and identically
+distributed as <span class="math notranslate nohighlight">\(\X\)</span>.</p>
+<p><strong>Empirical Joint Probability Mass Function</strong></p>
+<p>The <em>empirical joint probability mass function</em> for <span class="math notranslate nohighlight">\(\X\)</span> is given as</p>
+<div class="math notranslate nohighlight">
+\[\hat{f}(\x)=P(\X=\x)=\frac{1}{n}\sum_{i=1}^nI(\x_i=\x)\]</div>
+<div class="math notranslate nohighlight">
+\[\hat{f}(x_1,x_2)=P(X_1=x_1,X_2=x_2)=\frac{1}{n}\sum_{i=1}^nI(x_{i1}=x_1,x_{i2}=x_2)\]</div>
+<p>where</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}I(\x_i=\x)=\left\{\begin{array}{lr}1\quad\rm{if\ }x_{i1}=x_1\rm{\ and\ }
+x_{i2}=x_2\\0\quad\rm{otherwise}\end{array}\right.\end{split}\]</div>
+<div class="section" id="measures-of-location-and-dispersion">
+<h3>2.2.1 Measures of Location and Dispersion<a class="headerlink" href="#measures-of-location-and-dispersion" title="Permalink to this headline">¶</a></h3>
+<p><strong>Mean</strong></p>
+<p>The bivariate mean is defined as the expected value of the vector random variable <span class="math notranslate nohighlight">\(\X\)</span>, defined as follows:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\mmu=E[\X]=E\bigg[\bp X_1\\X_2 \ep\bigg]=\bp E[X_1]\\E[X_2] \ep=\bp \mu_1\\\mu_2 \ep\end{split}\]</div>
+<p>The sample mean vector can be computed from the joint empirical PMF</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\hat\mmu=\sum_\x\x\hat{f}(\x)=\sum_\x\x\bigg(\frac{1}{n}\sum_{i=1}^nI(\x_i=\x)\bigg)=\frac{1}{n}\sum_{i=1}^n\x_i\)</span></p>
+</div>
+<p><strong>Variance</strong></p>
+<p>The <em>total variance</em> is given as</p>
+<div class="math notranslate nohighlight">
+\[\sg_1^2+\sg_2^2\]</div>
+<p>The <em>sample total variance</em> is simply</p>
+<div class="math notranslate nohighlight">
+\[\rm{var}(\D)=\hat\sg_1^2+\hat\sg_2^2\]</div>
+</div>
+<div class="section" id="measures-of-association">
+<h3>2.2.2 Measures of Association<a class="headerlink" href="#measures-of-association" title="Permalink to this headline">¶</a></h3>
+<p><strong>Covariance</strong></p>
+<p>The <em>covariance</em> between two attributes <span class="math notranslate nohighlight">\(X_1\)</span> and <span class="math notranslate nohighlight">\(X_2\)</span> provides a
+measure of the association or linear dependence between them, and is defined as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\sg_{12}=E[(X_1-\mu_1)(X_2-\mu_2)]\)</span></p>
+</div>
+<p>By linearity of expectation, we have</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\sg_{12}&amp;=E[(X_1-\mu_1)(X_2-\mu_2)]=E[X_1X_2-X_1\mu_2-X_2\mu_1+\mu_1\mu_2]\\&amp;=E[X_1X_2]-\mu_2E[X_1]-\mu_1E[X_2]+\mu_1\mu_2=E[X_1X_2]-\mu_1\mu_2\end{aligned}\end{align} \]</div>
+<p>which implies</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\sg_{12}=E[X_1X_2]-E[X_1]E[X_2]\)</span></p>
+</div>
+<p>If <span class="math notranslate nohighlight">\(X_1\)</span> and <span class="math notranslate nohighlight">\(X_2\)</span> are independent random variables, then we conclude that their covariance is zero.
+This is because if <span class="math notranslate nohighlight">\(X_1\)</span> and <span class="math notranslate nohighlight">\(X_2\)</span> are independent, then we have</p>
+<div class="math notranslate nohighlight">
+\[E[X_1X_2]=E[X_1]\cd E[X_2]\]</div>
+<p>which in turn implies that</p>
+<div class="math notranslate nohighlight">
+\[\sg_{12}=0\]</div>
+<p>The converse is not true.</p>
+<p>The <em>sample covariance</em> between <span class="math notranslate nohighlight">\(X_1\)</span> and <span class="math notranslate nohighlight">\(X_2\)</span> is given as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\hat\sg_{12}=\frac{1}{n}\sum_{i=1}^n(x_{i1}-\hat\mu_1)(x_{i2}-\hat\mu_2)\)</span></p>
+</div>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\hat\sg_{12}&amp;=E[(X_1-\hat\mu_1)(X_2-\hat\mu_2)]\\&amp;=\sum_{\x=(x_1,x_2)^T}(x_1-\hat\mu_1)(x_2-\hat\mu_2)\hat{f}(x_1,x_2)\\&amp;=\frac{1}{n}\sum_{\x=(x_1,x_2)^T}\sum_{i=1}^n(x_1-\hat\mu_1)\cd(x_2-\hat\mu_2)\cd I(x_{i1}=x_1,x_{i2}=x_2)\\&amp;=\frac{1}{n}\sum_{i=1}^n(x_{i1}-\hat\mu_1)(x_{i2}-\hat\mu_2)\end{aligned}\end{align} \]</div>
+<p><strong>Correlation</strong></p>
+<p>The <em>correlation</em> between variables <span class="math notranslate nohighlight">\(X_1\)</span> and <span class="math notranslate nohighlight">\(X_2\)</span> is the
+<em>standardized covariance</em>, obatained by normalizing the covariance with the
+standard deviation of each variable, given as</p>
+<div class="math notranslate nohighlight">
+\[\rho_{12}=\frac{\sg_{12}}{\sg_1\sg_2}=\frac{\sg_{12}}{\sqrt{\sg_1^2\sg_2^2}}\]</div>
+<p>The <em>sample correlation</em> for attributes <span class="math notranslate nohighlight">\(X_1\)</span> and <span class="math notranslate nohighlight">\(X_2\)</span> is given as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\hat\rho_{12}=\frac{\hat\sg_{12}}{\hat\sg_1\sg_2}=\)</span>
+<span class="math notranslate nohighlight">\(\dp\frac{\sum_{i=1}^n(x_{i1}-\hat\mu_1)(x_{i2}-\hat\mu_2)}{\sqrt{\sum_{i=1}^n(x_{i1}-\hat\mu_1)^2}\sqrt{\sum_{i=1}^n(x_{i2}-\hat\mu_2)^2}}\)</span></p>
+</div>
+<p><strong>Geometric Interpretation of Sample Covariance and Correlation</strong></p>
+<p>Let <span class="math notranslate nohighlight">\(\bar{X}_1\)</span> and <span class="math notranslate nohighlight">\(\bar{X}_2\)</span> denote the centered attribute vectors in <span class="math notranslate nohighlight">\(\R^n\)</span>, given as follows:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\bar{X}_1=X_1-\hat\mu_1\cd\bs{1}=\bp x_{11}-\hat\mu_1\\x_{21}-\hat\mu_1\\
+\vds\\x_{n1}-\hat\mu_1 \ep\quad\bar{X}_2=X_2-\hat\mu_2\cd\bs{1}=
+\bp x_{12}-\hat\mu_2\\x_{22}-\hat\mu_2\\\vds\\x_{n2}-\hat\mu_2 \ep\end{split}\]</div>
+<p>The sample covariance can then be written as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\hat\sg_{12}=\frac{\hat{X}_1^T\hat{X}_2}{n}\)</span></p>
+</div>
+<p>The sample correlation can be written as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\hat\rho_{12}=\frac{\bar{X}_1^T\bar{X}_2}{\sqrt{\bar{X}_1^T\bar{X}_1}\sqrt{\bar{X}_2^T\bar{X}_2}}=\)</span>
+<span class="math notranslate nohighlight">\(\dp\frac{\bar{X}_1^T\bar{X}_2}{\lv\bar{X}_1\rv\lv\bar{X}_2\rv}=\)</span>
+<span class="math notranslate nohighlight">\(\dp\left(\frac{\bar{X}_1}{\lv\bar{X}_1\rv}\right)^T\left(\frac{\bar{X}_2}{\lv\bar{X}_2\rv}\right)=\cos\th\)</span></p>
+</div>
+<p><strong>Covariance Matrix</strong></p>
+<p>The variance-covariance information for the two attributes <span class="math notranslate nohighlight">\(X_1\)</span> and
+<span class="math notranslate nohighlight">\(X_2\)</span> can be summarized in the square <span class="math notranslate nohighlight">\(2\times 2\)</span>
+<em>covariance matrix</em>, given as</p>
+<div class="math notranslate nohighlight">
+\[\Sg=E[(\X-\mmu)(\X-\mmu)^T]\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}=E\bigg[\bp X_1-\mu_1\\X_2-\mu_2 \ep\bp X_1-\mu&amp;X_2-\mu_2 \ep\bigg]\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}=\bp E[(X_1-\mu_1)(X_1-\mu_1)]&amp;E[(X_1-\mu_1)(X_2-\mu_2)]\\E[(X_2-\mu_2)(X_1-\mu_1)]&amp;E[(X_2-\mu_2)(X_2-\mu_2)] \ep\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}=\bp \sg_1^2&amp;\sg_{12}\\\sg_{21}&amp;\sg_2^2 \ep\end{split}\]</div>
+<p>Because <span class="math notranslate nohighlight">\(\sg_{12}=\sg_{21}\)</span>, <span class="math notranslate nohighlight">\(\Sg\)</span> is a <em>symmetric</em> matrix.</p>
+<p>The <em>total variance</em> of the two attributes is given as the sum of the diagonal
+elements of <span class="math notranslate nohighlight">\(\Sg\)</span>, which is also called the <em>trace</em> of <span class="math notranslate nohighlight">\(\Sg\)</span>, given
+as</p>
+<div class="math notranslate nohighlight">
+\[tr(\Sg)=\sg_1^2+\sg_2^2\]</div>
+<p>We immediately have <span class="math notranslate nohighlight">\(tr(\Sg)\leq 0\)</span>.</p>
+<p>The generalized covariance is non-negative, because</p>
+<div class="math notranslate nohighlight">
+\[|\Sg|=\det(\Sg)=\sg_1^2\sg_2^2-\sg_{12}^2=\sg_1^2\sg_2^2-\rho_{12}^2\sg_1^2\sg_2^2=(1-\rho_{12}^2)\sg_1^2\sg_2^2\]</div>
+<p>Note that <span class="math notranslate nohighlight">\(|\rho_{12}|\leq 1\)</span> implies that <span class="math notranslate nohighlight">\(\rho_{12}^2\leq 1\)</span>,
+which in turn implies that <span class="math notranslate nohighlight">\(\det(\Sg)\geq 0\)</span>.</p>
+<p>The <em>sample covariance matrix</em> is given as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\hat\Sg=\bp\hat\sg_1^2&amp;\hat\sg_{12}\\\hat\sg_{12}&amp;\hat\sg_2^2\ep\)</span></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\rm{var}(\D)=tr(\hat\Sg)=\hat\sg_1^2+\hat\sg_2^2\)</span></p>
+</div>
+</div>
+</div>
+<div class="section" id="multivariate-analysis">
+<h2>2.3 Multivariate Analysis<a class="headerlink" href="#multivariate-analysis" title="Permalink to this headline">¶</a></h2>
+<p>In multivariate analysis, we consider all the <span class="math notranslate nohighlight">\(d\)</span> numeric attributes <span class="math notranslate nohighlight">\(X_1,X_2,\cds,X_d\)</span>.
+The full data is an <span class="math notranslate nohighlight">\(n\times d\)</span> matrix, given as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\D=\bp X_1&amp;X_2&amp;\cds&amp;X_d\\\hline x_{11}&amp;x_{12}&amp;\cds&amp;x_{1d}\\
+x_{21}&amp;x_{22}&amp;\cds&amp;x_{2d}\\\vds&amp;\vds&amp;\dds&amp;\vds\\x_{n1}&amp;x_{n2}&amp;\cds&amp;x_{nd}\ep
+=\bp|&amp;|&amp;&amp;|\\X_1&amp;X_2&amp;\cds&amp;X_d\\|&amp;|&amp;&amp;|\ep=\bp -&amp;\x_1^T&amp;-\\-&amp;\x_2^T&amp;-\\&amp;\vds\\
+-&amp;\x_n^T&amp;\ep\end{split}\]</div>
+<p>In the row view, the data can be considered as a set of <span class="math notranslate nohighlight">\(n\)</span> points or
+vectors in the <span class="math notranslate nohighlight">\(d\)</span>-dimensional attribute space</p>
+<div class="math notranslate nohighlight">
+\[\x_i=(x_{i1},x_{i2},\cds,x_{id})^T\in\R^d\]</div>
+<p>In the column view, the data can be considered as a set of <span class="math notranslate nohighlight">\(d\)</span> points or
+vectors in the <span class="math notranslate nohighlight">\(n\)</span>-dimensional space spanned by the data points</p>
+<div class="math notranslate nohighlight">
+\[X_j=(x_{1j},x_{2j},\cds,x_{nj})^T\in\R^n\]</div>
+<p>In the probabilistic view, the <span class="math notranslate nohighlight">\(d\)</span> attributes are modeled as a vector
+random variable, <span class="math notranslate nohighlight">\(\X=(X_1,X_2,\cds,X_d)^T\)</span>, and the points <span class="math notranslate nohighlight">\(\x_i\)</span>
+are considered to be a random sample drawn from <span class="math notranslate nohighlight">\(\X\)</span>, that is, they are
+independent and identically distributed as <span class="math notranslate nohighlight">\(\X\)</span>.</p>
+<p><strong>Mean</strong></p>
+<p>The <em>multivariate mean vector</em> is obtained by taking the mean of each attribute, given as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\mmu=E[\X]=\bp E[X_1]\\E[X_2]\\\vds\\E[X_d] \ep=\bp \mu_1\\\mu_2\\\vds\mu_d \ep\end{split}\]</div>
+<p>The <em>sample mean</em> is given as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\hat\mmu=\frac{1}{n}\sum_{i=1}^n\x_i\)</span></p>
+</div>
+<div class="math notranslate nohighlight">
+\[\hat\mmu=\frac{1}{n}\D^T\bs{1}\]</div>
+<p><strong>Covariance Matrix</strong></p>
+<p>The multivariate covariance information is captured by thbp sg_1^2&amp;sg_{12}&amp;cds&amp;sg_{1d}\
+sg_{21}&amp;sg_{2}^2&amp;cds&amp;sg_{2d}\cds&amp;cds&amp;cds&amp;cds\
+sg_{d1}&amp;sg_{d2}&amp;cds&amp;sg_d^2 epe <span class="math notranslate nohighlight">\(d\times d\)</span> symmetric <em>covariance matrix</em></p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\Sg=E[\X-\mmu)(\X-\mmu)^T]=\bp \sg_1^2&amp;\sg_{12}&amp;\cds&amp;\sg_{1d}\\
+\sg_{21}&amp;\sg_{2}^2&amp;\cds&amp;\sg_{2d}\\\cds&amp;\cds&amp;\cds&amp;\cds\\
+\sg_{d1}&amp;\sg_{d2}&amp;\cds&amp;\sg_d^2 \ep\end{split}\]</div>
+<p><strong>Covariance Matrix Is Positive Semidefinite</strong></p>
+<p><span class="math notranslate nohighlight">\(\Sg\)</span> is a <em>positive semidefinite</em> matrix, that is,</p>
+<div class="math notranslate nohighlight">
+\[\a^T\Sg\a\geq 0\rm{\ for\ any\ }d\rm{-dimensional\ vector\ }\a\]</div>
+<p>Too see this, observe that</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\a^t\Sg\a&amp;=\a^TE[(\X-\mmu)(\X-\mmu)^T]\a\\&amp;=E[\a^T(\X-\mmu)(\X-\mmu)^T\a]\\&amp;=E[Y^2]\\&amp;\geq 0\end{aligned}\end{align} \]</div>
+<p>where <span class="math notranslate nohighlight">\(Y\)</span> is the random variable <span class="math notranslate nohighlight">\(Y=\a^t(\X-\mmu)=\sum_{i=1}^da_i(X_i-\mu_i)\)</span>.</p>
+<p>The <span class="math notranslate nohighlight">\(d\)</span> eigenvalues of <span class="math notranslate nohighlight">\(\Sg\)</span> can be arranged from the largest to the
+smallest as follows: <span class="math notranslate nohighlight">\(\ld_1\geq\ld_2\geq\cds\geq\ld_d\geq 0\)</span>.</p>
+<p><strong>Total and Generalized Variance</strong></p>
+<p>The total variacne is given as the trace of the covariance matrix:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(tr(\Sg)=\sg_1^2+\sg_2^2+\cds+\sg_d^2\)</span></p>
+</div>
+<p>The generalized variacne is defined as the determinant of the covariance matrix,
+<span class="math notranslate nohighlight">\(\det(\Sg)\)</span>, also denoted as <span class="math notranslate nohighlight">\(|\Sg|\)</span>; it gives a single value for
+the overall multivariate scatter:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\det(\Sg)=|\Sg|=\prod_{i=1}^d\ld_i\)</span></p>
+</div>
+<p>Since all the eigenvalues of <span class="math notranslate nohighlight">\(\Sg\)</span> are non-negative (<span class="math notranslate nohighlight">\(\ld_i\geq 0\)</span>), it follows that <span class="math notranslate nohighlight">\(\det(\Sg)\geq 0\)</span>.</p>
+<p><strong>Sample Covariance Matrix</strong></p>
+<p>The <em>sample covariance matrix</em> is given as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\hat\Sg=E[(\X-\hat\mmu)(\X-\hat\mmu)^T]=\)</span>
+<span class="math notranslate nohighlight">\(\dp\bp\hat\sg_1^2&amp;\hat\sg_{12}&amp;\cds&amp;\hat\sg_{1d}\\\hat\sg_{21}&amp;\hat\sg_{2}^2&amp;\cds&amp;\hat\sg_{2d}\\\cds&amp;\cds&amp;\cds&amp;\cds\\\hat\sg_{d1}&amp;\hat\sg_{d2}&amp;\cds&amp;\hat\sg_d^2\ep\)</span></p>
+</div>
+<p>Let <span class="math notranslate nohighlight">\(\bar{D}\)</span> represent the centered data matrix, given as the matrix of
+centered attribute vectors <span class="math notranslate nohighlight">\(\bar{X}_i-X_i-\hat\mu_i\cd\bs{1}\)</span>, where
+<span class="math notranslate nohighlight">\(\bs{1}\in\R^n\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\begin{split}\bar{\D}=\D-\bs{1}\cd\hat\mmu^T=\bp |&amp;|&amp;&amp;|\\\bar{X}_1&amp;\bar{X}_2&amp;\cds&amp;\bar{X}_d\\|&amp;|&amp;&amp;|\ep\end{split}\\\begin{split}=\bp \x_1^T-\hat\mmu^T\\\x_2^T-\hat\mmu^T\\\vds\\\x_n^T-\hat\mmu^T \ep=
+\bp -&amp;\bar\x_1^T&amp;-\\-&amp;\bar\x_2^T&amp;-\\&amp;\vds\\-&amp;\bar\x_n^T&amp;- \ep\end{split}\end{aligned}\end{align} \]</div>
+<p>In matrix notation, the sample covariance matrix can be written as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\hat\Sg=\frac{1}{n}(\bar\D^T\bar\D)=\frac{1}{n}\)</span>
+<span class="math notranslate nohighlight">\(\dp\bp\bar{X}_1^T\bar{X}_1&amp;\bar{X}_1^T\bar{X}_2&amp;\cds&amp;\bar{X}_1^T\bar{X}_d\\\bar{X}_2^T\bar{X}_1&amp;\bar{X}_2^T\bar{X}_2&amp;\cds&amp;\bar{X}_2^T\bar{X}_d\\\vds&amp;\vds&amp;\dds&amp;\vds\\\bar{X}_d^T\bar{X}_1&amp;\bar{X}_d^T\bar{X}_2&amp;\cds&amp;\bar{X}_d^T\bar{X}_d\ep\)</span></p>
+</div>
+<p>The sample covariance matrix can also be written as a sum of rank-one matrices
+obtained as the <em>outer product</em> of each centered point:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\hat\Sg=\frac{1}{n}\sum_{i=1}^n\bar\x_i\cd\bar\x_i^T\)</span></p>
+</div>
+<p>Also the sample total variance is given as</p>
+<div class="math notranslate nohighlight">
+\[\rm{var}(\D)=tr(\hat\Sg)=\hat\sg_1^2=\hat\sg_2^2+\cds+\hat\sg_d^2\]</div>
+<p><strong>Sample Scatter Matrix</strong></p>
+<p>The <em>sample scatter matrix</em> is the <span class="math notranslate nohighlight">\(d\times d\)</span> positive semi-denifite matrix defined as</p>
+<div class="math notranslate nohighlight">
+\[\bs{\rm{S}}=\bar\D^T\bar\D=\sum_{i=1}^n\bar\x_i\cd\bar\x_i^T\]</div>
+<p>It is simply the un-normalized sample covariance matrix, since <span class="math notranslate nohighlight">\(\bs{\rm{S}}=n\cd\hat\Sg\)</span>.</p>
+</div>
+<div class="section" id="data-normalization">
+<h2>2.4 Data Normalization<a class="headerlink" href="#data-normalization" title="Permalink to this headline">¶</a></h2>
+<p><strong>Range Normalization</strong></p>
+<p>Let <span class="math notranslate nohighlight">\(X\)</span> be an attribute and let <span class="math notranslate nohighlight">\(x_1,x_2,\cds,x_n\)</span> be a random sample drawn from <span class="math notranslate nohighlight">\(X\)</span>.
+In <em>range normalization</em> each value is caled by the sample range <span class="math notranslate nohighlight">\(\hat{r}\)</span> of <span class="math notranslate nohighlight">\(X\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[x_i\pr=\frac{x_i-\min_i\{x_i\}}{\hat{r}}=\frac{x_i-\min_i\{x_i\}}{\max_i\{x_i\}-\min_i\{x_i\}}\]</div>
+<p>After transformation the new attribute takes on values in the range [0, 1].</p>
+<p><strong>Standard Score Normalization</strong></p>
+<p>In <em>standard score normalization</em>, also called <span class="math notranslate nohighlight">\(z\)</span>-normalization, each
+value is replaced by its <span class="math notranslate nohighlight">\(z\)</span>-score:</p>
+<div class="math notranslate nohighlight">
+\[x_i\pr=\frac{x_i-\hat\mu}{\hat\sg}\]</div>
+</div>
+<div class="section" id="normal-distribution">
+<h2>2.5 Normal Distribution<a class="headerlink" href="#normal-distribution" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="univariate-normal-distribution">
+<h3>2.5.1 Univariate Normal Distribution<a class="headerlink" href="#univariate-normal-distribution" title="Permalink to this headline">¶</a></h3>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp f(x|\mu,\sg^2)=\frac{1}{\sqrt{2\pi \sg^2}}\exp\bigg\{-\frac{(x-\mu)^2}{2\sg^2}\bigg\}\)</span></p>
+</div>
+<p><strong>Probability Mass</strong></p>
+<p>Given an interval <span class="math notranslate nohighlight">\([a,b]\)</span> the probability mass of the normal distribution within that interval is given as</p>
+<div class="math notranslate nohighlight">
+\[P(a\leq x\leq b)=\int_a^bf(x|\mu,\sg^2)dx\]</div>
+<p>The probability mass concentrated with <span class="math notranslate nohighlight">\(k\)</span> standard deviations from the
+mean, that is, for the interval <span class="math notranslate nohighlight">\([\mu-k\sg,\mu+k\sg]\)</span>, can be computed as</p>
+<div class="math notranslate nohighlight">
+\[P(\mu-k\sg\leq x\leq\mu+k\sg)=\frac{1}{\sqrt{2\pi}\sg}
+\int_{\mu-k\sg}^{\mu+k\sg}\exp\bigg\{-\frac{(x-\mu)^2}{2\sg^2}\bigg\}\]</div>
+<p>Via a change of variable <span class="math notranslate nohighlight">\(z=\frac{x-\mu}{\sg}\)</span>, we get</p>
+<div class="math notranslate nohighlight">
+\[P(-k\leq z\leq k)=\frac{1}{\sqrt{2\pi}}=\int_{-k}^ke^{-\frac{1}{2}z^2}dz=
+\frac{2}{\sqrt{2\pi}}\int_0^ke^{-\frac{1}{2}z^2}dz\]</div>
+<p>Via another change of variable <span class="math notranslate nohighlight">\(t=\frac{z}{\sqrt{2}}\)</span>, we get</p>
+<div class="math notranslate nohighlight">
+\[P(-k\leq z\leq k)=2\cd P(0\leq t\leq k/\sqrt{2})=\frac{2}{\sqrt{\pi}}
+\int_0^{k/\sqrt{2}}e^{-t^2}dt=\rm{erf}(k/\sqrt{2})\]</div>
+<p>where erf is the <em>Gauss error function</em>, defined as</p>
+<div class="math notranslate nohighlight">
+\[\rm{erf}(x)=\frac{2}{\sqrt{\pi}}\int_0^xe^{-t^2}dt\]</div>
+</div>
+<div class="section" id="multivariate-normal-distribution">
+<h3>2.5.2 Multivariate Normal Distribution<a class="headerlink" href="#multivariate-normal-distribution" title="Permalink to this headline">¶</a></h3>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp f(\x|\mmu,\Sg)=\frac{1}{(\sqrt{2\pi})^d\sqrt{|\Sg|}}\)</span>
+<span class="math notranslate nohighlight">\(\dp\exp\bigg\{-\frac{(\x-\mmu)^T\Sg\im(\x-\mmu)}{2}\bigg\}\)</span></p>
+</div>
+<p>As in the univariate case, the term</p>
+<div class="math notranslate nohighlight">
+\[(\x-\mmu)^T\Sg\im(\x-\mmu)\]</div>
+<p>measures the distance, called the <em>Mahalanobis distance</em>, of the point
+<span class="math notranslate nohighlight">\(\x\)</span> from the mean <span class="math notranslate nohighlight">\(\mmu\)</span> of the distribution, taking into account
+all of the variance-covariance information between the attributes.</p>
+<p>The <em>standard multivariate normal distribution</em> has parameters <span class="math notranslate nohighlight">\(\mu=\0\)</span> and <span class="math notranslate nohighlight">\(\Sg=\bs{\rm{I}}\)</span>.</p>
+<p><strong>Geometry of the Multivariate Normal</strong></p>
+<p>Compared to the standard normal distribution, we can expect the density contours to be shifted, scaled, and rotated.
+The shape or geometry of the normal distribution becomes clear by considering
+the eigen-decomposition of the covariance matrix.
+The eigenvector equation for <span class="math notranslate nohighlight">\(\Sg\)</span> is given as</p>
+<div class="math notranslate nohighlight">
+\[\Sg\u_i=\ld_i\u_i\]</div>
+<p>The diagonal matrix <span class="math notranslate nohighlight">\(\Ld\)</span> is used to record the eigenvalues:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\Ld=\bp \ld_1&amp;0&amp;\cds&amp;0\\0&amp;\ld_2&amp;\cds&amp;0\\\vds&amp;\vds&amp;\dds&amp;\vds\\0&amp;0&amp;\cds&amp;\ld_d \ep\end{split}\]</div>
+<p>The eigenvectors are orthonormal, and can be put together into an orthogonal matrix <span class="math notranslate nohighlight">\(\bs{\rm{U}}\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\bs{\rm{U}}=\bp |&amp;|&amp;&amp;|\\\u_1&amp;\u_2&amp;\cds&amp;\u_d\\|&amp;|&amp;&amp;| \ep\end{split}\]</div>
+<p>The eigen-decomposition of <span class="math notranslate nohighlight">\(\Sg\)</span> can then be expressed compactly as follows:</p>
+<div class="math notranslate nohighlight">
+\[\Sg=\bs{\rm{U}}\Ld\bs{\rm{U}}^T\]</div>
+<p>This equation can be interpreted geometrically as a change in basis vectors.</p>
+<p><strong>Total and Generalized Variance</strong></p>
+<div class="math notranslate nohighlight">
+\[\rm{var}(\D)=tr(\D)=\sum_{i=1}^d\sg_i^2=\sum_{i=1}^d\ld_i=tr(\Ld)\]</div>
+<p>In other words <span class="math notranslate nohighlight">\(\sg_1^2+\cds+\sg_d^2=\ld_1+\cds+\ld_d\)</span>.</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="chap3.html" class="btn btn-neutral float-right" title="Chapter 3 Categorical Attributes" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="chap1.html" class="btn btn-neutral float-left" title="Chapter 1 Data Matrix" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Ziniu Yu.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

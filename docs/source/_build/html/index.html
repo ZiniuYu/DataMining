@@ -42,7 +42,7 @@
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Chapter 1 Data Matrix" href="chap1.html" /> 
+    <link rel="next" title="Part 1 Data Analysis Foundations" href="part1/index1.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -87,10 +87,10 @@
               
             
             
-              <p class="caption"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="chap1.html">Chapter 1 Data Matrix</a></li>
-<li class="toctree-l1"><a class="reference internal" href="chap2.html">Chapter 2 Numeric Attributes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part1/index1.html">Part 1 Data Analysis Foundations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part3/index3.html">Part 3 Clustering</a></li>
 </ul>
 
             
@@ -166,34 +166,46 @@
 \newcommand{\pd}{\partial}\\\newcommand{\cd}{\cdot}
 \newcommand{\cds}{\cdots}
 \newcommand{\dds}{\ddots}
-\newcommand{\vds}{\vdots}
 \newcommand{\lv}{\lVert}
-\newcommand{\rv}{\rVert}
-\newcommand{\wh}{\widehat}
 \newcommand{\ol}{\overline}
-\newcommand{\ra}{\rightarrow}\\\newcommand{\0}{\boldsymbol{0}}
+\newcommand{\ra}{\rightarrow}
+\newcommand{\rv}{\rVert}
+\newcommand{\seq}{\subseteq}
+\newcommand{\vds}{\vdots}
+\newcommand{\wh}{\widehat}\\\newcommand{\0}{\boldsymbol{0}}
+\newcommand{\1}{\boldsymbol{1}}
 \newcommand{\a}{\boldsymbol{\mathrm{a}}}
 \newcommand{\b}{\boldsymbol{\mathrm{b}}}
+\newcommand{\c}{\boldsymbol{\mathrm{c}}}
 \newcommand{\e}{\boldsymbol{\mathrm{e}}}
-\newcommand{\i}{\boldsymbol{i}}
+\newcommand{\f}{\boldsymbol{\mathrm{f}}}
+\newcommand{\g}{\boldsymbol{\mathrm{g}}}
+\newcommand{\i}{\boldsymbol{\mathrm{i}}}
 \newcommand{\j}{\boldsymbol{j}}
+\newcommand{\n}{\boldsymbol{\mathrm{n}}}
 \newcommand{\p}{\boldsymbol{\mathrm{p}}}
 \newcommand{\q}{\boldsymbol{\mathrm{q}}}
 \newcommand{\r}{\boldsymbol{\mathrm{r}}}
-\newcommand{\u}{\boldsymbol{u}}
+\newcommand{\u}{\boldsymbol{\mathrm{u}}}
 \newcommand{\v}{\boldsymbol{\mathrm{v}}}
-\newcommand{\w}{\boldsymbol{w}}
+\newcommand{\w}{\boldsymbol{\mathrm{w}}}
 \newcommand{\x}{\boldsymbol{\mathrm{x}}}
-\newcommand{\y}{\boldsymbol{y}}\\\newcommand{\A}{\boldsymbol{A}}
+\newcommand{\y}{\boldsymbol{\mathrm{y}}}
+\newcommand{\z}{\boldsymbol{\mathrm{z}}}\\\newcommand{\A}{\boldsymbol{\mathrm{A}}}
 \newcommand{\B}{\boldsymbol{B}}
 \newcommand{\C}{\boldsymbol{C}}
 \newcommand{\D}{\boldsymbol{\mathrm{D}}}
-\newcommand{\N}{\boldsymbol{N}}
-\newcommand{\X}{\boldsymbol{\mathrm{X}}}\\
-\newcommand{\R}{\mathbb{R}}\\\newcommand{\ld}{\lambda}
-\newcommand{\Ld}{\Lambda}
+\newcommand{\I}{\boldsymbol{\mathrm{I}}}
+\newcommand{\K}{\boldsymbol{\mathrm{K}}}
+\newcommand{\N}{\boldsymbol{\mathrm{N}}}
+\newcommand{\P}{\boldsymbol{\mathrm{P}}}
+\newcommand{\S}{\boldsymbol{\mathrm{S}}}
+\newcommand{\U}{\boldsymbol{\mathrm{U}}}
+\newcommand{\W}{\boldsymbol{\mathrm{W}}}
+\newcommand{\X}{\boldsymbol{\mathrm{X}}}\\\newcommand{\R}{\mathbb{R}}\\\newcommand{\ld}{\lambda}
+\newcommand{\Ld}{\boldsymbol{\mathrm{\Lambda}}}
 \newcommand{\sg}{\sigma}
-\newcommand{\Sg}{\Sigma}
+\newcommand{\Sg}{\boldsymbol{\mathrm{\Sigma}}}
 \newcommand{\th}{\theta}\\\newcommand{\mmu}{\boldsymbol{\mu}}\\\newcommand{\bb}{\begin{bmatrix}}
 \newcommand{\eb}{\end{bmatrix}}
 \newcommand{\bp}{\begin{pmatrix}}
@@ -206,21 +218,24 @@
 <h1>Data Mining and Machine Learning<a class="headerlink" href="#data-mining-and-machine-learning" title="Permalink to this headline">¶</a></h1>
 <p>Study notes of Data Mining and Machine Learning, 2nd Edition by Mohammed J. Zaki and Magner Meira, JR</p>
 <div class="toctree-wrapper compound">
-<p class="caption"><span class="caption-text">Contents:</span></p>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="chap1.html">Chapter 1 Data Matrix</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="chap1.html#data-matrix">1.1 Data Matrix</a></li>
-<li class="toctree-l2"><a class="reference internal" href="chap1.html#attributes">1.2 Attributes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="chap1.html#data-algebraic-and-geometric-view">1.3 Data: Algebraic and Geometric View</a></li>
-<li class="toctree-l2"><a class="reference internal" href="chap1.html#data-probabilistic-view">1.4 Data: Probabilistic View</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part1/index1.html">Part 1 Data Analysis Foundations</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="part1/chap1.html">Chapter 1 Data Matrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="part1/chap2.html">Chapter 2 Numeric Attributes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="part1/chap3.html">Chapter 3 Categorical Attributes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="part1/chap4.html">Chapter 4 Graph Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="part1/chap5.html">Chapter 5 Kernel Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="part1/chap6.html">Chapter 6 High-dimensional Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="part1/chap7.html">Chapter 7 Dimensionality Reduction</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="chap2.html">Chapter 2 Numeric Attributes</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="chap2.html#univariate-analysis">2.1 Univariate Analysis</a></li>
-<li class="toctree-l2"><a class="reference internal" href="chap2.html#bivariate-analysis">2.2 Bivariate Analysis</a></li>
-<li class="toctree-l2"><a class="reference internal" href="chap2.html#multivariate-analysis">2.3 Multivariate Analysis</a></li>
-<li class="toctree-l2"><a class="reference internal" href="chap2.html#data-normalization">2.4 Data Normalization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="chap2.html#normal-distribution">2.5 Normal Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part3/index3.html">Part 3 Clustering</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="part3/chap13.html">Chapter 13 Representative-based Clustering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="part3/chap14.html">Chapter 14 Hierarchical Clustering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="part3/chap15.html">Chapter 15 Density-based Clustering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="part3/chap16.html">Chapter 16 Spectral and Graph Clustering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="part3/chap17.html">Chapter 17 Clustering Validation</a></li>
 </ul>
 </li>
 </ul>
@@ -233,7 +248,7 @@
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="chap1.html" class="btn btn-neutral float-right" title="Chapter 1 Data Matrix" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="part1/index1.html" class="btn btn-neutral float-right" title="Part 1 Data Analysis Foundations" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

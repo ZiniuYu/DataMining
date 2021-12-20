@@ -241,6 +241,18 @@ however, it can be used to obtain the following iterative update rule:
 
 **Center-defined Cluster**
 
+A cluster :math:`C\subseteq\D`, is called a *Center-defined cluster* if all the 
+points :math:`\x\in C` are density attracted to a unique density attractor 
+:math:`\x^*`, such that :math:`\hat{f}(\x^*)\geq\xi`, where :math:`\xi` is a 
+user-defined minimum density threshold.
+In other words,
+
+.. math::
+
+    \hat{f}(\x^*)=\frac{1}{nh^d}\sum_{i=1}^nK\bigg(\frac{\x^*-\x_i}{h}\bigg)\geq\xi
+
+**Density-defined Cluster**
+
 A cluster :math:`C\subseteq\D` is called a *density-based cluster* if there 
 exists a set of density attractors :math:`\x_1^*,\x_2^*,\cds,\x_m^*`, such that
 
@@ -257,3 +269,12 @@ exists a set of density attractors :math:`\x_1^*,\x_2^*,\cds,\x_m^*`, such that
 **DENCLUE Algorithm**
 
 .. image:: ../_static/Algo15.2.png
+
+**DENCLUE: Special Cases**
+
+If we let :math:`h=\epsilon` and :math:`\xi=minpts`, then using a discrete 
+kernel DENCLUE yields exactly the same clusters as DBSCAN.
+
+**Computational Complexity**
+
+The time for DENCLUE is dominated by the cost of the hill-climbing process.

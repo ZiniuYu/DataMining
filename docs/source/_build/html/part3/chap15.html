@@ -1,0 +1,468 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Chapter 15 Density-based Clustering &mdash; DataMining  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Chapter 16 Spectral and Graph Clustering" href="chap16.html" />
+    <link rel="prev" title="Chapter 14 Hierarchical Clustering" href="chap14.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> DataMining
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../part1/index1.html">Part 1 Data Analysis Foundations</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index3.html">Part 3 Clustering</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="chap13.html">Chapter 13 Representative-based Clustering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chap14.html">Chapter 14 Hierarchical Clustering</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Chapter 15 Density-based Clustering</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#the-dbscan-algorithm">15.1 The DBSCAN Algorithm</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#kernel-density-estimation">15.2 Kernel Density Estimation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#univariate-density-estimation">15.2.1 Univariate Density Estimation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#multivariate-density-estimation">15.2.2 Multivariate Density Estimation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#nearest-neighbor-density-estimation">15.2.3 Nearest Neighbor Density Estimation</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#density-based-clustering-denclue">15.3 Density-Based Clustering: DENCLUE</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="chap16.html">Chapter 16 Spectral and Graph Clustering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chap17.html">Chapter 17 Clustering Validation</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">DataMining</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index3.html">Part 3 Clustering</a> &raquo;</li>
+        
+      <li>Chapter 15 Density-based Clustering</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/part3/chap15.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\newcommand{\bs}{\boldsymbol}
+\newcommand{\dp}{\displaystyle}
+\newcommand{\rm}{\mathrm}
+\newcommand{\cl}{\mathcal}
+\newcommand{\pd}{\partial}\\\newcommand{\cd}{\cdot}
+\newcommand{\cds}{\cdots}
+\newcommand{\dds}{\ddots}
+\newcommand{\lv}{\lVert}
+\newcommand{\ol}{\overline}
+\newcommand{\ra}{\rightarrow}
+\newcommand{\rv}{\rVert}
+\newcommand{\seq}{\subseteq}
+\newcommand{\vds}{\vdots}
+\newcommand{\wh}{\widehat}\\\newcommand{\0}{\boldsymbol{0}}
+\newcommand{\1}{\boldsymbol{1}}
+\newcommand{\a}{\boldsymbol{\mathrm{a}}}
+\newcommand{\b}{\boldsymbol{\mathrm{b}}}
+\newcommand{\c}{\boldsymbol{\mathrm{c}}}
+\newcommand{\e}{\boldsymbol{\mathrm{e}}}
+\newcommand{\f}{\boldsymbol{\mathrm{f}}}
+\newcommand{\g}{\boldsymbol{\mathrm{g}}}
+\newcommand{\i}{\boldsymbol{\mathrm{i}}}
+\newcommand{\j}{\boldsymbol{j}}
+\newcommand{\n}{\boldsymbol{\mathrm{n}}}
+\newcommand{\p}{\boldsymbol{\mathrm{p}}}
+\newcommand{\q}{\boldsymbol{\mathrm{q}}}
+\newcommand{\r}{\boldsymbol{\mathrm{r}}}
+\newcommand{\u}{\boldsymbol{\mathrm{u}}}
+\newcommand{\v}{\boldsymbol{\mathrm{v}}}
+\newcommand{\w}{\boldsymbol{\mathrm{w}}}
+\newcommand{\x}{\boldsymbol{\mathrm{x}}}
+\newcommand{\y}{\boldsymbol{\mathrm{y}}}
+\newcommand{\z}{\boldsymbol{\mathrm{z}}}\\\newcommand{\A}{\boldsymbol{\mathrm{A}}}
+\newcommand{\B}{\boldsymbol{B}}
+\newcommand{\C}{\boldsymbol{C}}
+\newcommand{\D}{\boldsymbol{\mathrm{D}}}
+\newcommand{\I}{\boldsymbol{\mathrm{I}}}
+\newcommand{\K}{\boldsymbol{\mathrm{K}}}
+\newcommand{\N}{\boldsymbol{\mathrm{N}}}
+\newcommand{\P}{\boldsymbol{\mathrm{P}}}
+\newcommand{\S}{\boldsymbol{\mathrm{S}}}
+\newcommand{\U}{\boldsymbol{\mathrm{U}}}
+\newcommand{\W}{\boldsymbol{\mathrm{W}}}
+\newcommand{\X}{\boldsymbol{\mathrm{X}}}\\\newcommand{\R}{\mathbb{R}}\\\newcommand{\ld}{\lambda}
+\newcommand{\Ld}{\boldsymbol{\mathrm{\Lambda}}}
+\newcommand{\sg}{\sigma}
+\newcommand{\Sg}{\boldsymbol{\mathrm{\Sigma}}}
+\newcommand{\th}{\theta}\\\newcommand{\mmu}{\boldsymbol{\mu}}\\\newcommand{\bb}{\begin{bmatrix}}
+\newcommand{\eb}{\end{bmatrix}}
+\newcommand{\bp}{\begin{pmatrix}}
+\newcommand{\ep}{\end{pmatrix}}
+\newcommand{\bv}{\begin{vmatrix}}
+\newcommand{\ev}{\end{vmatrix}}\\\newcommand{\im}{^{-1}}
+\newcommand{\pr}{^{\prime}}
+\newcommand{\ppr}{^{\prime\prime}}\end{aligned}\end{align} \]</div>
+<div class="section" id="chapter-15-density-based-clustering">
+<h1>Chapter 15 Density-based Clustering<a class="headerlink" href="#chapter-15-density-based-clustering" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="the-dbscan-algorithm">
+<h2>15.1 The DBSCAN Algorithm<a class="headerlink" href="#the-dbscan-algorithm" title="Permalink to this headline">¶</a></h2>
+<p>Density-based clustering uses the local density of points to determine the
+clusters, rather than using only the distance between points.
+We define a ball of radius <span class="math notranslate nohighlight">\(\epsilon\)</span> around a point <span class="math notranslate nohighlight">\(\x\in\R^d\)</span>,
+called the <span class="math notranslate nohighlight">\(\epsilon\)</span>-<em>neighborhood</em> of <span class="math notranslate nohighlight">\(\x\)</span>, as follows:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(N_\epsilon(\x)=B_d(\x, \epsilon)=\{\y|\lv\x-\y\rv\leq\epsilon\}\)</span></p>
+</div>
+<p>Here <span class="math notranslate nohighlight">\(\lv\x-\y\rv\)</span> is the Euclidean distance between points <span class="math notranslate nohighlight">\(\x\)</span> and <span class="math notranslate nohighlight">\(\y\)</span>.
+However, other distance metrics can also be used.</p>
+<p>For any point <span class="math notranslate nohighlight">\(\x\in\D\)</span>, we say that <span class="math notranslate nohighlight">\(x\)</span> is a <em>core point</em> if there
+are at least <em>minpts</em> points in its <span class="math notranslate nohighlight">\(\epsilon\)</span>-neighborhood.
+A <em>border point</em> is defined as a point that does not meet the <em>minpts</em>
+threshold, but it belongs to the <span class="math notranslate nohighlight">\(\epsilon\)</span>-neighborhood of some core
+point <span class="math notranslate nohighlight">\(\bs{\rm{z}}\)</span>.
+If a point is neight a core nor a border point, then it is called a <em>noise point</em> or an outlier.</p>
+<p>We say that a point <span class="math notranslate nohighlight">\(\x\)</span> is <em>directly density reachable</em> from another
+point <span class="math notranslate nohighlight">\(y\)</span> if <span class="math notranslate nohighlight">\(\x\in N_\epsilon(\y)\)</span> and <span class="math notranslate nohighlight">\(\y\)</span> is a core point.
+We say that <span class="math notranslate nohighlight">\(\x\)</span> is <em>density reachable</em> from <span class="math notranslate nohighlight">\(y\)</span> if there exists a
+chain of points, <span class="math notranslate nohighlight">\(\x_0,\x_1,\cds,\x_l\)</span>, such that <span class="math notranslate nohighlight">\(\x=\x_0\)</span> and
+<span class="math notranslate nohighlight">\(y=\x_l\)</span> and <span class="math notranslate nohighlight">\(\x_i\)</span> is directly density reachable from
+<span class="math notranslate nohighlight">\(\x_{i-1}\)</span> for all <span class="math notranslate nohighlight">\(i=1,\cds,l\)</span>.
+Define any two points <span class="math notranslate nohighlight">\(\x\)</span> and <span class="math notranslate nohighlight">\(\y\)</span> to be <em>density connected</em> if
+there exists a core point <span class="math notranslate nohighlight">\(\bs{rm{z}\)</span>, such that both <span class="math notranslate nohighlight">\(\x\)</span> and
+<span class="math notranslate nohighlight">\(\y\)</span> are density reachable from <span class="math notranslate nohighlight">\(\bs{\rm{z}}\)</span>.
+A <em>density-based cluster</em> is defined as a maximal set of density connected points.</p>
+<p>One limitation of DBSCAN is that it is sensitive to the choice of
+<span class="math notranslate nohighlight">\(\epsilon\)</span>, in particular if clusters have different densities.
+If <span class="math notranslate nohighlight">\(\epsilon\)</span> is too small, sparser clusters will be categorized as noise.
+If <span class="math notranslate nohighlight">\(\epsilon\)</span> is too large, denser clusters may be merged together.</p>
+<img alt="../_images/Algo15.1.png" src="../_images/Algo15.1.png" />
+<p><strong>Computational Complexity</strong></p>
+<p>The overall complexity of DBSCAN is <span class="math notranslate nohighlight">\(O(n^2)\)</span> is the worst-case.</p>
+</div>
+<div class="section" id="kernel-density-estimation">
+<h2>15.2 Kernel Density Estimation<a class="headerlink" href="#kernel-density-estimation" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="univariate-density-estimation">
+<h3>15.2.1 Univariate Density Estimation<a class="headerlink" href="#univariate-density-estimation" title="Permalink to this headline">¶</a></h3>
+<p>We can directly estimate the cumulative distribution function from the data by
+counting how many points are less than or equal to <span class="math notranslate nohighlight">\(x\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\hat{F}(x)=\frac{1}{n}\sum_{i=1}^nI(x_i\leq x)\]</div>
+<p>We can estimate the density funciton by taking the derivative of
+<span class="math notranslate nohighlight">\(\hat{F}(x)\)</span>, by considering a window of small width <span class="math notranslate nohighlight">\(h\)</span> centered at
+<span class="math notranslate nohighlight">\(x\)</span>, that is,</p>
+<div class="math notranslate nohighlight">
+\[\hat{f}(x)=\frac{\hat{F}(x+\frac{h}{2})-\hat{F}(x-\frac{h}{2})}{h}=\frac{k/n}{h}=\frac{k}{nh}\]</div>
+<p>where <span class="math notranslate nohighlight">\(k\)</span> is the number of points that lie in the window of width
+<span class="math notranslate nohighlight">\(h\)</span> centered at <span class="math notranslate nohighlight">\(x\)</span>, that is, with the closed interval
+<span class="math notranslate nohighlight">\([x-\frac{h}{2},x+\frac{h}{2}]\)</span></p>
+<p><strong>Kernel Estimator</strong></p>
+<p>Kernel density estimation relies on a <em>density kernel function</em> <span class="math notranslate nohighlight">\(K\)</span> that
+is non-negative, symmetric, and integrates to 1, that is,
+<span class="math notranslate nohighlight">\(K(x)\geq 0, K(-x)=K(x)\)</span> for all values <span class="math notranslate nohighlight">\(x\)</span>, and <span class="math notranslate nohighlight">\(\int K(x)dx=1\)</span>.
+Thus, <span class="math notranslate nohighlight">\(K\)</span> is essentially a probability density function.</p>
+<p><strong>Discrete Kernel</strong></p>
+<p>The density estimate <span class="math notranslate nohighlight">\(\hat{f}(x)\)</span> can also be rewritten in terms of the kernel function as follows:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\hat{f}(x)=\frac{1}{nh}\sum_{i=1}^nK\bigg(\frac{x-x_i}{h}\bigg)\)</span></p>
+</div>
+<p>where the <strong>discrete kernel</strong> function <span class="math notranslate nohighlight">\(K\)</span> computes the number of points
+in a window of width <span class="math notranslate nohighlight">\(h\)</span>, and is defined as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(K(z)=\left\{\begin{array}{lr}1\quad\rm{if\ }|z|\leq\frac{1}{2}\\0\quad\rm{Otherwise}\end{array}\right.\)</span></p>
+</div>
+<p><strong>Gaussian Kernel</strong></p>
+<p>Instead of the discrete kernel, we can define a more smooth transition of influence via a Gaussian kernel:</p>
+<div class="math notranslate nohighlight">
+\[K(z)=\frac{1}{\sqrt{2\pi}}\exp\bigg\{-\frac{z^2}{2}\bigg\}\]</div>
+<p>Thus, we have</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp K\bigg(\frac{x-x_i}{h}\bigg)=\frac{1}{\sqrt{2\pi}}\exp\bigg\{-\frac{(x-x_i)^2}{2h^2}\bigg\}\)</span></p>
+</div>
+<p>Here <span class="math notranslate nohighlight">\(x\)</span>, which is at the center of the window, plays the role of the
+mean, and <span class="math notranslate nohighlight">\(h\)</span> acts as the standard deviation.</p>
+</div>
+<div class="section" id="multivariate-density-estimation">
+<h3>15.2.2 Multivariate Density Estimation<a class="headerlink" href="#multivariate-density-estimation" title="Permalink to this headline">¶</a></h3>
+<p>The volume of a <span class="math notranslate nohighlight">\(d\)</span>-dimensional hypercube is given as</p>
+<div class="math notranslate nohighlight">
+\[\rm{vol}(H_d(h))=h^d\]</div>
+<p>The density is then estimated as the fraction of the point weight lying within
+the <span class="math notranslate nohighlight">\(d\)</span>-dimensional window centered at <span class="math notranslate nohighlight">\(\x\)</span>, divided by the volume
+of the hypercube:</p>
+<div class="math notranslate nohighlight">
+\[\hat{f}(\x)=\frac{1}{nh^d}\sum_{i=1}^nK\bigg(\frac{\x-\x_i}{h}\bigg)\]</div>
+<p>where the multivariate kernel function <span class="math notranslate nohighlight">\(K\)</span> satisfies the condition <span class="math notranslate nohighlight">\(\int K(\z)d\z=1\)</span>.</p>
+<p><strong>Discrete Kernel</strong></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(K(\z)=\left\{\begin{array}{lr}1\quad\rm{if\ }|z_j|\leq\frac{1}{2},\rm{for\ all\ dimensions\ }j=1,\cds,d\\0\quad\rm{Otherwise}\end{array}\right.\)</span></p>
+</div>
+<p><strong>Gaussian Kernel</strong></p>
+<p>The <span class="math notranslate nohighlight">\(d\)</span>-dimensional Gaussian kernel is given as</p>
+<div class="math notranslate nohighlight">
+\[K(\z)=\frac{1}{(2\pi)^{d/2}}\exp\bigg\{-\frac{\z^T\z}{2}\bigg\}\]</div>
+<p>where we assume that the covariance matrix is the <span class="math notranslate nohighlight">\(d\times d\)</span> identity matrix, that is, <span class="math notranslate nohighlight">\(\Sg=\I_d\)</span>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp K\bigg(\frac{\x-\x_i}{h}\bigg)=\frac{1}{(2\pi)^{d/2}}\exp\bigg\{-\frac{(\x-\x_i)^T(\x-\x_i)}{2h^2}\bigg\}\)</span></p>
+</div>
+<p>Each point contributes a weight to the density estimate inversely proportional
+to its distance from <span class="math notranslate nohighlight">\(\x\)</span> termpered by the width parameter <span class="math notranslate nohighlight">\(h\)</span>.</p>
+</div>
+<div class="section" id="nearest-neighbor-density-estimation">
+<h3>15.2.3 Nearest Neighbor Density Estimation<a class="headerlink" href="#nearest-neighbor-density-estimation" title="Permalink to this headline">¶</a></h3>
+<p>An alternative approach to density estimation is to fix <span class="math notranslate nohighlight">\(k\)</span>, the number of
+points required to estimate the density, and allow the volume of the enclosing
+region to vary to accomodate those <span class="math notranslate nohighlight">\(k\)</span> points.
+This apporach is called the <span class="math notranslate nohighlight">\(k\)</span> nearest neighbors (KNN) approach to density estimation.</p>
+<p>Given <span class="math notranslate nohighlight">\(k\)</span>, the number of neighbors, we estimate the density at <span class="math notranslate nohighlight">\(\x\)</span> as follows:</p>
+<div class="math notranslate nohighlight">
+\[\hat{f}(\x)=\frac{k}{n\rm{\ vol}(S_d(h_\x))}\]</div>
+<p>where <span class="math notranslate nohighlight">\(h_\x\)</span> is the distance from <span class="math notranslate nohighlight">\(\x\)</span> to its <span class="math notranslate nohighlight">\(k\)</span>th nearest
+neighbor, and <span class="math notranslate nohighlight">\(\rm{vol}(S_d(h_\x))\)</span> is the volume of the
+<span class="math notranslate nohighlight">\(d\)</span>-dimensional hypersphere <span class="math notranslate nohighlight">\(S_d(h\x)\)</span> centered at <span class="math notranslate nohighlight">\(\x\)</span>, with
+radius <span class="math notranslate nohighlight">\(h_\x\)</span>.</p>
+</div>
+</div>
+<div class="section" id="density-based-clustering-denclue">
+<h2>15.3 Density-Based Clustering: DENCLUE<a class="headerlink" href="#density-based-clustering-denclue" title="Permalink to this headline">¶</a></h2>
+<p><strong>Density Attractors and Gradient</strong></p>
+<p>A point <span class="math notranslate nohighlight">\(\x^*\)</span> is called a <em>density attractor</em> if it is a local maxima of
+the probability density funciton <span class="math notranslate nohighlight">\(f\)</span>.</p>
+<p>The gradient at a point <span class="math notranslate nohighlight">\(\x\)</span> can be computed as the multivariate
+derivative of the probability density, given as</p>
+<div class="math notranslate nohighlight">
+\[\nabla\hat{f}(\x)=\frac{\pd}{\pd\x}\hat{f}(\x)=\frac{1}{nh^d}\sum_{i=1}^n\frac{\pd}{\pd\x}K\bigg(\frac{\x-\x_i}{h}\bigg)\]</div>
+<p>For the Gaussian kernel, we have</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\frac{\pd}{\pd\x}K(\z)&amp;=\bigg(\frac{1}{(2\pi)^{d/2}}\exp
+\bigg\{-\frac{\z^T\z}{2}\bigg\}\bigg)\cd-\z\cd\frac{\pd\z}{\pd\x}\\&amp;=K(\z)\cd-\z\cd\frac{\pd\z}{\pd\x}\end{aligned}\end{align} \]</div>
+<p>Setting <span class="math notranslate nohighlight">\(\z=\frac{\x-\x_i}{h}\)</span> above, we get</p>
+<div class="math notranslate nohighlight">
+\[\frac{\pd}{\pd\x}K\bigg(\frac{\x-\x_i}{h}\bigg)=K\bigg(\frac{\x-\x_i}{h}
+\bigg)\cd\bigg(\frac{\x_i-\x}{h}\bigg)\cd\bigg(\frac{1}{h}\bigg)\]</div>
+<p>The gradient at a point <span class="math notranslate nohighlight">\(\x\)</span> is given as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\nabla\hat{f}{\x}=\frac{1}{nh^{d+2}}\sum_{i=1}^nK\bigg(\frac{\x-\x_i}{h}\bigg)\cd(\x_i-\x)\)</span></p>
+</div>
+<p>We say that <span class="math notranslate nohighlight">\(\x^*\)</span> is a <em>density attractor</em> for <span class="math notranslate nohighlight">\(\x\)</span>,
+or alternatively that <span class="math notranslate nohighlight">\(\x\)</span> is <em>density attracted</em> to <span class="math notranslate nohighlight">\(\x^*\)</span>, if a
+hill climbing process started at <span class="math notranslate nohighlight">\(\x\)</span> converges to <span class="math notranslate nohighlight">\(\x^*\)</span>.</p>
+<p>The typical approach is to use the graident-ascent method to compute
+<span class="math notranslate nohighlight">\(\x^*\)</span>, that is, starting from <span class="math notranslate nohighlight">\(\x\)</span>, we iteratively update it at
+each step <span class="math notranslate nohighlight">\(t\)</span> via the update rule:</p>
+<div class="math notranslate nohighlight">
+\[\x_{t+1}=\x_t+\eta\cd\nabla\hat{f}(\x_t)\]</div>
+<p>where <span class="math notranslate nohighlight">\(\eta&gt;0\)</span> is the step size.
+One can directly optimize the move direction by setting the gradient to the zero vector:</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\nabla\hat{f}(\x)&amp;=\0\\\frac{1}{nh^{d+2}}\sum_{i=1}^nK\bigg(\frac{\x-\x_i}{h}\bigg)\cd(\x_i-\x)&amp;=\0\\\x\cd\sum_{i=1}^nK\bigg(\frac{\x-\x_i}{h}\bigg)&amp;=\sum_{i=1}^nK\bigg(\frac{\x-\x_i}{h}\bigg)\x_i\\\x&amp;=\frac{\sum_{i=1}^nK(\frac{\x-\x_i}{h})\x_i}{\sum_{i=1}^nK(\frac{\x-\x_i}{h})}\end{aligned}\end{align} \]</div>
+<p>The point <span class="math notranslate nohighlight">\(\x\)</span> is involved on both the left- and right-hand sides above;
+however, it can be used to obtain the following iterative update rule:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\x_{t+1}=\frac{\sum_{i=1}^nK(\frac{\x_t-\x_i}{h})\x_i}{\sum_{i=1}^nK(\frac{\x_t-\x_i}{h})}\)</span></p>
+</div>
+<p><strong>Center-defined Cluster</strong></p>
+<p>A cluster <span class="math notranslate nohighlight">\(C\subseteq\D\)</span> is called a <em>density-based cluster</em> if there
+exists a set of density attractors <span class="math notranslate nohighlight">\(\x_1^*,\x_2^*,\cds,\x_m^*\)</span>, such that</p>
+<ol class="arabic simple">
+<li><p>Each point <span class="math notranslate nohighlight">\(\x\in C\)</span> is attracted to some attractor <span class="math notranslate nohighlight">\(\x_i^*\)</span>.</p></li>
+<li><p>Each density attractor has density above <span class="math notranslate nohighlight">\(\xi\)</span>.
+That is, <span class="math notranslate nohighlight">\(\hat{f}(\x_i^*)\geq\xi\)</span>.</p></li>
+<li><p>Any two density attractors <span class="math notranslate nohighlight">\(\x_i^*\)</span> and <span class="math notranslate nohighlight">\(\x_j^*\)</span> are
+<em>density reachable</em>, that is, there exists a path from <span class="math notranslate nohighlight">\(\x_i^*\)</span> to
+<span class="math notranslate nohighlight">\(\x_j^*\)</span>, such that for all points <span class="math notranslate nohighlight">\(\y\)</span> on the path,
+<span class="math notranslate nohighlight">\(\hat{f}(\y)\geq\xi\)</span>.</p></li>
+</ol>
+<p><strong>DENCLUE Algorithm</strong></p>
+<img alt="../_images/Algo15.2.png" src="../_images/Algo15.2.png" />
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="chap16.html" class="btn btn-neutral float-right" title="Chapter 16 Spectral and Graph Clustering" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="chap14.html" class="btn btn-neutral float-left" title="Chapter 14 Hierarchical Clustering" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Ziniu Yu.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

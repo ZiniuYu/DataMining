@@ -1,0 +1,884 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Chapter 4 Graph Data &mdash; DataMining  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Chapter 5 Kernel Methods" href="chap5.html" />
+    <link rel="prev" title="Chapter 3 Categorical Attributes" href="chap3.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> DataMining
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index1.html">Part 1 Data Analysis Foundations</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="chap1.html">Chapter 1 Data Matrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chap2.html">Chapter 2 Numeric Attributes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chap3.html">Chapter 3 Categorical Attributes</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Chapter 4 Graph Data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#graph-concepts">4.1 Graph Concepts</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#topological-attributes">4.2 Topological Attributes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#centrality-analysis">4.3 Centrality Analysis</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#basic-centralities">4.3.1 Basic Centralities</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#web-centralities">4.3.2 Web Centralities</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#graph-models">4.4 Graph Models</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#erdosrenyi-random-graph-model">4.4.1 Erdös–Rényi Random Graph Model</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#watts-strogatz-small-world-graph-model">4.4.2 Watts-Strogatz Small-world Graph Model</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#barabasialbert-scale-free-model">4.4.3 Barabási–Albert Scale-free Model</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="chap5.html">Chapter 5 Kernel Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chap6.html">Chapter 6 High-dimensional Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chap7.html">Chapter 7 Dimensionality Reduction</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../part3/index3.html">Part 3 Clustering</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">DataMining</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index1.html">Part 1 Data Analysis Foundations</a> &raquo;</li>
+        
+      <li>Chapter 4 Graph Data</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/part1/chap4.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\newcommand{\bs}{\boldsymbol}
+\newcommand{\dp}{\displaystyle}
+\newcommand{\rm}{\mathrm}
+\newcommand{\cl}{\mathcal}
+\newcommand{\pd}{\partial}\\\newcommand{\cd}{\cdot}
+\newcommand{\cds}{\cdots}
+\newcommand{\dds}{\ddots}
+\newcommand{\lv}{\lVert}
+\newcommand{\ol}{\overline}
+\newcommand{\ra}{\rightarrow}
+\newcommand{\rv}{\rVert}
+\newcommand{\seq}{\subseteq}
+\newcommand{\vds}{\vdots}
+\newcommand{\wh}{\widehat}\\\newcommand{\0}{\boldsymbol{0}}
+\newcommand{\1}{\boldsymbol{1}}
+\newcommand{\a}{\boldsymbol{\mathrm{a}}}
+\newcommand{\b}{\boldsymbol{\mathrm{b}}}
+\newcommand{\c}{\boldsymbol{\mathrm{c}}}
+\newcommand{\e}{\boldsymbol{\mathrm{e}}}
+\newcommand{\f}{\boldsymbol{\mathrm{f}}}
+\newcommand{\g}{\boldsymbol{\mathrm{g}}}
+\newcommand{\i}{\boldsymbol{\mathrm{i}}}
+\newcommand{\j}{\boldsymbol{j}}
+\newcommand{\n}{\boldsymbol{\mathrm{n}}}
+\newcommand{\p}{\boldsymbol{\mathrm{p}}}
+\newcommand{\q}{\boldsymbol{\mathrm{q}}}
+\newcommand{\r}{\boldsymbol{\mathrm{r}}}
+\newcommand{\u}{\boldsymbol{\mathrm{u}}}
+\newcommand{\v}{\boldsymbol{\mathrm{v}}}
+\newcommand{\w}{\boldsymbol{\mathrm{w}}}
+\newcommand{\x}{\boldsymbol{\mathrm{x}}}
+\newcommand{\y}{\boldsymbol{\mathrm{y}}}
+\newcommand{\z}{\boldsymbol{\mathrm{z}}}\\\newcommand{\A}{\boldsymbol{\mathrm{A}}}
+\newcommand{\B}{\boldsymbol{B}}
+\newcommand{\C}{\boldsymbol{C}}
+\newcommand{\D}{\boldsymbol{\mathrm{D}}}
+\newcommand{\I}{\boldsymbol{\mathrm{I}}}
+\newcommand{\K}{\boldsymbol{\mathrm{K}}}
+\newcommand{\N}{\boldsymbol{\mathrm{N}}}
+\newcommand{\P}{\boldsymbol{\mathrm{P}}}
+\newcommand{\S}{\boldsymbol{\mathrm{S}}}
+\newcommand{\U}{\boldsymbol{\mathrm{U}}}
+\newcommand{\W}{\boldsymbol{\mathrm{W}}}
+\newcommand{\X}{\boldsymbol{\mathrm{X}}}\\\newcommand{\R}{\mathbb{R}}\\\newcommand{\ld}{\lambda}
+\newcommand{\Ld}{\boldsymbol{\mathrm{\Lambda}}}
+\newcommand{\sg}{\sigma}
+\newcommand{\Sg}{\boldsymbol{\mathrm{\Sigma}}}
+\newcommand{\th}{\theta}\\\newcommand{\mmu}{\boldsymbol{\mu}}\\\newcommand{\bb}{\begin{bmatrix}}
+\newcommand{\eb}{\end{bmatrix}}
+\newcommand{\bp}{\begin{pmatrix}}
+\newcommand{\ep}{\end{pmatrix}}
+\newcommand{\bv}{\begin{vmatrix}}
+\newcommand{\ev}{\end{vmatrix}}\\\newcommand{\im}{^{-1}}
+\newcommand{\pr}{^{\prime}}
+\newcommand{\ppr}{^{\prime\prime}}\end{aligned}\end{align} \]</div>
+<div class="section" id="chapter-4-graph-data">
+<h1>Chapter 4 Graph Data<a class="headerlink" href="#chapter-4-graph-data" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="graph-concepts">
+<h2>4.1 Graph Concepts<a class="headerlink" href="#graph-concepts" title="Permalink to this headline">¶</a></h2>
+<p><strong>Graph</strong></p>
+<p>A <em>graph</em> <span class="math notranslate nohighlight">\(G=(V,E)\)</span> is a mathematical structure consisting of a finite
+nonempty set <span class="math notranslate nohighlight">\(V\)</span> of <em>vertices</em> or <em>nodes</em>, and a set
+<span class="math notranslate nohighlight">\(E\seq V\times V\)</span> of <em>edges</em> consisting of <em>unordered</em> pairs of
+vertices.
+An edge from a node to itself, <span class="math notranslate nohighlight">\((v_i,v_i)\)</span>, is called a <em>loop</em>.
+An undirected graph without loops is called a <em>simple graph</em>.
+An edge <span class="math notranslate nohighlight">\(e=(v_i,v_j)\)</span> between <span class="math notranslate nohighlight">\(v_i\)</span> and <span class="math notranslate nohighlight">\(v_j\)</span> is said to be
+<em>incident with</em> nodes <span class="math notranslate nohighlight">\(v_i\)</span> and <span class="math notranslate nohighlight">\(v_j\)</span> and <span class="math notranslate nohighlight">\(v_j\)</span> are <em>adjacent</em> to one another, and that they are
+<em>neighbors</em>.
+The number of nodes in the graph <span class="math notranslate nohighlight">\(G\)</span>, given as <span class="math notranslate nohighlight">\(|V|=n\)</span> is called the
+<em>order</em> of the graph, and the number of edges in the graph, given as
+<span class="math notranslate nohighlight">\(|E|=m\)</span>, is called the <em>size</em> of <span class="math notranslate nohighlight">\(G\)</span>.</p>
+<p>A <em>directed graph</em> or <em>digraph</em> has an edge set <span class="math notranslate nohighlight">\(E\)</span> consisting of <em>ordered</em> pairs of vertices.
+A directed edge <span class="math notranslate nohighlight">\((v_i,v_j)\)</span> is also called an <em>arc</em>, and is said to be <em>from</em> <span class="math notranslate nohighlight">\(v_i\)</span> <em>to</em> <span class="math notranslate nohighlight">\(v_j\)</span>.
+We also say that <span class="math notranslate nohighlight">\(v_i\)</span> is the <em>tail</em> and <span class="math notranslate nohighlight">\(v_j\)</span> the <em>head</em> of the arc.</p>
+<p>A <em>weight graph</em> consists of a graph together with a weight <span class="math notranslate nohighlight">\(w_{ij}\)</span> for each edge <span class="math notranslate nohighlight">\((v_i,v_j)\in E\)</span>.</p>
+<p><strong>Subgraphs</strong></p>
+<p>A graph <span class="math notranslate nohighlight">\(H=(V_H,E_H)\)</span> is called a <em>subgraph</em> of <span class="math notranslate nohighlight">\(G=(V,E)\)</span> if
+<span class="math notranslate nohighlight">\(V_H\seq V\)</span> and <span class="math notranslate nohighlight">\(E_H\seq E\)</span>.
+We also say that <span class="math notranslate nohighlight">\(G\)</span> is a <em>supergraph</em> of <span class="math notranslate nohighlight">\(H\)</span>.
+Given a subset of the vertices <span class="math notranslate nohighlight">\(V\pr\seq V\)</span>, the <em>induced subgraph</em>
+<span class="math notranslate nohighlight">\(G\pr=(V\pr,E\pr)\)</span> consists exactly of all the edges present in <span class="math notranslate nohighlight">\(G\)</span>
+between vertices in <span class="math notranslate nohighlight">\(V\pr\)</span>.
+A (sub)graph is called <em>complete</em> (or a <em>clique</em>) if there exists an edge between all pairs of nodes.</p>
+<p><strong>Degree</strong></p>
+<p>The <em>degree</em> of a node <span class="math notranslate nohighlight">\(v_i\in V\)</span> is the number of edges incident with it,
+and is denoted as <span class="math notranslate nohighlight">\(d(v_i)\)</span> or just <span class="math notranslate nohighlight">\(d_i\)</span>.
+The <em>degree sequence</em> of a graph is the list of the degrees of the nodes sorted in non-increasing order.</p>
+<p>Let <span class="math notranslate nohighlight">\(N_k\)</span> denote the number of vertices with degree <span class="math notranslate nohighlight">\(k\)</span>.
+The <em>degree frequency distribution</em> of a graph is given as</p>
+<div class="math notranslate nohighlight">
+\[(N_0,N_1,\cds,N_t)\]</div>
+<p>where <span class="math notranslate nohighlight">\(t\)</span> is the maximum degree for a node in <span class="math notranslate nohighlight">\(G\)</span>.
+Let <span class="math notranslate nohighlight">\(X\)</span> be a random variable donoting the degree of a node.
+The <em>degree distribution</em> of a graph gives the probability mass function <span class="math notranslate nohighlight">\(f\)</span> for <span class="math notranslate nohighlight">\(X\)</span>, given as</p>
+<div class="math notranslate nohighlight">
+\[(f(0),f(1),\cds,f(t))\]</div>
+<p>where <span class="math notranslate nohighlight">\(f(k)=P(X=k)=\frac{N_k}{n}\)</span> is the probability of a node with degree <span class="math notranslate nohighlight">\(k\)</span>.</p>
+<p>For directed graphs, the <em>indegree</em> of node <span class="math notranslate nohighlight">\(v_i\)</span> denoted as
+<span class="math notranslate nohighlight">\(id(v_i)\)</span>, is the number of edges with <span class="math notranslate nohighlight">\(v_i\)</span> as head, that is, the
+number of incoming edges at <span class="math notranslate nohighlight">\(v_i\)</span>.
+The <em>outdegree</em> of <span class="math notranslate nohighlight">\(v_i\)</span>, denoted <span class="math notranslate nohighlight">\(od(v_i)\)</span>, is the number of edges
+with <span class="math notranslate nohighlight">\(v_i\)</span> as the tail, that is, the number of outgoing edges from
+<span class="math notranslate nohighlight">\(v_i\)</span>.</p>
+<p><strong>Path and Distance</strong></p>
+<p>A <em>walk</em> in a graph <span class="math notranslate nohighlight">\(G\)</span> between nodes <span class="math notranslate nohighlight">\(x\)</span> and <span class="math notranslate nohighlight">\(y\)</span> is an
+ordered sequence of vertices, starting at <span class="math notranslate nohighlight">\(x\)</span> and ending at <span class="math notranslate nohighlight">\(y\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[x=v_0,v_1,\cds,v_{t-1},v_t=y\]</div>
+<p>such that there is an edge between every pair of consecutive verices, that is
+<span class="math notranslate nohighlight">\((v_{i-1},v_i)\in E\)</span> for all <span class="math notranslate nohighlight">\(i=1,2,\cds,t\)</span>.
+The length of the walk, <span class="math notranslate nohighlight">\(t\)</span>, is measured in terms of <em>hops</em>–the number of edges along the walk.
+Both the vertices and edges may be repeated in a walk.
+A walk starting and ending at the same vertex is called <em>closed</em>.
+A <em>trail</em> is a walk with distinct edges, and a <em>path</em> is a walk with <em>distinct</em>
+vertices (with the exception of the start and end vertices).
+A closed path with length <span class="math notranslate nohighlight">\(t\geq 3\)</span> is called a <em>cycle</em>.</p>
+<p>A path of minumum length between nodes <span class="math notranslate nohighlight">\(x\)</span> and <span class="math notranslate nohighlight">\(y\)</span> is called a
+<em>shortest path</em>, and the length of the shortest path is called the <em>distance</em>
+between <span class="math notranslate nohighlight">\(x\)</span> and <span class="math notranslate nohighlight">\(y\)</span>, denoted as <span class="math notranslate nohighlight">\(d(x,y)\)</span>.
+If no path exists between the two nodes, the distance is assumed to be <span class="math notranslate nohighlight">\(d(x,y)=\infty\)</span>.</p>
+<p><strong>Connectedness</strong></p>
+<p>Two nodes <span class="math notranslate nohighlight">\(v_i\)</span> and <span class="math notranslate nohighlight">\(v_j\)</span> are said to be <em>connected</em> if there exists a path between them.
+A graph is <em>connected</em> if there is a path between all pairs of vertices.
+A <em>connected component</em>, or just <em>component</em>, of a graph is a maximal connected subgraph.
+If a graph has only one component it is connected; otherwise it is <em>disconnected</em>.</p>
+<p>For a directed graph, we say that it is <em>strongly connected</em> if there is a
+(directed) path between all ordered pairs of vertices.
+We say that it is <em>weakly connected</em> if there exists a path between node pairs only by considering edges as undirected.</p>
+<p><strong>Adjacency Matrix</strong></p>
+<p>A graph <span class="math notranslate nohighlight">\(G=(V,E)\)</span>, with <span class="math notranslate nohighlight">\(|V|=n\)</span> vertices, can be conveniently
+represented in the form of an <span class="math notranslate nohighlight">\(n\times n\)</span>, symmetric binary
+<em>adjacency matrix</em>, <span class="math notranslate nohighlight">\(\A\)</span>, defined as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\A(i,j)=\left\{\begin{array}{lr}1\quad\rm{if\ }v_i\rm{\ is\ adjacent\ to\ }v_j\\0\quad\rm{otherwise}\end{array}\right.\)</span></p>
+</div>
+<p>If the graph is directed, then the adjacency matrix <span class="math notranslate nohighlight">\(\A\)</span> is not symmetric,
+as <span class="math notranslate nohighlight">\((v_i,v_j)\in E\)</span> does not imply that <span class="math notranslate nohighlight">\((v_j,v_i)\in E\)</span>.</p>
+<p>If the graph is weighted, then we obtain an <span class="math notranslate nohighlight">\(n\times n\)</span> <em>weighted adjacency matrix</em>, <span class="math notranslate nohighlight">\(\A\)</span>, defined as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\A(i,j)=\left\{\begin{array}{lr}w_{ij}\quad\rm{if\ }v_i\rm{\ is\ adjacent\ to\ }v_j\\0\quad\rm{otherwise}\end{array}\right.\)</span></p>
+</div>
+<p>where <span class="math notranslate nohighlight">\(w_{ij}\)</span> is the weight on edge <span class="math notranslate nohighlight">\((v_i,v_j)\in E\)</span>.
+A weighted adjacency matrix can always be converted into a binary one, if
+desired, by using some threshold <span class="math notranslate nohighlight">\(\tau\)</span> on the edge weights</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\A(i,j)=\left\{\begin{array}{lr}1\quad\rm{if\ }w_{ij}\geq\tau\\0\quad\rm{otherwise}\end{array}\right.\end{split}\]</div>
+<p><strong>Graph from Data Matrix</strong></p>
+<p>Let <span class="math notranslate nohighlight">\(\D\)</span> be a dataset consisting of <span class="math notranslate nohighlight">\(n\)</span> points <span class="math notranslate nohighlight">\(\x_i\in\R^d\)</span> in a <span class="math notranslate nohighlight">\(d\)</span>-dimensional space.
+We can define a weighted graph <span class="math notranslate nohighlight">\(G=(V,E)\)</span>, where there exists a node for
+each point in <span class="math notranslate nohighlight">\(\D\)</span>, and there exists a node for each point in <span class="math notranslate nohighlight">\(\D\)</span>,
+and there exists an edge between each pair of points, with weight</p>
+<div class="math notranslate nohighlight">
+\[w_{ij}=sim(\x_i,\x_j)\]</div>
+<p>where <span class="math notranslate nohighlight">\(sim(\x_i,\x_j)\)</span> denotes the similarity between points <span class="math notranslate nohighlight">\(\x_i\)</span> and <span class="math notranslate nohighlight">\(\x_j\)</span>.
+For instance, similarity can be defined as being inversely related to the
+Euclidean distance between the points via the transformation</p>
+<div class="math notranslate nohighlight">
+\[w_{ij}=sim(\x_i,\x_j)=\exp\bigg\{-\frac{\lv\x_i-\x_j\rv^2}{2\sg^2}\bigg\}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\sg\)</span> is the spread parameter.</p>
+</div>
+<div class="section" id="topological-attributes">
+<h2>4.2 Topological Attributes<a class="headerlink" href="#topological-attributes" title="Permalink to this headline">¶</a></h2>
+<p>The topological attributes of graphs are <em>local</em> if they apply to only a single
+node, or <em>global</em> if they refer to the entire graph.</p>
+<p><strong>Degree</strong></p>
+<p>The degree of a node <span class="math notranslate nohighlight">\(\v_i\)</span> is defined as the number of its neighbors.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp d_i=\sum_j\A(i,j)\)</span></p>
+</div>
+<p>One of the simplest global attribute is the <em>average degree</em>:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp \mu_d=\frac{\sum_id_i}{n}\)</span></p>
+</div>
+<p><strong>Average Path Length</strong></p>
+<p>The <em>average path length</em>, also called the <em>characteristic path length</em>, of a connected graph is given as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\mu_L=\frac{\sum_i\sum_{j&gt;i}d(v_i,v_j)}{\bp n\\2 \ep}=\frac{2}{n(n-1)}\sum_i\sum_{j&gt;i}d(v_i,v_j)\)</span></p>
+</div>
+<p>For a directed graph, the average is over all ordered pairs of vertices:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\mu_L=\frac{1}{n(n-1)}\sum_i\sum_jd(v_i,v_j)\)</span></p>
+</div>
+<p>For a disconnected graph the average is taken over only the connected pairs of vertices.</p>
+<p><strong>Eccentricity</strong></p>
+<p>The <em>eccentricity</em> of a node <span class="math notranslate nohighlight">\(v_i\)</span> is the maximum distance from <span class="math notranslate nohighlight">\(v_i\)</span> to any other node in the graph:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp e(v_i)=\max_j\{d(v_i,v_j)\}\)</span></p>
+</div>
+<p>If the graph is disconnected the eccentricity is computed only over pairs of
+vertices with finite distance, that is, only for verticese connected by a path.</p>
+<p><strong>Radius and Diameter</strong></p>
+<p>The <em>radius</em> of a connected graph, denoted <span class="math notranslate nohighlight">\(r(G)\)</span>, is the minimum eccentricity of any node in the graph:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(r(G)=\min_i\{e(v_i)\}=\min_i\{\max_j\{d(v_i,v_j)\}\}\)</span></p>
+</div>
+<p>The <em>diameter</em>, denoted <span class="math notranslate nohighlight">\(d(G)\)</span>, is the maximum eccentricity of any vertex in the graph:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(d(G)=\max_i\{e(v_i)\}=\max_{i,j}\{d(v_i,v_j)\}\)</span></p>
+</div>
+<p>For a disconnected graph, the diameter is the maximum eccentricity over all the connected components of the graph.</p>
+<p>The diameter of a graph <span class="math notranslate nohighlight">\(G\)</span> is sensitive to outliers.
+A more robust notion is <em>effective diameter</em>, defined as the minimum number of
+hops for which a large fraction, typically <span class="math notranslate nohighlight">\(90\%\)</span>, of all connected pairs
+of nodes can reach each other.</p>
+<p><strong>Clustering Coefficient</strong></p>
+<p>The <em>clustering coefficient</em> of a node <span class="math notranslate nohighlight">\(v_i\)</span> is a measure of the density
+of edges in the neighborhood of <span class="math notranslate nohighlight">\(v_i\)</span>.
+Let <span class="math notranslate nohighlight">\(G_i=(V_i,E_i)\)</span> be the subgraph induced by the neighbors of vertex <span class="math notranslate nohighlight">\(v_i\)</span>.
+Note that <span class="math notranslate nohighlight">\(v_i\notin V_i\)</span>, as we assume that <span class="math notranslate nohighlight">\(G\)</span> is simple.
+Let <span class="math notranslate nohighlight">\(|V_i|=n_i\)</span> be the number of neighbors of <span class="math notranslate nohighlight">\(v_i\)</span> and
+<span class="math notranslate nohighlight">\(|E_i|=m_i\)</span> be the number of edges among the neighbors of <span class="math notranslate nohighlight">\(v_i\)</span>.
+The clustering coefficient of <span class="math notranslate nohighlight">\(v_i\)</span> is defined as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp C(v_i)=\frac{\rm{no.\ of\ edges\ in\ }G_i}{\rm{maximum\ number\ of\ edges\ in\ }G_i}=\)</span>
+<span class="math notranslate nohighlight">\(\dp\frac{m_i}{\bp n_i\\2 \ep}=\frac{2\cd m_i}{n_i(n_i-1)}\)</span></p>
+</div>
+<p>The <em>clustering coefficient</em> of a graph <span class="math notranslate nohighlight">\(G\)</span> is simply the average
+clustering coefficient over all the nodes, given as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp C(G)=\frac{1}{n}\sum_iC(v_i)\)</span></p>
+</div>
+<p>Because <span class="math notranslate nohighlight">\(C(v_i)\)</span> is well defined only for nodes with degree
+<span class="math notranslate nohighlight">\(d(v_i)\geq 2\)</span>, we can define <span class="math notranslate nohighlight">\(C(v_i)=0\)</span> for nodes with degree less
+than 2.</p>
+<p>Define the subgraph composed of the edges <span class="math notranslate nohighlight">\((v_i,v_j)\)</span> and <span class="math notranslate nohighlight">\((v_i,v_k)\)</span>
+to be a <em>connected triple</em> centered at <span class="math notranslate nohighlight">\(v_i\)</span>.
+A connected triple centered at <span class="math notranslate nohighlight">\(v_i\)</span> that includes <span class="math notranslate nohighlight">\((v_j,v_k)\)</span> is called a <em>triangle</em>.
+The clustering coefficient of node <span class="math notranslate nohighlight">\(v_i\)</span> can be expressed as</p>
+<div class="math notranslate nohighlight">
+\[C(v_i)=\frac{\rm{no.\ of\ triangles\ including\ }v_i}{\rm{no.\ of\ connected\ triples\ centered\ at\ }v_i}\]</div>
+<p>The <em>transitivity</em> of the graph is defined as</p>
+<div class="math notranslate nohighlight">
+\[T(G)=\frac{3\times\rm{no.\ of\ triangles\ in\ }G}{\rm{no.\ of\ connected\ triples\ in\ }G}\]</div>
+<p><strong>Efficiency</strong></p>
+<p>The <em>efficiency</em> for a pair of nodes <span class="math notranslate nohighlight">\(v_i\)</span> and <span class="math notranslate nohighlight">\(v_j\)</span> is defined as <span class="math notranslate nohighlight">\(\frac{1}{d(v_i,v_j)}\)</span>.
+If <span class="math notranslate nohighlight">\(v_i\)</span> and <span class="math notranslate nohighlight">\(v_j\)</span> are not connected, then <span class="math notranslate nohighlight">\(d(v_i,v_j)=\infty\)</span>
+and the efficiency is <span class="math notranslate nohighlight">\(1/\infty=0\)</span>.
+The <em>efficiency</em> of a graph <span class="math notranslate nohighlight">\(G\)</span> is  the average efficiency over all pairs
+of nodes, whether connected or not, given as</p>
+<div class="math notranslate nohighlight">
+\[\frac{2}{n(n-1)}\sum_i\sum_{j&gt;i}\frac{1}{d(v_i,v_j)}\]</div>
+<p>The maximum efficiency value is 1, which holds for a complete graph.</p>
+<p>The <em>local efficiency</em> for a node <span class="math notranslate nohighlight">\(v_i\)</span> is defined as the efficiency of
+the subgraph <span class="math notranslate nohighlight">\(G_i\)</span> induced by the neighbors of <span class="math notranslate nohighlight">\(v_i\)</span>.</p>
+</div>
+<div class="section" id="centrality-analysis">
+<h2>4.3 Centrality Analysis<a class="headerlink" href="#centrality-analysis" title="Permalink to this headline">¶</a></h2>
+<p>The notion of <em>centrality</em> is used to rank the vertices of a graph in terms of how “central” or important they are.
+A centrality can be formally defined as a function <span class="math notranslate nohighlight">\(c:V\ra\R\)</span>, that induces a total order on <span class="math notranslate nohighlight">\(V\)</span>.
+We say that <span class="math notranslate nohighlight">\(v_i\)</span> is at least as central as <span class="math notranslate nohighlight">\(v_j\)</span> if <span class="math notranslate nohighlight">\(c(v_i)\geq c(v_j)\)</span>.</p>
+<div class="section" id="basic-centralities">
+<h3>4.3.1 Basic Centralities<a class="headerlink" href="#basic-centralities" title="Permalink to this headline">¶</a></h3>
+<p><strong>Degree Centrality</strong></p>
+<p>The simplest notion of centrality is the degree <span class="math notranslate nohighlight">\(d_i\)</span> of a vertex
+<span class="math notranslate nohighlight">\(v_i\)</span>–the higher the degree, the more important or central the vertex.</p>
+<p><strong>Eccentricity Centrality</strong></p>
+<p>Eccentricity centrality is defined as follows:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp c(v_i)\frac{1}{e(v_i)}=\frac{1}{\max_j\{d(v_i,v_j)\}}\)</span></p>
+</div>
+<p>A node <span class="math notranslate nohighlight">\(v_i\)</span> that has the least eccentricity, that is, for which the
+eccentricity equals the graph radius, <span class="math notranslate nohighlight">\(e(v_i)=r(G)\)</span>, is called a
+<em>center node</em>, whereas a node that has the highest eccentricity, that is, for
+which eccentricity equals the graph diameter, <span class="math notranslate nohighlight">\(e(v_i)=d(G)\)</span>, is called a
+<em>periphery node</em>.</p>
+<p>Eccentricity centrality is related to the problem of <em>facility location</em>, that
+is, choosing the optimum location for a resource or facility.</p>
+<p><strong>Closeness Centrality</strong></p>
+<p>Closeness centrality uses the sum of all the distances to rank how central a node is</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp c(v_i)=\frac{1}{\sum_jd(v_i,v_j)}\)</span></p>
+</div>
+<p>A node <span class="math notranslate nohighlight">\(v_i\)</span> with the smallest total distance, <span class="math notranslate nohighlight">\(\sum_jd(v_i,v_j)\)</span> is called the <em>median node</em>.</p>
+<p><strong>Betweenness Centrality</strong></p>
+<p>The Betweenness centrality measures how many shortest paths between all pairs of vertices include <span class="math notranslate nohighlight">\(v_i\)</span>.
+This gives an indication as to the central “monitoring” role played by <span class="math notranslate nohighlight">\(v_i\)</span> for various pairs of nodes.
+Let <span class="math notranslate nohighlight">\(\eta_{jk}\)</span> denote the number of shortest paths between vertices
+<span class="math notranslate nohighlight">\(v_j\)</span> and <span class="math notranslate nohighlight">\(v_k\)</span>, and let <span class="math notranslate nohighlight">\(\eta_{jk}(v_j)\)</span> denote the number of
+such paths that include or contain <span class="math notranslate nohighlight">\(v_i\)</span>.
+Then the fraction of paths through <span class="math notranslate nohighlight">\(v_i\)</span> is denoted as</p>
+<div class="math notranslate nohighlight">
+\[\gamma_{jk}(v_i)=\frac{\eta_{jk}(v_i)}{\eta_{ij}}\]</div>
+<p>If the two vertices <span class="math notranslate nohighlight">\(v_i\)</span> and <span class="math notranslate nohighlight">\(v_k\)</span> are not connected, we assume <span class="math notranslate nohighlight">\(\gamma_{jk}(v_i)=0\)</span>.</p>
+<p>The betweenness centrality for a node <span class="math notranslate nohighlight">\(v_i\)</span> is defined as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp c(v_i)=\sum_{j\neq i}\sum_{k\neq i,k&gt;j}\gamma_{jk}(v_i)=\)</span>
+<span class="math notranslate nohighlight">\(\dp\sum_{j\neq i}\sum_{k\neq i,k&gt;j}\frac{\eta_{jk}(v_i)}{\eta_{jk}}\)</span></p>
+</div>
+</div>
+<div class="section" id="web-centralities">
+<h3>4.3.2 Web Centralities<a class="headerlink" href="#web-centralities" title="Permalink to this headline">¶</a></h3>
+<p><strong>Prestige</strong></p>
+<p>Let <span class="math notranslate nohighlight">\(G=(V,E)\)</span> be a directed graph, with <span class="math notranslate nohighlight">\(|V|=n\)</span>.
+The adjacency matrix of <span class="math notranslate nohighlight">\(G\)</span> is an <span class="math notranslate nohighlight">\(n\times n\)</span> asymmetric matrix <span class="math notranslate nohighlight">\(\A\)</span> given as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\A(u,v)=\left\{\begin{array}{lr}1\quad\rm{if\ }(u,v)\in E\\0\quad\rm{if\ }(u,v)\notin E\end{array}\right.\end{split}\]</div>
+<p>Let <span class="math notranslate nohighlight">\(p(u)\)</span> be a positive real number, called the <em>prestige</em> or <em>eigenvector centrality</em> score for node <span class="math notranslate nohighlight">\(u\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[p(u)=\sum_u\A(u,v)\cd p(u)=\sum_u\A^T(v,u)\cd p(u)\]</div>
+<p>Across all the nodes, we can recursively express the prestige scores as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\p\pr=\A^T\p\)</span></p>
+</div>
+<p>where <span class="math notranslate nohighlight">\(\p\)</span> is an <span class="math notranslate nohighlight">\(n\)</span>-dimensional column vector corresponding to the prestige scores for each vertex.</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\p_k&amp;=\A^T\p_{k-1}\\&amp;=\A^T(\A^T\p_{k-2})=(\A^T)^2\p_{k-2}\\&amp;=(\A^T)^2(\A^T\p_{k-3})=(\A^T)^3\p_{k-3}\\&amp;\vds\\&amp;=(\A^T)^k\p_0\end{aligned}\end{align} \]</div>
+<p>The dominant eigenvector of <span class="math notranslate nohighlight">\(\A^T\)</span> and the corresponding eigenvalue can be computed using the <em>power iteration</em>
+approach.</p>
+<img alt="../_images/Algo4.1.png" src="../_images/Algo4.1.png" />
+<p><strong>PageRank</strong></p>
+<p>The PageRank of a Web page is defined to be the probability of a random web surfer landing at that page.</p>
+<p><strong>Normalized Prestige</strong></p>
+<p>We assume for the moment that each node <span class="math notranslate nohighlight">\(u\)</span> has outdegree at least 1.
+Let <span class="math notranslate nohighlight">\(od(u)=\sum_v\A(u,v)\)</span> denote the outdegree of node <span class="math notranslate nohighlight">\(u\)</span>.
+Because a randodm surfer can choose among any of its outgoing links, if there is
+a link from <span class="math notranslate nohighlight">\(u\)</span> to <span class="math notranslate nohighlight">\(v\)</span>, then the probability of visiting <span class="math notranslate nohighlight">\(v\)</span>
+from <span class="math notranslate nohighlight">\(u\)</span> is <span class="math notranslate nohighlight">\(\frac{1}{od(u)}\)</span></p>
+<p>Staring from an initial probability or PageRank <span class="math notranslate nohighlight">\(p_0(u)\)</span> for each node, such that</p>
+<div class="math notranslate nohighlight">
+\[\sum_up_0(u)=1\]</div>
+<p>we can compute an updated PageRank vector for <span class="math notranslate nohighlight">\(v\)</span> as follows:</p>
+<div class="math notranslate nohighlight">
+\[p(v)=\sum_u\frac{\A(u,v)}{od(u)}\cd p(u)=\sum_u\N(u,v)\cd p(u)=\sum_u\N^T(v,u)\cd p(u)\]</div>
+<p>where <span class="math notranslate nohighlight">\(\N\)</span> is the normalized adjacency matrix of the graph, given as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\N(u,v)=\left\{\begin{array}{lr}\frac{1}{od(u)}\quad\rm{if\ }(u,v)\in E\\0\quad\rm{if\ }(u,v)\notin E\end{array}\right.\end{split}\]</div>
+<p>Across all nodes, we can express the PageRank vector as follows:</p>
+<div class="math notranslate nohighlight">
+\[\p\pr=\N^T\p\]</div>
+<p><strong>Random Jumps</strong></p>
+<p>In the random surfing approach, there is a small probability of jumping from one
+node to any of the other nodes in the graph, even if they do not have a link
+between them.
+For the random surfer matrix, the outdegree of each node is <span class="math notranslate nohighlight">\(od(u)=n\)</span>, and
+the probability of jumping from <span class="math notranslate nohighlight">\(u\)</span> to any node <span class="math notranslate nohighlight">\(v\)</span> is simply
+<span class="math notranslate nohighlight">\(\frac{1}{od(u)}=\frac{1}{n}\)</span>.
+The PageRank can then be computed analogously as</p>
+<div class="math notranslate nohighlight">
+\[p(v)=\sum_u\frac{\A_r(u,v)}{od(u)}\cd p(u)=\sum_u\N_r(u,v)\cd p(u)=\sum_u\N_r^T(v,u)\cd p(u)\]</div>
+<p>where <span class="math notranslate nohighlight">\(\N_r\)</span> is the normalized adjacency matrix of the fully connected Web graph, given as</p>
+<div class="math notranslate nohighlight">
+\[\N_r=\frac{1}{n}\A_r=\frac{1}{n}\1_{n\times n}\]</div>
+<p>Across all the nodes the random jump PageRank vector can be represented as</p>
+<div class="math notranslate nohighlight">
+\[\p\pr=\N_r^T\p\]</div>
+<p><strong>PageRank</strong></p>
+<p>The full PageRank is computed by assuming that with some small probability,
+<span class="math notranslate nohighlight">\(\alpha\)</span>, a random Web surfer jumps from the current node <span class="math notranslate nohighlight">\(u\)</span> to any
+other random node <span class="math notranslate nohighlight">\(v\)</span>, and with probability <span class="math notranslate nohighlight">\(1-\alpha\)</span> the user
+follows an existing link from <span class="math notranslate nohighlight">\(u\)</span> to <span class="math notranslate nohighlight">\(v\)</span>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\p\pr=(1-\alpha)\N^T\p+\alpha\N_r^T\p=((1-\alpha)\N^T+\alpha\N_r^T)\p=\bs{\rm{M}}^T\p\)</span></p>
+</div>
+<p>When a node <span class="math notranslate nohighlight">\(u\)</span> does not have any outgoing edges, that is, when
+<span class="math notranslate nohighlight">\(od(u)=0\)</span>, it acts like a sink for the normalized prestige score, and it
+can only jump to another random node.
+Thus, we need to make sure that if <span class="math notranslate nohighlight">\(od(u)=0\)</span> then for the row
+corresponding to <span class="math notranslate nohighlight">\(u\)</span> in <span class="math notranslate nohighlight">\(\bs{\rm{M}}\)</span>, denoted as
+<span class="math notranslate nohighlight">\(\bs{\rm{M}}_u\)</span>, we set <span class="math notranslate nohighlight">\(\alpha=1\)</span>, that is</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\bs{\rm{M}}_u=\left\{\begin{array}{lr}\bs{\rm{M}}_u\quad\rm{if\ }od(u)&gt;0\\
+\frac{1}{n}\1_n^T\quad\rm{if\ }od(u)=0\end{array}\right.\end{split}\]</div>
+<p><strong>Hub and Authority Scores</strong></p>
+<p>The <em>authority score</em> of a page is analogous to PageRank or prestige, and it
+depends on how many “good” pages point to it.
+The <em>hub score</em> of a  page is based on how many “good” pages it points to.</p>
+<p>We denote by <span class="math notranslate nohighlight">\(a(u)\)</span> the authority score and by <span class="math notranslate nohighlight">\(h(u)\)</span> the hub score of node <span class="math notranslate nohighlight">\(u\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}a(v)=\sum_u\A^T(v,u)\cd h(u)\\h(v)=\sum_u\A(v,u)\cd a(u)\end{aligned}\end{align} \]</div>
+<p>In matrix notation, we obtain</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\a\pr=\A^T\bs{\rm{h}}\quad\bs{\rm{h}}\pr=\A\a\)</span></p>
+</div>
+<p>In fact, we can write the above recursively as follows:</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\a_k=\A^T\bs{\rm{h}}_{k-1}=\A^T(\A\a_{k-1})=(\A^T\A)\a_{k-1}\\\bs{\rm{h}}_k=\A\a_{k-1}=\A(\A^T\bs{\rm{h}}_{k-1})=(\A\A^T)\bs{\rm{h}}_{k-1}\end{aligned}\end{align} \]</div>
+<p>In other words, as <span class="math notranslate nohighlight">\(k\ra\infty\)</span>, the authority score converges to the
+dominant eigenvector of <span class="math notranslate nohighlight">\(\A^T\A\)</span>, whereas the hub score converges to the
+dominant eigenvector of <span class="math notranslate nohighlight">\(\A\A^T\)</span>.</p>
+</div>
+</div>
+<div class="section" id="graph-models">
+<h2>4.4 Graph Models<a class="headerlink" href="#graph-models" title="Permalink to this headline">¶</a></h2>
+<p><strong>Small-world Property</strong></p>
+<p>A graph <span class="math notranslate nohighlight">\(G\)</span> exhibits small-world behavior if the average path length
+<span class="math notranslate nohighlight">\(\mu_L\)</span> scales logarithmically with the number of nodes in the graph, that
+is, if</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\mu_L\varpropto\log n\)</span></p>
+</div>
+<p>A graph is said to have <em>ultra-small-world</em> property if the average path length
+is much smaller than <span class="math notranslate nohighlight">\(\log n\)</span>, that is, if <span class="math notranslate nohighlight">\(\mu_L\ll\log n\)</span>.</p>
+<p><strong>Scale-free Property</strong></p>
+<p>In many real-world graphs, the probability that a node has degree <span class="math notranslate nohighlight">\(k\)</span> satisfies the condition</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(f(k)\varpropto k^{-\gamma}\)</span></p>
+</div>
+<p>Rewrite above equality by introducing a proportionality constant <span class="math notranslate nohighlight">\(\alpha\)</span>
+that does not depend on <span class="math notranslate nohighlight">\(k\)</span>, that is</p>
+<div class="math notranslate nohighlight">
+\[f(k)=\alpha K^{-\gamma}\]</div>
+<p>Then we have</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}f(ck)=\alpha(ck)^{-\gamma}&amp;=(\alpha c^{-\gamma})k^{-\gamma}\varpropto\alpha k^{-\gamma}\\\log f(k)&amp;=\log(\alpha k^{-\gamma})\\\rm{or\ }\log f(k)&amp;=-\gamma\log k+\log\alpha\end{aligned}\end{align} \]</div>
+<p>which is the equation of a straight line in the log-log plot of <span class="math notranslate nohighlight">\(k\)</span> versus
+<span class="math notranslate nohighlight">\(f(k)\)</span>, with <span class="math notranslate nohighlight">\(-\gamma\)</span> giving the slope of the line.</p>
+<p>A power-law relationship leads to a scale-free or scale invariant behavior
+because scaling the argument by some constant <span class="math notranslate nohighlight">\(c\)</span> does not change the
+proportionality.</p>
+<p><strong>Clustering Effect</strong></p>
+<p>Real-world graphs often also exhibit a <em>clustering effect</em>, that is, two nodes
+are more likely to be connected if they share a common neighbor.
+The clustering effect is captured by a high clustering coefficient for the graph <span class="math notranslate nohighlight">\(G\)</span>.
+Let <span class="math notranslate nohighlight">\(C(k)\)</span> denote the average clustering coefficient for all nodes with
+degree <span class="math notranslate nohighlight">\(k\)</span>; then the clustering effect also manifests itself as a
+power-law relationship between <span class="math notranslate nohighlight">\(C(k)\)</span> and <span class="math notranslate nohighlight">\(k\)</span>:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(C(k)\varpropto k^{-\gamma}\)</span></p>
+</div>
+<p>In other words, a log-log plot of <span class="math notranslate nohighlight">\(j\)</span> versus <span class="math notranslate nohighlight">\(C(k)\)</span> exhibits a
+straight line behavior with negative slop <span class="math notranslate nohighlight">\(-\gamma\)</span>.</p>
+<div class="section" id="erdosrenyi-random-graph-model">
+<h3>4.4.1 Erdös–Rényi Random Graph Model<a class="headerlink" href="#erdosrenyi-random-graph-model" title="Permalink to this headline">¶</a></h3>
+<p>The Erdös–Rényi(ER) model generates a random graph such that any of the possible
+graph with a fixed number of nodes and edges has equal probability of being
+chosen.</p>
+<p>Let <span class="math notranslate nohighlight">\(M\)</span> denote the maximum number of edges possible among the <span class="math notranslate nohighlight">\(n\)</span> nodes, that is,</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}M=\bp n\\2 \ep=\frac{n(n-1)}{2}\end{split}\]</div>
+<p>The ER model specifies a collection of graphs <span class="math notranslate nohighlight">\(\cl{G}(n,m)\)</span> with <span class="math notranslate nohighlight">\(n\)</span>
+nodes and <span class="math notranslate nohighlight">\(m\)</span> edges, such that each graph <span class="math notranslate nohighlight">\(G\in\cl{G}\)</span> has equal
+probability of being selected:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}P(G)=\frac{1}{\bp M\\m \ep}=\bp M\\m \ep\im\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\bp M\\m \ep\)</span> is the number of possible graphs with <span class="math notranslate nohighlight">\(m\)</span> edges
+corresponding to the way s of choosing the <span class="math notranslate nohighlight">\(m\)</span> edges out of a total of
+<span class="math notranslate nohighlight">\(M\)</span> possible edges.</p>
+<p>Let <span class="math notranslate nohighlight">\(V=\{v_1,v_2,\cds,v_n\}\)</span> denote the set of <span class="math notranslate nohighlight">\(n\)</span> nodes.
+The ER method chooses a random graph <span class="math notranslate nohighlight">\(G=(V,E)=\cl{G}\)</span> via a generative process.
+At each step, it randomly selects two distinct vertices <span class="math notranslate nohighlight">\(v_i,v_j\in V\)</span>,
+and adds an edge <span class="math notranslate nohighlight">\((v_i,v_j)\)</span> to <span class="math notranslate nohighlight">\(E\)</span>, provided the edge is not
+already in the graph <span class="math notranslate nohighlight">\(G\)</span>.
+The process is repeated until exactly <span class="math notranslate nohighlight">\(m\)</span> edges have been added to the graph.</p>
+<p>Let <span class="math notranslate nohighlight">\(X\)</span> be a random variable denoting the degree of a node for <span class="math notranslate nohighlight">\(G\in\cl{G}\)</span>.
+Let <span class="math notranslate nohighlight">\(p\)</span> denote the probability of an edge in <span class="math notranslate nohighlight">\(G\)</span>, which can be computed as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}p=\frac{m}{M}=\frac{m}{\bp n\\2 \ep}=\frac{2m}{n(n-1)}\end{split}\]</div>
+<p><strong>Average Degree</strong></p>
+<p>For any given node in <span class="math notranslate nohighlight">\(G\)</span> its degree can be at most <span class="math notranslate nohighlight">\(n-1\)</span>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(f(k)=P(X=k)=\bp n-1\\k \ep p^k(1-p)^{n-1-k}\)</span></p>
+</div>
+<p>The average degree <span class="math notranslate nohighlight">\(\mu_d\)</span> is then given as the expected value of <span class="math notranslate nohighlight">\(X\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\mu_d=E[x]=(n-1)p\]</div>
+<p>We can also compute the variance of the degrees among the nodes by computing the variance of <span class="math notranslate nohighlight">\(X\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\sg_d^2=\rm{var}(X)=(n-1)p(1-p)\]</div>
+<p><strong>Degree Distribution</strong></p>
+<p>As <span class="math notranslate nohighlight">\(n\ra\infty\)</span> and <span class="math notranslate nohighlight">\(p\ra 0\)</span>, the expected value and variance of <span class="math notranslate nohighlight">\(X\)</span> can be written as</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}E[x]&amp;=(n-1)p\simeq np\rm{\ as\ }n\ra\infty\\\rm{var}(X)&amp;=(n-1)p(1-p)\simeq np\rm{\ as\ }n\ra\infty\rm{\ and\ }p\ra 0\end{aligned}\end{align} \]</div>
+<p>In other words, for large and sparse graphs the expectation and variance of <span class="math notranslate nohighlight">\(X\)</span> are the same:</p>
+<div class="math notranslate nohighlight">
+\[E[x]=\rm{var}(X)=np\]</div>
+<p>and the binomial distribution can be approximated by a Poisson distribution with parameter <span class="math notranslate nohighlight">\(\ld\)</span>, give as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp f(k)=\frac{\ld^ke^{-\ld}}{k!}\)</span></p>
+</div>
+<p>where <span class="math notranslate nohighlight">\(\ld=np\)</span> represents both the expected value and variance of the distribution.
+Using Stirling’s approximation of the factorial <span class="math notranslate nohighlight">\(k!\simeq k^ke^{-k}\sqrt{2\pi k}\)</span> we obtain</p>
+<div class="math notranslate nohighlight">
+\[f(k)=\frac{\ld^ke^{-\ld}}{k!}\simeq
+\frac{\ld^ke^{-\ld}}{k^ke^{-k}\sqrt{2\pi k}}=
+\frac{e^{-\ld}}{\sqrt{2\pi}}\frac{(\ld e)^k}{\sqrt{k}k^k}\]</div>
+<p>In other words, we have</p>
+<div class="math notranslate nohighlight">
+\[f(k)\varpropto a^kk^{-\frac{1}{2}}k^{-k}\]</div>
+<p>for <span class="math notranslate nohighlight">\(\alpha=\ld e=npe\)</span>.
+The ER random graph model is not adequate to describe real-world scale-free graphs.</p>
+<p><strong>Clustering Coefficient</strong></p>
+<p>Let us cosinder a node <span class="math notranslate nohighlight">\(v_i\)</span> in <span class="math notranslate nohighlight">\(G\)</span> with degree <span class="math notranslate nohighlight">\(k\)</span>.
+The clustering coefficient of <span class="math notranslate nohighlight">\(v_i\)</span> is given as</p>
+<div class="math notranslate nohighlight">
+\[C(v_i)=\frac{2m_i}{k(k-1)}\]</div>
+<p>where <span class="math notranslate nohighlight">\(k=n_i\)</span> also denotes the number of nodes and <span class="math notranslate nohighlight">\(m_i\)</span> denotes the
+number of edges in the subgraph induced by neighbors of <span class="math notranslate nohighlight">\(v_i\)</span>.
+However, because <span class="math notranslate nohighlight">\(p\)</span> is the probability of an edge, the expected number of
+edges <span class="math notranslate nohighlight">\(m_i\)</span> among the neighbors of <span class="math notranslate nohighlight">\(v_i\)</span> is simply</p>
+<div class="math notranslate nohighlight">
+\[m_i=\frac{pk(k-1)}{2}\]</div>
+<p>Thus, we obtain</p>
+<div class="math notranslate nohighlight">
+\[C(v_i)=\frac{2m_i}{k(k-1)}=p\]</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp C(G)=\frac{1}{n}\sum_iC(v_i)=p\)</span></p>
+</div>
+<p>For sparse graphs we have <span class="math notranslate nohighlight">\(p\ra 0\)</span>, which in turn implies that <span class="math notranslate nohighlight">\(C(G)=C(v_i)\ra 0\)</span>.</p>
+<p><strong>Diameter</strong></p>
+<p>The expected degree of a node is <span class="math notranslate nohighlight">\(\mu_d=\ld\)</span>, and we can estimate the
+number of nodes at a distance of <span class="math notranslate nohighlight">\(k\)</span> hops away from a starting node
+<span class="math notranslate nohighlight">\(v_i\)</span> as <span class="math notranslate nohighlight">\(\ld^k\)</span>.
+However, because there are a total of <span class="math notranslate nohighlight">\(n\)</span> distinct vertices in the graph, we have</p>
+<div class="math notranslate nohighlight">
+\[\sum_{k=1}^t\ld^k=n\]</div>
+<p>where <span class="math notranslate nohighlight">\(t\)</span> denotes the maximum number of hops from <span class="math notranslate nohighlight">\(v_i\)</span>.
+We have</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\sum_{k=1}^t\ld^k=\frac{\ld^{t+1}-1}{\ld-1}&amp;\simeq \ld^t\\\ld^t&amp;\simeq n\rm{\ or}\\t\log\ld&amp;\simeq\log n\rm{\ which\ implies}\\t&amp;\simeq\frac{\log n}{\log\ld}\varpropto\log n\end{aligned}\end{align} \]</div>
+<p>Because the path length from a node to the farthest node is bounded by
+<span class="math notranslate nohighlight">\(t\)</span>, it follows that the diameter of the graph is also bounded by that
+value, that is,</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(d(G)\varpropto\log n\)</span></p>
+</div>
+</div>
+<div class="section" id="watts-strogatz-small-world-graph-model">
+<h3>4.4.2 Watts-Strogatz Small-world Graph Model<a class="headerlink" href="#watts-strogatz-small-world-graph-model" title="Permalink to this headline">¶</a></h3>
+<p>The WS model starts with a <em>regular</em> graph of degree <span class="math notranslate nohighlight">\(2k\)</span>, where each node
+is connected to its <span class="math notranslate nohighlight">\(k\)</span> neighbors on the right and <span class="math notranslate nohighlight">\(k\)</span> neighbors on
+the left.</p>
+<p><strong>Clustering Coefficient and Diameter of Regular Graph</strong></p>
+<p>Consider the subgraph <span class="math notranslate nohighlight">\(G_v\)</span> induced by the <span class="math notranslate nohighlight">\(2k\)</span> neighbors of a node <span class="math notranslate nohighlight">\(v\)</span>.
+The clustering coefficient of <span class="math notranslate nohighlight">\(v\)</span> is given as</p>
+<div class="math notranslate nohighlight">
+\[C(v)=\frac{m_v}{M_v}\]</div>
+<p>where <span class="math notranslate nohighlight">\(m_v\)</span> is the actual number of edges, and <span class="math notranslate nohighlight">\(M_v\)</span> is the maximum
+possible number of edges, among the neighbors of <span class="math notranslate nohighlight">\(v\)</span>.</p>
+<p>The degree of any node in <span class="math notranslate nohighlight">\(G_v\)</span> that is <span class="math notranslate nohighlight">\(i\)</span> backbone hops away from <span class="math notranslate nohighlight">\(v\)</span> is given as</p>
+<div class="math notranslate nohighlight">
+\[d_i=(k-i)+(k-1)=2k-i-1\]</div>
+<p>Because each edge contributes to the degree of its two incident nodes, summing
+the degrees of all neighbors of <span class="math notranslate nohighlight">\(v\)</span> to obtain</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}m_v&amp;=2\bigg(\sum_{i=1}^k2k-i-1\bigg)\\m_v&amp;=2k^2-\frac{k(k+1)}{2}-k\\m_v&amp;=\frac{3}{2}k(k-1)\end{aligned}\end{align} \]</div>
+<p>On the other hand, the number of possible edges among the <span class="math notranslate nohighlight">\(2k\)</span> neighbors of <span class="math notranslate nohighlight">\(v\)</span> is given as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}M_v=\bp 2k\\2 \ep=\frac{2k(2k-1)}{2}=k(2k-1)\end{split}\]</div>
+<p>The clustering coefficient of a node <span class="math notranslate nohighlight">\(v\)</span> is given as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(C(v)=\frac{m_v}{M_v}=\frac{3k-3}{4k-2}\)</span></p>
+</div>
+<p>As <span class="math notranslate nohighlight">\(k\)</span> increases, the clustering coefficient approahces <span class="math notranslate nohighlight">\(\frac{3}{4}\)</span>.</p>
+<p>The diameter of a regular WS graph is given as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(d(G)=\left\{\begin{array}{lr}\lceil\frac{n}{2k}\rceil\quad\rm{if\ }n\rm{\ is\ even}\\\lceil\frac{n-1}{2k}\rceil\quad\rm{if\ }n\rm{\ is\ odd}\end{array}\right.\)</span></p>
+</div>
+<p><strong>Random Perturbation of Regular Graph</strong></p>
+<p><strong>Edge Rewiring</strong></p>
+<p>For each <span class="math notranslate nohighlight">\((u,v)\)</span> in the graph, with probability <span class="math notranslate nohighlight">\(r\)</span>, replace
+<span class="math notranslate nohighlight">\(v\)</span> with another randomly chosen node avoiding loops and duplicate edges.
+Because the WS regular graph has <span class="math notranslate nohighlight">\(m=kn\)</span> total edges, after rewiring,
+<span class="math notranslate nohighlight">\(rm\)</span> of the edges are random, and <span class="math notranslate nohighlight">\((1-r)m\)</span> are regular.</p>
+<p><strong>Edge shortcuts</strong></p>
+<p>Add a few shortcut edges between random pairs of nodes, with <span class="math notranslate nohighlight">\(r\)</span> being the
+probability, per edge, of adding a shortcut edge.
+The total number of randum shortcut edges added to the network is <span class="math notranslate nohighlight">\(mr=knr\)</span>.
+The total number of edges in the graph is <span class="math notranslate nohighlight">\(m+mr=(1+r)m=(1+r)kn\)</span>.</p>
+<p><strong>Properties of Watts-Strogatz Graphs</strong></p>
+<p><strong>Degree Distribution</strong></p>
+<p>Let <span class="math notranslate nohighlight">\(X\)</span> denote the random variable denoting the number of shortcuts for each node.
+Then the probability of a node with <span class="math notranslate nohighlight">\(j\)</span> shortcut edges is given as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}f(j)=P(X=j)=\bp n\pr\\j \ep p^j(1-p)^{n\pr-j}\end{split}\]</div>
+<p>with <span class="math notranslate nohighlight">\(E[X]=n\pr p=2kr\)</span> and <span class="math notranslate nohighlight">\(p=\frac{2kr}{n-2k-1}=\frac{2kr}{n\pr}\)</span>
+The expected degree of each node in the network is therefore</p>
+<div class="math notranslate nohighlight">
+\[2k+E[X]=2k+2kr=2k(1+r)\]</div>
+<p>It is clear that the degree distribution of the WS graph does not adhere to a power law.
+Thus, such networks are not scale-free.</p>
+<p><strong>Clustering Coefficient</strong></p>
+<p>The clustering coefficient is</p>
+<div class="math notranslate nohighlight">
+\[C(v)\simeq\frac{3(k-1)}{(1+r)(4kr+2(2k-1))}=\frac{3k-3}{4k-2+2r(2kr+4k-1)}\]</div>
+<p>For small values of <span class="math notranslate nohighlight">\(r\)</span> the clustering coefficient remains high.</p>
+<p><strong>Diameter</strong></p>
+<p>Small values of shortcut edge probability <span class="math notranslate nohighlight">\(r\)</span> are enough to reduce the
+diameter from <span class="math notranslate nohighlight">\(O(n)\)</span> to <span class="math notranslate nohighlight">\(O(\log n)\)</span>.</p>
+</div>
+<div class="section" id="barabasialbert-scale-free-model">
+<h3>4.4.3 Barabási–Albert Scale-free Model<a class="headerlink" href="#barabasialbert-scale-free-model" title="Permalink to this headline">¶</a></h3>
+<p>The Barabási–Albert(BA) model tries to capture the scale-free degree
+distributions of real-world graphs via a generative process that adds new nodes
+and edges at each time step.
+The edge growth is based on the concept of <em>preferential attachment</em>; that is,
+edges from the new vertex are more likely to link to nodes with higher degrees.</p>
+<p>Let <span class="math notranslate nohighlight">\(G_t\)</span> denote the graph at time <span class="math notranslate nohighlight">\(t\)</span>, and let <span class="math notranslate nohighlight">\(n_t\)</span> denote
+the number of nodes, and <span class="math notranslate nohighlight">\(m_t\)</span> the number of edges in <span class="math notranslate nohighlight">\(G_t\)</span>.</p>
+<p><strong>Initialization</strong></p>
+<p>The BA model starts with <span class="math notranslate nohighlight">\(G_0\)</span>, with each node connected to its left and right neighbors in a circular layout.
+Thus <span class="math notranslate nohighlight">\(m_0=n_0\)</span>.</p>
+<p><strong>Growth and Preferential Attachment</strong></p>
+<p>The BA model derives a new graph <span class="math notranslate nohighlight">\(G_{t+1}\)</span> from <span class="math notranslate nohighlight">\(G_t\)</span> by adding
+exactly one new node <span class="math notranslate nohighlight">\(u\)</span> and adding <span class="math notranslate nohighlight">\(q\leq n_0\)</span> new edges from
+<span class="math notranslate nohighlight">\(u\)</span> to <span class="math notranslate nohighlight">\(q\)</span> distinct nodes <span class="math notranslate nohighlight">\(v_j\in G_t\)</span>, where node <span class="math notranslate nohighlight">\(v_j\)</span>
+is chosen with probability <span class="math notranslate nohighlight">\(\pi_t(v_j)\)</span> proportional to its degree in
+<span class="math notranslate nohighlight">\(G_t\)</span>, given as</p>
+<div class="math notranslate nohighlight">
+\[\pi_t(v_j)=\frac{d_j}{\sum_{v_j\in G_t}d_i}\]</div>
+<p><strong>Degree Distribution</strong></p>
+<p>The degree distribution for BA graphs is given as</p>
+<div class="math notranslate nohighlight">
+\[f(k)=\frac{(q+2)(q+1)q}{(k+2)(k+1)k}\cd\frac{2}{(q+2)}=\frac{2q(q+1)}{k(k+1)(k+2)}\]</div>
+<p>For constant <span class="math notranslate nohighlight">\(q\)</span> and large <span class="math notranslate nohighlight">\(k\)</span>, the degree distribution scales as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(f(k)\varpropto k^{-3}\)</span></p>
+</div>
+<p>The BA model yields a power-law degree distribution with <span class="math notranslate nohighlight">\(\gamma=3\)</span>, especially for large degrees.</p>
+<p><strong>Clustering Coefficient and Diameter</strong></p>
+<p>The diameter of BA graphs scales as</p>
+<div class="math notranslate nohighlight">
+\[d(G_t)=O\bigg(\frac{\log n_t}{\log\log n_t}\bigg)\]</div>
+<p>The expected clustering coefficient of the BA graphs scales as</p>
+<div class="math notranslate nohighlight">
+\[E[C(G_t)]=O\bigg(\frac{(\log n_t)^2}{n_t}\bigg)\]</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="chap5.html" class="btn btn-neutral float-right" title="Chapter 5 Kernel Methods" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="chap3.html" class="btn btn-neutral float-left" title="Chapter 3 Categorical Attributes" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Ziniu Yu.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

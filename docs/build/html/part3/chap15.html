@@ -401,6 +401,14 @@ however, it can be used to obtain the following iterative update rule:</p>
 <p><span class="math notranslate nohighlight">\(\dp\x_{t+1}=\frac{\sum_{i=1}^nK(\frac{\x_t-\x_i}{h})\x_i}{\sum_{i=1}^nK(\frac{\x_t-\x_i}{h})}\)</span></p>
 </div>
 <p><strong>Center-defined Cluster</strong></p>
+<p>A cluster <span class="math notranslate nohighlight">\(C\subseteq\D\)</span>, is called a <em>Center-defined cluster</em> if all the
+points <span class="math notranslate nohighlight">\(\x\in C\)</span> are density attracted to a unique density attractor
+<span class="math notranslate nohighlight">\(\x^*\)</span>, such that <span class="math notranslate nohighlight">\(\hat{f}(\x^*)\geq\xi\)</span>, where <span class="math notranslate nohighlight">\(\xi\)</span> is a
+user-defined minimum density threshold.
+In other words,</p>
+<div class="math notranslate nohighlight">
+\[\hat{f}(\x^*)=\frac{1}{nh^d}\sum_{i=1}^nK\bigg(\frac{\x^*-\x_i}{h}\bigg)\geq\xi\]</div>
+<p><strong>Density-defined Cluster</strong></p>
 <p>A cluster <span class="math notranslate nohighlight">\(C\subseteq\D\)</span> is called a <em>density-based cluster</em> if there
 exists a set of density attractors <span class="math notranslate nohighlight">\(\x_1^*,\x_2^*,\cds,\x_m^*\)</span>, such that</p>
 <ol class="arabic simple">
@@ -414,6 +422,11 @@ That is, <span class="math notranslate nohighlight">\(\hat{f}(\x_i^*)\geq\xi\)</
 </ol>
 <p><strong>DENCLUE Algorithm</strong></p>
 <img alt="../_images/Algo15.2.png" src="../_images/Algo15.2.png" />
+<p><strong>DENCLUE: Special Cases</strong></p>
+<p>If we let <span class="math notranslate nohighlight">\(h=\epsilon\)</span> and <span class="math notranslate nohighlight">\(\xi=minpts\)</span>, then using a discrete
+kernel DENCLUE yields exactly the same clusters as DBSCAN.</p>
+<p><strong>Computational Complexity</strong></p>
+<p>The time for DENCLUE is dominated by the cost of the hill-climbing process.</p>
 </div>
 </div>
 

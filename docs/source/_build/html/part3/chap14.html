@@ -1,0 +1,403 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Chapter 14 Hierarchical Clustering &mdash; DataMining  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Chapter 15 Density-based Clustering" href="chap15.html" />
+    <link rel="prev" title="Chapter 13 Representative-based Clustering" href="chap13.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> DataMining
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../part1/index1.html">Part 1 Data Analysis Foundations</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index3.html">Part 3 Clustering</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="chap13.html">Chapter 13 Representative-based Clustering</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Chapter 14 Hierarchical Clustering</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#preliminaries">14.1 Preliminaries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#agglomerative-hierarchical-clustering">14.2 Agglomerative Hierarchical Clustering</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#distance-between-clusters">14.2.1 Distance between Clusters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#updating-distance-matrix">14.2.2 Updating Distance Matrix</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#computational-complexity">14.2.3 Computational Complexity</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="chap15.html">Chapter 15 Density-based Clustering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chap16.html">Chapter 16 Spectral and Graph Clustering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chap17.html">Chapter 17 Clustering Validation</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">DataMining</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index3.html">Part 3 Clustering</a> &raquo;</li>
+        
+      <li>Chapter 14 Hierarchical Clustering</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/part3/chap14.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\newcommand{\bs}{\boldsymbol}
+\newcommand{\dp}{\displaystyle}
+\newcommand{\rm}{\mathrm}
+\newcommand{\cl}{\mathcal}
+\newcommand{\pd}{\partial}\\\newcommand{\cd}{\cdot}
+\newcommand{\cds}{\cdots}
+\newcommand{\dds}{\ddots}
+\newcommand{\lv}{\lVert}
+\newcommand{\ol}{\overline}
+\newcommand{\ra}{\rightarrow}
+\newcommand{\rv}{\rVert}
+\newcommand{\seq}{\subseteq}
+\newcommand{\vds}{\vdots}
+\newcommand{\wh}{\widehat}\\\newcommand{\0}{\boldsymbol{0}}
+\newcommand{\1}{\boldsymbol{1}}
+\newcommand{\a}{\boldsymbol{\mathrm{a}}}
+\newcommand{\b}{\boldsymbol{\mathrm{b}}}
+\newcommand{\c}{\boldsymbol{\mathrm{c}}}
+\newcommand{\e}{\boldsymbol{\mathrm{e}}}
+\newcommand{\f}{\boldsymbol{\mathrm{f}}}
+\newcommand{\g}{\boldsymbol{\mathrm{g}}}
+\newcommand{\i}{\boldsymbol{\mathrm{i}}}
+\newcommand{\j}{\boldsymbol{j}}
+\newcommand{\n}{\boldsymbol{\mathrm{n}}}
+\newcommand{\p}{\boldsymbol{\mathrm{p}}}
+\newcommand{\q}{\boldsymbol{\mathrm{q}}}
+\newcommand{\r}{\boldsymbol{\mathrm{r}}}
+\newcommand{\u}{\boldsymbol{\mathrm{u}}}
+\newcommand{\v}{\boldsymbol{\mathrm{v}}}
+\newcommand{\w}{\boldsymbol{\mathrm{w}}}
+\newcommand{\x}{\boldsymbol{\mathrm{x}}}
+\newcommand{\y}{\boldsymbol{\mathrm{y}}}
+\newcommand{\z}{\boldsymbol{\mathrm{z}}}\\\newcommand{\A}{\boldsymbol{\mathrm{A}}}
+\newcommand{\B}{\boldsymbol{B}}
+\newcommand{\C}{\boldsymbol{C}}
+\newcommand{\D}{\boldsymbol{\mathrm{D}}}
+\newcommand{\I}{\boldsymbol{\mathrm{I}}}
+\newcommand{\K}{\boldsymbol{\mathrm{K}}}
+\newcommand{\N}{\boldsymbol{\mathrm{N}}}
+\newcommand{\P}{\boldsymbol{\mathrm{P}}}
+\newcommand{\S}{\boldsymbol{\mathrm{S}}}
+\newcommand{\U}{\boldsymbol{\mathrm{U}}}
+\newcommand{\W}{\boldsymbol{\mathrm{W}}}
+\newcommand{\X}{\boldsymbol{\mathrm{X}}}\\\newcommand{\R}{\mathbb{R}}\\\newcommand{\ld}{\lambda}
+\newcommand{\Ld}{\boldsymbol{\mathrm{\Lambda}}}
+\newcommand{\sg}{\sigma}
+\newcommand{\Sg}{\boldsymbol{\mathrm{\Sigma}}}
+\newcommand{\th}{\theta}\\\newcommand{\mmu}{\boldsymbol{\mu}}\\\newcommand{\bb}{\begin{bmatrix}}
+\newcommand{\eb}{\end{bmatrix}}
+\newcommand{\bp}{\begin{pmatrix}}
+\newcommand{\ep}{\end{pmatrix}}
+\newcommand{\bv}{\begin{vmatrix}}
+\newcommand{\ev}{\end{vmatrix}}\\\newcommand{\im}{^{-1}}
+\newcommand{\pr}{^{\prime}}
+\newcommand{\ppr}{^{\prime\prime}}\end{aligned}\end{align} \]</div>
+<div class="section" id="chapter-14-hierarchical-clustering">
+<h1>Chapter 14 Hierarchical Clustering<a class="headerlink" href="#chapter-14-hierarchical-clustering" title="Permalink to this headline">¶</a></h1>
+<p>Given <span class="math notranslate nohighlight">\(n\)</span> points in a <span class="math notranslate nohighlight">\(d\)</span>-dimensional space, the goal of
+hierarchical clustering is to create a sequence of nested partitions, which can
+be conveniently visualized via a tree or hierarchy of clusters, also called the
+cluster <em>dendrogram</em>.</p>
+<p>There are two main algorithmic approaches to mine hierarchical clusters: agglomerative and divisive.
+Agglomerative strategies work in a bottom-up manner.
+That is, starting with each of the <span class="math notranslate nohighlight">\(n\)</span> points in a separate cluster, they
+repeatedly merge the most similar pair of clusters until all points are members
+of the same cluster.
+Divisive strategies do just the opposite, working in a top-down manner.
+Starting with all the points in the same cluster, they recursively split the
+clusters until all points are in separate clusters.</p>
+<div class="section" id="preliminaries">
+<h2>14.1 Preliminaries<a class="headerlink" href="#preliminaries" title="Permalink to this headline">¶</a></h2>
+<p>Given a dataset <span class="math notranslate nohighlight">\(\D\)</span> comprising <span class="math notranslate nohighlight">\(n\)</span> points
+<span class="math notranslate nohighlight">\(\x_i\in\R^D(i=1,2,\cds,n)\)</span>, a clustering <span class="math notranslate nohighlight">\(\cl{C}=\{C_1,\cds,C_k\}\)</span>
+is a partition of <span class="math notranslate nohighlight">\(\D\)</span>, that is, each cluster is a set of points
+<span class="math notranslate nohighlight">\(C_i\subseteq\D\)</span>, such that the clusters are pairwise disjoint
+<span class="math notranslate nohighlight">\(C_i\cap C_j=\emptyset\)</span> (for all <span class="math notranslate nohighlight">\(i\neq j\)</span>), and
+<span class="math notranslate nohighlight">\(\cup_{i=1}^kC_i=\D\)</span>.
+A clustering <span class="math notranslate nohighlight">\(\cl{A}=\{A_1,\cds,A_r\}\)</span> is said to be nested in another
+clustering <span class="math notranslate nohighlight">\(\cl{B}=\{B_1,\cds,\B_s\}\)</span> if and only if <span class="math notranslate nohighlight">\(r&gt;s\)</span>, and for
+each cluster <span class="math notranslate nohighlight">\(A_i\in\cl{A}\)</span>, there exists a cluster <span class="math notranslate nohighlight">\(B_j\in\cl{B}\)</span>,
+such that <span class="math notranslate nohighlight">\(A_i\subseteq B_j\)</span>.
+Hierarchical clustering yields a sequence of <span class="math notranslate nohighlight">\(n\)</span> nested partitions <span class="math notranslate nohighlight">\(\cl{C}_1,\cds,\cl{C}_n\)</span>.
+The clustering <span class="math notranslate nohighlight">\(\cl{C}_{t-1}\)</span> is nested in the clustering <span class="math notranslate nohighlight">\(\cl{C}_t\)</span>.
+The cluster dendrogram is a rooted binary tree that captures this nesting
+structure, with edges between cluster <span class="math notranslate nohighlight">\(C_i\in\cl{C}_{i-1}\)</span> and cluster
+<span class="math notranslate nohighlight">\(C_j\in\cl{C}_t\)</span> if <span class="math notranslate nohighlight">\(C_i\)</span> is nested in <span class="math notranslate nohighlight">\(C_j\)</span>, that is, if
+<span class="math notranslate nohighlight">\(C_i\subset C_j\)</span>.</p>
+<p><strong>Number of Hierarchical Clusterings</strong></p>
+<p>The number of different nested or hierarchical clusterings corresponds to the
+number of different binary rooted trees or dendrograms with <span class="math notranslate nohighlight">\(n\)</span> leaves
+with distinct labels.
+Any tree with <span class="math notranslate nohighlight">\(t\)</span> nodes has <span class="math notranslate nohighlight">\(t−1\)</span> edges.
+Also, any rooted binary tree with <span class="math notranslate nohighlight">\(m\)</span> leaves has <span class="math notranslate nohighlight">\(m−1\)</span> internal nodes.
+Thus, a dendrogram with <span class="math notranslate nohighlight">\(m\)</span> leaf nodes has a total of <span class="math notranslate nohighlight">\(t=m+m−1=2m−1\)</span>
+nodes, and consequently <span class="math notranslate nohighlight">\(t−1=2m−2\)</span> edges.
+The total number of different dendrograms with <span class="math notranslate nohighlight">\(n\)</span> leaves is obtained by the following product:</p>
+<div class="math notranslate nohighlight">
+\[\prod_{m=1}^{n-1}(2m-1)=1\times 3\times 5\times 7\times\cds\times(2n-3)=(2n-3)!!\]</div>
+</div>
+<div class="section" id="agglomerative-hierarchical-clustering">
+<h2>14.2 Agglomerative Hierarchical Clustering<a class="headerlink" href="#agglomerative-hierarchical-clustering" title="Permalink to this headline">¶</a></h2>
+<img alt="../_images/Algo14.1.png" src="../_images/Algo14.1.png" />
+<div class="section" id="distance-between-clusters">
+<h3>14.2.1 Distance between Clusters<a class="headerlink" href="#distance-between-clusters" title="Permalink to this headline">¶</a></h3>
+<p>The between-cluster distances are ultimately based on the distance between two
+points, which is typically computed using the Euclidean distance or <span class="math notranslate nohighlight">\(L_2\)</span>
+-<em>norm</em>, defined as</p>
+<div class="math notranslate nohighlight">
+\[\lv\x-\y\rv=\bigg(\sum_{i=1}^d(x_i-y_i)^2\bigg)^{1/2}\]</div>
+<p><strong>Single Link</strong></p>
+<p>Given two clusters <span class="math notranslate nohighlight">\(C_i\)</span> and <span class="math notranslate nohighlight">\(C_j\)</span>, the distance between them,
+denoted <span class="math notranslate nohighlight">\(\delta(C_i,C_j)\)</span>, is defined as the minimum distance between a
+point in <span class="math notranslate nohighlight">\(C_i\)</span> and a point in <span class="math notranslate nohighlight">\(C_j\)</span></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\delta(C_i,C_j)=\min\{\lv\x-\y\rv|\x\in C_i,\y\in C_j\}\)</span></p>
+</div>
+<p><strong>Complete Link</strong></p>
+<p>The distance between two clusters is defined as the maximum distance between a
+point in <span class="math notranslate nohighlight">\(C_i\)</span> and a point in <span class="math notranslate nohighlight">\(C_j\)</span>:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\delta(C_i,C_j)=\max\{\lv\x-\y\rv|\x\in C_i,\y\in C_j\}\)</span></p>
+</div>
+<p><strong>Group Average</strong></p>
+<p>The distance between two clusters is defined as the average pairwise distance
+between points in <span class="math notranslate nohighlight">\(C_i\)</span> and <span class="math notranslate nohighlight">\(C_j\)</span>:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\delta(C_i,C_j)=\frac{\sum_{\x\in C_i}\sum_{\y\in C_j}\lv\x-\y\rv}{n_i\cd n_j}\)</span></p>
+</div>
+<p>where <span class="math notranslate nohighlight">\(n_i=|C_i|\)</span> denotes the number of points in cluster <span class="math notranslate nohighlight">\(C_i\)</span>.</p>
+<p><strong>Mean Distance</strong></p>
+<p>The distance between two clusters is defined as the distance between the means or centroids of the two clusters:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\delta(C_i,C_j)=\lv\mmu_i-\mmu_j\rv\)</span></p>
+</div>
+<p>where <span class="math notranslate nohighlight">\(\mmu_i=\frac{1}{n_i}\sum_{\x\in C_i}\x\)</span>.</p>
+<p><strong>Minimum Variance: Ward’s Method</strong></p>
+<p>The sum of a squared errors (SSE) for a given cluster <span class="math notranslate nohighlight">\(C_i\)</span> is given as</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}SSE_i&amp;=\sum_{\x\in C_i}\lv\x-\mmu_i\rv^2\\&amp;=\sum_{\x\in C_i}\lv\x-\mmu_i\rv^2\\&amp;=\sum_{\x\in C_i}\x^T\x-2\sum_{\x\in C_i}\x^T\mmu_i+\sum_{\x\in C_i}\mmu_i^T\mmu_i\\&amp;=\bigg(\sum_{\x\in C_i}\x^T\x\bigg)-n_i\mmu_i^T\mmu_i\end{aligned}\end{align} \]</div>
+<p>The SSE for a clustering <span class="math notranslate nohighlight">\(\cl{C}=\{C_1,\cds,C_m\}\)</span> is given as</p>
+<div class="math notranslate nohighlight">
+\[SSE=\sum_{i=1}^mSSE_i=\sum_{i=1}^m\sum_{\x\in C_i}\lv\x-\mmu_i\rv^2\]</div>
+<p>After simplification, we get</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\delta(C_i,C_j)=\bigg(\frac{n_in_j}{n_i+n_j}\bigg)\lv\mmu_i-\mmu_j\rv^2\)</span></p>
+</div>
+</div>
+<div class="section" id="updating-distance-matrix">
+<h3>14.2.2 Updating Distance Matrix<a class="headerlink" href="#updating-distance-matrix" title="Permalink to this headline">¶</a></h3>
+<p>Whenever two clusters <span class="math notranslate nohighlight">\(C_i\)</span> and <span class="math notranslate nohighlight">\(C_j\)</span> are merged into
+<span class="math notranslate nohighlight">\(C_{ij}\)</span>, we need to update the distance matrix by recomputing the
+distances from the newly created cluster <span class="math notranslate nohighlight">\(C_{ij}\)</span> to all other clusters
+<span class="math notranslate nohighlight">\(C_r\)</span> (<span class="math notranslate nohighlight">\(r \ne i\)</span> and <span class="math notranslate nohighlight">\(r \ne j\)</span>).
+The Lance–Williams formula provides a general equation to recompute the
+distances for all of the cluster proximity measures we considered earlier; it is
+given as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\delta(C_{ij},C_r)=\alpha_i\cd\delta(C_i,C_r)+\alpha_j\cd\delta(C_j,C_r)+\beta\cd\delta(C_i,C_j)+\gamma\cd|\delta(C_i,C_r)-\delta(C_j,C_r)|\)</span></p>
+</div>
+<p>The coefficients <span class="math notranslate nohighlight">\(\alpha_i,\alpha_j,\beta\)</span> and <span class="math notranslate nohighlight">\(\gamma\)</span> differ from one measure to another.</p>
+</div>
+<div class="section" id="computational-complexity">
+<h3>14.2.3 Computational Complexity<a class="headerlink" href="#computational-complexity" title="Permalink to this headline">¶</a></h3>
+<p>The computational complexity of hierarchical clustering is <span class="math notranslate nohighlight">\(O(n^2\log n)\)</span>.</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="chap15.html" class="btn btn-neutral float-right" title="Chapter 15 Density-based Clustering" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="chap13.html" class="btn btn-neutral float-left" title="Chapter 13 Representative-based Clustering" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Ziniu Yu.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

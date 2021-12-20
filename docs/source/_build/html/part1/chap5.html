@@ -1,0 +1,745 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Chapter 5 Kernel Methods &mdash; DataMining  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Chapter 6 High-dimensional Data" href="chap6.html" />
+    <link rel="prev" title="Chapter 4 Graph Data" href="chap4.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> DataMining
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index1.html">Part 1 Data Analysis Foundations</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="chap1.html">Chapter 1 Data Matrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chap2.html">Chapter 2 Numeric Attributes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chap3.html">Chapter 3 Categorical Attributes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chap4.html">Chapter 4 Graph Data</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Chapter 5 Kernel Methods</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#kernel-matrix">5.1 Kernel Matrix</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#reproducing-kernel-map">5.1.1 Reproducing Kernel Map</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#mercer-kernel-map">5.1.2 Mercer Kernel Map</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#vector-kernels">5.2 Vector Kernels</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#basic-kernel-operations-in-feature-space">5.3 Basic Kernel Operations in Feature Space</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#kernels-for-complex-objects">5.4 Kernels for Complex Objects</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#spectrum-kernel-for-strings">5.4.1 Spectrum Kernel for Strings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#diffusion-kernels-on-graph-nodes">5.4.2 Diffusion Kernels on Graph Nodes</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="chap6.html">Chapter 6 High-dimensional Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chap7.html">Chapter 7 Dimensionality Reduction</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../part3/index3.html">Part 3 Clustering</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">DataMining</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index1.html">Part 1 Data Analysis Foundations</a> &raquo;</li>
+        
+      <li>Chapter 5 Kernel Methods</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/part1/chap5.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\newcommand{\bs}{\boldsymbol}
+\newcommand{\dp}{\displaystyle}
+\newcommand{\rm}{\mathrm}
+\newcommand{\cl}{\mathcal}
+\newcommand{\pd}{\partial}\\\newcommand{\cd}{\cdot}
+\newcommand{\cds}{\cdots}
+\newcommand{\dds}{\ddots}
+\newcommand{\lv}{\lVert}
+\newcommand{\ol}{\overline}
+\newcommand{\ra}{\rightarrow}
+\newcommand{\rv}{\rVert}
+\newcommand{\seq}{\subseteq}
+\newcommand{\vds}{\vdots}
+\newcommand{\wh}{\widehat}\\\newcommand{\0}{\boldsymbol{0}}
+\newcommand{\1}{\boldsymbol{1}}
+\newcommand{\a}{\boldsymbol{\mathrm{a}}}
+\newcommand{\b}{\boldsymbol{\mathrm{b}}}
+\newcommand{\c}{\boldsymbol{\mathrm{c}}}
+\newcommand{\e}{\boldsymbol{\mathrm{e}}}
+\newcommand{\f}{\boldsymbol{\mathrm{f}}}
+\newcommand{\g}{\boldsymbol{\mathrm{g}}}
+\newcommand{\i}{\boldsymbol{\mathrm{i}}}
+\newcommand{\j}{\boldsymbol{j}}
+\newcommand{\n}{\boldsymbol{\mathrm{n}}}
+\newcommand{\p}{\boldsymbol{\mathrm{p}}}
+\newcommand{\q}{\boldsymbol{\mathrm{q}}}
+\newcommand{\r}{\boldsymbol{\mathrm{r}}}
+\newcommand{\u}{\boldsymbol{\mathrm{u}}}
+\newcommand{\v}{\boldsymbol{\mathrm{v}}}
+\newcommand{\w}{\boldsymbol{\mathrm{w}}}
+\newcommand{\x}{\boldsymbol{\mathrm{x}}}
+\newcommand{\y}{\boldsymbol{\mathrm{y}}}
+\newcommand{\z}{\boldsymbol{\mathrm{z}}}\\\newcommand{\A}{\boldsymbol{\mathrm{A}}}
+\newcommand{\B}{\boldsymbol{B}}
+\newcommand{\C}{\boldsymbol{C}}
+\newcommand{\D}{\boldsymbol{\mathrm{D}}}
+\newcommand{\I}{\boldsymbol{\mathrm{I}}}
+\newcommand{\K}{\boldsymbol{\mathrm{K}}}
+\newcommand{\N}{\boldsymbol{\mathrm{N}}}
+\newcommand{\P}{\boldsymbol{\mathrm{P}}}
+\newcommand{\S}{\boldsymbol{\mathrm{S}}}
+\newcommand{\U}{\boldsymbol{\mathrm{U}}}
+\newcommand{\W}{\boldsymbol{\mathrm{W}}}
+\newcommand{\X}{\boldsymbol{\mathrm{X}}}\\\newcommand{\R}{\mathbb{R}}\\\newcommand{\ld}{\lambda}
+\newcommand{\Ld}{\boldsymbol{\mathrm{\Lambda}}}
+\newcommand{\sg}{\sigma}
+\newcommand{\Sg}{\boldsymbol{\mathrm{\Sigma}}}
+\newcommand{\th}{\theta}\\\newcommand{\mmu}{\boldsymbol{\mu}}\\\newcommand{\bb}{\begin{bmatrix}}
+\newcommand{\eb}{\end{bmatrix}}
+\newcommand{\bp}{\begin{pmatrix}}
+\newcommand{\ep}{\end{pmatrix}}
+\newcommand{\bv}{\begin{vmatrix}}
+\newcommand{\ev}{\end{vmatrix}}\\\newcommand{\im}{^{-1}}
+\newcommand{\pr}{^{\prime}}
+\newcommand{\ppr}{^{\prime\prime}}\end{aligned}\end{align} \]</div>
+<div class="section" id="chapter-5-kernel-methods">
+<h1>Chapter 5 Kernel Methods<a class="headerlink" href="#chapter-5-kernel-methods" title="Permalink to this headline">¶</a></h1>
+<p>Given a data instance <span class="math notranslate nohighlight">\(\x\)</span>, we need to find a mapping <span class="math notranslate nohighlight">\(\phi\)</span>, so
+that <span class="math notranslate nohighlight">\(\phi(\x)\)</span> is the vector representation of <span class="math notranslate nohighlight">\(\x\)</span>.
+Even when the input data is a numeric data matrix, if we wish to discover
+nonlinear relationships among the attributes, then a nonlinear mapping
+<span class="math notranslate nohighlight">\(\phi\)</span> may be used, so that <span class="math notranslate nohighlight">\(\phi(\x)\)</span> represents a vector in the
+corresponding high-dimensional space comprising nonlinear attributes.
+We use the <em>input space</em> to reefer to the data space for the input data
+<span class="math notranslate nohighlight">\(\x\)</span> and <em>feature space</em> to refer to the space of mapped vectors
+<span class="math notranslate nohighlight">\(\phi(\x)\)</span>.</p>
+<p>Kernel methods avoid explicitly transforming each point <span class="math notranslate nohighlight">\(\x\)</span> in the input
+space into the mapped point <span class="math notranslate nohighlight">\(\phi(\x)\)</span> in the feature space.
+Instead, the input objects are represented via their <span class="math notranslate nohighlight">\(n\times n\)</span> pairwise similarity values.
+The similarity function, called a <em>kernel</em>, is chosen so that it represents a
+dot product in some high-dimensional feature space, yet it can be computed
+without directly constructing <span class="math notranslate nohighlight">\(\phi(\x)\)</span>.
+Let <span class="math notranslate nohighlight">\(\cl{I}\)</span> denote the input space, and let <span class="math notranslate nohighlight">\(\D\subset\cl{I}\)</span> be a
+dataset comprising <span class="math notranslate nohighlight">\(n\)</span> objects <span class="math notranslate nohighlight">\(\x_i\ (i=1,2,\cds,n)\)</span> in the input
+space.
+We can represent the pairwise similarity values between points in <span class="math notranslate nohighlight">\(\D\)</span> via the <span class="math notranslate nohighlight">\(n\times n\)</span> <em>kernel matrix</em></p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\K=\bp K(\x_1,\x_1)&amp;K(\x_1,\x_2)&amp;\cds&amp;K(\x_1,\x_n)\\
+K(\x_2,\x_1)&amp;K(\x_2,\x_2)&amp;\cds&amp;K(\x_2,\x_n)\\\vds&amp;\vds&amp;\dds&amp;\vds\\
+K(\x_m,\x_1)&amp;K(\x_n,\x_2)&amp;\cds&amp;K(\x_n,\x_n) \ep\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(K:\cl{I}\times\cl{I}\ra\R\)</span> is a <em>kernel function</em> on any two points in input space.
+For any <span class="math notranslate nohighlight">\(\x_i,\x_j\in\cl{I}\)</span>, the kernel function should satisfy the condition</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(K(\x_i,\x_j)=\phi(\x_i)^T\phi(\x_j)\)</span></p>
+</div>
+<p>Intuitively, this means that we should be able to compute the value of the dot
+product using the original input representation <span class="math notranslate nohighlight">\(\x\)</span>, without having
+recourse to the mapping <span class="math notranslate nohighlight">\(\phi(\x)\)</span>.</p>
+<p>many data mining methods can be <em>kernelized</em>, that is, instead of mapping the
+input points into feature space, the data can be represented via the
+<span class="math notranslate nohighlight">\(n\times n\)</span> kernel matrix <span class="math notranslate nohighlight">\(\K\)</span>, and all relevant analysis can be
+performed over <span class="math notranslate nohighlight">\(\K\)</span>.
+This is usually done via the so-called <em>kernel trick</em>, that is, show that the
+analysis task requires only dot products <span class="math notranslate nohighlight">\(\phi(\x_i)^T\phi(\x_j)\)</span> that can
+be computed efficiently in input space.
+Once the kernel matrix has been computed, we no longer even need the input
+points <span class="math notranslate nohighlight">\(\x_i\)</span>, as all operations involving only dot products inthe feature
+space can be performed over the <span class="math notranslate nohighlight">\(n\times n\)</span> kernel matrix <span class="math notranslate nohighlight">\(\K\)</span>.</p>
+<div class="section" id="kernel-matrix">
+<h2>5.1 Kernel Matrix<a class="headerlink" href="#kernel-matrix" title="Permalink to this headline">¶</a></h2>
+<p>Let <span class="math notranslate nohighlight">\(\cl{I}\)</span> denote the input space, which can be any arbitrary set of
+data objects, and let <span class="math notranslate nohighlight">\(\D\subset\cl{I}\)</span> denote a subset of <span class="math notranslate nohighlight">\(n\)</span>
+objects <span class="math notranslate nohighlight">\(\x_i\)</span> in the input space.
+Let <span class="math notranslate nohighlight">\(\phi:\cl{I}\ra\cl{F}\)</span> be a mapping from the input space into the
+feature space <span class="math notranslate nohighlight">\(\cl{F}\)</span>, which is endowed with a dot product and norm.
+Let <span class="math notranslate nohighlight">\(K:\cl{I}\times\cl{I}\ra\R\)</span> be a function that maps pairs of input
+objects to their dot product value in feature space, that is,
+<span class="math notranslate nohighlight">\(K(\x_i,\x_j)=\phi(\x_i)^T\phi(\x_j)\)</span>, and let <span class="math notranslate nohighlight">\(\K\)</span> be the
+<span class="math notranslate nohighlight">\(n\times n\)</span> kernel matrix corresponding to the subset <span class="math notranslate nohighlight">\(\D\)</span>.</p>
+<p>The function <span class="math notranslate nohighlight">\(K\)</span> is called a <strong>positive semidefinite kernel</strong> if and only if it is symmetric:</p>
+<div class="math notranslate nohighlight">
+\[K(\x_i,\x_j)=K(\x_j,\x_i)\]</div>
+<p>and the corresponding kernel matrix <span class="math notranslate nohighlight">\(\K\)</span> for any subset <span class="math notranslate nohighlight">\(\D\subset\cl{I}\)</span> is positive semidefinite, that is,</p>
+<div class="math notranslate nohighlight">
+\[\a^T\K\a\geq 0,\rm{\ for\ all\ vectors\ }\a\in\R^n\]</div>
+<p>which implies that</p>
+<div class="math notranslate nohighlight">
+\[\sum_{i=1}^n\sum_{j=1}^na_ia_jK(\x_i,\x_j)\geq 0,\rm{\ for\ all\ }a_i\in\R,i\in[1,n]\]</div>
+<p><span class="math notranslate nohighlight">\(K\)</span> is symmetric since the dot product is symmetric, which also implies that <span class="math notranslate nohighlight">\(\K\)</span> is symmetric.
+<span class="math notranslate nohighlight">\(\K\)</span> is positive semidefinite because</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\a^T\K\a&amp;=\sum_{i=1}^n\sum_{j=1}^na_ia_jK(\x_i,\x_j)\\&amp;=\sum_{i=1}^n\sum_{j=1}^na_ia_j\phi(\x_i)^T\phi(\x_j)\\&amp;=\bigg(\sum_{i=1}^na_i\phi(\x_i)\bigg)^T\bigg(\sum_{j=1}^na_j\phi(\x_j)\bigg)\\&amp;=\lv\sum_{i=1}^na_i\phi(\x_i)\rv^2\geq 0\end{aligned}\end{align} \]</div>
+<div class="section" id="reproducing-kernel-map">
+<h3>5.1.1 Reproducing Kernel Map<a class="headerlink" href="#reproducing-kernel-map" title="Permalink to this headline">¶</a></h3>
+<p>For the reproducing kernel map <span class="math notranslate nohighlight">\(\phi\)</span>, we map each point
+<span class="math notranslate nohighlight">\(\x\in\cl{I}\)</span> into a function in a <em>function space</em>
+<span class="math notranslate nohighlight">\(\{f:\cl{I}\ra\R\}\)</span> comprising functions that map points in <span class="math notranslate nohighlight">\(\cl{I}\)</span>
+into <span class="math notranslate nohighlight">\(\R\)</span>.
+Any <span class="math notranslate nohighlight">\(\x\in\R\)</span> in the input space is mapped to the following function:</p>
+<div class="math notranslate nohighlight">
+\[\phi(\x)=K(\x,\cd)\]</div>
+<p>where the <span class="math notranslate nohighlight">\(\cd\)</span> stands for any argument in <span class="math notranslate nohighlight">\(\cl{I}\)</span>.
+That is, each object <span class="math notranslate nohighlight">\(\x\)</span> in the input space gets mapped to a
+<em>feature point</em> <span class="math notranslate nohighlight">\(\phi(\x)\)</span>, which is in fact a function <span class="math notranslate nohighlight">\(K(\x,\cd)\)</span>
+that represents its similarity to all other points in the input space
+<span class="math notranslate nohighlight">\(\cl{I}\)</span>.</p>
+<p>Let <span class="math notranslate nohighlight">\(\cl{F}\)</span> be the set of all functions or points that can be obtained as
+a linear combination of any subset of feature points, defined as</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\cl{F}&amp;=span\{K(\x,\cd)|\x\in\cl{I}\}\\&amp;=\bigg\{\bs{\rm{f}}=f(\cd)=\sum_{i=1}^m\alpha_iK(\x_i,\cd)|m\in\mathbb{N},
+\alpha_i\in\R,\{\x_1,\cds,\x_m\}\seq\cl{I}\bigg\}\end{aligned}\end{align} \]</div>
+<p>Let <span class="math notranslate nohighlight">\(\f,\g\in\cl{F}\)</span> be any two points in feature space:</p>
+<div class="math notranslate nohighlight">
+\[\f=f(\cd)=\sum_{i=1}^{m_a}\alpha_iK(\x_i,\cd)\quad\g=g(\cd)=\sum_{j=1}^{m_b}\beta_jK(\x_j,\cd)\]</div>
+<p>Define the dot product between two points as</p>
+<div class="math notranslate nohighlight">
+\[\f^T\g=f(\cd)^T g(\cd)=\sum_{i=1}^{m_a}\sum_{j=1}^{m_b}\alpha_i\beta_jK(\x_i,\x_j)\]</div>
+<p>The dot product is <em>bilinear</em>, that is, linear in both arguments, because</p>
+<div class="math notranslate nohighlight">
+\[\f^T\g=\sum_{i=1}^{m_a}\sum_{j=1}^{m_b}\alpha_i\beta_jK(\x_i,\x_j)=
+\sum_{i=1}^{m_a}\alpha_ig(\x_i)=\sum_{j=1}^{m_b}\beta_jf(\x_j)\]</div>
+<p>The fact that <span class="math notranslate nohighlight">\(K\)</span> is positive semidefinite implies that</p>
+<div class="math notranslate nohighlight">
+\[\lv\f\rv^2=\f^T\f=\sum_{i=1}^{m_a}\sum_{j=1}^{m_a}\alpha_i\alpha_jK(\x_i,\x_j)\geq 0\]</div>
+<p>Thus, the space <span class="math notranslate nohighlight">\(\cl{F}\)</span> is a <em>pre-Hilbert space</em>,</p>
+<p>The space <span class="math notranslate nohighlight">\(\cl{F}\)</span> has the so-called <em>reproducing property</em>, that is, we
+can evaluate a function <span class="math notranslate nohighlight">\(f(\cd)=\f\)</span> at a point <span class="math notranslate nohighlight">\(\x\in\cl{I}\)</span> by
+taking the dot product of <span class="math notranslate nohighlight">\(\f\)</span> with <span class="math notranslate nohighlight">\(\phi(\x)\)</span>, that is</p>
+<div class="math notranslate nohighlight">
+\[\f^T\phi(\x)=f(\cd)^TK(\x,\cd)=\sum_{i=1}^{m_a}\alpha_iK(\x_i,\x)=f(\x)\]</div>
+<p>For this reason, the space <span class="math notranslate nohighlight">\(\cl{F}\)</span> is also called a <em>reproducing kernel Hilbert space</em>.</p>
+<div class="math notranslate nohighlight">
+\[\phi(\x_i)^T\phi(\x_j)=K(\x_i,\cd)^TK(\x_j,\cd)=K(\x_i,\x_j)\]</div>
+<p>The reproducing kernel map shows that any positive semidefinite kernel
+corresponds to a dot product in some feature space.
+This means we can apply well known algebraic and geometric methods to understand and analyze the data in these spaces.</p>
+<p><strong>Empirical Kernel Map</strong></p>
+<p>Define the map <span class="math notranslate nohighlight">\(\phi\)</span> as follows:</p>
+<div class="math notranslate nohighlight">
+\[\phi(\x)=(K(\x_1,\x),K(\x_2,\x),\cds,K(\x_n,\x))^T\in\R^n\]</div>
+<p>Define the dot product in feature space as</p>
+<div class="math notranslate nohighlight">
+\[\phi(\x_i)^T\phi(\x_j)=\sum_{k=1}^nK(\x_k,\x_i)K(\x_k,\x_j)=\K_i^T\K_j\]</div>
+<p>For <span class="math notranslate nohighlight">\(\phi\)</span> to be a valid map, we require that
+<span class="math notranslate nohighlight">\(\phi(\x_i)^T\phi(\x_j)=K(\x_i,\x_j)\)</span>, which is clearly not satisfied.
+One solution is to replace <span class="math notranslate nohighlight">\(\K_i^T\K_j\)</span> with :math`K_i^TAK_j` for some
+positive semidefinite matrix <span class="math notranslate nohighlight">\(\A\)</span> such that</p>
+<div class="math notranslate nohighlight">
+\[\K_i^T\A\K_j=\K(\x_i,\x_j)\]</div>
+<p>If we can find such an <span class="math notranslate nohighlight">\(\A\)</span>, it would imply that over all pairs of mapped points we have</p>
+<div class="math notranslate nohighlight">
+\[\{\K_i^T\A\K_j\}_{i,j=1}^n=\{K(\x_i,\x_j)\}_{i,j=1}^N\]</div>
+<p>which can be written compactly as</p>
+<div class="math notranslate nohighlight">
+\[\K\A\K=\K\]</div>
+<p>This immediately suggests that we take <span class="math notranslate nohighlight">\(\A=\K\im\)</span>, the (pseudo)inverse of the kernel matrix <span class="math notranslate nohighlight">\(K\)</span>.
+The modified map <span class="math notranslate nohighlight">\(\phi\)</span>, called the <em>empirical kernel map</em>, is then defined as</p>
+<div class="math notranslate nohighlight">
+\[\phi(\x)=\K^{-1/2}\cd(K(\x_1,\x),K(\x_2,\x),\cds,K(\x_n,\x))^T\in\R^n\]</div>
+<p>so that the dot product yields</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\phi(\x_i)^T\phi(\x_j)&amp;=(\K^{-1/2}\K_i)^T(\K^{-1/2}\K_j)\\&amp;=\K_i^T(\K^{-1/2}\K^{-1/2})\K_j\\&amp;=\K_i^T\K\im\K_j\end{aligned}\end{align} \]</div>
+<p>Over all pairs of mapped points, we have</p>
+<div class="math notranslate nohighlight">
+\[\{\K_i^T\K\im\K_j\}_{i,j=1}^n=\K\K\im\K=\K\]</div>
+<p>It is important to note that this empirical feature representation is valid only for the <span class="math notranslate nohighlight">\(n\)</span> points in <span class="math notranslate nohighlight">\(\D\)</span>.
+If points are added to or removed from <span class="math notranslate nohighlight">\(\D\)</span>, the kernel map will have to be updated for all points.</p>
+</div>
+<div class="section" id="mercer-kernel-map">
+<h3>5.1.2 Mercer Kernel Map<a class="headerlink" href="#mercer-kernel-map" title="Permalink to this headline">¶</a></h3>
+<p><strong>Data-specific Kernel Map</strong></p>
+<p>Because <span class="math notranslate nohighlight">\(\K\)</span> is a symmetric positive semidefinite matrix, it has real and
+non-negative eigenvalues, and it can be decomposed as follows:</p>
+<div class="math notranslate nohighlight">
+\[\K=\U\Ld\U^T\]</div>
+<p>where <span class="math notranslate nohighlight">\(\U\)</span> is the orthonormal matrix of eigenvectors
+<span class="math notranslate nohighlight">\(\u_i=(u_{i1},u_{i2},\cds,u_{in})^T\in\R^n\)</span>, and <span class="math notranslate nohighlight">\(\Ld\)</span> is the
+diagonal matrix of eigenvalues, with both arranged in non-increasing order of
+the eigenvalues <span class="math notranslate nohighlight">\(\ld_1\geq\ld_2\geq\cds\geq\ld_n\geq 0\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\U=\bp |&amp;|&amp;&amp;|\\\u_1&amp;\u_2&amp;\cds&amp;\u_n\\|&amp;|&amp;&amp;| \ep\quad
+\Ld=\bp\ld_1&amp;0&amp;\cds&amp;0\\0&amp;\ld_2&amp;\cds&amp;0\\\vds&amp;\vds&amp;\dds&amp;\vds\\0&amp;0&amp;\cds&amp;\ld_n\ep\end{split}\]</div>
+<p>The kernel matrix <span class="math notranslate nohighlight">\(\K\)</span> can therefore be rewritten as the spectral sum</p>
+<div class="math notranslate nohighlight">
+\[\K=\ld_1\u_1\u_1^T+\ld_2\u_2\u_2^T+\cds+\ld_n\u_n\u_n^T\]</div>
+<p>In particular the kernel function between <span class="math notranslate nohighlight">\(\x_i\)</span> and <span class="math notranslate nohighlight">\(\x_j\)</span> is given as</p>
+<div class="math notranslate nohighlight">
+\[\K(\x_i,\x_j)=\ld_1u_{1i}u_{1j}+\ld_2u_{2i}u_{2j}+\cds+\ld_nu_{ni}u_{nj}=\sum_{k=1}^n\ld_ku_{ki}u_{kj}\]</div>
+<p>The Mercer map <span class="math notranslate nohighlight">\(\phi\)</span> is defined as follows:</p>
+<div class="math notranslate nohighlight">
+\[\phi(\x_i)=(\sqrt{\ld_1}u_{1i},\sqrt{\ld_2}u_{2i},\cds,\sqrt{\ld_n}u_{ni})^T\]</div>
+<p>then <span class="math notranslate nohighlight">\(\K(\x_i,\x_j)\)</span> is a dot product in feature space between the mapped
+points <span class="math notranslate nohighlight">\(\phi(\x_i)\)</span> and <span class="math notranslate nohighlight">\(\phi(\x_j)\)</span> because</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\phi(\x_i)^T\phi(\x_j)&amp;=(\sqrt{\ld_1}u_{1i},\cds,\sqrt{\ld_n}u_{ni})(\sqrt{\ld_1}u_{1i},\cds,\sqrt{\ld_n}u_{ni})^T\\&amp;=\ld_1u_{1i}u_{1j}+\cds+\ld_nu_{ni}u_{nj}=\K(\x_i,\x_j)\end{aligned}\end{align} \]</div>
+<p>We can rewrite the Mercer map <span class="math notranslate nohighlight">\(\phi\)</span> as</p>
+<div class="math notranslate nohighlight">
+\[\phi(\x_i)=\sqrt\Ld\U_i\]</div>
+<p>The kernel value is simply the dot product between scaled rows of <span class="math notranslate nohighlight">\(\U\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\phi(\x_i)^T\phi(\x_j)=(\sqrt\Ld\U_i)^T(\sqrt\Ld\U_j)=\U_i^T\Ld\U_j\]</div>
+<p>The Mercer map restricted to the input dataset <span class="math notranslate nohighlight">\(\D\)</span> is called the <em>data-specific Mercer kernel Map</em>.</p>
+<p><strong>Mercer Kernel Map</strong></p>
+<p>For compact continuous spaces, the kernel value between any two points can be
+written as the infinite spectral decomposition</p>
+<div class="math notranslate nohighlight">
+\[K(\x_i,\x_j)=\sum_{k=1}^\infty\ld_k\u_k(\x_i)\u_k(\x_j)\]</div>
+<p>where each normalized <em>eigenfunction</em> <span class="math notranslate nohighlight">\(\u_i(\cd)\)</span> is a solution to the integral equation</p>
+<div class="math notranslate nohighlight">
+\[\int K(\x,\y)\u_i(\y)d\y=\ld_i\u_i(\x)\]</div>
+<p>and <span class="math notranslate nohighlight">\(K\)</span> is a continuous positive semidefinite kernel, that is, for all
+functions <span class="math notranslate nohighlight">\(a(\cd)\)</span> with a finite square integral <span class="math notranslate nohighlight">\(K\)</span> satisfies the
+condition</p>
+<div class="math notranslate nohighlight">
+\[\iint K(\x_1,\x_2)a(\x_1)a(\x_2)d\x_1d\x_2\geq 0\]</div>
+<p>The general Mercer kernel map is given as</p>
+<div class="math notranslate nohighlight">
+\[\phi(\x_i)=(\sqrt{\ld_1}\u_1(\x_i),\sqrt{\ld_2}\u_2(\x_i),\cds)^T\]</div>
+<p>with the kernel value being equivalent to the dot product between two mapped points:</p>
+<div class="math notranslate nohighlight">
+\[K(\x_i,\x_j)=\phi(\x_i)^T\phi(\x_j)\]</div>
+</div>
+</div>
+<div class="section" id="vector-kernels">
+<h2>5.2 Vector Kernels<a class="headerlink" href="#vector-kernels" title="Permalink to this headline">¶</a></h2>
+<p><strong>Polynomial Kernel</strong></p>
+<p>Polynomial kernels are of two types: homogeneous or inhomogeneous.
+Let <span class="math notranslate nohighlight">\(\x,\y\in\R^d\)</span>.
+The <em>homogeneous polynomial kernel</em> is defined as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(K_q(\x,\y)=\phi(\x)^T\phi(\y)=(\x^T\y)^q\)</span></p>
+</div>
+<p>where <span class="math notranslate nohighlight">\(q\)</span> is the degree of the polynomial.</p>
+<p>The most typical cases are the <em>linear</em> (with <span class="math notranslate nohighlight">\(q=1\)</span>) and <em>quadratic</em> (with <span class="math notranslate nohighlight">\(q=2\)</span>) kernels, given as</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}K_1(\x,\y)=\x^T\y\\K_2(\x,\y)=(\x^T\y)^2\end{aligned}\end{align} \]</div>
+<p>The <em>inhomogeneous polynomial kernel</em> is defined as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(k_q(\x,\y)=\phi(\x)^T\phi(\y)=(c+\x^T\y)^q\)</span></p>
+</div>
+<p>where <span class="math notranslate nohighlight">\(q\)</span> is the degree of the polynomial, and <span class="math notranslate nohighlight">\(c\geq 0\)</span> is some constant.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}K_q(\x,\y)=(c+\x^T\y)^q=\sum_{k=0}^q\bp q\\k \ep c^{q-k}(\x^T\y)^k\end{split}\]</div>
+<p>Let <span class="math notranslate nohighlight">\(n_0,n_1,\cds,n_d\)</span> denote non-negative integers, such that <span class="math notranslate nohighlight">\(\sum_{i=0}^dn_i=q\)</span>.
+Further, let <span class="math notranslate nohighlight">\(\n=(n_0,n_1,\cds,n_d)\)</span>, and let <span class="math notranslate nohighlight">\(|\n|=\sum_{i=0}^dn_i=q\)</span>.
+Also, let <span class="math notranslate nohighlight">\(\bp q\\\n \ep\)</span> denote the multinomial coefficient</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\bp q\\\n \ep=\bp q\\n_0,n_1,\cds,n_d \ep=\frac{q!}{n_0!n_1!\cds n_d!}\end{split}\]</div>
+<p>The multinomial expansion of the inhomogeneous kernel is then given as</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}K_q(\x,\y)=(c+\x^T\y)^q=\bigg(c+\sum_{k=1}^dx_ky_k\bigg)^q=(c+x_1y_1+\cds+x_dy_d)^q\\\begin{split}=\sum_{|\n|=q}\bp q\\\n \ep c^{n_0}(x_1y_1)^{n_1}(x_2y_2)^{n_2}\cds(x_dy_d)^{n_d}\end{split}\\\begin{split}=\sum_{|\n|=q}\bp q\\\n \ep c^{n_0}(x_1^{n_1}x_2^{n_2}\cds x_d^{n_d})(y_1^{n_1}y_2^{n_2}\cds y_d^{n_d})\end{split}\\=\sum_{|\n|=q}\bigg(\sqrt{a_\n}\prod_{k=1}^dx_k^{n_k}\bigg)\bigg(\sqrt{a_\n}\prod_{k=1}^dy_k^{n_k}\bigg)\\=\phi(\x)^T\phi(\y)\end{aligned}\end{align} \]</div>
+<p>Using the notation <span class="math notranslate nohighlight">\(\x^\n=\prod_{k=1}^dx_k^{n_k}\)</span>, the mapping <span class="math notranslate nohighlight">\(\phi:\R^d\ra\R^m\)</span> is given as the vector</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\phi(\x)=(\cds,a_\n\x^\n,\cds)^T=\left(\cds,\sqrt{\bp q\\\n \ep c^{n_0}}\prod_{k=1}^dx_k^{n_k},\cds\right)^T\end{split}\]</div>
+<p>It can be shown that the dimensionality of the feature space is given as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}m=\bp d+q\\q \ep\end{split}\]</div>
+<p><strong>Gaussian Kernel</strong></p>
+<p>The Gaussian kernel, also called the Gaussian radial basis function (RBF) kernel, is defined as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp K(\x,\y)=\exp\bigg\{-\frac{\lv\x-\y\rv^2}{2\sg^2}\bigg\}\)</span></p>
+</div>
+<p>where <span class="math notranslate nohighlight">\(\sg&gt;0\)</span> is the spread parameter that plays the same role as the
+standard deviation in a normal density function.
+Note that <span class="math notranslate nohighlight">\(K(\x,\x)=1\)</span>, and further that the kernel value is inversely
+related to the distance between the two points <span class="math notranslate nohighlight">\(\x\)</span> and <span class="math notranslate nohighlight">\(\y\)</span>.</p>
+<p>A feature space for the Gaussian kernal has infinite dimensionality.</p>
+<div class="math notranslate nohighlight">
+\[\exp\{a\}=\sum_{n=0}^\infty\frac{a^n}{n!}=1+a+\frac{1}{2!}a^2+\frac{1}{3!}a^3+\cds\]</div>
+<p>Further, using <span class="math notranslate nohighlight">\(\gamma=\frac{1}{2\sg^2}\)</span>, and noting that
+<span class="math notranslate nohighlight">\(\lv\x-\y\rv^2=\lv\x\rv^2+\lv\y\rv^2-2\x^T\y\)</span>, we can rewrite the Gaussian
+kernel as follows:</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}K(\x,\y)&amp;=\exp\{-\gamma\lv\x-\y\rv^2\}\\&amp;=\exp\{-\gamma\lv\x\rv^2\}\cd\exp\{-\gamma\lv\y\rv^2\}\cd\exp\{2\gamma\x^T\y\}\end{aligned}\end{align} \]</div>
+<p>In particular, the last term is given as the infinite expansion</p>
+<div class="math notranslate nohighlight">
+\[\exp\{2\gamma\x^T\y\}=\sum_{q=0}^\infty\frac{(2\gamma)^q}{q!}(\x^T\y)^q=
+1+(2\gamma)\x^T\y+\frac{(2\gamma)^2}{2!}(\x^T\y)^2+\cds\]</div>
+<p>Using the multinomial expansion of <span class="math notranslate nohighlight">\((\x^T\y)^q\)</span>, we can write the Gaussian kernel as</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\begin{split}K(\x,\y)=\exp\{-\gamma\lv\x\rv^2\}\exp\{-\gamma\lv\y\rv^2\}
+\sum_{q=0}^\infty\frac{(2\gamma)^q}{q!}\bigg(\sum_{|\n|=q}\bp q\\\n \ep
+\prod_{k=1}^d(x_ky_k)^{n_k}\bigg)\end{split}\\=\sum_{q=0}^\infty\sum_{|\n|=q}
+\bigg(\sqrt{a_{q,\n}}\exp\{-\gamma\lv\x\rv^2\}\prod_{k=1}^dx_k^{n_k}\bigg)
+\bigg(\sqrt{a_{q,\n}}\exp\{-\gamma\lv\y\rv^2\}\prod_{k=1}^dy_k^{n_k}\bigg)\\=\phi(\x)^T\phi(\y)\end{aligned}\end{align} \]</div>
+<p>where</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\begin{split}\dp a_{q,\n}=\frac{(2\gamma)^q}{q!}\bp q\\\n \ep\end{split}\\\n=(n_1,n_2,\cds,n_d)\\|\n|=n_1+n_2+\cds+n_d=q\end{aligned}\end{align} \]</div>
+<p>The mapping into feature space corresponds to the function <span class="math notranslate nohighlight">\(\phi:\R^d\ra\R^\infty\)</span></p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\phi(\x)=\left(\cds,\sqrt{\frac{(2\gamma)^q}{q!}\bp q\\\n \ep}
+\exp\{-\gamma\lv\x\rv^2\}\prod_{k=1}^dx_k^{n_k},\cds\right)^T\end{split}\]</div>
+</div>
+<div class="section" id="basic-kernel-operations-in-feature-space">
+<h2>5.3 Basic Kernel Operations in Feature Space<a class="headerlink" href="#basic-kernel-operations-in-feature-space" title="Permalink to this headline">¶</a></h2>
+<p><strong>Norm of a Point</strong></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\lv\phi(\x)\rv^2=\phi(\x)^T\phi(\x)=K(\x,\x)\)</span></p>
+</div>
+<p><strong>Distance between Points</strong></p>
+<p>The squared distance between two points <span class="math notranslate nohighlight">\(\phi(\x_i)\)</span> and <span class="math notranslate nohighlight">\(\phi(\x_j)\)</span> can be computed as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\lv\phi(\x_i)-\phi(\x_j)\rv^2=\lv\phi(\x_i)\rv^2+\lv\phi(\x_j)\rv^2-2\phi(\x_i)^T\phi(\x_j)\)</span>
+<span class="math notranslate nohighlight">\(=K(\x_i,\x_i)+K(\x_j,\x_j)-2K(\x_i,\x_j)\)</span></p>
+</div>
+<p>which implies that the distance is</p>
+<div class="math notranslate nohighlight">
+\[\lv\phi(\x_i)-\phi(\x_j)\rv=\sqrt{K(\x_i,\x_i)+K(\x_j,\x_j)-2K(\x_i,\x_j)}\]</div>
+<p>The kernel value can be considered as a measure of the similarity between two points, as</p>
+<div class="math notranslate nohighlight">
+\[\frac{1}{2}(\lv\phi(\x_i)\rv^2+\lv\phi(\x_j)\rv^2-\lv\phi(\x_i)-\phi(\x_j)\rv^2)=K(\x_i,\x_j)=\phi(\x_i)^T\phi(\x_j)\]</div>
+<p>Thus, the more the distance <span class="math notranslate nohighlight">\(\lv\phi(\x_i)-\phi(\x_j)\rv\)</span> between the two
+points in feature space, the less the kernel value, that is, the less the
+similarity.</p>
+<p><strong>Mean in Feature Space</strong></p>
+<div class="math notranslate nohighlight">
+\[\mmu_\phi=\frac{1}{n}\sum_{i=1}^n\phi(\x_i)\]</div>
+<p>Because we do not, in general, have access to <span class="math notranslate nohighlight">\(\phi(\x_i)\)</span>, we cannot
+explicity compute the mean point in feature space</p>
+<div class="math notranslate nohighlight">
+\[\lv\mmu_\phi\rv^2=\mmu_\phi^T\mmu_\phi=\bigg(\frac{1}{n}\sum_{i=1}^n
+\phi(\x_i)\bigg)^T\bigg(\frac{1}{n}\sum_{j=1}^n\phi(\x_j)\bigg)=
+\frac{1}{n^2}\sum_{i=1}^n\sum_{j=1}^n\phi(\x_i)^T\phi(\x_j)\]</div>
+<p>which implies that</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\lv\mmu_\phi\rv^2=\frac{1}{n^2}\sum_{i=1}^n\sum_{j=1}^nK(\x_i,\x_j)\)</span></p>
+</div>
+<p><strong>Total Variance in Feature Space</strong></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\lv\phi(\x_i)-\mmu_\phi\rv^2=\lv\phi(\x_i)\rv^2-2\phi(\x_i)^T\mmu_\phi+\lv\mmu_\phi\rv^2\)</span></p>
+<p><span class="math notranslate nohighlight">\(\dp=K(\x_i,\x_i)-\frac{2}{n}\sum_{j=1}^nK(\x_i,\x_j)+\frac{1}{n^2}\sum_{a=1}^n\sum_{b=1}^nK(\x_a,\x_b)\)</span></p>
+</div>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\sg_\phi^2&amp;=\frac{1}{n}\sum_{i=1}^n\lv\phi(\x_i)-\mmu_\phi\rv^2\\&amp;=\frac{1}{n}\sum_{i=1}^n\bigg(K(\x_i,\x_i)-\frac{2}{n}\sum_{j=1}^n
+K(\x_i,\x_j)+\frac{1}{n^2}\sum_{a=1}^n\sum_{b=1}^nK(\x_a,\x_b)\bigg)\\&amp;=\frac{1}{n}\sum_{i=1}^nK(\x_i,\x_i)-\frac{2}{n^2}\sum_{i=1}^n\sum_{j=1}^n
+K(\x_i,\x_j)+\frac{n}{n^3}\sum_{a=1}^n\sum_{b=1}^nK(\x_a,\x_b)\end{aligned}\end{align} \]</div>
+<p>That is</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\sg_\phi^2=\frac{1}{n}\sum_{i=1}^nK(\x_i,\x_i)-\frac{2}{n^2}\sum_{i=1}^n\sum_{j=1}^nK(\x_i,\x_j)\)</span></p>
+</div>
+<p><strong>Centering in Feature Space</strong></p>
+<p>We can center each point in feature space by subtracting the mean from it, as follows:</p>
+<div class="math notranslate nohighlight">
+\[\bar\phi(\x_i)=\phi(\x_i)-\mmu_\phi\]</div>
+<p>The <em>centered kernel matrix</em> is given as</p>
+<div class="math notranslate nohighlight">
+\[\bar\K=\{\bar{K}(\x_i,\x_j)\}_{i,j=1}^n\]</div>
+<p>where each cell corresponds to the kernel between centered points, that is</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\bar{K}(\x_i,\x_j)&amp;=\bar\phi(\x_i)^T\bar\phi(\x_j)\\&amp;=(\phi(\x_i)-\mmu_\phi)^T(\phi(\x_j)-\mmu_\phi)\\&amp;=\phi(\x_i)^T\phi(\x_j)-\phi(\x_i)^T\mmu_\phi-\phi(\x_j)^T\mmu_\phi+\mmu_\phi^T\mmu_\phi\\&amp;=K(\x_i,\x_j)-\frac{1}{n}\sum_{k=1}^n\phi(\x_i)^T\phi(\x_k)-
+\frac{1}{n}\sum_{k=1}^n\phi(\x_j)^T\phi(\x_k)+\lv\mmu_\phi\rv^2\\&amp;=K(\x_i,\x_j)-\frac{1}{n}\sum_{k=1}^nK(\x_i,\x_k)-\frac{1}{n}\sum_{k=1}^n
+K(\x_j,\x_k)+\frac{1}{n^2}\sum_{a=1}^n\sum_{b=1}^nK(\x_a,\X_b)\end{aligned}\end{align} \]</div>
+<p>The centered kernel matrix can be written campactly as follows:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\bar\K=\K-\frac{1}{n}\1_{n\times n}\K-\frac{1}{n}\K\1_{n\times n}\)</span>
+<span class="math notranslate nohighlight">\(\dp+\frac{1}{n^2}\1_{n\times n}\K\1_{n\times n}=\)</span>
+<span class="math notranslate nohighlight">\(\dp\bigg(\bs{\rm{I}}-\frac{1}{n}\1_{n\times n}\bigg)\K\bigg(\bs{\rm{I}}-\frac{1}{n}\1_{n\times n}\bigg)\)</span></p>
+</div>
+<p><strong>Normalizing in Feature Space</strong></p>
+<p>The dot product in feature space corresponds to the cosine of the angle between the two mapped points, because</p>
+<div class="math notranslate nohighlight">
+\[\phi_n(\x_i)^T\phi_n(\x_j)=\frac{\phi(\x_i)^T\phi(\x_j)}{\lv\phi(\x_i)\rv\cd\lv\phi(\x_j)\rv}=\cos\th\]</div>
+<p>The normalized kernel matrix <span class="math notranslate nohighlight">\(\K_n\)</span> can be computed using only the kernel function <span class="math notranslate nohighlight">\(K\)</span>, as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\K_n(\x_i,\x_j)=\frac{\phi(\x_i)^T\phi(\x_j)}{\lv\phi(\x_i)\rv\cd\lv\phi(\x_j)\rv}=\)</span>
+<span class="math notranslate nohighlight">\(\dp\frac{K(\x_i,\x_j)}{\sqrt{K(\x_i,\x_i)\cd K(\x_j,\x_j)}}\)</span></p>
+</div>
+<p>Let <span class="math notranslate nohighlight">\(\W\)</span> denote the diagonal matrix comprising the diagonal elements of <span class="math notranslate nohighlight">\(\K\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\W=\rm{diag}(\K)=\bp K(\x_1,\x_1)&amp;0&amp;\cds&amp;0\\0&amp;K(\x_2,\x_2)&amp;\cds&amp;0\\\vds&amp;\vds&amp;\dds&amp;\vds\\0&amp;0&amp;\cds&amp;K(\x_n,\x_n) \ep\end{split}\]</div>
+<p>The normalized kernel matrix can then be expressed compactly as</p>
+<div class="math notranslate nohighlight">
+\[\K_n=\W^{-1/2}\cds\K\cd\W^{-1/2}\]</div>
+</div>
+<div class="section" id="kernels-for-complex-objects">
+<h2>5.4 Kernels for Complex Objects<a class="headerlink" href="#kernels-for-complex-objects" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="spectrum-kernel-for-strings">
+<h3>5.4.1 Spectrum Kernel for Strings<a class="headerlink" href="#spectrum-kernel-for-strings" title="Permalink to this headline">¶</a></h3>
+<p>Consider text or sequence data defined over an alphabet <span class="math notranslate nohighlight">\(\Sg\)</span>.
+The <span class="math notranslate nohighlight">\(l\)</span>-spectrum feature map is the mapping
+<span class="math notranslate nohighlight">\(\phi:\Sg^*\ra\R^{|\Sg|^l}\)</span> from the set of substrings over <span class="math notranslate nohighlight">\(\Sg\)</span> to
+the <span class="math notranslate nohighlight">\(|\Sg|^l\)</span>-dimensional space representing the number of occurrences of
+all possible substrings of length <span class="math notranslate nohighlight">\(l\)</span>, defined as</p>
+<div class="math notranslate nohighlight">
+\[\phi(\x)=(\cds,\#(\alpha),\cds)_{\alpha\in\Sg^l}^T\]</div>
+<p>where <span class="math notranslate nohighlight">\(\#(\alpha)\)</span> is the number of occurrences of the <span class="math notranslate nohighlight">\(l\)</span>-length string <span class="math notranslate nohighlight">\(\alpha\)</span> in <span class="math notranslate nohighlight">\(\x\)</span>.</p>
+<p>The (full) spectrum map is an extension of the <span class="math notranslate nohighlight">\(l\)</span>-spectrum map, obtained
+by considering all lengths from <span class="math notranslate nohighlight">\(l=0\)</span> to <span class="math notranslate nohighlight">\(l=\infty\)</span>, leading to an
+infinite dimensional feature map <span class="math notranslate nohighlight">\(\phi:\Sg^*\ra\R^\infty\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\phi(\x)=(\cds,\#(\alpha),\cds)_{\alpha\in\Sg^*}^T\]</div>
+<p>where <span class="math notranslate nohighlight">\(\#(\alpha)\)</span> is the number of occurrences of the string <span class="math notranslate nohighlight">\(\alpha\)</span> in <span class="math notranslate nohighlight">\(\x\)</span>.</p>
+<p>The (<span class="math notranslate nohighlight">\(l\)</span>-)spectrum kernel between two string <span class="math notranslate nohighlight">\(\x_i,\x_j\)</span> is simply
+the dot product between their (<span class="math notranslate nohighlight">\(l\)</span>-)spectrum maps:</p>
+<div class="math notranslate nohighlight">
+\[K(\x_i,\x_j)=\phi(\x_i)^T\phi(\x_j)\]</div>
+</div>
+<div class="section" id="diffusion-kernels-on-graph-nodes">
+<h3>5.4.2 Diffusion Kernels on Graph Nodes<a class="headerlink" href="#diffusion-kernels-on-graph-nodes" title="Permalink to this headline">¶</a></h3>
+<p>Let :math`S` be some symmetric similarity matrix between nodes of a graph <span class="math notranslate nohighlight">\(G=(V,E)\)</span>.
+Consider the similarity between any two nodes obtained by summing the product of the similarities over walks of length 2:</p>
+<div class="math notranslate nohighlight">
+\[S^{(2)}(\x_i,\x_j)=\sum_{a=1}^nS(\x_i,\x_a)S(\x_a,\x_j)=\S_i^T\S_j\]</div>
+<p>where</p>
+<div class="math notranslate nohighlight">
+\[\S_i=(S(\x_i,\x_1),S(\x_i,\x_2),\cds,S(\x_i,\x_n))^T\]</div>
+<p>denotes the (column) vector representing the <span class="math notranslate nohighlight">\(i\)</span>.
+Over all pairs of nodes the similarity matrix over walks of length 2, denoted
+<span class="math notranslate nohighlight">\(\S^{(2)}\)</span>, is thus given as the square of the base similarity matrix
+<span class="math notranslate nohighlight">\(\S\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\S^{(2)}=\S\times\S=\S^2\]</div>
+<p>In general, if we sum up the product of the base similarities over all <span class="math notranslate nohighlight">\(l\)</span>
+-length walks between two nodes, we obtain the <span class="math notranslate nohighlight">\(l\)</span>-length similarity
+matrix <span class="math notranslate nohighlight">\(\S^{(l)}\)</span>, which is simply the <span class="math notranslate nohighlight">\(l\)</span>S`,
+that is,</p>
+<div class="math notranslate nohighlight">
+\[\S^{(l)}=\S^l\]</div>
+<p><strong>Power Kernels</strong></p>
+<p>The kernel value between any two points is then a dot product in feature space:</p>
+<div class="math notranslate nohighlight">
+\[K(\x_i,\x_j)=S^{(2)}(\x_i,\x_j)=\S_i^T\S_j=\phi(\x_i)^T\phi(\x_j)\]</div>
+<p>For a general walk length <span class="math notranslate nohighlight">\(l\)</span>, let <span class="math notranslate nohighlight">\(\K=\S^l\)</span>.
+Consider the eigen-decomposition of <span class="math notranslate nohighlight">\(\S\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\S=\U\Ld\U^T=\sum_{i=1}^n\u_i\ld_i\u_i^T\]</div>
+<p>The eigen-decomposition of <span class="math notranslate nohighlight">\(\K\)</span> can be obtained as follows:</p>
+<div class="math notranslate nohighlight">
+\[\K=\S^l=(\U\Ld\U^T)^l=\U(\Ld^l)\U^T\]</div>
+<p><strong>Exponential Diffusion Kernel</strong></p>
+<p>Instead of fixing the walk length <em>a priori</em>, we can obtain a new kernel between
+nodes of a graph by considering walks of all possible lengths, but by damping
+the contribution of longer walks, which leads to the
+<em>exponential diffusion kernel</em>, defined as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\K=\sum_{l=0}^\infty\frac{1}{l!}\beta^l\S^l=\)</span>
+<span class="math notranslate nohighlight">\(\dp\I+\beta\S+\frac{1}{2!}\beta^2\S^2+\frac{1}{3!}\beta^3\S^3+\cds=\exp\{\beta\S\}\)</span></p>
+</div>
+<p>where <span class="math notranslate nohighlight">\(\beta\)</span> is a damping factor, and <span class="math notranslate nohighlight">\(\exp\{\beta\S\}\)</span> is the matrix exponential.</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\K&amp;=\I+\beta\S+\frac{1}{2!}\beta^2\S^2+\cds\\&amp;=\bigg(\sum_{i=1}^n\u_i\u_i^T\bigg)+\bigg(\sum_{i=1}^n\u_i\beta\ld_i\u_i^T
+\bigg)+\bigg(\sum_{i=1}^n\u_i\frac{1}{2!}\beta^2\ld_i^2\u_i^T\bigg)+\cds\\&amp;=\sum_{i=1}^n\u_i(1+\beta\ld_i+\frac{1}{2!}\beta^2\ld_i^2+\cds)+\u_i^T\\&amp;=\sum_{i=1}^n\u_i\exp\{\beta\ld_i\}\u_i^T\end{aligned}\end{align} \]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}=\U\bp\exp\{\beta\ld_1\}&amp;0&amp;\cds&amp;0\\0&amp;\exp\{\beta\ld_2\}&amp;\cds&amp;0\\
+\vds&amp;\vds&amp;\dds&amp;\vds\\0&amp;0&amp;\cds&amp;\exp\{\beta\ld_n\}\ep\U^T\quad\quad\quad\quad\end{split}\]</div>
+<p><strong>Von Neumann Diffusion Kernel</strong></p>
+<p>A related kernel based on powers of <span class="math notranslate nohighlight">\(\S\)</span> is the <em>von Neumann diffusion kernel</em>, defined as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\K=\sum_{l=0}^\infty\beta^l\S^l\)</span></p>
+</div>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\K&amp;=\I+\beta\S+\beta^2\S^2+\beta^3\S^3+\cds\\&amp;=\I+\beta\S(\I+\beta\S+\beta^2\S^2+\cds)\\&amp;=\I+\beta\S\K\end{aligned}\end{align} \]</div>
+<p>Rearranging the terms to obtain a closed form expression for the von Neumann kernel:</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\K-\beta\S\K&amp;=\I\\(\I-\beta\S)\K&amp;=\I\\\K&amp;=(\I-\beta\S)\im\\\K&amp;=(\U\U^T-\U(\beta\Ld)\U^T)\im\\&amp;=(\U(\I-\beta\Ld)\U^T)\im\\&amp;=\U(\I-\beta\Ld)\im\U^T\end{aligned}\end{align} \]</div>
+<p>For <span class="math notranslate nohighlight">\(\K\)</span> to be a positive semidefinite kernel, all its eigenvalues should
+be non-negative, which in turn implies that</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}(1-\beta\ld_i)\im&amp;\geq 0\\1-\beta\ld_i&amp;\geq 0\\\beta&amp;\leq 1/\ld_i\end{aligned}\end{align} \]</div>
+<p>Further, the inverse matrix <span class="math notranslate nohighlight">\((\I-\beta\Ld)\im\)</span> exists only if</p>
+<div class="math notranslate nohighlight">
+\[\det(\I-\beta\Ld)=\prod_{i=1}^n(1-\beta\ld_i)\neq 0\]</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="chap6.html" class="btn btn-neutral float-right" title="Chapter 6 High-dimensional Data" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="chap4.html" class="btn btn-neutral float-left" title="Chapter 4 Graph Data" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Ziniu Yu.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
