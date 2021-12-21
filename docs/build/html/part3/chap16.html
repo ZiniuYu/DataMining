@@ -95,7 +95,10 @@
 <li class="toctree-l2"><a class="reference internal" href="chap13.html">Chapter 13 Representative-based Clustering</a></li>
 <li class="toctree-l2"><a class="reference internal" href="chap14.html">Chapter 14 Hierarchical Clustering</a></li>
 <li class="toctree-l2"><a class="reference internal" href="chap15.html">Chapter 15 Density-based Clustering</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Chapter 16 Spectral and Graph Clustering</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Chapter 16 Spectral and Graph Clustering</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#graphs-and-matrices">16.1 Graphs and Matrices</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="chap17.html">Chapter 17 Clustering Validation</a></li>
 </ul>
 </li>
@@ -226,6 +229,110 @@
 \newcommand{\ppr}{^{\prime\prime}}\end{aligned}\end{align} \]</div>
 <div class="section" id="chapter-16-spectral-and-graph-clustering">
 <h1>Chapter 16 Spectral and Graph Clustering<a class="headerlink" href="#chapter-16-spectral-and-graph-clustering" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="graphs-and-matrices">
+<h2>16.1 Graphs and Matrices<a class="headerlink" href="#graphs-and-matrices" title="Permalink to this headline">¶</a></h2>
+<p>Given a dataset <span class="math notranslate nohighlight">\(\D\)</span> comprising <span class="math notranslate nohighlight">\(n\)</span> points
+<span class="math notranslate nohighlight">\(\x_i\in\R^d\ (i=1,2,\cds,n)\)</span>, let <span class="math notranslate nohighlight">\(\A\)</span> denote the <span class="math notranslate nohighlight">\(n\times n\)</span>
+symmetric <em>similarity matrix</em> between the points, given as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\A = \left(\begin{array}{cccc}a_{11}&amp;a_{12}&amp;\cds&amp;a_{1n}\\
+\a_{21}&amp;a_{22}&amp;\cds&amp;a_{1n}\\\vds&amp;\vds&amp;\dds&amp;\vds\\
+\a_{n1}&amp;a_{n2}&amp;\cds&amp;a_{nn}\end{array}\right)\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\A(i,j)=a_{ij}\)</span> denotes the similarity or affinity between points <span class="math notranslate nohighlight">\(\x_i\)</span> and <span class="math notranslate nohighlight">\(\x_j\)</span>.
+We require the similarity to be symmetric and non-negative, that is, <span class="math notranslate nohighlight">\(a_{ij}=a_{ji}\)</span> and <span class="math notranslate nohighlight">\(a_{ji}\geq 0\)</span>.
+The matrix <span class="math notranslate nohighlight">\(\A\)</span> may be considered to be a <em>weighted adjacency matrix</em> of
+the weighted (undirected) graph <span class="math notranslate nohighlight">\(G=(V,E)\)</span>, where each vertex is a point
+and each edge joins a pair of points, that is,</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}V&amp;=\{\x_i|i=1,\cds,n\}\\E&amp;=\{(\x_i,\x_j)|1\leq i,j\leq n\}\end{aligned}\end{align} \]</div>
+<p>Further, the similarity matrix <span class="math notranslate nohighlight">\(\A\)</span> gives the weight on each edge, that
+is, <span class="math notranslate nohighlight">\(a_{ij}\)</span> denotes the weight of the edge <span class="math notranslate nohighlight">\((\x_i,\x_j)\)</span>.
+If all affinities are 0 or 1, then <span class="math notranslate nohighlight">\(\A\)</span> represents the regular adjacency relationship between the vertices.</p>
+<p>For a vertex <span class="math notranslate nohighlight">\(\x_i\)</span>, let <span class="math notranslate nohighlight">\(d_j\)</span> denote the <em>degree</em> of the vertex, defined as</p>
+<div class="math notranslate nohighlight">
+\[d_i=\sum_{j=1}^n a_{ij}\]</div>
+<p>We define the <em>degree matrix</em> <span class="math notranslate nohighlight">\(\Delta\)</span> of graph <span class="math notranslate nohighlight">\(G\)</span> as the <span class="math notranslate nohighlight">\(n\times n\)</span> diagonal matrix:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\Delta=\left(\begin{array}{cccc}d_1&amp;0&amp;\cds&amp;0\\0&amp;d_2&amp;\cds&amp;0\\\vds&amp;\vds&amp;\dds&amp;\vds\\0&amp;0&amp;\cds&amp;d_n\end{array}\right)\)</span>
+<span class="math notranslate nohighlight">\(=\left(\begin{array}{cccc}\sum_{j=1}^na_{1j}&amp;0&amp;\cds&amp;0\\0&amp;\sum_{j=1}^na_{2j}&amp;\cds&amp;0\\\vds&amp;\vds&amp;\dds&amp;\vds\\0&amp;0&amp;\cds&amp;\sum_{j=1}^na_{nj}\end{array}\right)\)</span></p>
+</div>
+<p><span class="math notranslate nohighlight">\(\Delta\)</span> can be compactly written as <span class="math notranslate nohighlight">\(\Delta(i,i)=d_i\)</span> for all <span class="math notranslate nohighlight">\(1\leq i\leq n\)</span>.</p>
+<p><strong>Normalized Adjacency Matrix</strong></p>
+<p>The normalized adjacency matrix is obtained by dividing each row of the
+adjacency matrix by the degree of the corresponding node.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\bs{\rm{M}}=\Delta\im\A=\)</span>
+<span class="math notranslate nohighlight">\(\left(\begin{array}{cccc}\frac{a_{11}}{d_1}&amp;\frac{a_{12}}{d_1}&amp;\cds&amp;\frac{a_{1n}}{d_1}\\\frac{a_{21}}{d_2}&amp;\frac{a_{22}}{d_2}&amp;\cds&amp;\frac{a_{2n}}{d_2}\\\vds&amp;\vds&amp;\dds&amp;\vds\\\frac{a_{n1}}{d_n}&amp;\frac{a_{n2}}{d_n}&amp;\cds&amp;\frac{a_{nn}}{d_n}\end{array}\right)\)</span></p>
+</div>
+<p>Each element of <span class="math notranslate nohighlight">\(\bs{\rm{M}}\)</span>, namely <span class="math notranslate nohighlight">\(m_{ij}\)</span> is also non-negative,
+as <span class="math notranslate nohighlight">\(m_{ij}=\frac{a_{ij}}{d_i}\geq 0\)</span>.
+Consider the sum of the <span class="math notranslate nohighlight">\(i\)</span>th row in <span class="math notranslate nohighlight">\(\bs{\rm{M}}\)</span>, we have</p>
+<div class="math notranslate nohighlight">
+\[\sum_{j=1}^nm_{ij}=\sum_{j=1}^n\frac{a_{ij}}{d_i}=\frac{d_i}{d_i}=1\]</div>
+<p>Thus, each row in <span class="math notranslate nohighlight">\(\bs{\rm{M}}\)</span> sums to 1.
+This implies that 1 is an eigenvalue of <span class="math notranslate nohighlight">\(\bs{\rm{M}}\)</span>.
+In fact, <span class="math notranslate nohighlight">\(\ld=1\)</span> is the largest eigenvalue of <span class="math notranslate nohighlight">\(\bs{\rm{M}}\)</span>, and the
+other eigenvalues satisfy the property that <span class="math notranslate nohighlight">\(|\ld_i|\leq 1\)</span>.
+Also, if <span class="math notranslate nohighlight">\(G\)</span> is connected then the eigenvector corresponding to
+<span class="math notranslate nohighlight">\(\ld_1\)</span> is
+<span class="math notranslate nohighlight">\(\u_1=\frac{1}{\sqrt{n}}=(1,1,\cds,1)^T=\frac{1}{\sqrt{n}}\1\)</span>.
+Because <span class="math notranslate nohighlight">\(\bs{\rm{M}}\)</span> is not symmetric, its eigenvectors are not necessarily orthogonal.</p>
+<p><strong>Graph Laplacian Matrices</strong></p>
+<p>The <em>Laplacian matrix</em> of a graph is defined as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\bs{\rm{L}}=\Delta-\A=\left(\begin{array}{cccc}\sum_{j=1}^na_{1j}&amp;0&amp;\cds&amp;0\\
+0&amp;\sum_{j=1}^na_{2j}&amp;\cds&amp;0\\\vds&amp;\vds&amp;\dds&amp;\vds\\
+0&amp;0&amp;\cds&amp;\sum_{j=1}^na_{nj}\end{array}\right)
+-\left(\begin{array}{cccc}a_{11}&amp;a_{12}&amp;\cds&amp;a_{1n}\\
+\a_{21}&amp;a_{22}&amp;\cds&amp;a_{1n}\\\vds&amp;\vds&amp;\dds&amp;\vds\\
+\a_{n1}&amp;a_{n2}&amp;\cds&amp;a_{nn}\end{array}\right)\end{split}\]</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(=\left(\begin{array}{cccc}\sum_{j\ne 1}^na_{1j}&amp;-a_{12}&amp;\cds&amp;-a_{1n}\\-a{21}&amp;\sum_{j\ne 2}^na_{2j}&amp;\cds&amp;-a_{2n}\\\vds&amp;\vds&amp;\dds&amp;\vds\\-a_{n1}&amp;-a_{n2}&amp;\cds&amp;\sum_{j\ne n}^na_{nj}\end{array}\right)\)</span></p>
+</div>
+<p><span class="math notranslate nohighlight">\(\bs{\rm{L}}\)</span> is a symmetric, positive semidefinite matrix, as for any <span class="math notranslate nohighlight">\(\c\in\R^n\)</span>, we have</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\c^T\bs{\rm{L}}\c&amp;=\c^T(\Delta-\A)\c=\c^T\Delta\c-\c^T\A\c\\&amp;=\sum_{i=1}^nd_ic_i^2-\sum_{i=1}^n\sum_{j=1}^nc_ic_ja_{ij}\\&amp;=\frac{1}{2}\bigg(\sum_{i=1}^nd_ic_i^2-2\sum_{i=1}^n\sum_{j=1}^nc_ic_ja_{ij}+\sum_{j=1}^nd_jc_j^2\bigg)\\&amp;=\frac{1}{2}\bigg(\sum_{i=1}^n\sum_{j=1}^na_{ij}c_i^2-2\sum_{i=1}^n
+\sum_{j=1}^nc_ic_ja_{ij}+\sum_{i=j}^n\sum_{i=1}^na_{ij}c_j^2\bigg)\\&amp;=\frac{1}{2}\sum_{i=1}^n\sum_{j=1}^na_{ij}(c_i-c_j)^2\\&amp;\geq 0\end{aligned}\end{align} \]</div>
+<p>This means that <span class="math notranslate nohighlight">\(\bs{\rm{L}}\)</span> has <span class="math notranslate nohighlight">\(n\)</span> real, non-negative
+eigenvalues, which can be arranged in decreasing order as follows:
+<span class="math notranslate nohighlight">\(\ld_1\geq\ld_2\geq\cds\geq\ld_n\geq 0\)</span>.
+Because <span class="math notranslate nohighlight">\(\bs{\rm{L}}\)</span> is symmetric, its eigenvectors are orthonormal.
+We can observe that the first column (and the first row) is a linear combination of the remaining columns (rows).
+This implies that the rank of <span class="math notranslate nohighlight">\(\bs{\rm{L}}\)</span> is at most <span class="math notranslate nohighlight">\(n-1\)</span>, and
+the smallest eigenvalue is <span class="math notranslate nohighlight">\(\ld_n=0\)</span>, with the corresponding eigenvector
+given as <span class="math notranslate nohighlight">\(\u_n=\frac{1}{\sqrt{n}}=(1,1,\cds,1)^T=\frac{1}{\sqrt{n}}\1\)</span>,
+provided the graph is connected.
+If the graph is disconnected, then the number of eigenvalues equal to zero
+specifies the number of connected components in the graph.</p>
+<p>The <em>normalized symmetric Laplacian matrix</em> of a graph is defined as</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\bs{\rm{L}}^S&amp;=\Delta^{-1/2}\bs{\rm{L}}\Delta^{-1/2}\\&amp;=\bs{\rm{L}}^{-1/2}(\Delta-\A)\Delta^{-1/2}=\Delta^{-1/2}\Delta\Delta^{-1/2}-\Delta^{-1/2}\A\Delta^{-1/2}\\&amp;=\I-\Delta^{-1/2}\A\Delta^{-1/2}\end{aligned}\end{align} \]</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\bs{\rm{L}}^S=\Delta^{-1/2}\bs{\rm{L}}\Delta^{-1/2}\)</span>
+<span class="math notranslate nohighlight">\(\left(\begin{array}{cccc} \frac{\sum_{j\ne 1}a_{1j}}{\sqrt{d_1d_1}}&amp;-\frac{a_{12}}{\sqrt{d_1d_2}}&amp;\cds&amp;-\frac{a_{1n}}{\sqrt{d_1d_n}}\\-\frac{a_{21}}{\sqrt{d_2d_1}}&amp;\frac{\sum_{j\ne 2}a_{2j}}{\sqrt{d_2d_2}}&amp;\cds&amp;-\frac{a_{2n}}{\sqrt{d_2d_n}}\\\vds&amp;\vds&amp;\dds&amp;\vds\\-\frac{a_{n1}}{\sqrt{d_nd_1}}&amp;-\frac{a_{n2}}{\sqrt{d_nd_2}}&amp;\cds&amp;\frac{\sum_{j\ne n}a_{nj}}{\sqrt{d_nd_n}}\end{array}\right)\)</span></p>
+</div>
+<p>We can hsow that <span class="math notranslate nohighlight">\(\bs{\rm{L}}^S\)</span> is also positive semidefinite because for any <span class="math notranslate nohighlight">\(\c\in\R^d\)</span>, we get</p>
+<div class="math notranslate nohighlight">
+\[\c^T\bs{\rm{L}}^s\c=\frac{1}{2}\sum_{i=1}^n\sum_{j=1}^na_{ij}
+\bigg(\frac{c_i}{\sqrt{d_i}}-\frac{c_j}{\sqrt{d_j}}\bigg)^2\geq 0\]</div>
+<p>The first column is also a linear combination of the other columns, which means
+that <span class="math notranslate nohighlight">\(\bs{\rm{L}}^S\)</span> has rank at most <span class="math notranslate nohighlight">\(n-1\)</span>, with the smallest
+eigenvalue <span class="math notranslate nohighlight">\(\ld_n=0\)</span>, and the corresponding eigenvector
+<span class="math notranslate nohighlight">\(\frac{1}{\sqrt{\sum_id_i}}(\sqrt{d_1},\sqrt{d_2},\cds,\sqrt{d_n})^T=\frac{1}{\sqrt{\sum_id_i}}\Delta^{1/2}\1\)</span>.
+Combined with the fact that <span class="math notranslate nohighlight">\(\bs{\rm{L}}^S\)</span> is positive semidefinite, we
+conclude that <span class="math notranslate nohighlight">\(\bs{\rm{L}}^S\)</span> has <span class="math notranslate nohighlight">\(n\)</span> (not necessarily distinct)
+real, positive eigenvalues <span class="math notranslate nohighlight">\(\ld_1\geq\ld_2\geq\cds\geq\ld_n=0\)</span>.</p>
+<p>The <em>normalized asymmetric Laplacian</em> matrix is defined as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\bs{\rm{L}}^a=\Delta\im\bs{\rm{L}}=\Delta\im(\Delta-\A)=\I-\Delta\im\A\)</span></p>
+<p>:math:``</p>
+</div>
+</div>
 </div>
 
 
