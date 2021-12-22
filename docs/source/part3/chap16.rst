@@ -131,7 +131,7 @@ The *normalized symmetric Laplacian matrix* of a graph is defined as
 .. note::
 
     :math:`\bs{\rm{L}}^S=\Delta^{-1/2}\bs{\rm{L}}\Delta^{-1/2}`
-    :math:`\left(\begin{array}{cccc} \frac{\sum_{j\ne 1}a_{1j}}{\sqrt{d_1d_1}}&-\frac{a_{12}}{\sqrt{d_1d_2}}&\cds&-\frac{a_{1n}}{\sqrt{d_1d_n}}\\-\frac{a_{21}}{\sqrt{d_2d_1}}&\frac{\sum_{j\ne 2}a_{2j}}{\sqrt{d_2d_2}}&\cds&-\frac{a_{2n}}{\sqrt{d_2d_n}}\\\vds&\vds&\dds&\vds\\-\frac{a_{n1}}{\sqrt{d_nd_1}}&-\frac{a_{n2}}{\sqrt{d_nd_2}}&\cds&\frac{\sum_{j\ne n}a_{nj}}{\sqrt{d_nd_n}}\end{array}\right)`
+    :math:`=\left(\begin{array}{cccc} \frac{\sum_{j\ne 1}a_{1j}}{\sqrt{d_1d_1}}&-\frac{a_{12}}{\sqrt{d_1d_2}}&\cds&-\frac{a_{1n}}{\sqrt{d_1d_n}}\\-\frac{a_{21}}{\sqrt{d_2d_1}}&\frac{\sum_{j\ne 2}a_{2j}}{\sqrt{d_2d_2}}&\cds&-\frac{a_{2n}}{\sqrt{d_2d_n}}\\\vds&\vds&\dds&\vds\\-\frac{a_{n1}}{\sqrt{d_nd_1}}&-\frac{a_{n2}}{\sqrt{d_nd_2}}&\cds&\frac{\sum_{j\ne n}a_{nj}}{\sqrt{d_nd_n}}\end{array}\right)`
 
 We can hsow that :math:`\bs{\rm{L}}^S` is also positive semidefinite because for any :math:`\c\in\R^d`, we get
 
@@ -153,5 +153,200 @@ The *normalized asymmetric Laplacian* matrix is defined as
 .. note::
 
     :math:`\bs{\rm{L}}^a=\Delta\im\bs{\rm{L}}=\Delta\im(\Delta-\A)=\I-\Delta\im\A`
+    :math:`=\left(\begin{array}{cccc}\frac{\sum_{j\ne 1}a_{1j}}{d_1}&-\frac{a_{12}}{d_1}&\cds&-\frac{a_{1n}}{d_1}\\-\frac{a_{21}}{d_2}&\frac{\sum_{j\ne 2}a_{2j}}{d_2}&\cds&-\frac{a_{2n}}{d_2}\\\vds&\vds&\dds&\vds\\-\frac{a_{n1}}{d_n}&-\frac{a_{n2}}{d_n}&\cds&\frac{\sum_{j\ne n}a_{nj}}{d_n}\end{array}\right)`
 
-    :math:``
+Consider the eigenvalue equation for the symmetric Laplacian :math:`\bs{\rm{L}}^S`:
+
+.. math::
+
+    \bs{\rm{L}}^S\u&=\ld\u
+
+    \Delta^{-1/2}\bs{\rm{L}}^S\u&=\ld\Delta^{-1/2}\u
+
+    \Delta^{-1/2}(\Delta^{-1/2}\bs{\rm{L}}\Delta^{-1/2})\u&=\ld\Delta^{-1/2}\u
+
+    \Delta\im\bs{\rm{L}}(\Delta^{-1/2}\u)&=\ld(\Delta^{-1/2}\u)
+
+    \bs{\rm{L}}^a\v=\ld\v
+
+where :math:`\v=\Delta^{-1/2}\u` is an eigenvector of :math:`\bs{\rm{L}}^a`, and 
+:math:`\u` is an eigenvector of :math:`\bs{\rm{L}}^S`.
+
+16.2 Clustering as Graph Cuts
+-----------------------------
+
+A *k-way cut* in a graph is a partitioning or clustering of the vertex set, 
+given as :math:`\cl{C}=\{C_1,\cds,C_k\}`, such that :math:`C_i\ne\emptyset` for
+all :math:`i`, :math:`C_i\cap C_j=\emptyset` for all :math:`i, j`, and 
+:math:`V=\bigcup_ic_i`.
+We require :math:`\cl{C}` to optimize some objective function that cptures the 
+intuition that nodes within a cluster should have high similarity, and nodes 
+from different clusters should have low similarity.
+
+Given a weighted graph :math:`G` defined by its similarity matrix, let 
+:math:`S, T\subseteq V` be any two subsets of the vertices.
+We denote by :math:`W(S,T)` the sum of the weights on all edges with one vertex
+in :math:`S` and the other in :math:`T`, given as
+
+.. note::
+
+    :math:`\dp W(S,T)=\sum_{v_i\in S}\sum_{v_j\in T}a_{ij}`
+
+Given :math:`S\subseteq V`, we denote by :math:`\bar{S}` the complementary set
+of vertices, that is, :math:`\bar{S}=V-S`.
+A *（vertex) cut* in a graph is defined as a partitioning of :math:`V` into :math:`S\subset V` and :math:`\bar{S}`.
+The *weight of the cut* or *cut weight* is defined as the sum of all the weights 
+on edges between vertices in :math:`S` and :math:`\bar{S}`, given as 
+:math:`W(S,\bar{S})`.
+
+Given a clustering :math:`\cl{C}=\{C_1,\cds,C_k\}` comprising :math:`k` 
+clusters, the *size* of a cluster :math:`C_i` is the number of nodes in the 
+cluster, given as :math:`|C_i|`.
+The *volume* of a cluster :math:`C_i` is defined as the sum of all the weights 
+on edges with one end in cluster :math:`C_i`:
+
+.. note::
+
+    :math:`\dp vol(C_i)=\sum_{v_j\in C_i}d_j=\sum_{v_j\in C_i}\sum_{v_r\in V}a_{jr}=W(C_i,V)`
+
+Let :math:`\c_i=\{0,1\}^n` be the *cluster indicator vector* that records the 
+cluster membership for cluster :math:`C_i`, defined as
+
+.. math::
+
+    c_{ij}=\left\{\begin{array}{lr}1\quad\rm{if\ }v_j\in C_i\\0\quad\rm{if\ }v_j\notin C_i\end{array}\right.
+
+Because a clustering creates pairwise disjoint clusters, we immediately have
+
+.. math::
+
+    \c_i^T\c_j=0
+
+The cluster size can be written as
+
+.. note::
+
+    :math:`|C_i|=\c_i^T\c_i=\lv\c_i\rv^2`
+
+.. math::
+
+    vol(C_i)=W(C_i,V)=\sum_{v_r\in C_i}d_r=\sum_{v_r\in C_i}c_{ir}d_rc_{ir}=
+    \sum_{r=1}^n\sum_{s=1}^nc_{ir}\Delta_{rs}c_{is}
+
+The volume of the cluster can be written as
+
+.. note::
+
+    :math:`vol(C_i)=\c_i^T\Delta\c_i`
+
+.. math::
+
+    W(C_i,C_i)=\sum_{v_r\in C_i}\sum_{v_s\in C_i}a_{rs}=\sum_{r=1}^n\sum_{s=1}^nc_{ir}a_{rs}c_{is}
+
+The sum of internal weights can be written as
+
+.. note::
+
+    :math:`W(C_i,C_i)=\c_i^T\A\c_i`
+
+.. note::
+
+    :math:`\dp W(C_i,\bar{C_i})=\sum_{v_r\in C_i}\sum_{v_s\in V-C_i}a_{rs}=W(C_i,V)-W(C_i,C_i)`
+    :math:`=\c_i(\Delta-\A)\c_i=\c_i^T\bs{\rm{L}}\c_i`
+
+16.2.1 Clustering Objective Functions: Ratio and Normalized Cut
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+**Ratio Cut**
+
+.. note::
+
+    :math:`\dp\min_{\cl{C}}J_{rc}(\cl{C})=\sum_{i=1}^k\frac{W(C_i,\bar{C_i})}{|C_i|}`
+    :math:`=\dp\sum_{i=1}^k\frac{\c_i^T\bs{\rm{L}}\c_i}{\c_i^T\c_i}`
+    :math:`=\dp\sum_{i=1}^k\frac{\c_i^T\bs{\rm{L}}\c_i}{\lv\c_i\rv^2}`
+
+ratio cut tries to minimize the sum of the similarities from a cluster 
+:math:`C_i` to other points not in the cluster :math:`\bar{C_i}`, taking into 
+account the size of each cluster.
+
+For binary cluster indicator vectors :math:`\c_i`, the ratio cut objective is NP-hard.
+An obvious relaxation is to allow :math:`\c_i` to take on any real value.
+
+.. math::
+
+    \min_{\cl{C}}J_{rc}(\cl{C})=
+    \sum_{i=1}^k\frac{\c_i^T\bs{\rm{L}}\c_i}{\lv\c_i\rv^2}=
+    \sum_{i=1}^k\bigg(\frac{\c_i}{\lv\c_i\rv}\bigg)^T\bs{\rm{L}}
+    \bigg(\frac{\c_i}{\lv\c_i\rv}\bigg)=\sum_{i=1}^k\u_i^T\bs{\rm{L}}\u_i
+
+where :math:`\u_i=\frac{\c_i}{\lv\c_i\rv}` is the unit vector in the direction of :math:`\c_i\in\R^n`.
+
+To incorporate the constraint the :math:`\u_i^T\u_i=1`, we introduce the 
+Lagrange multiplier :math:`\ld_i` for each cluster :math:`C_i`.
+We have
+
+.. math::
+
+    \frac{\pd}{\pd\u_i}\bigg(\sum_{i=1}^k\u_i^T\bs{\rm{L}}\u_i+\sum_{i=1}^n\ld_i(1-\u_i^T\u_i)\bigg)&=\0
+
+    2\bs{\rm{L}}\u_i-2\ld_i\u_i&=\0
+
+    \bs{\rm{L}}\u_i&=\ld_i\u_i
+
+    \u_i^T\bs{\rm{L}}\u_i&=\u_i^T\ld_i\u_i=\ld_i
+
+which in turn implies that to minimize the ratio cut objective, we should choose 
+the :math:`k` smallest eigenvalues, and the corresponding eigenvectors, so that
+
+.. math::
+
+    \min_{\cl{C}}J_{rc}(\cl{C})&=\u_n^T\bs{\rm{L}}\u_n+\cds+\u_{n-k+1}^T\bs{\rm{L}}\u_{n-k+1}
+
+    &=\ld_n+\cds+\ld_{n-k+1}
+
+**Normalized Cut**
+
+*Normalized cut* is similar to ratio cut, except that it divides the cut weight 
+of each cluster by the volume of a cluster instead of its size.
+
+.. note::
+
+    :math:`\dp\min_{\cl{C}}J_{nc}(\cl{C})=\sum_{i=1}^k\frac{W(C_i,\bar{C_i})}{vol(C_i)}`
+    :math:`=\dp\sum_{i=1}^k\frac{\c_i^T\bs{\rm{L}}\c_i}{\c_i^T\Delta\c_i}`
+
+We assume :math:`\c_i` to be an arbitrary real vector, and rewrite the 
+normalized cut objective in terms of the normalized symmetrc Laplacian, as 
+follows:
+
+.. math::
+
+    \min_{\cl{C}}J_{nc}(\cl{C})
+    &=\sum_{i=1}^k\frac{\c_i^T\bs{\rm{L}}\c_i}{\c_i^T\Delta\c_i}
+    =\sum_{i=1}^k\frac{\c_i^T(\Delta^{1/2}\Delta^{-1/2})\bs{\rm{L}}
+    (\Delta^{-1/2}\Delta^{1/2})\c_i}{\c_i^T(\Delta^{1/2}\Delta^{1/2})\c_i}
+
+    &=\sum_{i=1}^k\frac{(\Delta^{1/2}\c_i)^T(\Delta^{-1/2}\bs{\rm{L}}
+    \Delta^{-1/2})(\Delta^{1/2}\c_i)}{(\Delta^{1/2}\c_i)^T(\Delta^{1/2}\c_i)}
+
+    &=\sum_{i=1}^k\bigg(\frac{\Delta^{1/2}\c_i}{\lv\Delta^{1/2}\c_i\rv}\bigg)^T
+    \bs{\rm{L}}^S\bigg(\frac{\Delta^{1/2}\c_i}{\lv\Delta^{1/2}\c_i\rv}\bigg)
+    =\sum_{i=1}^k\u_i^T\bs{\rm{L}}^S\u_i
+
+The normalized cut objective can also be expressed in terms of the normalized asymmetric Laplacian:
+
+.. math::
+
+    \frac{\pd}{\pd\c_i}\bigg(\sum_{j=1}^k\frac{\c_j^T\bs{\rm{L}}\c_j}
+    {\c_j^T\Delta\c_j}\bigg)=\frac{\pd}{\pd\c_i}
+    \bigg(\frac{\c_i^T\bs{\rm{L}}\c_i}{\c_i^T\Delta\c_i}\bigg)&=\0
+
+    \frac{\bs{\rm{L}}\c_i(\c_i^T\Delta\c_i)-\Delta\c_i(\c_i^T\bs{\rm{L}}\c_i)}
+    {(\c_i^T\Delta\c_i)^2}&=0
+
+    \bs{\rm{L}}\c_i&=\bigg(\frac{\c_i^T\bs{\rm{L}}\c_i}{\c_i^T\Delta\c_i}\bigg)\Delta\c_i
+
+    \Delta\im\bs{\rm{L}}\c_i&=\ld_i\c_i
+
+    \bs{\rm{L}}^a\c_i&=\ld_i\c_i
+
+    

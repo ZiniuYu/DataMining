@@ -97,6 +97,10 @@
 <li class="toctree-l2"><a class="reference internal" href="chap15.html">Chapter 15 Density-based Clustering</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Chapter 16 Spectral and Graph Clustering</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#graphs-and-matrices">16.1 Graphs and Matrices</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#clustering-as-graph-cuts">16.2 Clustering as Graph Cuts</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#clustering-objective-functions-ratio-and-normalized-cut">16.2.1 Clustering Objective Functions: Ratio and Normalized Cut</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="chap17.html">Chapter 17 Clustering Validation</a></li>
@@ -313,7 +317,7 @@ specifies the number of connected components in the graph.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p><span class="math notranslate nohighlight">\(\bs{\rm{L}}^S=\Delta^{-1/2}\bs{\rm{L}}\Delta^{-1/2}\)</span>
-<span class="math notranslate nohighlight">\(\left(\begin{array}{cccc} \frac{\sum_{j\ne 1}a_{1j}}{\sqrt{d_1d_1}}&amp;-\frac{a_{12}}{\sqrt{d_1d_2}}&amp;\cds&amp;-\frac{a_{1n}}{\sqrt{d_1d_n}}\\-\frac{a_{21}}{\sqrt{d_2d_1}}&amp;\frac{\sum_{j\ne 2}a_{2j}}{\sqrt{d_2d_2}}&amp;\cds&amp;-\frac{a_{2n}}{\sqrt{d_2d_n}}\\\vds&amp;\vds&amp;\dds&amp;\vds\\-\frac{a_{n1}}{\sqrt{d_nd_1}}&amp;-\frac{a_{n2}}{\sqrt{d_nd_2}}&amp;\cds&amp;\frac{\sum_{j\ne n}a_{nj}}{\sqrt{d_nd_n}}\end{array}\right)\)</span></p>
+<span class="math notranslate nohighlight">\(=\left(\begin{array}{cccc} \frac{\sum_{j\ne 1}a_{1j}}{\sqrt{d_1d_1}}&amp;-\frac{a_{12}}{\sqrt{d_1d_2}}&amp;\cds&amp;-\frac{a_{1n}}{\sqrt{d_1d_n}}\\-\frac{a_{21}}{\sqrt{d_2d_1}}&amp;\frac{\sum_{j\ne 2}a_{2j}}{\sqrt{d_2d_2}}&amp;\cds&amp;-\frac{a_{2n}}{\sqrt{d_2d_n}}\\\vds&amp;\vds&amp;\dds&amp;\vds\\-\frac{a_{n1}}{\sqrt{d_nd_1}}&amp;-\frac{a_{n2}}{\sqrt{d_nd_2}}&amp;\cds&amp;\frac{\sum_{j\ne n}a_{nj}}{\sqrt{d_nd_n}}\end{array}\right)\)</span></p>
 </div>
 <p>We can hsow that <span class="math notranslate nohighlight">\(\bs{\rm{L}}^S\)</span> is also positive semidefinite because for any <span class="math notranslate nohighlight">\(\c\in\R^d\)</span>, we get</p>
 <div class="math notranslate nohighlight">
@@ -329,8 +333,133 @@ real, positive eigenvalues <span class="math notranslate nohighlight">\(\ld_1\ge
 <p>The <em>normalized asymmetric Laplacian</em> matrix is defined as</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p><span class="math notranslate nohighlight">\(\bs{\rm{L}}^a=\Delta\im\bs{\rm{L}}=\Delta\im(\Delta-\A)=\I-\Delta\im\A\)</span></p>
-<p>:math:``</p>
+<p><span class="math notranslate nohighlight">\(\bs{\rm{L}}^a=\Delta\im\bs{\rm{L}}=\Delta\im(\Delta-\A)=\I-\Delta\im\A\)</span>
+<span class="math notranslate nohighlight">\(=\left(\begin{array}{cccc}\frac{\sum_{j\ne 1}a_{1j}}{d_1}&amp;-\frac{a_{12}}{d_1}&amp;\cds&amp;-\frac{a_{1n}}{d_1}\\-\frac{a_{21}}{d_2}&amp;\frac{\sum_{j\ne 2}a_{2j}}{d_2}&amp;\cds&amp;-\frac{a_{2n}}{d_2}\\\vds&amp;\vds&amp;\dds&amp;\vds\\-\frac{a_{n1}}{d_n}&amp;-\frac{a_{n2}}{d_n}&amp;\cds&amp;\frac{\sum_{j\ne n}a_{nj}}{d_n}\end{array}\right)\)</span></p>
+</div>
+<p>Consider the eigenvalue equation for the symmetric Laplacian <span class="math notranslate nohighlight">\(\bs{\rm{L}}^S\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\bs{\rm{L}}^S\u&amp;=\ld\u\\\Delta^{-1/2}\bs{\rm{L}}^S\u&amp;=\ld\Delta^{-1/2}\u\\\Delta^{-1/2}(\Delta^{-1/2}\bs{\rm{L}}\Delta^{-1/2})\u&amp;=\ld\Delta^{-1/2}\u\\\Delta\im\bs{\rm{L}}(\Delta^{-1/2}\u)&amp;=\ld(\Delta^{-1/2}\u)\\\bs{\rm{L}}^a\v=\ld\v\end{aligned}\end{align} \]</div>
+<p>where <span class="math notranslate nohighlight">\(\v=\Delta^{-1/2}\u\)</span> is an eigenvector of <span class="math notranslate nohighlight">\(\bs{\rm{L}}^a\)</span>, and
+<span class="math notranslate nohighlight">\(\u\)</span> is an eigenvector of <span class="math notranslate nohighlight">\(\bs{\rm{L}}^S\)</span>.</p>
+</div>
+<div class="section" id="clustering-as-graph-cuts">
+<h2>16.2 Clustering as Graph Cuts<a class="headerlink" href="#clustering-as-graph-cuts" title="Permalink to this headline">¶</a></h2>
+<p>A <em>k-way cut</em> in a graph is a partitioning or clustering of the vertex set,
+given as <span class="math notranslate nohighlight">\(\cl{C}=\{C_1,\cds,C_k\}\)</span>, such that <span class="math notranslate nohighlight">\(C_i\ne\emptyset\)</span> for
+all <span class="math notranslate nohighlight">\(i\)</span>, <span class="math notranslate nohighlight">\(C_i\cap C_j=\emptyset\)</span> for all <span class="math notranslate nohighlight">\(i, j\)</span>, and
+<span class="math notranslate nohighlight">\(V=\bigcup_ic_i\)</span>.
+We require <span class="math notranslate nohighlight">\(\cl{C}\)</span> to optimize some objective function that cptures the
+intuition that nodes within a cluster should have high similarity, and nodes
+from different clusters should have low similarity.</p>
+<p>Given a weighted graph <span class="math notranslate nohighlight">\(G\)</span> defined by its similarity matrix, let
+<span class="math notranslate nohighlight">\(S, T\subseteq V\)</span> be any two subsets of the vertices.
+We denote by <span class="math notranslate nohighlight">\(W(S,T)\)</span> the sum of the weights on all edges with one vertex
+in <span class="math notranslate nohighlight">\(S\)</span> and the other in <span class="math notranslate nohighlight">\(T\)</span>, given as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp W(S,T)=\sum_{v_i\in S}\sum_{v_j\in T}a_{ij}\)</span></p>
+</div>
+<p>Given <span class="math notranslate nohighlight">\(S\subseteq V\)</span>, we denote by <span class="math notranslate nohighlight">\(\bar{S}\)</span> the complementary set
+of vertices, that is, <span class="math notranslate nohighlight">\(\bar{S}=V-S\)</span>.
+A <em>（vertex) cut</em> in a graph is defined as a partitioning of <span class="math notranslate nohighlight">\(V\)</span> into <span class="math notranslate nohighlight">\(S\subset V\)</span> and <span class="math notranslate nohighlight">\(\bar{S}\)</span>.
+The <em>weight of the cut</em> or <em>cut weight</em> is defined as the sum of all the weights
+on edges between vertices in <span class="math notranslate nohighlight">\(S\)</span> and <span class="math notranslate nohighlight">\(\bar{S}\)</span>, given as
+<span class="math notranslate nohighlight">\(W(S,\bar{S})\)</span>.</p>
+<p>Given a clustering <span class="math notranslate nohighlight">\(\cl{C}=\{C_1,\cds,C_k\}\)</span> comprising <span class="math notranslate nohighlight">\(k\)</span>
+clusters, the <em>size</em> of a cluster <span class="math notranslate nohighlight">\(C_i\)</span> is the number of nodes in the
+cluster, given as <span class="math notranslate nohighlight">\(|C_i|\)</span>.
+The <em>volume</em> of a cluster <span class="math notranslate nohighlight">\(C_i\)</span> is defined as the sum of all the weights
+on edges with one end in cluster <span class="math notranslate nohighlight">\(C_i\)</span>:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp vol(C_i)=\sum_{v_j\in C_i}d_j=\sum_{v_j\in C_i}\sum_{v_r\in V}a_{jr}=W(C_i,V)\)</span></p>
+</div>
+<p>Let <span class="math notranslate nohighlight">\(\c_i=\{0,1\}^n\)</span> be the <em>cluster indicator vector</em> that records the
+cluster membership for cluster <span class="math notranslate nohighlight">\(C_i\)</span>, defined as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}c_{ij}=\left\{\begin{array}{lr}1\quad\rm{if\ }v_j\in C_i\\0\quad\rm{if\ }v_j\notin C_i\end{array}\right.\end{split}\]</div>
+<p>Because a clustering creates pairwise disjoint clusters, we immediately have</p>
+<div class="math notranslate nohighlight">
+\[\c_i^T\c_j=0\]</div>
+<p>The cluster size can be written as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(|C_i|=\c_i^T\c_i=\lv\c_i\rv^2\)</span></p>
+</div>
+<div class="math notranslate nohighlight">
+\[vol(C_i)=W(C_i,V)=\sum_{v_r\in C_i}d_r=\sum_{v_r\in C_i}c_{ir}d_rc_{ir}=
+\sum_{r=1}^n\sum_{s=1}^nc_{ir}\Delta_{rs}c_{is}\]</div>
+<p>The volume of the cluster can be written as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(vol(C_i)=\c_i^T\Delta\c_i\)</span></p>
+</div>
+<div class="math notranslate nohighlight">
+\[W(C_i,C_i)=\sum_{v_r\in C_i}\sum_{v_s\in C_i}a_{rs}=\sum_{r=1}^n\sum_{s=1}^nc_{ir}a_{rs}c_{is}\]</div>
+<p>The sum of internal weights can be written as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(W(C_i,C_i)=\c_i^T\A\c_i\)</span></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp W(C_i,\bar{C_i})=\sum_{v_r\in C_i}\sum_{v_s\in V-C_i}a_{rs}=W(C_i,V)-W(C_i,C_i)\)</span>
+<span class="math notranslate nohighlight">\(=\c_i(\Delta-\A)\c_i=\c_i^T\bs{\rm{L}}\c_i\)</span></p>
+</div>
+<div class="section" id="clustering-objective-functions-ratio-and-normalized-cut">
+<h3>16.2.1 Clustering Objective Functions: Ratio and Normalized Cut<a class="headerlink" href="#clustering-objective-functions-ratio-and-normalized-cut" title="Permalink to this headline">¶</a></h3>
+<p><strong>Ratio Cut</strong></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\min_{\cl{C}}J_{rc}(\cl{C})=\sum_{i=1}^k\frac{W(C_i,\bar{C_i})}{|C_i|}\)</span>
+<span class="math notranslate nohighlight">\(=\dp\sum_{i=1}^k\frac{\c_i^T\bs{\rm{L}}\c_i}{\c_i^T\c_i}\)</span>
+<span class="math notranslate nohighlight">\(=\dp\sum_{i=1}^k\frac{\c_i^T\bs{\rm{L}}\c_i}{\lv\c_i\rv^2}\)</span></p>
+</div>
+<p>ratio cut tries to minimize the sum of the similarities from a cluster
+<span class="math notranslate nohighlight">\(C_i\)</span> to other points not in the cluster <span class="math notranslate nohighlight">\(\bar{C_i}\)</span>, taking into
+account the size of each cluster.</p>
+<p>For binary cluster indicator vectors <span class="math notranslate nohighlight">\(\c_i\)</span>, the ratio cut objective is NP-hard.
+An obvious relaxation is to allow <span class="math notranslate nohighlight">\(\c_i\)</span> to take on any real value.</p>
+<div class="math notranslate nohighlight">
+\[\min_{\cl{C}}J_{rc}(\cl{C})=
+\sum_{i=1}^k\frac{\c_i^T\bs{\rm{L}}\c_i}{\lv\c_i\rv^2}=
+\sum_{i=1}^k\bigg(\frac{\c_i}{\lv\c_i\rv}\bigg)^T\bs{\rm{L}}
+\bigg(\frac{\c_i}{\lv\c_i\rv}\bigg)=\sum_{i=1}^k\u_i^T\bs{\rm{L}}\u_i\]</div>
+<p>where <span class="math notranslate nohighlight">\(\u_i=\frac{\c_i}{\lv\c_i\rv}\)</span> is the unit vector in the direction of <span class="math notranslate nohighlight">\(\c_i\in\R^n\)</span>.</p>
+<p>To incorporate the constraint the <span class="math notranslate nohighlight">\(\u_i^T\u_i=1\)</span>, we introduce the
+Lagrange multiplier <span class="math notranslate nohighlight">\(\ld_i\)</span> for each cluster <span class="math notranslate nohighlight">\(C_i\)</span>.
+We have</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\frac{\pd}{\pd\u_i}\bigg(\sum_{i=1}^k\u_i^T\bs{\rm{L}}\u_i+\sum_{i=1}^n\ld_i(1-\u_i^T\u_i)\bigg)&amp;=\0\\2\bs{\rm{L}}\u_i-2\ld_i\u_i&amp;=\0\\\bs{\rm{L}}\u_i&amp;=\ld_i\u_i\\\u_i^T\bs{\rm{L}}\u_i&amp;=\u_i^T\ld_i\u_i=\ld_i\end{aligned}\end{align} \]</div>
+<p>which in turn implies that to minimize the ratio cut objective, we should choose
+the <span class="math notranslate nohighlight">\(k\)</span> smallest eigenvalues, and the corresponding eigenvectors, so that</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\min_{\cl{C}}J_{rc}(\cl{C})&amp;=\u_n^T\bs{\rm{L}}\u_n+\cds+\u_{n-k+1}^T\bs{\rm{L}}\u_{n-k+1}\\&amp;=\ld_n+\cds+\ld_{n-k+1}\end{aligned}\end{align} \]</div>
+<p><strong>Normalized Cut</strong></p>
+<p><em>Normalized cut</em> is similar to ratio cut, except that it divides the cut weight
+of each cluster by the volume of a cluster instead of its size.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\min_{\cl{C}}J_{nc}(\cl{C})=\sum_{i=1}^k\frac{W(C_i,\bar{C_i})}{vol(C_i)}\)</span>
+<span class="math notranslate nohighlight">\(=\dp\sum_{i=1}^k\frac{\c_i^T\bs{\rm{L}}\c_i}{\c_i^T\Delta\c_i}\)</span></p>
+</div>
+<p>We assume <span class="math notranslate nohighlight">\(\c_i\)</span> to be an arbitrary real vector, and rewrite the
+normalized cut objective in terms of the normalized symmetrc Laplacian, as
+follows:</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\min_{\cl{C}}J_{nc}(\cl{C})
+&amp;=\sum_{i=1}^k\frac{\c_i^T\bs{\rm{L}}\c_i}{\c_i^T\Delta\c_i}
+=\sum_{i=1}^k\frac{\c_i^T(\Delta^{1/2}\Delta^{-1/2})\bs{\rm{L}}
+(\Delta^{-1/2}\Delta^{1/2})\c_i}{\c_i^T(\Delta^{1/2}\Delta^{1/2})\c_i}\\&amp;=\sum_{i=1}^k\frac{(\Delta^{1/2}\c_i)^T(\Delta^{-1/2}\bs{\rm{L}}
+\Delta^{-1/2})(\Delta^{1/2}\c_i)}{(\Delta^{1/2}\c_i)^T(\Delta^{1/2}\c_i)}\\&amp;=\sum_{i=1}^k\bigg(\frac{\Delta^{1/2}\c_i}{\lv\Delta^{1/2}\c_i\rv}\bigg)^T
+\bs{\rm{L}}^S\bigg(\frac{\Delta^{1/2}\c_i}{\lv\Delta^{1/2}\c_i\rv}\bigg)
+=\sum_{i=1}^k\u_i^T\bs{\rm{L}}^S\u_i\end{aligned}\end{align} \]</div>
+<p>The normalized cut objective can also be expressed in terms of the normalized asymmetric Laplacian:</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\frac{\pd}{\pd\c_i}\bigg(\sum_{j=1}^k\frac{\c_j^T\bs{\rm{L}}\c_j}
+{\c_j^T\Delta\c_j}\bigg)=\frac{\pd}{\pd\c_i}
+\bigg(\frac{\c_i^T\bs{\rm{L}}\c_i}{\c_i^T\Delta\c_i}\bigg)&amp;=\0\\\frac{\bs{\rm{L}}\c_i(\c_i^T\Delta\c_i)-\Delta\c_i(\c_i^T\bs{\rm{L}}\c_i)}
+{(\c_i^T\Delta\c_i)^2}&amp;=0\\\bs{\rm{L}}\c_i&amp;=\bigg(\frac{\c_i^T\bs{\rm{L}}\c_i}{\c_i^T\Delta\c_i}\bigg)\Delta\c_i\\\Delta\im\bs{\rm{L}}\c_i&amp;=\ld_i\c_i\\\bs{\rm{L}}^a\c_i&amp;=\ld_i\c_i\end{aligned}\end{align} \]</div>
 </div>
 </div>
 </div>
