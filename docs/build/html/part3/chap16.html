@@ -99,6 +99,8 @@
 <li class="toctree-l3"><a class="reference internal" href="#graphs-and-matrices">16.1 Graphs and Matrices</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#clustering-as-graph-cuts">16.2 Clustering as Graph Cuts</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#clustering-objective-functions-ratio-and-normalized-cut">16.2.1 Clustering Objective Functions: Ratio and Normalized Cut</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#spectral-clustering-algorithm">16.2.2 Spectral Clustering Algorithm</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#maximization-objectives-average-cut-and-modularity">16.2.3 Maximization Objectives: Average Cut and Modularity</a></li>
 </ul>
 </li>
 </ul>
@@ -460,6 +462,134 @@ follows:</p>
 {\c_j^T\Delta\c_j}\bigg)=\frac{\pd}{\pd\c_i}
 \bigg(\frac{\c_i^T\bs{\rm{L}}\c_i}{\c_i^T\Delta\c_i}\bigg)&amp;=\0\\\frac{\bs{\rm{L}}\c_i(\c_i^T\Delta\c_i)-\Delta\c_i(\c_i^T\bs{\rm{L}}\c_i)}
 {(\c_i^T\Delta\c_i)^2}&amp;=0\\\bs{\rm{L}}\c_i&amp;=\bigg(\frac{\c_i^T\bs{\rm{L}}\c_i}{\c_i^T\Delta\c_i}\bigg)\Delta\c_i\\\Delta\im\bs{\rm{L}}\c_i&amp;=\ld_i\c_i\\\bs{\rm{L}}^a\c_i&amp;=\ld_i\c_i\end{aligned}\end{align} \]</div>
+</div>
+<div class="section" id="spectral-clustering-algorithm">
+<h3>16.2.2 Spectral Clustering Algorithm<a class="headerlink" href="#spectral-clustering-algorithm" title="Permalink to this headline">¶</a></h3>
+<img alt="../_images/Algo16.1.png" src="../_images/Algo16.1.png" />
+<p>Eq.(16.23): <span class="math notranslate nohighlight">\(\dp\y_i=\frac{1}{\sqrt{\sum_{j=1}^ku_{n-j+1,i}^2}}(u_{n,i},u_{n-1,i},\cds,u_{n-k+1,i})^T\)</span></p>
+<p><strong>Computational Complexity</strong></p>
+<p>The computational complexity of the spectral clustering algorithm is <span class="math notranslate nohighlight">\(O(n^3)\)</span>.</p>
+</div>
+<div class="section" id="maximization-objectives-average-cut-and-modularity">
+<h3>16.2.3 Maximization Objectives: Average Cut and Modularity<a class="headerlink" href="#maximization-objectives-average-cut-and-modularity" title="Permalink to this headline">¶</a></h3>
+<p><strong>Average Weight</strong></p>
+<p>The <em>average weight</em> objective is defined as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\max_{\cl{C}}J_{aw}(\cl{C})=\sum_{i=1}^k\frac{W(C_i,C_i)}{|C_i|}=\sum_{i=1}^k\frac{\c_i^T\A\c_i}{\c_i^T\c_i}\)</span></p>
+</div>
+<p>Instead of trying to minimize the weights on edges between clusters as in ratio
+cut, average weight tries to maximize the within cluster weights.
+The problem of maximizing <span class="math notranslate nohighlight">\(J_{aw}\)</span> for binary cluster indicator vectors is
+also NP-hard; we can obtain a solution by relaxing the constraint on
+<span class="math notranslate nohighlight">\(\c_i\)</span>, by assuming that it can take on any real values for its elements.</p>
+<div class="math notranslate nohighlight">
+\[\max_{\cl{C}}J_{aw}(\cl{C})=\sum_{i=1}^k\u_i^T\A\u_i\]</div>
+<p>We can maximize the objective by selecting the <span class="math notranslate nohighlight">\(k\)</span> largest eigenvalues of
+<span class="math notranslate nohighlight">\(\A\)</span>, and the corresponding eigenvectors</p>
+<div class="math notranslate nohighlight">
+\[\max_{\cl{C}}J_{aw}(\cl{C})=\u_1^T\A\u_1+\cds+\u_k^T\A\u_k=\ld_1+\cds+\ld_k\]</div>
+<p>where <span class="math notranslate nohighlight">\(\ld_1\geq\ld_2\geq\cds\ld_n\)</span>.</p>
+<p><strong>Average Weight and Kernel K-means</strong></p>
+<p>If the weighted adjacency matrix <span class="math notranslate nohighlight">\(\A\)</span> represents the kernel value between
+a pair of points, so that <span class="math notranslate nohighlight">\(a_{ij}=K(\x_i,\x_j)\)</span>, then we may use the sum
+of squared errors objective of kernel K-means for graph clustering.</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\min_{\cl{C}}J_{sse}(\cl{C})&amp;=\sum_{j=1}^nK(\x_j,\x_j)-\sum_{i=1}^k
+\frac{1}{|C_i|}\sum_{\x_r\in C_i}\sum_{\x_s\in C_i}K(\x_r,\x_s)\\&amp;=\sum_{j=1}^na_{jj}-\sum_{i=1}^k\frac{1}{|C_i|}\sum_{v_r\in C_i}\sum_{v_s\in C_i}a_{rs}\\&amp;=\sum_{j=1}^na_{jj}-\sum_{i=1}^k\frac{\c_i^T\A\c_i}{\c_i^T\c_i}\\&amp;=\sum_{j=1}^na_{jj}-J_{aw}(\cl{C})\end{aligned}\end{align} \]</div>
+<p>We can observe that because <span class="math notranslate nohighlight">\(\sum_{j=1}^na_{jj}\)</span> is independent of the
+clustering, minimizing the SSE objective is the same as maximizing the average
+weight objective.
+In particular, if <span class="math notranslate nohighlight">\(a_{jj}\)</span> represents the linear kernel <span class="math notranslate nohighlight">\(\x_i^T\x_j\)</span>
+between the nodes, then maximizing the average weight objective is equivalent to
+minimizing the regular K-means SSE objective.</p>
+<p><strong>Modularity</strong></p>
+<p>Informally, modularity is defined as the difference between the observed and
+expected fraction of edges within a cluster.
+It measures the extent to which nodes of the same type are linked to each other.</p>
+<p><strong>Unweighted Graphs</strong></p>
+<p>Let us assume for the moment that the graph <span class="math notranslate nohighlight">\(G\)</span> is unweighted, and that <span class="math notranslate nohighlight">\(\A\)</span> is its binary adjacency matrix.
+The number of edges within a cluster <span class="math notranslate nohighlight">\(C_i\)</span> is given as</p>
+<div class="math notranslate nohighlight">
+\[\frac{1}{2}\sum_{v_r\in C_i}\sum_{v_s\in C_i}a_{rs}\]</div>
+<p>where we divide by <span class="math notranslate nohighlight">\(\frac{1}{2}\)</span> because each edge is counted twice in the summation.
+Over all the clusters, the observed number of edges within the same cluster is given as</p>
+<div class="math notranslate nohighlight">
+\[\frac{1}{2}\sum_{i=1}^k\sum_{v_r\in C_i}\sum_{v_s\in C_i}a_{rs}\]</div>
+<p>The probability that one end of an edge is <span class="math notranslate nohighlight">\(v_r\)</span> and the other <span class="math notranslate nohighlight">\(v_s\)</span> is given as</p>
+<div class="math notranslate nohighlight">
+\[p_{rs}=\frac{d_r}{2m}\cd\frac{d_s}{2m}=\frac{d_rd_s}{4m^2}\]</div>
+<p>The number of edges between <span class="math notranslate nohighlight">\(v_r\)</span> and <span class="math notranslate nohighlight">\(v_s\)</span> follows a binomial
+distribution with success probability <span class="math notranslate nohighlight">\(p_{rs}\)</span> over <span class="math notranslate nohighlight">\(2m\)</span> trails
+(because we are selecting the two ends of <span class="math notranslate nohighlight">\(m\)</span> edges).
+The expected number of edges between <span class="math notranslate nohighlight">\(v_r\)</span> and <span class="math notranslate nohighlight">\(v_s\)</span> is given as</p>
+<div class="math notranslate nohighlight">
+\[2m\cd p_{rs}=\frac{d_rd_s}{2m}\]</div>
+<p>The expected number of edges within a cluster <span class="math notranslate nohighlight">\(C_i\)</span> is then</p>
+<div class="math notranslate nohighlight">
+\[\frac{1}{2}\sum_{v_r\in C_i}\sum_{v_s\in C_i}\frac{d_rd_s}{2m}\]</div>
+<p>and the expected number of edges within the same cluster, summed over all <span class="math notranslate nohighlight">\(k\)</span> clusters, is given as</p>
+<div class="math notranslate nohighlight">
+\[\frac{1}{2}\sum_{i=1}^k\sum_{v_r\in C_i}\sum_{v_s\in C_i}\frac{d_rd_s}{2m}\]</div>
+<p>where we divide by 2 because each edge is counted twice.
+The <em>modularity</em> of the clustering <span class="math notranslate nohighlight">\(\cl{C}\)</span> is defined as the difference
+between the observed and expected fraction of edges within the same cluster.</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}Q&amp;=\frac{1}{2m}\sum_{i=1}^k\sum_{v_r\in C_i}\sum_{v_s\in C_i}\bigg(a_{rs}-\frac{d_rd_s}{2m}\bigg)\\&amp;=\sum_{i=1}^k\sum_{v_r\in C_i}\sum_{v_s\in C_i}\bigg(
+    \frac{a_{rs}}{\sum_{j=1}^nd_j}-\frac{d_rd_s}{(\sum_{j=1}^nd_j)^2}\bigg)\end{aligned}\end{align} \]</div>
+<p><strong>Weighted Graphs</strong></p>
+<p>Assume that <span class="math notranslate nohighlight">\(\A\)</span> is the weighted adjacency matrix; we interpret the
+modularity of a clustering as the difference between the observed and expected
+fraction of weights on edges within the clusters.</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\sum_{v_r\in C_i}\sum_{v_s\in C_i}a_{rs}=W(C_i,C_i)\\\sum_{v_r\in C_i}\sum_{v_s\in C_i}d_rd_s=\bigg(\sum_{v_r\in C_i}d_r\bigg)\bigg(\sum_{v_s\in C_i}d_s\bigg)=W(C_i,V)^2\\\sum_{j=1}^nd_j=W(V,V)\end{aligned}\end{align} \]</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp \max_{\cl{C}}J_Q(\cl{C})=\sum_{i=1}^k\bigg(\frac{W(C_i,C_i)}{W(V,V)}\)</span>
+<span class="math notranslate nohighlight">\(\dp-\bigg(\frac{W(C_i,V)}{W(V,V)}\bigg)^2\bigg)\)</span></p>
+</div>
+<p>We now express the modularity obejctive in matrix terms.
+We have</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}W(C_i,C_i)=\c_i^T\A\c_i\\W(C_i,V)=\sum_{v_r\in C_i}d_r=\sum_{v_r\in C_i}d_rc_{ir}=\sum_{j=1}^nd_jc_{ij}=\bs{\rm{d}}^T\c_i\\W(V,V)=\sum_{j=1}^nd_j=tr(\Delta)\end{aligned}\end{align} \]</div>
+<p>The clustering objective based on modularity can then be written as</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\max_{\cl{C}}J_Q(\cl{C})&amp;=\sum_{i=1}^k\bigg(\frac{\c_i^T\A\c_i}{tr(\Delta)}-
+\frac{(\bs{\rm{d}}^T\c_i)^2}{tr(\Delta)^2}\bigg)\\&amp;=\sum_{i=1}^k\bigg(\c_i^T\bigg(\frac{\A}{tr(\Delta)}\bigg)\c_i-
+\c_i^T\bigg(\frac{\bs{\rm{d}}\cd\bs{\rm{d}}^T}{tr(\Delta)^2}\bigg)\c_i\bigg)\\&amp;=\sum_{i=1}^k\c_i^T\bs{\rm{Q}}\c_i\end{aligned}\end{align} \]</div>
+<p>where <span class="math notranslate nohighlight">\(\bs{\rm{Q}}\)</span> is the <em>modularity matrix</em>:</p>
+<div class="math notranslate nohighlight">
+\[\bs{\rm{Q}}=\frac{1}{tr(\Delta)}\bigg(\A-\frac{\bs{\rm{d}}\cd\bs{\rm{d}}^T}{tr(\Delta)}\bigg)\]</div>
+<p>We select the <span class="math notranslate nohighlight">\(k\)</span> largest eigenvalues and the corresponding eigenvectors to obtain</p>
+<div class="math notranslate nohighlight">
+\[\max_{\cl{C}}=J_Q(\cl{C})=\u_1^T\bs{\rm{Q}}\u_1+\cds+\u_k^T\bs{\rm{Q}}\u_k=\ld_1+\cds+\ld_k\]</div>
+<p><strong>Modularity as Average Weight</strong></p>
+<p>We know that each row of <span class="math notranslate nohighlight">\(\bs{\rm{M}}=\Delta\im\A\)</span> sums to 1, that is</p>
+<div class="math notranslate nohighlight">
+\[\sum_{j=1}^nm_{ij}=d_i=1,\forall i=1,\cds,n\]</div>
+<p>The modularity matrix can then be written as</p>
+<div class="math notranslate nohighlight">
+\[\bs{\rm{Q}}=\frac{1}{n}\bs{\rm{M}}-\frac{1}{n^2}\1_{n\times n}\]</div>
+<p>For large graphs with many nodes, <span class="math notranslate nohighlight">\(n\)</span> is large and the second term
+practically vanishes, as <span class="math notranslate nohighlight">\(\frac{1}{n^2}\)</span> will be very small.
+Thus, the modularity matrix can be reasonably approximated as</p>
+<div class="math notranslate nohighlight">
+\[\bs{\rm{Q}}\simeq\frac{1}{n}\bs{\rm{M}}\]</div>
+<div class="math notranslate nohighlight">
+\[\max_{\cl{C}}J_Q(\cl{C})=\sum_{i=1}^k\c_i^T\bs{\rm{Q}}\c_i=\sum_{i=1}^k\c_i^T\bs{\rm{M}}\c_i\]</div>
+<p>where we dropped the <span class="math notranslate nohighlight">\(\frac{1}{n}\)</span> factor because it is a constant for a
+given graph; it only scales the eigenvalues without effecting the eigenvectors.</p>
+<p>In conclusion, if we use the normalized adjacency matrix, maximizing the
+modularity is equivalent to selecting the <span class="math notranslate nohighlight">\(k\)</span> largest eigenvalues and the
+corresponding eigenvectors of the normalized adjacency matrix
+<span class="math notranslate nohighlight">\(\bs{\rm{M}}\)</span>.</p>
+<p><strong>Normalized Modularity as Normalized Cut</strong></p>
+<p>Define the <em>normalized modularity</em> objective as follows:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\max_{\cl{C}}J_{nQ}(\cl{C})=\sum_{i=1}^k\frac{1}{W(C_i,V)}\)</span>
+<span class="math notranslate nohighlight">\(\dp\bigg(\frac{W(C_i,C_i)}{W(V,V)}-\bigg(\frac{W(C_i,V)}{W(V,V)}\bigg)^2\bigg)\)</span></p>
+</div>
 </div>
 </div>
 </div>
