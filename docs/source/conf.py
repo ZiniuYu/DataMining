@@ -100,6 +100,7 @@ rst_prolog = r'''
     \newcommand{\D}{\boldsymbol{\mathrm{D}}}
     \newcommand{\I}{\boldsymbol{\mathrm{I}}}
     \newcommand{\K}{\boldsymbol{\mathrm{K}}}
+    \newcommand{\M}{\boldsymbol{\mathrm{M}}}
     \newcommand{\N}{\boldsymbol{\mathrm{N}}}
     \newcommand{\P}{\boldsymbol{\mathrm{P}}}
     \newcommand{\S}{\boldsymbol{\mathrm{S}}}
@@ -116,6 +117,7 @@ rst_prolog = r'''
     \newcommand{\th}{\theta}
 
     \newcommand{\mmu}{\boldsymbol{\mu}}
+    \newcommand{\ppi}{\boldsymbol{\pi}}
 
     \newcommand{\bb}{\begin{bmatrix}}
     \newcommand{\eb}{\end{bmatrix}}

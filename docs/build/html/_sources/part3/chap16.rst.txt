@@ -571,3 +571,176 @@ Define the *normalized modularity* objective as follows:
 
     :math:`\dp\max_{\cl{C}}J_{nQ}(\cl{C})=\sum_{i=1}^k\frac{1}{W(C_i,V)}`
     :math:`\dp\bigg(\frac{W(C_i,C_i)}{W(V,V)}-\bigg(\frac{W(C_i,V)}{W(V,V)}\bigg)^2\bigg)`
+
+.. math::
+
+    J_{nQ}(\cl{C})&=\frac{1}{W(V,V)}\sum_{i=1}^k\bigg(\frac{W(C_i,C_i)}{W(C_i,V)}-\frac{W(C_i,V)}{W(V,V)}\bigg)
+
+    &=\frac{1}{W(V,V)}\bigg(\sum_{i=1}^k\bigg(\frac{W(C_i,C_i)}{W(C_i,V)}\bigg)-
+    -\sum_{i=1}^k\bigg(\frac{W(C_i,V)}{W(V,V)}\bigg)\bigg)
+
+    &=\frac{1}{W(V,V)}\bigg(\sum_{i=1}^k\bigg(\frac{W(C_i,C_i)}{W(C_i,V)}\bigg)-1\bigg)
+
+We have
+
+.. math::
+
+    (k-1)-W(V,V)J_{nQ}(\cl{C})&=(k-1)-\bigg(\sum_{i=1}^k\bigg(\frac{W(C_i,C_i)}{W(C_i,V)}\bigg)-1\bigg)
+
+    &=k-\sum_{i=1}^k\frac{W(C_i,C_i)}{W(C_i,V)}
+
+    &=\sum_{i=1}^k1-\frac{W(C_i,C_i)}{W(C_i,V)}
+
+    &=\sum_{i=1}^k\frac{W(C_i,V)-W(C_i,C_i)}{W(C_i,V)}
+
+    &=\sum_{i=1}^k\frac{W(C_i,\bar{C_i})}{W(C_i,V)}
+
+    &=\sum_{i=1}^k\frac{W(C_i,\bar{C_i})}{vol(C_i)}
+
+    &=J_{nc}(\cl{C})
+
+In other words the normalized cut objective is related to the normalized modularity objective by the following equation:
+
+.. math::
+
+    J_{nc}(\cl{C})=(k-1)-W(V,V)\cd J_{nQ}(\cl{C})
+
+Since :math:`W(V,V)` is a constant for a given graph, we observe that minimizing 
+normalized cut is equivalent to maximizing normalized modularity.
+
+**Spectral Clustering Algorithm**
+
+The matrix :math:`\bs{\rm{B}}` is chosen to be :math:`\A` if we are maximizing
+average weight or :math:`\bs{\rm{Q}}` for the modularity objective.
+Instead of computing the :math:`k` smallest eigenvalues we have to select the 
+:math:`k` largest eigenvalues and their corresponding eigenvectors.
+Because both :math:`\A` and :math:`\bs{\rm{Q}}` can have negative eigenvalues,
+we must select only the positive eigenvalues.
+
+16.3 Markov Clustering
+----------------------
+
+If node transitions reflect the weights on the edges, then transitions from one 
+node to another within a cluster are much more likely than transitions between 
+nodes from different clusters.
+
+Given the weighted adhacency matrix :math:`\A` for a graph :math:`G`, the
+normalized adjacency matrix is given as :math:`\M=\Delta\im\A`.
+The matrix :math:`\M` can be interpreted as the :math:`n\times n` *transition*
+*matrix* where the entry :math:`m_{ij}=\frac{a_{ij}}{d_i}` can be interpreted as 
+the probability of transitioning or jumpping from node :math:`i` to node 
+:math:`j` in the graph :math:`G`.
+This is because :math:`\M` is a *row stochastic* or *Markov* matrix. which
+satisfies the following conditions: (1) elements of the matrix are non-negative,
+that is, :math:`m_{ij}\geq 0`, which follows from the fact that :math:`\A` is
+non-negative, and (2) rows of :math:`\M` are probability vectors, that is, row
+elements add to 1, because
+
+.. math::
+
+    \sum_{j=1}^nm_{ij}=\sum_{j=1}^n\frac{\a_{ij}}{d_i}=1
+
+The matrix :math:`\M` is thus the transition matrix for a *Markov chain* or a Markov random walk on graph :math:`G`.
+The Markov chain makese a transition from one node to another at discrete 
+timesteps :math:`t=1,2,\cds`, with the probability of making a transition from 
+node :math:`i` to node :math:`j` given as :math:`m_{ij}`.
+Let the random variable :math:`X_t` denote the state at time :math:`t`.
+The Markov property means that the probability distribution of :math:`X_t` over 
+the states at time :math:`t` depends only on the probability distribution of 
+:math:`X_{t=1}`, that is,
+
+.. math::
+
+    P(X_t=i|X_0,X_1,\cds,X_{t-1})=P(X_t=i|X_{t-1})
+
+Further, we assume that the Markov chain is *homogeneous*, that is, the transition probability
+
+.. math::
+
+    P(X_t=j|X_{t-1}=i)=m_{ij}
+
+is independent of the time step :math:`t`.
+
+The transition probability matrix for :math:`t` time steps is given as
+
+.. math::
+
+    \M^{t-1}\cd\M=\M^t
+
+A random walk on :math:`G` thus corresponds to taking successive powers of the transition matrix :math:`\M`.
+Let :math:`\ppi_0` specify the initial state probability vector at time 
+:math:`t=0`, that is, :math:`\ppi_{0i}=P(X_0=i)` is the probability of starting 
+at node :math:`i`, for all :math:`i=1,\cds,n`.
+
+.. math::
+
+    \ppi_t^T&=\ppi_{t-1}^T\M
+
+    &=(\ppi_{t-2}^T\M)\cd\M=\ppi_{t-2}^T\M^2
+
+    &=(\ppi_{t-3}^T\M^2)\cd\M=\ppi_{t-3}^T\M^3
+
+    &=\vds
+
+    &=\ppi_0^T\M^t
+
+Equivalently, taking transpose on both sides, we get
+
+.. math::
+
+    \ppi_t=(\M^t)^T\ppi_0=(\M^T)^t\ppi_0
+
+The state probability vector thus converges to the dominant eigenvector of 
+:math:`\M^T`, reflecting the steady-state probability of reaching any node in 
+the graph, regardless of the staring node.
+
+**Transition Probability Inflation**
+
+We now consider a variation of the random walk, where the probability of 
+transitioning from node :math:`i` to :math:`j` is inflated by taking each 
+element :math:`m_{ij}` to the power :math:`r\geq 1`.
+Given a transition matrix :math:`\M`, define the inflation operator :math:`\Upsilon` as follows:
+
+.. note::
+
+    :math:`\dp\Upsilon(\M,r)=\bigg\{\frac{(m_{ij})^r}{\sum_{a=1}^n(m_{ia})^r}\bigg\}_{i,j=1}^n`
+
+The net effect of the inflation operator is to increase the higher probability 
+transitions and decrease the lower probability transitions.
+
+16.3.1 Markov Clustering Algorithm
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The Markov clustering algorithm (MCL) is an iterative method that interleaves matrix expansion and inflation steps.
+
+The matrix difference is given in terms of the *Frobenius norm*:
+
+.. math::
+
+    \lv\M_t-\M_{t-1}\rv_F=\sqrt{\sum_{i=1}^n\sum_{j=1}^n(\M_t(i,j)-\M_{t-1}(i,j))^2}
+
+.. image:: ../_static/Algo16.2.png
+
+**MCL Graph**
+
+The final clusters are found by enumerating the weakly connected components in 
+the directed graph induced by the converged transition matrix :math:`\M_t`.
+The directed graph induced by :math:`\M_t` is denoted as :math:`G_t=(V_t,E_t)`.
+The vertex set is the same as the set of nodes in the original graph, that is 
+:math:`V_t=V`, and the edge set is given as
+
+.. math::
+
+    E_t=\{(i,j)|\M_t(i,j)>0\}
+
+In other words, a directed edge :math:`(i,j)` exists only if node :math:`i` can 
+transition to node :math:`j` within :math:`t` steps of the expansion and inflation process.
+A node :math:`j` is called an *attractor* if :math:`\M_t(j,j)>0`, and we say 
+that node :math:`i` is attracted to attractor :math:`j` if :math:`\M_t(i,j)>0`.
+The MCL process yields a set of attractor nodes, :math:`V_a\subseteq V`, such
+that other nodes are attracted to at least one attractor in :math:`V_a`.
+
+**Computational Complexity**
+
+The computational complexity of the MCL algorithm is :math:`O(tn^3)`, where 
+:math:`t` is the number of iterations until convergence.

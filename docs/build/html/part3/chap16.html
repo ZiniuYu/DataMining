@@ -103,6 +103,10 @@
 <li class="toctree-l4"><a class="reference internal" href="#maximization-objectives-average-cut-and-modularity">16.2.3 Maximization Objectives: Average Cut and Modularity</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="#markov-clustering">16.3 Markov Clustering</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#markov-clustering-algorithm">16.3.1 Markov Clustering Algorithm</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="chap17.html">Chapter 17 Clustering Validation</a></li>
@@ -216,6 +220,7 @@
 \newcommand{\D}{\boldsymbol{\mathrm{D}}}
 \newcommand{\I}{\boldsymbol{\mathrm{I}}}
 \newcommand{\K}{\boldsymbol{\mathrm{K}}}
+\newcommand{\M}{\boldsymbol{\mathrm{M}}}
 \newcommand{\N}{\boldsymbol{\mathrm{N}}}
 \newcommand{\P}{\boldsymbol{\mathrm{P}}}
 \newcommand{\S}{\boldsymbol{\mathrm{S}}}
@@ -225,7 +230,8 @@
 \newcommand{\Ld}{\boldsymbol{\mathrm{\Lambda}}}
 \newcommand{\sg}{\sigma}
 \newcommand{\Sg}{\boldsymbol{\mathrm{\Sigma}}}
-\newcommand{\th}{\theta}\\\newcommand{\mmu}{\boldsymbol{\mu}}\\\newcommand{\bb}{\begin{bmatrix}}
+\newcommand{\th}{\theta}\\\newcommand{\mmu}{\boldsymbol{\mu}}
+\newcommand{\ppi}{\boldsymbol{\pi}}\\\newcommand{\bb}{\begin{bmatrix}}
 \newcommand{\eb}{\end{bmatrix}}
 \newcommand{\bp}{\begin{pmatrix}}
 \newcommand{\ep}{\end{pmatrix}}
@@ -590,6 +596,108 @@ corresponding eigenvectors of the normalized adjacency matrix
 <p><span class="math notranslate nohighlight">\(\dp\max_{\cl{C}}J_{nQ}(\cl{C})=\sum_{i=1}^k\frac{1}{W(C_i,V)}\)</span>
 <span class="math notranslate nohighlight">\(\dp\bigg(\frac{W(C_i,C_i)}{W(V,V)}-\bigg(\frac{W(C_i,V)}{W(V,V)}\bigg)^2\bigg)\)</span></p>
 </div>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}J_{nQ}(\cl{C})&amp;=\frac{1}{W(V,V)}\sum_{i=1}^k\bigg(\frac{W(C_i,C_i)}{W(C_i,V)}-\frac{W(C_i,V)}{W(V,V)}\bigg)\\&amp;=\frac{1}{W(V,V)}\bigg(\sum_{i=1}^k\bigg(\frac{W(C_i,C_i)}{W(C_i,V)}\bigg)-
+-\sum_{i=1}^k\bigg(\frac{W(C_i,V)}{W(V,V)}\bigg)\bigg)\\&amp;=\frac{1}{W(V,V)}\bigg(\sum_{i=1}^k\bigg(\frac{W(C_i,C_i)}{W(C_i,V)}\bigg)-1\bigg)\end{aligned}\end{align} \]</div>
+<p>We have</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}(k-1)-W(V,V)J_{nQ}(\cl{C})&amp;=(k-1)-\bigg(\sum_{i=1}^k\bigg(\frac{W(C_i,C_i)}{W(C_i,V)}\bigg)-1\bigg)\\&amp;=k-\sum_{i=1}^k\frac{W(C_i,C_i)}{W(C_i,V)}\\&amp;=\sum_{i=1}^k1-\frac{W(C_i,C_i)}{W(C_i,V)}\\&amp;=\sum_{i=1}^k\frac{W(C_i,V)-W(C_i,C_i)}{W(C_i,V)}\\&amp;=\sum_{i=1}^k\frac{W(C_i,\bar{C_i})}{W(C_i,V)}\\&amp;=\sum_{i=1}^k\frac{W(C_i,\bar{C_i})}{vol(C_i)}\\&amp;=J_{nc}(\cl{C})\end{aligned}\end{align} \]</div>
+<p>In other words the normalized cut objective is related to the normalized modularity objective by the following equation:</p>
+<div class="math notranslate nohighlight">
+\[J_{nc}(\cl{C})=(k-1)-W(V,V)\cd J_{nQ}(\cl{C})\]</div>
+<p>Since <span class="math notranslate nohighlight">\(W(V,V)\)</span> is a constant for a given graph, we observe that minimizing
+normalized cut is equivalent to maximizing normalized modularity.</p>
+<p><strong>Spectral Clustering Algorithm</strong></p>
+<p>The matrix <span class="math notranslate nohighlight">\(\bs{\rm{B}}\)</span> is chosen to be <span class="math notranslate nohighlight">\(\A\)</span> if we are maximizing
+average weight or <span class="math notranslate nohighlight">\(\bs{\rm{Q}}\)</span> for the modularity objective.
+Instead of computing the <span class="math notranslate nohighlight">\(k\)</span> smallest eigenvalues we have to select the
+<span class="math notranslate nohighlight">\(k\)</span> largest eigenvalues and their corresponding eigenvectors.
+Because both <span class="math notranslate nohighlight">\(\A\)</span> and <span class="math notranslate nohighlight">\(\bs{\rm{Q}}\)</span> can have negative eigenvalues,
+we must select only the positive eigenvalues.</p>
+</div>
+</div>
+<div class="section" id="markov-clustering">
+<h2>16.3 Markov Clustering<a class="headerlink" href="#markov-clustering" title="Permalink to this headline">¶</a></h2>
+<p>If node transitions reflect the weights on the edges, then transitions from one
+node to another within a cluster are much more likely than transitions between
+nodes from different clusters.</p>
+<p>Given the weighted adhacency matrix <span class="math notranslate nohighlight">\(\A\)</span> for a graph <span class="math notranslate nohighlight">\(G\)</span>, the
+normalized adjacency matrix is given as <span class="math notranslate nohighlight">\(\M=\Delta\im\A\)</span>.
+The matrix <span class="math notranslate nohighlight">\(\M\)</span> can be interpreted as the <span class="math notranslate nohighlight">\(n\times n\)</span> <em>transition</em>
+<em>matrix</em> where the entry <span class="math notranslate nohighlight">\(m_{ij}=\frac{a_{ij}}{d_i}\)</span> can be interpreted as
+the probability of transitioning or jumpping from node <span class="math notranslate nohighlight">\(i\)</span> to node
+<span class="math notranslate nohighlight">\(j\)</span> in the graph <span class="math notranslate nohighlight">\(G\)</span>.
+This is because <span class="math notranslate nohighlight">\(\M\)</span> is a <em>row stochastic</em> or <em>Markov</em> matrix. which
+satisfies the following conditions: (1) elements of the matrix are non-negative,
+that is, <span class="math notranslate nohighlight">\(m_{ij}\geq 0\)</span>, which follows from the fact that <span class="math notranslate nohighlight">\(\A\)</span> is
+non-negative, and (2) rows of <span class="math notranslate nohighlight">\(\M\)</span> are probability vectors, that is, row
+elements add to 1, because</p>
+<div class="math notranslate nohighlight">
+\[\sum_{j=1}^nm_{ij}=\sum_{j=1}^n\frac{\a_{ij}}{d_i}=1\]</div>
+<p>The matrix <span class="math notranslate nohighlight">\(\M\)</span> is thus the transition matrix for a <em>Markov chain</em> or a Markov random walk on graph <span class="math notranslate nohighlight">\(G\)</span>.
+The Markov chain makese a transition from one node to another at discrete
+timesteps <span class="math notranslate nohighlight">\(t=1,2,\cds\)</span>, with the probability of making a transition from
+node <span class="math notranslate nohighlight">\(i\)</span> to node <span class="math notranslate nohighlight">\(j\)</span> given as <span class="math notranslate nohighlight">\(m_{ij}\)</span>.
+Let the random variable <span class="math notranslate nohighlight">\(X_t\)</span> denote the state at time <span class="math notranslate nohighlight">\(t\)</span>.
+The Markov property means that the probability distribution of <span class="math notranslate nohighlight">\(X_t\)</span> over
+the states at time <span class="math notranslate nohighlight">\(t\)</span> depends only on the probability distribution of
+<span class="math notranslate nohighlight">\(X_{t=1}\)</span>, that is,</p>
+<div class="math notranslate nohighlight">
+\[P(X_t=i|X_0,X_1,\cds,X_{t-1})=P(X_t=i|X_{t-1})\]</div>
+<p>Further, we assume that the Markov chain is <em>homogeneous</em>, that is, the transition probability</p>
+<div class="math notranslate nohighlight">
+\[P(X_t=j|X_{t-1}=i)=m_{ij}\]</div>
+<p>is independent of the time step <span class="math notranslate nohighlight">\(t\)</span>.</p>
+<p>The transition probability matrix for <span class="math notranslate nohighlight">\(t\)</span> time steps is given as</p>
+<div class="math notranslate nohighlight">
+\[\M^{t-1}\cd\M=\M^t\]</div>
+<p>A random walk on <span class="math notranslate nohighlight">\(G\)</span> thus corresponds to taking successive powers of the transition matrix <span class="math notranslate nohighlight">\(\M\)</span>.
+Let <span class="math notranslate nohighlight">\(\ppi_0\)</span> specify the initial state probability vector at time
+<span class="math notranslate nohighlight">\(t=0\)</span>, that is, <span class="math notranslate nohighlight">\(\ppi_{0i}=P(X_0=i)\)</span> is the probability of starting
+at node <span class="math notranslate nohighlight">\(i\)</span>, for all <span class="math notranslate nohighlight">\(i=1,\cds,n\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\ppi_t^T&amp;=\ppi_{t-1}^T\M\\&amp;=(\ppi_{t-2}^T\M)\cd\M=\ppi_{t-2}^T\M^2\\&amp;=(\ppi_{t-3}^T\M^2)\cd\M=\ppi_{t-3}^T\M^3\\&amp;=\vds\\&amp;=\ppi_0^T\M^t\end{aligned}\end{align} \]</div>
+<p>Equivalently, taking transpose on both sides, we get</p>
+<div class="math notranslate nohighlight">
+\[\ppi_t=(\M^t)^T\ppi_0=(\M^T)^t\ppi_0\]</div>
+<p>The state probability vector thus converges to the dominant eigenvector of
+<span class="math notranslate nohighlight">\(\M^T\)</span>, reflecting the steady-state probability of reaching any node in
+the graph, regardless of the staring node.</p>
+<p><strong>Transition Probability Inflation</strong></p>
+<p>We now consider a variation of the random walk, where the probability of
+transitioning from node <span class="math notranslate nohighlight">\(i\)</span> to <span class="math notranslate nohighlight">\(j\)</span> is inflated by taking each
+element <span class="math notranslate nohighlight">\(m_{ij}\)</span> to the power <span class="math notranslate nohighlight">\(r\geq 1\)</span>.
+Given a transition matrix <span class="math notranslate nohighlight">\(\M\)</span>, define the inflation operator <span class="math notranslate nohighlight">\(\Upsilon\)</span> as follows:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\Upsilon(\M,r)=\bigg\{\frac{(m_{ij})^r}{\sum_{a=1}^n(m_{ia})^r}\bigg\}_{i,j=1}^n\)</span></p>
+</div>
+<p>The net effect of the inflation operator is to increase the higher probability
+transitions and decrease the lower probability transitions.</p>
+<div class="section" id="markov-clustering-algorithm">
+<h3>16.3.1 Markov Clustering Algorithm<a class="headerlink" href="#markov-clustering-algorithm" title="Permalink to this headline">¶</a></h3>
+<p>The Markov clustering algorithm (MCL) is an iterative method that interleaves matrix expansion and inflation steps.</p>
+<p>The matrix difference is given in terms of the <em>Frobenius norm</em>:</p>
+<div class="math notranslate nohighlight">
+\[\lv\M_t-\M_{t-1}\rv_F=\sqrt{\sum_{i=1}^n\sum_{j=1}^n(\M_t(i,j)-\M_{t-1}(i,j))^2}\]</div>
+<img alt="../_images/Algo16.2.png" src="../_images/Algo16.2.png" />
+<p><strong>MCL Graph</strong></p>
+<p>The final clusters are found by enumerating the weakly connected components in
+the directed graph induced by the converged transition matrix <span class="math notranslate nohighlight">\(\M_t\)</span>.
+The directed graph induced by <span class="math notranslate nohighlight">\(\M_t\)</span> is denoted as <span class="math notranslate nohighlight">\(G_t=(V_t,E_t)\)</span>.
+The vertex set is the same as the set of nodes in the original graph, that is
+<span class="math notranslate nohighlight">\(V_t=V\)</span>, and the edge set is given as</p>
+<div class="math notranslate nohighlight">
+\[E_t=\{(i,j)|\M_t(i,j)&gt;0\}\]</div>
+<p>In other words, a directed edge <span class="math notranslate nohighlight">\((i,j)\)</span> exists only if node <span class="math notranslate nohighlight">\(i\)</span> can
+transition to node <span class="math notranslate nohighlight">\(j\)</span> within <span class="math notranslate nohighlight">\(t\)</span> steps of the expansion and inflation process.
+A node <span class="math notranslate nohighlight">\(j\)</span> is called an <em>attractor</em> if <span class="math notranslate nohighlight">\(\M_t(j,j)&gt;0\)</span>, and we say
+that node <span class="math notranslate nohighlight">\(i\)</span> is attracted to attractor <span class="math notranslate nohighlight">\(j\)</span> if <span class="math notranslate nohighlight">\(\M_t(i,j)&gt;0\)</span>.
+The MCL process yields a set of attractor nodes, <span class="math notranslate nohighlight">\(V_a\subseteq V\)</span>, such
+that other nodes are attracted to at least one attractor in <span class="math notranslate nohighlight">\(V_a\)</span>.</p>
+<p><strong>Computational Complexity</strong></p>
+<p>The computational complexity of the MCL algorithm is <span class="math notranslate nohighlight">\(O(tn^3)\)</span>, where
+<span class="math notranslate nohighlight">\(t\)</span> is the number of iterations until convergence.</p>
 </div>
 </div>
 </div>
