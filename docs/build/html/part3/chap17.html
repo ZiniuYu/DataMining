@@ -97,6 +97,7 @@
 <li class="toctree-l2"><a class="reference internal" href="chap16.html">Chapter 16 Spectral and Graph Clustering</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Chapter 17 Clustering Validation</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#external-measures">17.1 External Measures</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#matching-based-measures">17.1.1 Matching Based Measures</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#internal-measures">17.2 Internal Measures</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#relative-measures">17.3 Relative Measures</a></li>
 </ul>
@@ -244,6 +245,45 @@ clusterings, usually those obtained via different parameter settings for the
 same algorithm.</p>
 <div class="section" id="external-measures">
 <h2>17.1 External Measures<a class="headerlink" href="#external-measures" title="Permalink to this headline">¶</a></h2>
+<p>External measures assume that the correct or ground-truth clustering is known a <em>priori</em>.
+The true cluster labels play the role of external information that is used to evaluate a given clustering.</p>
+<p>Let <span class="math notranslate nohighlight">\(\D\)</span> be a dataset consisting of <span class="math notranslate nohighlight">\(n\)</span> points <span class="math notranslate nohighlight">\(\x_i\)</span> in a
+<em>d</em>-dimensional space, partitioned into <span class="math notranslate nohighlight">\(k\)</span> clusters.
+Let <span class="math notranslate nohighlight">\(y_i\in\{1,2,\cds,k\}\)</span> denote the ground-truth cluster membership or label information for each point.
+The ground-truth clustering is given as <span class="math notranslate nohighlight">\(\cl{T}=\{T_1,T_2,\cds,T_k\}\)</span>,
+where the cluster <span class="math notranslate nohighlight">\(T_j\)</span> consists of all the points with label <span class="math notranslate nohighlight">\(j\)</span>,
+i.e., <span class="math notranslate nohighlight">\(T_j=\{\x_i\in\D|y_i=j\}\)</span>.
+Also, let <span class="math notranslate nohighlight">\(\cl{C}=\{C_1,\cds,C_r\}\)</span> dentoe a clustering of the same
+dataset into <span class="math notranslate nohighlight">\(r\)</span> clusters, obtained via some clustering algorithm, and let
+<span class="math notranslate nohighlight">\(\hat{y_i}\in\{1,2,\cds,r\}\)</span> denote the cluster label for <span class="math notranslate nohighlight">\(\x_i\)</span>.</p>
+<p>External evaluation measures try capture the extent to which points from the
+same partition appear in the same cluster, and the extent to which points from
+different partitions are grouped in different clusters.
+All of the external measures rely on the <span class="math notranslate nohighlight">\(r\times k\)</span> <em>contingency tabel</em>
+<span class="math notranslate nohighlight">\(\N\)</span> that is induced by a clustering <span class="math notranslate nohighlight">\(\cl{C}\)</span> and the ground-truth
+partitioning <span class="math notranslate nohighlight">\(\cl{T}\)</span>, defined as follows</p>
+<div class="math notranslate nohighlight">
+\[\N(i,j)=n_{ij}=|C_i\cap T_j|\]</div>
+<p>In other words, the count <span class="math notranslate nohighlight">\(n_{ij}\)</span> denotes the number of points that are
+common to cluster <span class="math notranslate nohighlight">\(C_i\)</span> and ground-truth partition <span class="math notranslate nohighlight">\(T_j\)</span>.</p>
+</div>
+<div class="section" id="matching-based-measures">
+<h2>17.1.1 Matching Based Measures<a class="headerlink" href="#matching-based-measures" title="Permalink to this headline">¶</a></h2>
+<p><strong>Purity</strong></p>
+<div class="math notranslate nohighlight">
+\[purity_i=\frac{1}{n_i}\max_{j=1}^k\{n_{ij}\}\]</div>
+<p>The purity of clustering <span class="math notranslate nohighlight">\(\cl{C}\)</span> is defined as the weighted sum of the clusterwise purity values:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp purity=\sum_{i=1}^r\frac{n_i}{n}purity_i=\frac{1}{n}\sum_{i=1}^r\max_{j=1}^k\{n_{ij}\}\)</span></p>
+</div>
+<p>The larger the purity of <span class="math notranslate nohighlight">\(\cl{C}\)</span>, the better the agreement with the groundtruth.
+The maximum value of purity is 1, when each cluster comprises points from only one partition.
+When <span class="math notranslate nohighlight">\(r=k\)</span>, a purity value of 1 indicates a perfect clustering, with a
+one-to-one correspondence between the clsuters and partitions.
+However, purity can be 1 even for <span class="math notranslate nohighlight">\(r&gt;k\)</span>, when each of the clusters is a subset of a ground-truth partition.
+When <span class="math notranslate nohighlight">\(r&lt;k\)</span>, purity can never by 1, because at least one cluster must contain points from more than one partition.</p>
+<p><strong>Maximum Matching</strong></p>
 </div>
 <div class="section" id="internal-measures">
 <h2>17.2 Internal Measures<a class="headerlink" href="#internal-measures" title="Permalink to this headline">¶</a></h2>
