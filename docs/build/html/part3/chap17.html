@@ -96,8 +96,11 @@
 <li class="toctree-l2"><a class="reference internal" href="chap15.html">Chapter 15 Density-based Clustering</a></li>
 <li class="toctree-l2"><a class="reference internal" href="chap16.html">Chapter 16 Spectral and Graph Clustering</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Chapter 17 Clustering Validation</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#external-measures">17.1 External Measures</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#matching-based-measures">17.1.1 Matching Based Measures</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#external-measures">17.1 External Measures</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#matching-based-measures">17.1.1 Matching Based Measures</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#entropy-based-measures">17.1.2 Entropy-based Measures</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#internal-measures">17.2 Internal Measures</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#relative-measures">17.3 Relative Measures</a></li>
 </ul>
@@ -266,9 +269,8 @@ partitioning <span class="math notranslate nohighlight">\(\cl{T}\)</span>, defin
 \[\N(i,j)=n_{ij}=|C_i\cap T_j|\]</div>
 <p>In other words, the count <span class="math notranslate nohighlight">\(n_{ij}\)</span> denotes the number of points that are
 common to cluster <span class="math notranslate nohighlight">\(C_i\)</span> and ground-truth partition <span class="math notranslate nohighlight">\(T_j\)</span>.</p>
-</div>
 <div class="section" id="matching-based-measures">
-<h2>17.1.1 Matching Based Measures<a class="headerlink" href="#matching-based-measures" title="Permalink to this headline">¶</a></h2>
+<h3>17.1.1 Matching Based Measures<a class="headerlink" href="#matching-based-measures" title="Permalink to this headline">¶</a></h3>
 <p><strong>Purity</strong></p>
 <div class="math notranslate nohighlight">
 \[purity_i=\frac{1}{n_i}\max_{j=1}^k\{n_{ij}\}\]</div>
@@ -284,6 +286,95 @@ one-to-one correspondence between the clsuters and partitions.
 However, purity can be 1 even for <span class="math notranslate nohighlight">\(r&gt;k\)</span>, when each of the clusters is a subset of a ground-truth partition.
 When <span class="math notranslate nohighlight">\(r&lt;k\)</span>, purity can never by 1, because at least one cluster must contain points from more than one partition.</p>
 <p><strong>Maximum Matching</strong></p>
+<p>The maximum matching measure selects the mapping between clusters and
+partitions, such that the sum of the number of common points (<span class="math notranslate nohighlight">\(n_{ij}\)</span>) is
+maximized, provided that onlyl one cluster can match with a given partition.</p>
+<p>Formally, we treat the contigency table as a complete weighted bipartite graph
+<span class="math notranslate nohighlight">\(G=(V,E)\)</span>, where each partition and cluster is a node, that is,
+<span class="math notranslate nohighlight">\(V=\cl{C}\cup\cl{T}\)</span>, and there exists an edge <span class="math notranslate nohighlight">\((C_i,T_j)\in E\)</span>,
+with weight <span class="math notranslate nohighlight">\(w(C_i,T_i)=n_{ij}\)</span>, for all <span class="math notranslate nohighlight">\(C_i\in\cl{C}\)</span> and
+<span class="math notranslate nohighlight">\(T_j\in\cl{T}\)</span>.
+A <em>matching</em> <span class="math notranslate nohighlight">\(M\)</span> in <span class="math notranslate nohighlight">\(G\)</span> is a subset of <span class="math notranslate nohighlight">\(E\)</span>, such that the
+edges in <span class="math notranslate nohighlight">\(M\)</span> are pairwise nonadjacent, that is, they do not have a common
+vertex.
+The maximum matching measure is defined as the <em>maximum weight matching</em> in <span class="math notranslate nohighlight">\(G\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[match=\arg\max_M\bigg\{\frac{w(M)}{n}\bigg\}\]</div>
+<p>where the weight of a matching <span class="math notranslate nohighlight">\(M\)</span> is simply the sum of all the edge
+weights in <span class="math notranslate nohighlight">\(M\)</span>, given as <span class="math notranslate nohighlight">\(w(M)=\sum)_{e\in M}w(e)\)</span>.
+The maximum matching can be computed in time
+<span class="math notranslate nohighlight">\(O(|V|^2\cd|E|)=O((r+k)^2rk)\)</span>, which is equivalent to <span class="math notranslate nohighlight">\(O(k^4)\)</span> if
+<span class="math notranslate nohighlight">\(r=O(k)\)</span>.</p>
+<p><strong>F-Measure</strong></p>
+<p>Given cluster <span class="math notranslate nohighlight">\(C_i\)</span>, let <span class="math notranslate nohighlight">\(j_i\)</span> denote the partition that contains
+the maximum number of points from <span class="math notranslate nohighlight">\(C_i\)</span>, that is,
+<span class="math notranslate nohighlight">\(j_i=\max_{j=1}^k\{n_{ij}\}\)</span>.
+The <em>precision</em> of a cluster <span class="math notranslate nohighlight">\(C_i\)</span> is the same as its purity:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp prec_i=\frac{1}{n_i}\max_{j=1}^k\{n_{ij}\}=\frac{n_{ij_i}}{n_i}\)</span></p>
+</div>
+<p>It measures the fraction of points in <span class="math notranslate nohighlight">\(C_i\)</span> from the majority partition <span class="math notranslate nohighlight">\(T_{j_i}\)</span>.</p>
+<p>The <em>recall</em> of cluster <span class="math notranslate nohighlight">\(C_i\)</span> is defined as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp recall_i=\frac{n_{ij_i}}{|T_{j_{i}}|}=\frac{n_{ij_i}}{m_{j_i}}\)</span></p>
+</div>
+<p>where <span class="math notranslate nohighlight">\(m_{j_i}=|T_{j_i}|\)</span>.
+It measures the fraction of point in partition <span class="math notranslate nohighlight">\(T_{j_i}\)</span> shared in common with cluster <span class="math notranslate nohighlight">\(C_i\)</span>.</p>
+<p>The F-measure is the harmonic mean of the precision and recall values for each cluster.
+The F-measure for cluster <span class="math notranslate nohighlight">\(C_i\)</span> is therefore given as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp F_i=\frac{2}{\frac{1}{prec_i}+\frac{1}{recall_i}}=\frac{2\cd prec_i\cd recall_i}{prec_i+recall_i}\)</span>
+<span class="math notranslate nohighlight">\(\dp=\frac{2n_{ij_i}}{n_i+m_{j_i}}\)</span></p>
+</div>
+<p>The F-measures for the clustering <span class="math notranslate nohighlight">\(\cl{C}\)</span> is the mean of clusterwise F-measure values:</p>
+<div class="math notranslate nohighlight">
+\[F=\frac{1}{r}\sum_{i=1}^rF_i\]</div>
+<p>F-measure thus tries to balance the precision and recall values across all the clusters.
+For a perfect clustering, when <span class="math notranslate nohighlight">\(r=k\)</span>, the maximum value of the F-measure is 1.</p>
+</div>
+<div class="section" id="entropy-based-measures">
+<h3>17.1.2 Entropy-based Measures<a class="headerlink" href="#entropy-based-measures" title="Permalink to this headline">¶</a></h3>
+<p><strong>Conditional Entropy</strong></p>
+<p>The entropy of a clustering <span class="math notranslate nohighlight">\(\cl{C}\)</span> is defined as</p>
+<div class="math notranslate nohighlight">
+\[H(\cl{C})=-\sum_{i=1}^rp_{C_i}\log p_{C_i}\]</div>
+<p>where <span class="math notranslate nohighlight">\(p_{C_i}=\frac{n_i}{n}\)</span> is the probability of cluster <span class="math notranslate nohighlight">\(C_i\)</span>.
+The entropy of the partitioning <span class="math notranslate nohighlight">\(\cl{T}\)</span> is defined as</p>
+<div class="math notranslate nohighlight">
+\[H(\cl{T})=-\sum_{j=1}^kp_{T_j}\log p_{T_j}\]</div>
+<p>where <span class="math notranslate nohighlight">\(p_{T_j}=\frac{m_j}{n}\)</span> is the probability of partition <span class="math notranslate nohighlight">\(T_j\)</span>.</p>
+<p>The cluster-specific entropy of <span class="math notranslate nohighlight">\(\cl{T}\)</span>, that is, the conditional entropy
+of <span class="math notranslate nohighlight">\(\cl{T}\)</span> with respect to cluster <span class="math notranslate nohighlight">\(C_i\)</span> is defined as</p>
+<div class="math notranslate nohighlight">
+\[H(\cl{T}|C_i)=-\sum_{j=1}^k\bigg(\frac{n_{ij}}{n_i}\bigg)\log\bigg(\frac{n_{ij}}{n_i}\bigg)\]</div>
+<p>The conditional entropy of <span class="math notranslate nohighlight">\(\cl{T}\)</span> given clustering <span class="math notranslate nohighlight">\(\cl{C}\)</span> is then defined as the weighted sum:</p>
+<div class="math notranslate nohighlight">
+\[H(\cl{T}|\cl{C})=\sum_{i=1}^r\frac{n_i}{n}H(\cl{T}|C_i)=
+\sum_{i=1}^r\sum_{j=1}^k\frac{n_{ij}}{n}\log\bigg(\frac{n_{ij}}{n_i}\bigg)\]</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp=-\sum_{i=1}^r\sum_{j=1}^kp_{ij}\log\bigg(\frac{p_{ij}}{p_{C_i}}\bigg)\)</span></p>
+</div>
+<p>where <span class="math notranslate nohighlight">\(p_{ij}=\frac{n_{ij}}{n}\)</span> is the probability that a point in cluster
+<span class="math notranslate nohighlight">\(i\)</span> also belongs to partition <span class="math notranslate nohighlight">\(j\)</span>.
+For a perfect clustering, the conditional entropy value is zero, whereas the
+worst possible conditional entropy value is <span class="math notranslate nohighlight">\(\log k\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}H(\cl{T}|\cl{C})&amp;=-\sum_{i=1}^r\sum_{j=1}^kp_{ij}(\log p_{ij}-\log p_{C_i})\\&amp;=-\bigg(\sum_{i=1}^r\sum_{j=1}^kp_{ij}\log p_{ij}\bigg)+\sum_{i=1}^r\bigg(\log p_{C_i}\sum_{j=1}^kp_{ij}\bigg)\\&amp;=-\sum_{i=1}^r\sum_{j=1}^kp_{ij}\log p_{ij}+\sum_{i=1}^rp_{C_i}\log p_{C_i}\\&amp;=H(\cl{C},\cl{T})-H(\cl{C})\end{aligned}\end{align} \]</div>
+<p>where <span class="math notranslate nohighlight">\(H(\cl{C},\cl{T})=-\sum_{i=1}^r\sum_{j=1}^kp_{ij}\log p_{ij}\)</span> is the
+joint entropy of <span class="math notranslate nohighlight">\(\cl{C}\)</span> and <span class="math notranslate nohighlight">\(\cl{T}\)</span>.
+The conditional entropy <span class="math notranslate nohighlight">\(H(\cl{T}|\cl{C})\)</span> thus measures the remaining
+entropy of <span class="math notranslate nohighlight">\(\cl{T}\)</span> given the clustering <span class="math notranslate nohighlight">\(\cl{C}\)</span>.
+In particular, <span class="math notranslate nohighlight">\(H(\cl{T}|\cl{C})=0\)</span> if and only if <span class="math notranslate nohighlight">\(\cl{T}\)</span> is
+completely determined by <span class="math notranslate nohighlight">\(\cl{C}\)</span>, corresponding to the ideal clustering.
+On the other hand, if <span class="math notranslate nohighlight">\(\cl{C}\)</span> and <span class="math notranslate nohighlight">\(\cl{T}\)</span> are independent of each
+other, then <span class="math notranslate nohighlight">\(H(\cl{T}|\cl{C})=H(\cl{T})\)</span>, which means that <span class="math notranslate nohighlight">\(\cl{C}\)</span>
+provides no information about <span class="math notranslate nohighlight">\(\cl{T}\)</span>.</p>
+<p><strong>Normalized Mutual Information</strong></p>
+</div>
 </div>
 <div class="section" id="internal-measures">
 <h2>17.2 Internal Measures<a class="headerlink" href="#internal-measures" title="Permalink to this headline">¶</a></h2>

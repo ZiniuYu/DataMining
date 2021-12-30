@@ -46,7 +46,7 @@ In other words, the count :math:`n_{ij}` denotes the number of points that are
 common to cluster :math:`C_i` and ground-truth partition :math:`T_j`.
 
 17.1.1 Matching Based Measures
-------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 **Purity**
 
@@ -69,8 +69,133 @@ When :math:`r<k`, purity can never by 1, because at least one cluster must conta
 
 **Maximum Matching**
 
+The maximum matching measure selects the mapping between clusters and 
+partitions, such that the sum of the number of common points (:math:`n_{ij}`) is 
+maximized, provided that onlyl one cluster can match with a given partition.
 
+Formally, we treat the contigency table as a complete weighted bipartite graph 
+:math:`G=(V,E)`, where each partition and cluster is a node, that is, 
+:math:`V=\cl{C}\cup\cl{T}`, and there exists an edge :math:`(C_i,T_j)\in E`,
+with weight :math:`w(C_i,T_i)=n_{ij}`, for all :math:`C_i\in\cl{C}` and 
+:math:`T_j\in\cl{T}`.
+A *matching* :math:`M` in :math:`G` is a subset of :math:`E`, such that the 
+edges in :math:`M` are pairwise nonadjacent, that is, they do not have a common 
+vertex.
+The maximum matching measure is defined as the *maximum weight matching* in :math:`G`:
 
+.. math::
+
+    match=\arg\max_M\bigg\{\frac{w(M)}{n}\bigg\}
+
+where the weight of a matching :math:`M` is simply the sum of all the edge 
+weights in :math:`M`, given as :math:`w(M)=\sum)_{e\in M}w(e)`.
+The maximum matching can be computed in time 
+:math:`O(|V|^2\cd|E|)=O((r+k)^2rk)`, which is equivalent to :math:`O(k^4)` if 
+:math:`r=O(k)`.
+
+**F-Measure**
+
+Given cluster :math:`C_i`, let :math:`j_i` denote the partition that contains 
+the maximum number of points from :math:`C_i`, that is, 
+:math:`j_i=\max_{j=1}^k\{n_{ij}\}`.
+The *precision* of a cluster :math:`C_i` is the same as its purity:
+
+.. note::
+
+    :math:`\dp prec_i=\frac{1}{n_i}\max_{j=1}^k\{n_{ij}\}=\frac{n_{ij_i}}{n_i}`
+
+It measures the fraction of points in :math:`C_i` from the majority partition :math:`T_{j_i}`.
+
+The *recall* of cluster :math:`C_i` is defined as
+
+.. note::
+
+    :math:`\dp recall_i=\frac{n_{ij_i}}{|T_{j_{i}}|}=\frac{n_{ij_i}}{m_{j_i}}`
+
+where :math:`m_{j_i}=|T_{j_i}|`.
+It measures the fraction of point in partition :math:`T_{j_i}` shared in common with cluster :math:`C_i`.
+
+The F-measure is the harmonic mean of the precision and recall values for each cluster.
+The F-measure for cluster :math:`C_i` is therefore given as
+
+.. note::
+
+    :math:`\dp F_i=\frac{2}{\frac{1}{prec_i}+\frac{1}{recall_i}}=\frac{2\cd prec_i\cd recall_i}{prec_i+recall_i}`
+    :math:`\dp=\frac{2n_{ij_i}}{n_i+m_{j_i}}`
+
+The F-measures for the clustering :math:`\cl{C}` is the mean of clusterwise F-measure values:
+
+.. math::
+
+    F=\frac{1}{r}\sum_{i=1}^rF_i
+
+F-measure thus tries to balance the precision and recall values across all the clusters.
+For a perfect clustering, when :math:`r=k`, the maximum value of the F-measure is 1.
+
+17.1.2 Entropy-based Measures
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+**Conditional Entropy**
+
+The entropy of a clustering :math:`\cl{C}` is defined as
+
+.. math::
+
+    H(\cl{C})=-\sum_{i=1}^rp_{C_i}\log p_{C_i}
+
+where :math:`p_{C_i}=\frac{n_i}{n}` is the probability of cluster :math:`C_i`.
+The entropy of the partitioning :math:`\cl{T}` is defined as
+
+.. math::
+
+    H(\cl{T})=-\sum_{j=1}^kp_{T_j}\log p_{T_j}
+
+where :math:`p_{T_j}=\frac{m_j}{n}` is the probability of partition :math:`T_j`.
+
+The cluster-specific entropy of :math:`\cl{T}`, that is, the conditional entropy 
+of :math:`\cl{T}` with respect to cluster :math:`C_i` is defined as
+
+.. math::
+
+    H(\cl{T}|C_i)=-\sum_{j=1}^k\bigg(\frac{n_{ij}}{n_i}\bigg)\log\bigg(\frac{n_{ij}}{n_i}\bigg)
+
+The conditional entropy of :math:`\cl{T}` given clustering :math:`\cl{C}` is then defined as the weighted sum:
+
+.. math::
+
+    H(\cl{T}|\cl{C})=\sum_{i=1}^r\frac{n_i}{n}H(\cl{T}|C_i)=
+    \sum_{i=1}^r\sum_{j=1}^k\frac{n_{ij}}{n}\log\bigg(\frac{n_{ij}}{n_i}\bigg)
+
+.. note::
+
+    :math:`\dp=-\sum_{i=1}^r\sum_{j=1}^kp_{ij}\log\bigg(\frac{p_{ij}}{p_{C_i}}\bigg)`
+
+where :math:`p_{ij}=\frac{n_{ij}}{n}` is the probability that a point in cluster 
+:math:`i` also belongs to partition :math:`j`.
+For a perfect clustering, the conditional entropy value is zero, whereas the 
+worst possible conditional entropy value is :math:`\log k`.
+
+.. math::
+
+    H(\cl{T}|\cl{C})&=-\sum_{i=1}^r\sum_{j=1}^kp_{ij}(\log p_{ij}-\log p_{C_i})
+
+    &=-\bigg(\sum_{i=1}^r\sum_{j=1}^kp_{ij}\log p_{ij}\bigg)+\sum_{i=1}^r\bigg(\log p_{C_i}\sum_{j=1}^kp_{ij}\bigg)
+
+    &=-\sum_{i=1}^r\sum_{j=1}^kp_{ij}\log p_{ij}+\sum_{i=1}^rp_{C_i}\log p_{C_i}
+
+    &=H(\cl{C},\cl{T})-H(\cl{C})
+
+where :math:`H(\cl{C},\cl{T})=-\sum_{i=1}^r\sum_{j=1}^kp_{ij}\log p_{ij}` is the 
+joint entropy of :math:`\cl{C}` and :math:`\cl{T}`.
+The conditional entropy :math:`H(\cl{T}|\cl{C})` thus measures the remaining 
+entropy of :math:`\cl{T}` given the clustering :math:`\cl{C}`.
+In particular, :math:`H(\cl{T}|\cl{C})=0` if and only if :math:`\cl{T}` is 
+completely determined by :math:`\cl{C}`, corresponding to the ideal clustering.
+On the other hand, if :math:`\cl{C}` and :math:`\cl{T}` are independent of each
+other, then :math:`H(\cl{T}|\cl{C})=H(\cl{T})`, which means that :math:`\cl{C}`
+provides no information about :math:`\cl{T}`.
+
+**Normalized Mutual Information**
 
 
 
