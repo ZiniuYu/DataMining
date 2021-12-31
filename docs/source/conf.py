@@ -118,6 +118,9 @@ rst_prolog = r'''
 
     \newcommand{\mmu}{\boldsymbol{\mu}}
     \newcommand{\ppi}{\boldsymbol{\pi}}
+    \newcommand{\CC}{\mathcal{C}}
+    \newcommand{\TT}{\mathcal{T}}
+
 
     \newcommand{\bb}{\begin{bmatrix}}
     \newcommand{\eb}{\end{bmatrix}}

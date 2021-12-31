@@ -197,6 +197,67 @@ provides no information about :math:`\cl{T}`.
 
 **Normalized Mutual Information**
 
+The *mutual information* tries to quantify the amount of shared information 
+between the clustering :math:`\cl{C}` and partitioning :math:`\cl{T}`, and it is
+defined as
+
+.. note::
+
+    :math:`\dp I(\cl{C},\cl{T})=\sum_{i=1}^r\sum_{j=1}^kp_{ij}\log\bigg(\frac{p_{ij}}{p_{C_i}\cd p_{T_j}}\bigg)`
+
+It measures the dependence between the observed joint probability :math:`p_{ij}` 
+of :math:`\cl{C}` and :math:`\cl{T}`, and the expected joint probability 
+:math:`p_{C_i}\cd p_{T_j}` under the independence assumption.
+When :math:`\cl{C}` and :math:`\cl{T}` are independent then 
+:math:`p_{ij}=p_{C_i}\cd p_{T_j}`, and thus :math:`T(\cl{C},\cl{T})=0`.
+
+.. math::
+
+    I(\cl{C},\cl{T})=H(\cl{T})-H(\cl{T}|\cl{C})
+
+    I(\cl{C},\cl{T})=H(\cl{C})-H(\cl{C}|\cl{T})
+
+Finally, because :math:`H(\CC,\TT)\geq 0` and :math:`H(\TT|\CC)\geq 0`, we have
+the inequalities :math:`I(\CC,\TT)\leq H(\CC)` and 
+:math:`I(\CC,\TT)\leq H(\TT)`.
+
+The *normalized mutual information* (NMI) is defined as the geometric mean of two ratios:
+
+.. note::
+
+    :math:`\dp NMI(\CC,\TT)=\sqrt{\frac{I(\CC,\TT)}{H(\CC)}\cd\frac{I(\CC,\TT)}{H(\TT)}}=`
+    :math:`\dp\frac{I(\CC,\TT)}{\sqrt{H(\CC)\cd H(\TT)}}`
+
+The NMI value lies in the range :math:`[0, 1]`.
+Values close to 1 indicate a good clustering.
+
+**Variation of Information**
+
+.. math::
+
+    VI(\CC,\TT)&=(H(\TT)-I(\CC,\TT))+(H(\CC)-I(\CC,\TT))
+
+    &=H(\TT)+H(\CC)-2I(\CC,\TT)
+
+Variation of information (VI) is zero only when :math:`\CC` and :math:`\TT` are identical.
+Thus the lower the VI value the better the clustering :math:`\CC`.
+
+.. math::
+
+    VI(\CC,\TT)=H(\TT|\CC)+H(\CC|\TT)
+
+.. note::
+
+    :math:`VI(\CC,\TT)=2H(\TT,\CC)-H(\TT)-H(\CC)`
+
+17.1.3 Pairwise Measures
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+
+17.1.4 Correlation Measures
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 
 
 17.2 Internal Measures
