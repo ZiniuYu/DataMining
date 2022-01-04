@@ -253,12 +253,130 @@ Thus the lower the VI value the better the clustering :math:`\CC`.
 17.1.3 Pairwise Measures
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
+Let :math:`\x_i,\x_j\in\D` be any two points, with :math:`i\neq j`.
+Let :math:`y_i` denote the true partition label and let :math:`\hat{y_i}` denote 
+the cluster label for point :math:`\x_i`.
+If both :math:`\x_i` and :math:`\x_j` belong to the same cluster, that is, 
+:math:`\hat{y_i}=\hat{y_j}`, we call it a *positive* event, and if they do not 
+belong to the same cluster, we call that a *negative* event.
 
+.. note::
+
+    :math:`True\ Positives=|\{(\x_i,\x_j):y_i=y_j\ \rm{and}\ \hat{y_i}=\hat{y_j}\}|`
+
+.. note::
+
+    :math:`False\ Negatives=|\{(\x_i,\x_j):y_i=y_j\ \rm{and}\ \hat{y_i}\neq\hat{y_j}\}|`
+
+.. note::
+
+    :math:`False\ Positives=|\{(\x_i,\x_j):y_i\neq y_j\ \rm{and}\ \hat{y_i}=\hat{y_j}\}|`
+
+.. note::
+
+    :math:`True\ Negatives=|\{(\x_i,\x_j):y_i\neq y_j\ \rm{and}\ \hat{y_i}\neq\hat{y_j}\}|`        
+
+.. math::
+
+    N=\bp n\\2 \ep=\frac{n(n-1)}{2}=TP+FN+FP+TN
+
+.. math::
+
+    TP=\sum_{i=1}^r\sum_{j=1}^k\bp n_{ij}\\2 \ep=
+    \sum_{i=1}^r\sum_{j=1}^k\frac{n_{ij}(n_{ij}-1)}{2}=
+    \frac{1}{2}\bigg(\sum_{i=1}^r\sum_{j=1}^kn_{ij}^2-
+    \sum_{i=1}^r\sum_{j=1}^kn_{ij}\bigg)
+    
+    =\frac{1}{2}\bigg(\bigg(\sum_{i=1}^r\sum_{j=1}^kn_{ij}^2\bigg)-n\bigg)
+
+.. math::
+
+    FN=\sum_{j=1}^k\bp m_j\\2 \ep-TP=\frac{1}{2}\bigg(\sum_{j=1}^km_j^2-
+    \sum_{j=1}^km_j-\sum_{i=1}^r\sum_{j=1}^kn_{ij}^2+n\bigg)
+
+    =\frac{1}{2}\bigg(\sum_{j=1}^km_j^2-\sum_{i=1}^r\sum_{j=1}^kn_{jj}^2\bigg)
+
+.. math::
+
+    FP=\sum_{i=1}^r\bp n_i\\2 \ep-TP=\frac{1}{2}\bigg(\sum_{i=1}^rn_i^2-\sum_{i=1}^r\sum_{j=1}^kn_{ij}^2\bigg)
+
+.. math::
+
+    TN=N-(TP+FN+FP)=\frac{1}{2}\bigg(n^2-\sum_{i=1}^rn_i^2-\sum_{j=1}^km_j^2+\sum_{i=1}^r\sum_{j=1}^kn_{ij}^2\bigg)
+
+Each of the four values can be computed in :math:`O(rk)` time.
+Because the contingency table can be obtained in linear time, the total time to 
+compute the four values is :math:`O(n+rk)`, which is much better than the negative
+:math:`O(n^2)` bound.
+
+**Jaccard Coefficient**
+
+.. note::
+
+    :math:`\dp Jaccard=\frac{TP}{TP+FN+FP}`
+
+For a perfect clustering :math:`\CC`, the Jaccard Coefficient has value 1, as in 
+that case there are no false positives or false negatives.
+The Jaccard coefficient is asymmetric in terms of the true positives and 
+negatives because it ignores the true negatives.
+
+**Rand Statistic**
+
+.. note::
+
+    :math:`\dp Rand=\frac{TP+TN}{N}`
+
+The Rand statistic, which is symmetric, measures the fraction of point pairs 
+where both :math:`\CC` and :math:`\TT` agree.
+A perfect clustering has a value of 1 for the statistic.
+
+**Fowlkes-Mallows Measure**
+
+Define the overall *pairwise precision* and *pairwise recall* values for a clustering :math:`\CC`, as follows:
+
+.. math::
+
+    prec=\frac{TP}{TP+FP}\quad\quad recall=\frac{TP}{TP+FN}
+
+The Fowlkes-Mallows (FM) measure is defined as the geometric mean of the pairwise precision and recall
+
+.. note::
+
+    :math:`\dp FM=\sqrt{prec\cd recall}=\frac{TP}{\sqrt{(TP+FN)(TP+FP)}}`
 
 17.1.4 Correlation Measures
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Let :math:`\X` and :math:`\bs{\rm{Y}}` be two symmetric :math:`n\times n` matrics, and let :math:`N=\bp n\\2 \ep`.
+Let :math:`\x,\y\in\R^N` denote the vectors obtained by linearizing the upper
+triangular elements (excluding the main diagonal) of :math:`X` and :math:`Y`,
+respectively.
+Let :math:`\mu_X` denote the element-wise mean of :math:`\x`, given as
 
+.. math::
+
+    \mu_X=\frac{1}{N}\sum_{i=1}^{n-1}\sum_{j=i+1}^n\X(i,j)=\frac{1}{N}\x^T\x
+
+and let :math:`\bar{\x}` denote the centered :math:`\x` vector, defined as
+
+.. math::
+
+    \bar{\x}=\x-\1\cd\mu_X
+
+The Hubert statistic is defined as the averaged element-wise product between :math:`\X` and :math:`\bs{\rm{Y}}`
+
+.. note::
+
+    :math:`\dp\Gamma=\frac{1}{N}\sum_{i=1}^{n-1}\sum_{j=i+1}^n\X(i,j)\cd\bs{\rm{Y}}(i,j)=\frac{1}{N}\x^T\y`
+
+The normalized Hubert statistic is defined as the element-wise correlation between :math:`\X` and :math:`\bs{\rm{Y}}`
+
+.. math::
+
+    \Gamma_n=\frac{\sum_{i=1}^{n-1}\sum_{j=i+1}^{n}(\X(i,j)-\mu_X)\cd
+    (\bs{\rm{Y}}(i,j)-\mu_Y)}{\sqrt{\sum_{i=1}^{n-1}\sum_{j=i+1}^{n}
+    (\X(i,j)-\mu_X)^2\sum_{i=1}^{n-1}\sum_{j=i+1}^{n}(\bs{\rm{Y}}[i]-\mu_Y)^2}}
+    =\frac{\sg_{XY}}{\sqrt{\sg_X^2\sg_Y^2}}
 
 17.2 Internal Measures
 ----------------------

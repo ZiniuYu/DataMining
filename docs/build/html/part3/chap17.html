@@ -418,9 +418,96 @@ Thus the lower the VI value the better the clustering <span class="math notransl
 </div>
 <div class="section" id="pairwise-measures">
 <h3>17.1.3 Pairwise Measures<a class="headerlink" href="#pairwise-measures" title="Permalink to this headline">¶</a></h3>
+<p>Let <span class="math notranslate nohighlight">\(\x_i,\x_j\in\D\)</span> be any two points, with <span class="math notranslate nohighlight">\(i\neq j\)</span>.
+Let <span class="math notranslate nohighlight">\(y_i\)</span> denote the true partition label and let <span class="math notranslate nohighlight">\(\hat{y_i}\)</span> denote
+the cluster label for point <span class="math notranslate nohighlight">\(\x_i\)</span>.
+If both <span class="math notranslate nohighlight">\(\x_i\)</span> and <span class="math notranslate nohighlight">\(\x_j\)</span> belong to the same cluster, that is,
+<span class="math notranslate nohighlight">\(\hat{y_i}=\hat{y_j}\)</span>, we call it a <em>positive</em> event, and if they do not
+belong to the same cluster, we call that a <em>negative</em> event.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(True\ Positives=|\{(\x_i,\x_j):y_i=y_j\ \rm{and}\ \hat{y_i}=\hat{y_j}\}|\)</span></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(False\ Negatives=|\{(\x_i,\x_j):y_i=y_j\ \rm{and}\ \hat{y_i}\neq\hat{y_j}\}|\)</span></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(False\ Positives=|\{(\x_i,\x_j):y_i\neq y_j\ \rm{and}\ \hat{y_i}=\hat{y_j}\}|\)</span></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(True\ Negatives=|\{(\x_i,\x_j):y_i\neq y_j\ \rm{and}\ \hat{y_i}\neq\hat{y_j}\}|\)</span></p>
+</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}N=\bp n\\2 \ep=\frac{n(n-1)}{2}=TP+FN+FP+TN\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\begin{split}TP=\sum_{i=1}^r\sum_{j=1}^k\bp n_{ij}\\2 \ep=
+\sum_{i=1}^r\sum_{j=1}^k\frac{n_{ij}(n_{ij}-1)}{2}=
+\frac{1}{2}\bigg(\sum_{i=1}^r\sum_{j=1}^kn_{ij}^2-
+\sum_{i=1}^r\sum_{j=1}^kn_{ij}\bigg)\end{split}\\=\frac{1}{2}\bigg(\bigg(\sum_{i=1}^r\sum_{j=1}^kn_{ij}^2\bigg)-n\bigg)\end{aligned}\end{align} \]</div>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\begin{split}FN=\sum_{j=1}^k\bp m_j\\2 \ep-TP=\frac{1}{2}\bigg(\sum_{j=1}^km_j^2-
+\sum_{j=1}^km_j-\sum_{i=1}^r\sum_{j=1}^kn_{ij}^2+n\bigg)\end{split}\\=\frac{1}{2}\bigg(\sum_{j=1}^km_j^2-\sum_{i=1}^r\sum_{j=1}^kn_{jj}^2\bigg)\end{aligned}\end{align} \]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}FP=\sum_{i=1}^r\bp n_i\\2 \ep-TP=\frac{1}{2}\bigg(\sum_{i=1}^rn_i^2-\sum_{i=1}^r\sum_{j=1}^kn_{ij}^2\bigg)\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[TN=N-(TP+FN+FP)=\frac{1}{2}\bigg(n^2-\sum_{i=1}^rn_i^2-\sum_{j=1}^km_j^2+\sum_{i=1}^r\sum_{j=1}^kn_{ij}^2\bigg)\]</div>
+<p>Each of the four values can be computed in <span class="math notranslate nohighlight">\(O(rk)\)</span> time.
+Because the contingency table can be obtained in linear time, the total time to
+compute the four values is <span class="math notranslate nohighlight">\(O(n+rk)\)</span>, which is much better than the negative
+<span class="math notranslate nohighlight">\(O(n^2)\)</span> bound.</p>
+<p><strong>Jaccard Coefficient</strong></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp Jaccard=\frac{TP}{TP+FN+FP}\)</span></p>
+</div>
+<p>For a perfect clustering <span class="math notranslate nohighlight">\(\CC\)</span>, the Jaccard Coefficient has value 1, as in
+that case there are no false positives or false negatives.
+The Jaccard coefficient is asymmetric in terms of the true positives and
+negatives because it ignores the true negatives.</p>
+<p><strong>Rand Statistic</strong></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp Rand=\frac{TP+TN}{N}\)</span></p>
+</div>
+<p>The Rand statistic, which is symmetric, measures the fraction of point pairs
+where both <span class="math notranslate nohighlight">\(\CC\)</span> and <span class="math notranslate nohighlight">\(\TT\)</span> agree.
+A perfect clustering has a value of 1 for the statistic.</p>
+<p><strong>Fowlkes-Mallows Measure</strong></p>
+<p>Define the overall <em>pairwise precision</em> and <em>pairwise recall</em> values for a clustering <span class="math notranslate nohighlight">\(\CC\)</span>, as follows:</p>
+<div class="math notranslate nohighlight">
+\[prec=\frac{TP}{TP+FP}\quad\quad recall=\frac{TP}{TP+FN}\]</div>
+<p>The Fowlkes-Mallows (FM) measure is defined as the geometric mean of the pairwise precision and recall</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp FM=\sqrt{prec\cd recall}=\frac{TP}{\sqrt{(TP+FN)(TP+FP)}}\)</span></p>
+</div>
 </div>
 <div class="section" id="correlation-measures">
 <h3>17.1.4 Correlation Measures<a class="headerlink" href="#correlation-measures" title="Permalink to this headline">¶</a></h3>
+<p>Let <span class="math notranslate nohighlight">\(\X\)</span> and <span class="math notranslate nohighlight">\(\bs{\rm{Y}}\)</span> be two symmetric <span class="math notranslate nohighlight">\(n\times n\)</span> matrics, and let <span class="math notranslate nohighlight">\(N=\bp n\\2 \ep\)</span>.
+Let <span class="math notranslate nohighlight">\(\x,\y\in\R^N\)</span> denote the vectors obtained by linearizing the upper
+triangular elements (excluding the main diagonal) of <span class="math notranslate nohighlight">\(X\)</span> and <span class="math notranslate nohighlight">\(Y\)</span>,
+respectively.
+Let <span class="math notranslate nohighlight">\(\mu_X\)</span> denote the element-wise mean of <span class="math notranslate nohighlight">\(\x\)</span>, given as</p>
+<div class="math notranslate nohighlight">
+\[\mu_X=\frac{1}{N}\sum_{i=1}^{n-1}\sum_{j=i+1}^n\X(i,j)=\frac{1}{N}\x^T\x\]</div>
+<p>and let <span class="math notranslate nohighlight">\(\bar{\x}\)</span> denote the centered <span class="math notranslate nohighlight">\(\x\)</span> vector, defined as</p>
+<div class="math notranslate nohighlight">
+\[\bar{\x}=\x-\1\cd\mu_X\]</div>
+<p>The Hubert statistic is defined as the averaged element-wise product between <span class="math notranslate nohighlight">\(\X\)</span> and <span class="math notranslate nohighlight">\(\bs{\rm{Y}}\)</span></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\Gamma=\frac{1}{N}\sum_{i=1}^{n-1}\sum_{j=i+1}^n\X(i,j)\cd\bs{\rm{Y}}(i,j)=\frac{1}{N}\x^T\y\)</span></p>
+</div>
+<p>The normalized Hubert statistic is defined as the element-wise correlation between <span class="math notranslate nohighlight">\(\X\)</span> and <span class="math notranslate nohighlight">\(\bs{\rm{Y}}\)</span></p>
+<div class="math notranslate nohighlight">
+\[\Gamma_n=\frac{\sum_{i=1}^{n-1}\sum_{j=i+1}^{n}(\X(i,j)-\mu_X)\cd
+(\bs{\rm{Y}}(i,j)-\mu_Y)}{\sqrt{\sum_{i=1}^{n-1}\sum_{j=i+1}^{n}
+(\X(i,j)-\mu_X)^2\sum_{i=1}^{n-1}\sum_{j=i+1}^{n}(\bs{\rm{Y}}[i]-\mu_Y)^2}}
+=\frac{\sg_{XY}}{\sqrt{\sg_X^2\sg_Y^2}}\]</div>
 </div>
 </div>
 <div class="section" id="internal-measures">
