@@ -378,16 +378,264 @@ The normalized Hubert statistic is defined as the element-wise correlation betwe
     (\X(i,j)-\mu_X)^2\sum_{i=1}^{n-1}\sum_{j=i+1}^{n}(\bs{\rm{Y}}[i]-\mu_Y)^2}}
     =\frac{\sg_{XY}}{\sqrt{\sg_X^2\sg_Y^2}}
 
+.. math::
+
+    \sg_X^2=\frac{1}{N}\sum_{i=1}^{n-1}\sum_{j=i+1}^{n}(\X(i,j)-\mu_X)^2=
+    \frac{1}{N}\bar{\x}^T\bar{\x}=\frac{1}{N}\lv\bar{\x}\rv^2
+
+    \sg_Y^2=\frac{1}{N}\sum_{i=1}^{n-1}\sum_{j=i+1}^{n}(\bs{\rm{Y}}(i,j)-
+    \mu_Y)^2=\frac{1}{N}\bar{\y}^T\bar{\y}=\frac{1}{N}\lv\bar{\y}\rv^2
+
+    \sg_{XY}=\frac{1}{N}\sum_{i=1}^{n-1}\sum_{j=i+1}^{n}(\X(i,j)-\mu_x)
+    (\bs{\rm{Y}}(i,j)-\mu_Y)=\frac{1}{N}\bar{\x}^T\bar{\y}
+
+.. note::
+
+    :math:`\dp\Gamma_n=\frac{\bar{\x}^T\bar{\y}}{\lv\bar{\x}\rv\cd\lv\bar{\y}\rv}=\cos\th`
+
+**Discretized Hubert Statistic**
+
+Let :math:`\bs{\rm{T}}` and :math:`\bs{\rm{C}}` be the :math:`n\times n` matrices defined as
+
+.. math::
+
+    \bs{\rm{T}}(i,j)=\left\{\begin{array}{lr}1\quad\rm{if\ }y_i=y_j,i\neq j\\
+    0\quad\rm{otherwise}\end{array}\right.\quad\quad
+    \bs{\rm{C}}(i,j)=\left\{\begin{array}{lr}1\quad\rm{if\ }
+    \hat{y_i}=\hat{y_j},i\neq j\\0\quad\rm{otherwise}\end{array}\right.
+
+.. math::
+
+    \Gamma=\frac{1}{N}\rm{\bs{t}}^T\c=\frac{TP}{N}
+
+**Normalized Discretized Hubert Statistic**
+
+.. math::
+
+    \Gamma_n=\frac{\bar{\rm{\bs{t}}}^T\bar{\c}}{\lv\bar{\rm{\bs{t}}}\rv\cd\lv\bar{\c}\rv}=\cos\th
+
+    \mu_T=\frac{\rm{\bs{t}}^T\rm{\bs{t}}}{N}=\frac{TP+FN}{N}
+
+    \mu_C=\frac{\c^T\c}{N}=\frac{TP+FP}{N}
+
+.. math::
+
+    \bar{\rm{\bs{t}}}^T\bar{\c}&=(\rm{\bs{t}}-\1\cd\mu_T)^T(\c-\1\cd\mu_C)
+
+    &=\rm{\bs{t}}^T\c-\mu_C\rm{\bs{t}}^T\1-\mu_T\c^T\1+\1^T\1\mu_T\mu_C
+
+    &=\rm{\bs{t}}^T\c-N\mu_C\mu_T-N\mu_T\mu_C+N\mu_T\mu_C
+
+    &=\rm{\bs{t}}^T\c-N\mu_T\mu_C
+
+    &=TP-N\mu_T\mu_C
+
+.. math::
+
+    \lv\bar{\rm{\bs{t}}}\rv^2=\bar{\rm{\bs{t}}}^T\bar{\rm{\bs{t}}}=
+    \rm{\bs{t}}^T\rm{\bs{t}}-N\mu_T^2=N\mu_T-N\mu_T^2=N\mu_T(1-\mu_T)
+
+    \lv\bar{\c}\rv^2=\bar{\c}^T\bar{\c}=\c^T\c-N\mu_C^2=N\mu_C-N\mu_C^2=N\mu_C(1-\mu_C)
+
+Discretized Hubert statistic can be written as
+
+.. math::
+
+    \Gamma_n=\frac{\frac{TP}{N}-\mu_T\mu_C}{\sqrt{\mu_T\mu_C(1-\mu_T)(1-\mu_C)}}
+
 17.2 Internal Measures
 ----------------------
 
+Internal evaluation measures do not have recourse to the ground-truth 
+partitioning, which is the typical scenario when clustering a dataset.
+The internal measures are based on the :math:`n\times n` *distance matrix*, also
+called the *proximity matrix*, of all pairwise distances among the :math:`n`
+points:
 
+.. note::
 
+    :math:`\bs{\rm{W}}=\{\lv\x_i-\x_j\rv\}_{i,j=1}^n`
 
+The proximity matrix :math:`\bs{\rm{W}}` can also be considered as the adjacency 
+matrix of the weighted complete graph :math:`G` over the :math:`n` points, that
+is, with nodes :math:`V=\{\x_i|\x_i\in\D\}`, edges 
+:math:`E=\{(\x_i,\x_j)|\x_i,\x_j\in\D\}` and edge weights 
+:math:`w_{ij}=\bs{\rm{W}}(i,j)` for all :math:`\x_i,\x_j\in\D`.
 
+For internal measures, we assume that we are given a clustering 
+:math:`\CC=\{C_1,\cds,C_k\}` comprising :math:`r=k` clusteres, with cluster 
+:math:`C_i` containing :math:`n_i=|C_i|` points.
+Let :math:`\hat{y_i}\in\{1,2,\cds,k\}` denote the clsuter label for point :math:`\x_i`.
+The clustering :math:`\CC` can be considered as a :math:`k`-way cut in :math:`G`
+because :math:`C_i\neq\emptyset` for all :math:`i`, 
+:math:`C_i\cap C_j=\emptyset` for all :math:`i,j`, and :math:`\bigcup_iC_i=V`.
+Given any subsets :math:`S,R\subset V`, define :math:`W(S,R)` as the sum of the 
+weights on all edges with one vertex in :math:`S` and the other in :math:`R`, given as
 
+.. math::
 
+    W(S,R)=\sum_{\x_i\in S}\sum_{\x_j\in R}w_{ij}
 
+Also, given :math:`S\subseteq V`, we denote by :math:`\bar{S}` the complementary 
+set of vertices, that is, :math:`\bar{S}=V-S`.
+
+The sum of all the intracluster weights, denoted :math:`W_{in}`, and 
+intercluster weights, denoted :math:`W_{out}` are given as
+
+.. math::
+
+    W_{in}=\frac{1}{2}\sum_{i=1}^kW(C_i,C_i)
+
+.. math::
+
+    W_{out}=\frac{1}{2}\sum_{i=1}^kW(C_i,\bar{C_i})=\sum_{i=1}^{k-1}\sum_{j>i}W(C_i,C_j)
+
+The number of distinct intracluster edges, denoted :math:`N_{in}`, and 
+intercluster edges, denoted :math:`N_{out}`, are given as
+
+.. math::
+
+    N_{in}=\sum_{i=1}^k\bp n_i\\2 \ep=\frac{1}{2}\sum_{i=1}^kn_i(n_i-1)
+
+.. math::
+
+    N_{out}=\sum_{i=1}^{k-1}\sum_{j=i+1}^kn_i\cd n_j=\frac{1}{2}\sum_{i=1}^k\sum_{j=1,j\neq i}^kn_i\cd n_j
+
+.. math::
+
+    N=N_{in}+N_{out}=\bp n\\2 \ep=\frac{1}{2}n(n-1)
+
+The total number of distinct pairs of points :math:`N` satisfies the identity
+
+.. math::
+
+    N=N_{in}+N_{out}=\bp n\\2 \ep=\frac{1}{2}n(n-1)
+
+**BetaCV Measure**
+
+.. note::
+
+    :math:`\dp BetaCV=\frac{W_{in}/N_{in}}{W_{out}/N_{out}}=\frac{N_{out}}{N_{in}}\cd\frac{W_{in}}{W_{out}}`
+    :math:`\dp\frac{N_{out}}{N_{in}}\frac{\sum_{i=1}^kW(C_i,C_i)}{\sum_{i=1}^kW(C_i,\bar{C_i})}`
+
+The smaller the BetaCV ratio, the better the clustering, as it indicates that 
+intracluster distances are on average smaller than intercluster distances.
+
+**C-index**
+
+Let :math:`W_\min(N_{in})` be the sum of the smallest :math:`N_{in}` distances 
+in the proximity matrix :math:`\bs{\rm{W}}`, where :math:`N_{in}` is the total
+number of intracluster edges, or point pairs.
+Let :math:`W_\max{N_{in})` be the sum of the largest :math:`N_{in}` distaces in
+:math:`\bs{\rm{W}}`.
+
+The C-index measures to what extent the clustering puts together the 
+:math:`N_{in}` points that are the closest across the :math:`k` clusters.
+
+.. note::
+
+    :math:`\dp C-index=\frac{W_{in}-W_\min(N_{in})}{W_\max(N_{in})-W_\min(N_{in})}`
+
+The C-index lies in the range :math:`[0,1]`.
+The smaller the C-index, the better the clustering, as it indicates more compact 
+clusters with relatively smaller distances with clusters rather than between 
+clusters.
+
+**Normalized Cut Measure**
+
+.. note::
+
+    :math:`\dp NC=\sum_{i=1}^k\frac{W(C_i,\bar{C_i})}{vol(C_i)}=\sum_{i=1}^k\frac{W(C_i,\bar{C_i})}{W(C_i,V)}`
+
+where :math:`vol(C_i)=W(C_i,V)` is the volume of cluster :math:`C_i`, that is, 
+the total weights on edges with at least one end in the cluster.
+
+.. math::
+
+    NC=\sum_{i=1}^k\frac{W(C_i,\bar{C_i})}{W(C_i,C_i)+W(C_i,\bar{C_i})}=
+    \sum_{i=1}^k\frac{1}{\frac{W(C_i,C_i)}{W(C_i,\bar{C_i})}+1}
+
+We can see that :math:`NC` is maximized when the ratio 
+:math:`\frac{W(C_i,C_i)}{W(C_i,\bar{C_i})}` (across the :math:`k` clusters) are
+as small as possible, which happens when the intracluster distances are much
+smaller compared to intercluster distances, that is, when the clustering is 
+good.
+The maximum possible value of :math:`NC` is :math:`k`.
+
+**Modularity**
+
+.. note::
+
+    :math:`\dp Q=\sum_{i=1}^k\bigg(\frac{W(C_i,C_i)}{W(V,V)}-\bigg(\frac{W(C_i,V)}{W(V,V)}\bigg)^2\bigg)`
+
+where
+
+.. math::
+
+    W(V,V)&=\sum_{i=1}^kW(C_i,V)
+
+    &=\sum_{i=1}^kW(C_i,C_i)+\sum_{i=1}^kW(C_i,\bar{C_i})
+
+    &=2(W_{in}+W_{out})
+
+Modularity measures the difference between the observed and expected fraction of weights on edges within the clusters.
+Since we are using the distance matrix, the smaller the modularity measure the
+better the clustering, which indicates that the intracluster distaces are lower
+than expected.
+
+**Dunn Index**
+
+.. note::
+
+    :math:`\dp Dunn=\frac{W_{out}^\min}{W_{in}^\max}`
+
+where :math:`W_{out}^\min` is the minimum intercluster distance:
+
+.. math::
+    
+    W_{out}^\min=\min_{i,j>i}\{w_{ab}|\x_a\in C_i,\x_b\in C_j\}
+
+and :math:`W_{in}^\max` is the maximum intracluster distance:
+
+.. math::
+
+    W_{in}^\max=\max_i\{w_{ab}|\x_a,\x_b\in C_i\}
+
+The larger the Dunn index the better the clustering because it means even the 
+closest distance between points in different clusters is much larger than the 
+farthest distance between points in the same cluster. 
+However, the Dunn index may be insensitive because the minimum intercluster and 
+maximum intracluster distances do not capture all the information about a 
+clustering.
+
+**Davies-Bouldin index**
+
+Let :math:`\mu_i` denote the cluster mean, given as
+
+.. math::
+
+    \mmu_i=\frac{1}{n_i}\sum_{\x_i\in C_i}\x_j
+
+Further, let :math:`\sg_{\mu_i}` denote the dispersion or spread of the points around the cluster mean, given as
+
+.. math::
+
+    \sg_{\mu_i}=\sqrt{\frac{\sum_{\x_j\in C_i}\lv\x_j-\mmu_i\rv^2}{n_i}}=\sqrt{\rm{var}(C_i)}
+
+.. note::
+
+    :math:`\dp DB_{ij}=\frac{\sg_{\mu_i}+\sg_{\mu_j}}{\lv\mmu_i-\mmu_j\rv}`
+
+:math:`DB_{ij}` measures how compact the clsuters are compared to the distance between the cluster means.
+The Davies-Bouldin index is then defined as
+
+.. math::
+
+    DB=\frac{1}{k}\sum_{i=1}^k\max_{j\ne i}\{DB_{ij}\}
+
+The smaller the DB value the better the clustering, as it means that the 
+clusters are well separated (i.e., the distance between cluster means is large), 
+and each cluster is well represented by its mean (i.e., has a small spread).
 
 17.3 Relative Measures
 ----------------------

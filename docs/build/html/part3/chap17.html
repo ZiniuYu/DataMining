@@ -508,10 +508,170 @@ Let <span class="math notranslate nohighlight">\(\mu_X\)</span> denote the eleme
 (\bs{\rm{Y}}(i,j)-\mu_Y)}{\sqrt{\sum_{i=1}^{n-1}\sum_{j=i+1}^{n}
 (\X(i,j)-\mu_X)^2\sum_{i=1}^{n-1}\sum_{j=i+1}^{n}(\bs{\rm{Y}}[i]-\mu_Y)^2}}
 =\frac{\sg_{XY}}{\sqrt{\sg_X^2\sg_Y^2}}\]</div>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\sg_X^2=\frac{1}{N}\sum_{i=1}^{n-1}\sum_{j=i+1}^{n}(\X(i,j)-\mu_X)^2=
+\frac{1}{N}\bar{\x}^T\bar{\x}=\frac{1}{N}\lv\bar{\x}\rv^2\\\sg_Y^2=\frac{1}{N}\sum_{i=1}^{n-1}\sum_{j=i+1}^{n}(\bs{\rm{Y}}(i,j)-
+\mu_Y)^2=\frac{1}{N}\bar{\y}^T\bar{\y}=\frac{1}{N}\lv\bar{\y}\rv^2\\\sg_{XY}=\frac{1}{N}\sum_{i=1}^{n-1}\sum_{j=i+1}^{n}(\X(i,j)-\mu_x)
+(\bs{\rm{Y}}(i,j)-\mu_Y)=\frac{1}{N}\bar{\x}^T\bar{\y}\end{aligned}\end{align} \]</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\Gamma_n=\frac{\bar{\x}^T\bar{\y}}{\lv\bar{\x}\rv\cd\lv\bar{\y}\rv}=\cos\th\)</span></p>
+</div>
+<p><strong>Discretized Hubert Statistic</strong></p>
+<p>Let <span class="math notranslate nohighlight">\(\bs{\rm{T}}\)</span> and <span class="math notranslate nohighlight">\(\bs{\rm{C}}\)</span> be the <span class="math notranslate nohighlight">\(n\times n\)</span> matrices defined as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\bs{\rm{T}}(i,j)=\left\{\begin{array}{lr}1\quad\rm{if\ }y_i=y_j,i\neq j\\
+0\quad\rm{otherwise}\end{array}\right.\quad\quad
+\bs{\rm{C}}(i,j)=\left\{\begin{array}{lr}1\quad\rm{if\ }
+\hat{y_i}=\hat{y_j},i\neq j\\0\quad\rm{otherwise}\end{array}\right.\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\Gamma=\frac{1}{N}\rm{\bs{t}}^T\c=\frac{TP}{N}\]</div>
+<p><strong>Normalized Discretized Hubert Statistic</strong></p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\Gamma_n=\frac{\bar{\rm{\bs{t}}}^T\bar{\c}}{\lv\bar{\rm{\bs{t}}}\rv\cd\lv\bar{\c}\rv}=\cos\th\\\mu_T=\frac{\rm{\bs{t}}^T\rm{\bs{t}}}{N}=\frac{TP+FN}{N}\\\mu_C=\frac{\c^T\c}{N}=\frac{TP+FP}{N}\end{aligned}\end{align} \]</div>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\bar{\rm{\bs{t}}}^T\bar{\c}&amp;=(\rm{\bs{t}}-\1\cd\mu_T)^T(\c-\1\cd\mu_C)\\&amp;=\rm{\bs{t}}^T\c-\mu_C\rm{\bs{t}}^T\1-\mu_T\c^T\1+\1^T\1\mu_T\mu_C\\&amp;=\rm{\bs{t}}^T\c-N\mu_C\mu_T-N\mu_T\mu_C+N\mu_T\mu_C\\&amp;=\rm{\bs{t}}^T\c-N\mu_T\mu_C\\&amp;=TP-N\mu_T\mu_C\end{aligned}\end{align} \]</div>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\lv\bar{\rm{\bs{t}}}\rv^2=\bar{\rm{\bs{t}}}^T\bar{\rm{\bs{t}}}=
+\rm{\bs{t}}^T\rm{\bs{t}}-N\mu_T^2=N\mu_T-N\mu_T^2=N\mu_T(1-\mu_T)\\\lv\bar{\c}\rv^2=\bar{\c}^T\bar{\c}=\c^T\c-N\mu_C^2=N\mu_C-N\mu_C^2=N\mu_C(1-\mu_C)\end{aligned}\end{align} \]</div>
+<p>Discretized Hubert statistic can be written as</p>
+<div class="math notranslate nohighlight">
+\[\Gamma_n=\frac{\frac{TP}{N}-\mu_T\mu_C}{\sqrt{\mu_T\mu_C(1-\mu_T)(1-\mu_C)}}\]</div>
 </div>
 </div>
 <div class="section" id="internal-measures">
 <h2>17.2 Internal Measures<a class="headerlink" href="#internal-measures" title="Permalink to this headline">¶</a></h2>
+<p>Internal evaluation measures do not have recourse to the ground-truth
+partitioning, which is the typical scenario when clustering a dataset.
+The internal measures are based on the <span class="math notranslate nohighlight">\(n\times n\)</span> <em>distance matrix</em>, also
+called the <em>proximity matrix</em>, of all pairwise distances among the <span class="math notranslate nohighlight">\(n\)</span>
+points:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\bs{\rm{W}}=\{\lv\x_i-\x_j\rv\}_{i,j=1}^n\)</span></p>
+</div>
+<p>The proximity matrix <span class="math notranslate nohighlight">\(\bs{\rm{W}}\)</span> can also be considered as the adjacency
+matrix of the weighted complete graph <span class="math notranslate nohighlight">\(G\)</span> over the <span class="math notranslate nohighlight">\(n\)</span> points, that
+is, with nodes <span class="math notranslate nohighlight">\(V=\{\x_i|\x_i\in\D\}\)</span>, edges
+<span class="math notranslate nohighlight">\(E=\{(\x_i,\x_j)|\x_i,\x_j\in\D\}\)</span> and edge weights
+<span class="math notranslate nohighlight">\(w_{ij}=\bs{\rm{W}}(i,j)\)</span> for all <span class="math notranslate nohighlight">\(\x_i,\x_j\in\D\)</span>.</p>
+<p>For internal measures, we assume that we are given a clustering
+<span class="math notranslate nohighlight">\(\CC=\{C_1,\cds,C_k\}\)</span> comprising <span class="math notranslate nohighlight">\(r=k\)</span> clusteres, with cluster
+<span class="math notranslate nohighlight">\(C_i\)</span> containing <span class="math notranslate nohighlight">\(n_i=|C_i|\)</span> points.
+Let <span class="math notranslate nohighlight">\(\hat{y_i}\in\{1,2,\cds,k\}\)</span> denote the clsuter label for point <span class="math notranslate nohighlight">\(\x_i\)</span>.
+The clustering <span class="math notranslate nohighlight">\(\CC\)</span> can be considered as a <span class="math notranslate nohighlight">\(k\)</span>-way cut in <span class="math notranslate nohighlight">\(G\)</span>
+because <span class="math notranslate nohighlight">\(C_i\neq\emptyset\)</span> for all <span class="math notranslate nohighlight">\(i\)</span>,
+<span class="math notranslate nohighlight">\(C_i\cap C_j=\emptyset\)</span> for all <span class="math notranslate nohighlight">\(i,j\)</span>, and <span class="math notranslate nohighlight">\(\bigcup_iC_i=V\)</span>.
+Given any subsets <span class="math notranslate nohighlight">\(S,R\subset V\)</span>, define <span class="math notranslate nohighlight">\(W(S,R)\)</span> as the sum of the
+weights on all edges with one vertex in <span class="math notranslate nohighlight">\(S\)</span> and the other in <span class="math notranslate nohighlight">\(R\)</span>, given as</p>
+<div class="math notranslate nohighlight">
+\[W(S,R)=\sum_{\x_i\in S}\sum_{\x_j\in R}w_{ij}\]</div>
+<p>Also, given <span class="math notranslate nohighlight">\(S\subseteq V\)</span>, we denote by <span class="math notranslate nohighlight">\(\bar{S}\)</span> the complementary
+set of vertices, that is, <span class="math notranslate nohighlight">\(\bar{S}=V-S\)</span>.</p>
+<p>The sum of all the intracluster weights, denoted <span class="math notranslate nohighlight">\(W_{in}\)</span>, and
+intercluster weights, denoted <span class="math notranslate nohighlight">\(W_{out}\)</span> are given as</p>
+<div class="math notranslate nohighlight">
+\[W_{in}=\frac{1}{2}\sum_{i=1}^kW(C_i,C_i)\]</div>
+<div class="math notranslate nohighlight">
+\[W_{out}=\frac{1}{2}\sum_{i=1}^kW(C_i,\bar{C_i})=\sum_{i=1}^{k-1}\sum_{j&gt;i}W(C_i,C_j)\]</div>
+<p>The number of distinct intracluster edges, denoted <span class="math notranslate nohighlight">\(N_{in}\)</span>, and
+intercluster edges, denoted <span class="math notranslate nohighlight">\(N_{out}\)</span>, are given as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}N_{in}=\sum_{i=1}^k\bp n_i\\2 \ep=\frac{1}{2}\sum_{i=1}^kn_i(n_i-1)\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[N_{out}=\sum_{i=1}^{k-1}\sum_{j=i+1}^kn_i\cd n_j=\frac{1}{2}\sum_{i=1}^k\sum_{j=1,j\neq i}^kn_i\cd n_j\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}N=N_{in}+N_{out}=\bp n\\2 \ep=\frac{1}{2}n(n-1)\end{split}\]</div>
+<p>The total number of distinct pairs of points <span class="math notranslate nohighlight">\(N\)</span> satisfies the identity</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}N=N_{in}+N_{out}=\bp n\\2 \ep=\frac{1}{2}n(n-1)\end{split}\]</div>
+<p><strong>BetaCV Measure</strong></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp BetaCV=\frac{W_{in}/N_{in}}{W_{out}/N_{out}}=\frac{N_{out}}{N_{in}}\cd\frac{W_{in}}{W_{out}}\)</span>
+<span class="math notranslate nohighlight">\(\dp\frac{N_{out}}{N_{in}}\frac{\sum_{i=1}^kW(C_i,C_i)}{\sum_{i=1}^kW(C_i,\bar{C_i})}\)</span></p>
+</div>
+<p>The smaller the BetaCV ratio, the better the clustering, as it indicates that
+intracluster distances are on average smaller than intercluster distances.</p>
+<p><strong>C-index</strong></p>
+<p>Let <span class="math notranslate nohighlight">\(W_\min(N_{in})\)</span> be the sum of the smallest <span class="math notranslate nohighlight">\(N_{in}\)</span> distances
+in the proximity matrix <span class="math notranslate nohighlight">\(\bs{\rm{W}}\)</span>, where <span class="math notranslate nohighlight">\(N_{in}\)</span> is the total
+number of intracluster edges, or point pairs.
+Let <span class="math notranslate nohighlight">\(W_\max{N_{in})\)</span> be the sum of the largest <span class="math notranslate nohighlight">\(N_{in}\)</span> distaces in
+<span class="math notranslate nohighlight">\(\bs{\rm{W}}\)</span>.</p>
+<p>The C-index measures to what extent the clustering puts together the
+<span class="math notranslate nohighlight">\(N_{in}\)</span> points that are the closest across the <span class="math notranslate nohighlight">\(k\)</span> clusters.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp C-index=\frac{W_{in}-W_\min(N_{in})}{W_\max(N_{in})-W_\min(N_{in})}\)</span></p>
+</div>
+<p>The C-index lies in the range <span class="math notranslate nohighlight">\([0,1]\)</span>.
+The smaller the C-index, the better the clustering, as it indicates more compact
+clusters with relatively smaller distances with clusters rather than between
+clusters.</p>
+<p><strong>Normalized Cut Measure</strong></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp NC=\sum_{i=1}^k\frac{W(C_i,\bar{C_i})}{vol(C_i)}=\sum_{i=1}^k\frac{W(C_i,\bar{C_i})}{W(C_i,V)}\)</span></p>
+</div>
+<p>where <span class="math notranslate nohighlight">\(vol(C_i)=W(C_i,V)\)</span> is the volume of cluster <span class="math notranslate nohighlight">\(C_i\)</span>, that is,
+the total weights on edges with at least one end in the cluster.</p>
+<div class="math notranslate nohighlight">
+\[NC=\sum_{i=1}^k\frac{W(C_i,\bar{C_i})}{W(C_i,C_i)+W(C_i,\bar{C_i})}=
+\sum_{i=1}^k\frac{1}{\frac{W(C_i,C_i)}{W(C_i,\bar{C_i})}+1}\]</div>
+<p>We can see that <span class="math notranslate nohighlight">\(NC\)</span> is maximized when the ratio
+<span class="math notranslate nohighlight">\(\frac{W(C_i,C_i)}{W(C_i,\bar{C_i})}\)</span> (across the <span class="math notranslate nohighlight">\(k\)</span> clusters) are
+as small as possible, which happens when the intracluster distances are much
+smaller compared to intercluster distances, that is, when the clustering is
+good.
+The maximum possible value of <span class="math notranslate nohighlight">\(NC\)</span> is <span class="math notranslate nohighlight">\(k\)</span>.</p>
+<p><strong>Modularity</strong></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp Q=\sum_{i=1}^k\bigg(\frac{W(C_i,C_i)}{W(V,V)}-\bigg(\frac{W(C_i,V)}{W(V,V)}\bigg)^2\bigg)\)</span></p>
+</div>
+<p>where</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}W(V,V)&amp;=\sum_{i=1}^kW(C_i,V)\\&amp;=\sum_{i=1}^kW(C_i,C_i)+\sum_{i=1}^kW(C_i,\bar{C_i})\\&amp;=2(W_{in}+W_{out})\end{aligned}\end{align} \]</div>
+<p>Modularity measures the difference between the observed and expected fraction of weights on edges within the clusters.
+Since we are using the distance matrix, the smaller the modularity measure the
+better the clustering, which indicates that the intracluster distaces are lower
+than expected.</p>
+<p><strong>Dunn Index</strong></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp Dunn=\frac{W_{out}^\min}{W_{in}^\max}\)</span></p>
+</div>
+<p>where <span class="math notranslate nohighlight">\(W_{out}^\min\)</span> is the minimum intercluster distance:</p>
+<div class="math notranslate nohighlight">
+\[W_{out}^\min=\min_{i,j&gt;i}\{w_{ab}|\x_a\in C_i,\x_b\in C_j\}\]</div>
+<p>and <span class="math notranslate nohighlight">\(W_{in}^\max\)</span> is the maximum intracluster distance:</p>
+<div class="math notranslate nohighlight">
+\[W_{in}^\max=\max_i\{w_{ab}|\x_a,\x_b\in C_i\}\]</div>
+<p>The larger the Dunn index the better the clustering because it means even the
+closest distance between points in different clusters is much larger than the
+farthest distance between points in the same cluster.
+However, the Dunn index may be insensitive because the minimum intercluster and
+maximum intracluster distances do not capture all the information about a
+clustering.</p>
+<p><strong>Davies-Bouldin index</strong></p>
+<p>Let <span class="math notranslate nohighlight">\(\mu_i\)</span> denote the cluster mean, given as</p>
+<div class="math notranslate nohighlight">
+\[\mmu_i=\frac{1}{n_i}\sum_{\x_i\in C_i}\x_j\]</div>
+<p>Further, let <span class="math notranslate nohighlight">\(\sg_{\mu_i}\)</span> denote the dispersion or spread of the points around the cluster mean, given as</p>
+<div class="math notranslate nohighlight">
+\[\sg_{\mu_i}=\sqrt{\frac{\sum_{\x_j\in C_i}\lv\x_j-\mmu_i\rv^2}{n_i}}=\sqrt{\rm{var}(C_i)}\]</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp DB_{ij}=\frac{\sg_{\mu_i}+\sg_{\mu_j}}{\lv\mmu_i-\mmu_j\rv}\)</span></p>
+</div>
+<p><span class="math notranslate nohighlight">\(DB_{ij}\)</span> measures how compact the clsuters are compared to the distance between the cluster means.
+The Davies-Bouldin index is then defined as</p>
+<div class="math notranslate nohighlight">
+\[DB=\frac{1}{k}\sum_{i=1}^k\max_{j\ne i}\{DB_{ij}\}\]</div>
+<p>The smaller the DB value the better the clustering, as it means that the
+clusters are well separated (i.e., the distance between cluster means is large),
+and each cluster is well represented by its mean (i.e., has a small spread).</p>
 </div>
 <div class="section" id="relative-measures">
 <h2>17.3 Relative Measures<a class="headerlink" href="#relative-measures" title="Permalink to this headline">¶</a></h2>
