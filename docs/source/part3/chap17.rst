@@ -826,5 +826,107 @@ and :math:`m_j^a` denote the number of occurrences of :math:`\x_a` in
 
     \D_{ij}=\D_i\cap\D_j=\{m^a\ \rm{instances\ of}\ \x_a|\x_a\in\D,m^a=\min\{m_i^a,m_j^a\}\}
 
-
 .. image:: ../_static/Algo17.1.png
+
+In general, those external measures that yield lower values for better agreement 
+between :math:`\CC_k(\D_i)` and :math:`\CC_k(\D_j)` can be used as distance
+functions, whereas those that yield higher values for better agreement can be
+used as similarity functions.
+
+17.3.2 Clustering Tendency
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Clustering tendency or clusterability aims to determine whether the dataset 
+:math:`\D` has any meaningful groups to begin with.
+
+**Spatial Histogram**
+
+Let :math:`X_1,X_2,\cds,X_d` denote the :math:`d` dimensions.
+Given :math:`b`, the number of bins for each dimension, we divide each dimension
+:math:`X_j` into :math:`b` equi-width bins, and simply count how many points lie 
+in each of the :math:`b^d` :math:`d`-dimensional cells.
+From this spatial histogram, we can obtain the empirical joint probability mass 
+function (EPMF) for the dataset :math:`\D`, which is an approximation of the
+unknown joint probability density function.
+The EPMF is givne as
+
+.. math::
+
+    f(\i)=P(\x_j\in\ \rm{cell}\ \i)=\frac{|\{\x_j\in\ \rm{cell}\ \i\}|}{n}
+
+where :math:`\i=(i_1,i_2,\cds,i_d)` denotes a cell index, with :math:`i_j` 
+denoting the bin index along dimension :math:`X_j`.
+
+Next, we generate :math:`t` random samples, each comprising :math:`n` points
+within the same :math:`d`-dimensional space as the input dataset :math:`\D`.
+That is, for each dimension :math:`X_j`, we compute its range 
+:math:`[\min(X_j),\max(X_j)]`, and generate values uniformly at random within 
+the givne range.
+Let :math:`\bs{\rm{R}}_j` denote the :math:`j`\ th such random smaple.
+We can then compute the corresponding EPMF :math:`g_j(\i)` for each :math:`\bs{\rm{R}}_j, 1\leq j\leq t`.
+
+Finally, we can compute how much the distribution :math:`f` differs from 
+:math:`g_j` (for :math:`j=1,\cds,t`), using the Kullback-Leibler (KL) divergence
+from :math:`f` to :math:`g_j`, defined as
+
+.. math::
+
+    KL(f|g_j)=\sum_\i f(\i)\log\bigg(\frac{f(\i)}{g_j(\i)}\bigg)
+
+The KL divergence is zero only when :math:`f` and :math:`g_j` are the same distributions.
+
+The main limitation of this approach is that as dmensionality increases, the 
+number of cells :math:`(b^d)` increases exponentially, and with a fixed sample 
+size :math:`n`, most of the cells will be empty, or will have only one point,
+making it hard to estimate the divergence.
+The method is also sensitive to the choice of parameter :math:`b`.
+Instead of histograms, and the corresponding EPMF, we can also use density 
+estimation methods to determine the joint probability density function (PDF) for
+the dataset :math:`\D`, and see how it differs from the PDF for the random 
+datasets.
+However, the curse of dimensionality also causes problems for density estimation.
+
+**Distance Distribution**
+
+We create the EPMF from the proximity matrix :math:`\bs{\rm{W}}` for 
+:math:`\bs{\rm{D}}` by binning the distances into :math:`b` bins:
+
+.. math::
+
+    f(i)=P(w_{pq}\in\ \rm{bin}\ i|\x_p,\x_q\in\D,p<q)=\frac{|\{w_{pq}\in\ \rm{bin}\ i\}|}{n(n-1)/2}
+
+**Hopkins Statistic**
+
+Given a dataset :math:`\D` comprising :math:`n` points, we generate :math:`t` 
+random subsamples :math:`\bs{rm{R}}_i` of :math:`m` points each, where 
+:math:`m\ll n`.
+These samples are drawn from the same data space as :math:`\D`, generated uniformly at random along each dimension.
+Futher, we also generate :math:`t` subsamples of :math:`m` points directly from 
+:math:`\D`, using sampling without replacement.
+Let :math:`\D_i` denote the :math:`i`\ th direct subsample.
+Next, we compute the minimum distance between each point :math:`\x_j\in\D_i` and points in :math:`\D`
+
+.. math::
+
+    \delta_\min(\x_j)=\min_{\x_i\in\D,\x_i\ne\x_j}\{\lv\x_j-\x_i\rv\}
+
+Likewise, we compute the minimum distance :math:`\delta_\min(\y_i)` between a 
+point :math:`\y_i\in\bs{\rm{R}}_i` and points in :math:`\D`.
+
+The Hopkins statistic for the :math:`i`\ th pair of samples :math:`\bs{\rm{R}}_i` and :math:`\D_i` is then defined as
+
+.. math::
+
+    HS_i=\frac{\sum_{\y_j\in\bs{\rm{R}}_i}(\delta_\min(\y_j))^d}
+    {\sum_{\y_j\in\bs{\rm{R}}_i}(\delta_\min(\y_j))^d+
+    +sum_{\x_j\in\bs{\rm{R}}_i}(\delta_\min(\x_j))^d}
+
+If the data is well clusterd we expect :math:`\delta_\min(\x_j)` values to be
+smaller compared to the :math:`\delta_\min(\y_j)` values, and in this case 
+:math:`HS_i` tends to 1.
+If both nearest-neighbor distances are similar, then :math:`HS_i` takes on 
+values close to 0.5, which indicates that the data is essentially random, and 
+there is no apparent clustering.
+Finally, if :math:`\delta_\min(\x_j)` values are larger compared to 
+:math:`\delta_\min(\y_j)` values, then :math:`HS_i` tends to 0, and it indicates
+point repulsion, with no clustering.
