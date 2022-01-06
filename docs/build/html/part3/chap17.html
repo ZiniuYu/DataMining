@@ -104,7 +104,10 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#internal-measures">17.2 Internal Measures</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#relative-measures">17.3 Relative Measures</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#relative-measures">17.3 Relative Measures</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#cluster-stability">17.3.1 Cluster stability</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -597,7 +600,7 @@ intracluster distances are on average smaller than intercluster distances.</p>
 <p>Let <span class="math notranslate nohighlight">\(W_\min(N_{in})\)</span> be the sum of the smallest <span class="math notranslate nohighlight">\(N_{in}\)</span> distances
 in the proximity matrix <span class="math notranslate nohighlight">\(\bs{\rm{W}}\)</span>, where <span class="math notranslate nohighlight">\(N_{in}\)</span> is the total
 number of intracluster edges, or point pairs.
-Let <span class="math notranslate nohighlight">\(W_\max{N_{in})\)</span> be the sum of the largest <span class="math notranslate nohighlight">\(N_{in}\)</span> distaces in
+Let <span class="math notranslate nohighlight">\(W_\max(N_{in})\)</span> be the sum of the largest <span class="math notranslate nohighlight">\(N_{in}\)</span> distaces in
 <span class="math notranslate nohighlight">\(\bs{\rm{W}}\)</span>.</p>
 <p>The C-index measures to what extent the clustering puts together the
 <span class="math notranslate nohighlight">\(N_{in}\)</span> points that are the closest across the <span class="math notranslate nohighlight">\(k\)</span> clusters.</p>
@@ -672,9 +675,143 @@ The Davies-Bouldin index is then defined as</p>
 <p>The smaller the DB value the better the clustering, as it means that the
 clusters are well separated (i.e., the distance between cluster means is large),
 and each cluster is well represented by its mean (i.e., has a small spread).</p>
+<p><strong>Silhouette Coefficient</strong></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp s_i=\frac{\mu_{out}^\min(\x_i)-\mu_{in}(\x_i)}{\max\{\mu_{out}^\min(\x_i),\mu_{in}(\x_i)\}}\)</span></p>
+</div>
+<p>where <span class="math notranslate nohighlight">\(\mu_{in}(\x_i)\)</span> is the mean distance from <span class="math notranslate nohighlight">\(\x_i\)</span> to points in its own cluster <span class="math notranslate nohighlight">\(\hat{y_i}\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\mu_{in}(\x_i)=\frac{\sum_{\x_j\in C_{\hat{y_i}},j\ne i}\lv\x_i-\x_j\rv}{n_{\hat{y_i}}-1}\]</div>
+<p>and <span class="math notranslate nohighlight">\(\mu_{out}^\min(\x_i)\)</span> is the mean of the distance from <span class="math notranslate nohighlight">\(\x_i\)</span> to points in the closest cluster:</p>
+<div class="math notranslate nohighlight">
+\[\mu_{out}^\min(\x_i)=\min_{j\ne\hat{y_i}}\bigg\{\frac{\sum_{\y\in C_j}\lv\x_i-\y\rv}{n_j}\bigg\}\]</div>
+<p>The silhouette coefficient is defined as the mean <span class="math notranslate nohighlight">\(s_i\)</span> value across all the points:</p>
+<div class="math notranslate nohighlight">
+\[SC=\frac{1}{n}\sum_{i=1}^ns_i\]</div>
+<p>A value close to 1 indicates a good clustering.</p>
+<p><strong>Hubert Statistic</strong></p>
+<p>The Hubert <span class="math notranslate nohighlight">\(\Gamma\)</span> statistic, and its normalized version
+<span class="math notranslate nohighlight">\(\Gamma_n\)</span>, can both be used as internal evaluation measures by letting
+<span class="math notranslate nohighlight">\(\X=\bs{\rm{W}}\)</span> be the pairwise distance matrix, and by defining
+<span class="math notranslate nohighlight">\(\bs{\rm{Y}}\)</span> as the matrix of distances between the cluster means.</p>
+<div class="math notranslate nohighlight">
+\[\bs{\rm{Y}}=\{\lv\mmu_i-\mmu_j\rv\}_{i,j=1}^N\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mmu_i\)</span> is the mean for cluster <span class="math notranslate nohighlight">\(C_i\)</span>.</p>
 </div>
 <div class="section" id="relative-measures">
 <h2>17.3 Relative Measures<a class="headerlink" href="#relative-measures" title="Permalink to this headline">¶</a></h2>
+<p>Relative measures are used to compare different cluesterings obtained by varying
+different parameters for the same algorithm, for example, to choose the number
+of cluster <span class="math notranslate nohighlight">\(k\)</span>.</p>
+<p><strong>Silhouette Coefficient</strong></p>
+<div class="math notranslate nohighlight">
+\[SC_i=\frac{1}{n_i}\sum_{\x_j\in C_i}s_j\]</div>
+<p>We can pick the value <span class="math notranslate nohighlight">\(k\)</span> that yields the best clustering, with many
+points having high <span class="math notranslate nohighlight">\(s_j\)</span> values within each cluster, as well as high
+values for <span class="math notranslate nohighlight">\(SC\)</span> and <span class="math notranslate nohighlight">\(SC_i(1\leq i\leq k)\)</span>.</p>
+<p><strong>Calinski-Harabasz Index</strong></p>
+<p>Given the dataset <span class="math notranslate nohighlight">\(\D\)</span> comprising <span class="math notranslate nohighlight">\(n\)</span> points <span class="math notranslate nohighlight">\(\x_j\)</span>, the scatter matrix for <span class="math notranslate nohighlight">\(\D\)</span> is given as</p>
+<div class="math notranslate nohighlight">
+\[\bs{\rm{S}}=n\Sg=\sum_{j=1}^n(\x_j-\mmu)(\x_j-\mmu)^T\]</div>
+<p>The scatter matrix can be decomposed into two matrices
+<span class="math notranslate nohighlight">\(\bs{\rm{S}}=\bs{\rm{S}}_W+\bs{\rm{S}}_B\)</span>, where <span class="math notranslate nohighlight">\(\bs{\rm{S}}_W\)</span> is
+the within-cluster scatter matrix and <span class="math notranslate nohighlight">\(\bs{\rm{S}}_B\)</span> is the
+between-cluster matrix, given as</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\bs{\rm{S}}_W=\sum_{i=1}^k\sum_{\x_j\in C_i}(\x_j-\mmu_i)(\x_j-\mmu_i)^T\\\bs{\rm{S}}_B=\sum_{i=1}^kn_i(\mmu_i-\mmu)(\mmu_i-\mmu)^T\end{aligned}\end{align} \]</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp CH(k)=\frac{tr(\bs{\rm{S}}_B)/(k-1)}{tr(\bs{\rm{S}}_W)/(n-k)}=\)</span>
+<span class="math notranslate nohighlight">\(\dp\frac{n-k}{n-1}\cd\frac{tr(\bs{\rm{S}}_B)}{tr(\bs{\rm{S}}_W)}\)</span></p>
+</div>
+<p>For a good value of <span class="math notranslate nohighlight">\(k\)</span>, we expect the within-cluster scatter to be
+smaller relative to the between-cluster scatter, which should result in a higher
+<span class="math notranslate nohighlight">\(CH(k)\)</span> value.
+On the other hand, we do not desire a very large value of <span class="math notranslate nohighlight">\(k\)</span>; thus the
+term <span class="math notranslate nohighlight">\(\frac{n-k}{k-1}\)</span> panalizes larger values of <span class="math notranslate nohighlight">\(k\)</span>.
+We could choose a value of <span class="math notranslate nohighlight">\(k\)</span> that maximizes <span class="math notranslate nohighlight">\(CH(k)\)</span>.
+Alternatively, we can plot the <span class="math notranslate nohighlight">\(CH\)</span> values and look for a large increase
+in the value followed by little or no gain.
+For instance, we can choose the value that minimizes the term</p>
+<div class="math notranslate nohighlight">
+\[\Delta(k)=(CH(k+1)-CH(k))-(CH(k)-CH(k-1))\]</div>
+<p>The intuition is that we want to find the value of <span class="math notranslate nohighlight">\(k\)</span> for which
+<span class="math notranslate nohighlight">\(CH(k)\)</span> is much higher than <span class="math notranslate nohighlight">\(CH(k-1)\)</span> and there is only a little
+improvement or a decrease in the <span class="math notranslate nohighlight">\(CH(k+1)\)</span> value.</p>
+<p><strong>Gap Statistic</strong></p>
+<p>The gap statistic compares the sum of intracluster weights <span class="math notranslate nohighlight">\(W_{in}\)</span> for
+different values of <span class="math notranslate nohighlight">\(k\)</span> with their expected values assuming no apparent
+clustering structure, which forms the null hypothesis.</p>
+<p>Let <span class="math notranslate nohighlight">\(\CC_k\)</span> be the clustering obtained for a specified value of <span class="math notranslate nohighlight">\(k\)</span>, using a chosen clustering algorithm.
+Let <span class="math notranslate nohighlight">\(W_{in}^k(\D)\)</span> denote the sum of intracluster weights (over all
+clsuters) for <span class="math notranslate nohighlight">\(\CC_k\)</span> on the input dataset <span class="math notranslate nohighlight">\(\D\)</span>.
+We would like to compute the probability of the observed <span class="math notranslate nohighlight">\(W_{in}^k\)</span> value
+under the null hypothesis that the points are randomly placed in the same data
+space as <span class="math notranslate nohighlight">\(\D\)</span>.</p>
+<p>We resort to Monte Carlo simulations to obtain an empirical distribution for <span class="math notranslate nohighlight">\(W_{in}\)</span>.
+We generate <span class="math notranslate nohighlight">\(t\)</span> random samples comprising <span class="math notranslate nohighlight">\(n\)</span> randomly distributed
+points within the same <span class="math notranslate nohighlight">\(d\)</span>-dimensional data space as the input dataset
+<span class="math notranslate nohighlight">\(\D\)</span>.
+That is, for each dimension of <span class="math notranslate nohighlight">\(\D\)</span>, say <span class="math notranslate nohighlight">\(X_j\)</span>, we compute its range
+<span class="math notranslate nohighlight">\([\min(X_j),\max(X_j)]\)</span> and generate values for the <span class="math notranslate nohighlight">\(n\)</span> points (for
+the <span class="math notranslate nohighlight">\(j\)</span>th dimension) uniformly at random within the given range.
+Let <span class="math notranslate nohighlight">\(\bs{\rm{R}}_i\in\R^{n\times d}\)</span>, <span class="math notranslate nohighlight">\(1\leq i\leq t\)</span> denote the <span class="math notranslate nohighlight">\(i\)</span>th sample.
+Let <span class="math notranslate nohighlight">\(W_{in}^k(\bs{\rm{R}}_i)\)</span> denote the sum of intracluster weights for a
+given clustering of <span class="math notranslate nohighlight">\(\bs{\rm{R}}_i\)</span> into <span class="math notranslate nohighlight">\(k\)</span> clusters.
+From each sample dataset <span class="math notranslate nohighlight">\(\bs{\rm{R}}_i\)</span>, we generate clusterings for
+different values of <span class="math notranslate nohighlight">\(k\)</span> using the same algorithm and record the
+intraclsuter values <span class="math notranslate nohighlight">\(W_{in}^k(\bs{\rm{R}}_i)\)</span>.
+Let <span class="math notranslate nohighlight">\(\mu_W(k)\)</span> and <span class="math notranslate nohighlight">\(\sg_W(k)\)</span> denote the mean and standard deviation
+of these intracluster weights for each value of <span class="math notranslate nohighlight">\(k\)</span>, given as</p>
+<div class="math notranslate nohighlight">
+\[\mu_W(k)=\frac{1}{t}\sum_{i=1}^t\log W_{in}^k(\bs{\rm{R}}_i)\]</div>
+<div class="math notranslate nohighlight">
+\[\sg_W(k)=\sqrt{\frac{1}{t}\sum_{i=1}^t(\log W_{in}^k(\bs{\rm{R}}_i)-\mu_W(k))^2}\]</div>
+<p>where we use the logarithm of the <span class="math notranslate nohighlight">\(W_{in}\)</span> values, as they can be quite large.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(gap(k)=\mu_W(k)-\log W_{in}^k(\D)\)</span></p>
+</div>
+<p>It measures the deviation of the observed <span class="math notranslate nohighlight">\(W_{in}^k\)</span> value from its expected value under the null hypothesis.
+We can select the value of <span class="math notranslate nohighlight">\(k\)</span> that yields the largest gap statistic
+because that indicates a clustering structure far away from the uniform
+distribution of points.
+A more robust approach is to choose <span class="math notranslate nohighlight">\(k\)</span> as follows:</p>
+<div class="math notranslate nohighlight">
+\[k^*=\arg\min_k\{gap(k)\geq gap(k+1)-\sg_W(k+1)\}\]</div>
+<p>That is, we select the least value of <span class="math notranslate nohighlight">\(k\)</span> such that the gap statistic
+exceeds one standard deviation of the gap at <span class="math notranslate nohighlight">\(k+1\)</span>.</p>
+<div class="section" id="cluster-stability">
+<h3>17.3.1 Cluster stability<a class="headerlink" href="#cluster-stability" title="Permalink to this headline">¶</a></h3>
+<p>The main idea behind cluster stability is that the clusterings obtained from
+several datasets sampled from the same underlying distribution as <span class="math notranslate nohighlight">\(\D\)</span>
+should be similar or “stable”.</p>
+<p>Considering the bootstrapping approach, we generate <span class="math notranslate nohighlight">\(t\)</span> samples of size
+<span class="math notranslate nohighlight">\(n\)</span> by sampling from <span class="math notranslate nohighlight">\(\D\)</span> with replacement, which allows the same
+point to be chosen possibly multiple times, and thus each sample <span class="math notranslate nohighlight">\(\D_i\)</span>
+will be different.
+Next, for each sample <span class="math notranslate nohighlight">\(\D_i\)</span> we run the same clustering algorithm with
+different cluster values <span class="math notranslate nohighlight">\(k\)</span> ranging from 2 to <span class="math notranslate nohighlight">\(k^\max\)</span>.</p>
+<p>Let <span class="math notranslate nohighlight">\(\CC_k(\D_i)\)</span> denote the clustering obtained from sample <span class="math notranslate nohighlight">\(\D_i\)</span>, for a given value of <span class="math notranslate nohighlight">\(k\)</span>.
+Next, the method compares the distance between all pairs of clustering
+<span class="math notranslate nohighlight">\(\CC_k(\D_i)\)</span> and <span class="math notranslate nohighlight">\(\CC_k(\D_j)\)</span> via some distance function.
+We compute the expected pairwise distance for each value of <span class="math notranslate nohighlight">\(k\)</span>.
+Finally, the value <span class="math notranslate nohighlight">\(k^*\)</span> that exhibits the least deviation between the
+clusterings obtained from the resampled datasets is the best choice for
+<span class="math notranslate nohighlight">\(k\)</span> because it exhibits the most stability.</p>
+<p>Before computing the distance between the two clusterings, we have to restrict
+the clusterings only to the points common to both <span class="math notranslate nohighlight">\(\D_i\)</span> and <span class="math notranslate nohighlight">\(\D_j\)</span>,
+denoted as <span class="math notranslate nohighlight">\(\D_{ij}\)</span>.
+Because sampling with replacement allows multiple instances of the same point,
+we also have to acoount for this when creating <span class="math notranslate nohighlight">\(D_{ij}\)</span>.
+For each point <span class="math notranslate nohighlight">\(\x_a\)</span> in the input dataset <span class="math notranslate nohighlight">\(\D\)</span>, let <span class="math notranslate nohighlight">\(m_i^a\)</span>
+and <span class="math notranslate nohighlight">\(m_j^a\)</span> denote the number of occurrences of <span class="math notranslate nohighlight">\(\x_a\)</span> in
+<span class="math notranslate nohighlight">\(\D_i\)</span> and <span class="math notranslate nohighlight">\(\D_j\)</span>, respectively.</p>
+<div class="math notranslate nohighlight">
+\[\D_{ij}=\D_i\cap\D_j=\{m^a\ \rm{instances\ of}\ \x_a|\x_a\in\D,m^a=\min\{m_i^a,m_j^a\}\}\]</div>
+<img alt="../_images/Algo17.1.png" src="../_images/Algo17.1.png" />
+</div>
 </div>
 </div>
 
