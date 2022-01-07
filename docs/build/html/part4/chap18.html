@@ -42,7 +42,7 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="&lt;no title&gt;" href="chap19.html" />
+    <link rel="next" title="Chapter 19 Decision Tree Classifier" href="chap19.html" />
     <link rel="prev" title="Part 4 Classification" href="index4.html" /> 
 </head>
 
@@ -93,7 +93,20 @@
 <li class="toctree-l1"><a class="reference internal" href="../part1/index1.html">Part 1 Data Analysis Foundations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../part3/index3.html">Part 3 Clustering</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index4.html">Part 4 Classification</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Chapter 18 Probabilistic Classification</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Chapter 18 Probabilistic Classification</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#bayes-classifier">18.1 Bayes Classifier</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#estimating-the-prior-probability">18.1.1 Estimating the Prior Probability</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#estimating-the-likelihood">18.1.2 Estimating the Likelihood</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#naive-bayes-classifier">18.2 Naive Bayes Classifier</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#k-nearest-neighbors-classifier">18.3 <span class="math notranslate nohighlight">\(K\)</span> Nearest Neighbors Classifier</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="chap19.html">Chapter 19 Decision Tree Classifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chap20.html">Chapter 20 Linear Discriminant Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chap21.html">Chapter 21 Support Vector Machines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chap22.html">Chapter 22 Classification Assessment</a></li>
 </ul>
 </li>
 </ul>
@@ -228,6 +241,223 @@
 \newcommand{\ppr}{^{\prime\prime}}\end{aligned}\end{align} \]</div>
 <div class="section" id="chapter-18-probabilistic-classification">
 <h1>Chapter 18 Probabilistic Classification<a class="headerlink" href="#chapter-18-probabilistic-classification" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="bayes-classifier">
+<h2>18.1 Bayes Classifier<a class="headerlink" href="#bayes-classifier" title="Permalink to this headline">¶</a></h2>
+<p>Let the training dataset <span class="math notranslate nohighlight">\(\D\)</span> consist of <span class="math notranslate nohighlight">\(n\)</span> points <span class="math notranslate nohighlight">\(\x_i\)</span> in
+a <span class="math notranslate nohighlight">\(d\)</span>-dimensional space, and let <span class="math notranslate nohighlight">\(y_i\)</span> denote the class for each
+point, with <span class="math notranslate nohighlight">\(y_i\in\{c_1,c_2,\cds,c_k\}\)</span>.
+The Bayes classifier directly uses the Bayes theorem to predict the class for a new test instance, <span class="math notranslate nohighlight">\(\x\)</span>.
+It estimates the posterior probability <span class="math notranslate nohighlight">\(P(c_i|\x)\)</span> for each class
+<span class="math notranslate nohighlight">\(c_i\)</span>, and chooses the class that has the largest probability.
+The predicted class for <span class="math notranslate nohighlight">\(\x\)</span> is given as</p>
+<div class="math notranslate nohighlight">
+\[\hat{y}=\arg\max_{c_i}\{P(c_i|\x)\}\]</div>
+<p>The Bayes theorem allows us to invert the posterior probability in terms of the
+likelihood and prior probability, as follows:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp P(c_i|\x)=\frac{P(\x|c_i)\cd P(c_i)}{P(\x)}\)</span></p>
+</div>
+<p>where <span class="math notranslate nohighlight">\(P(\x|c_i)\)</span> is the <em>likelihood</em>, defined as the probability of
+observing <span class="math notranslate nohighlight">\(\x\)</span> assuming that the true class is <span class="math notranslate nohighlight">\(c_i\)</span>, <span class="math notranslate nohighlight">\(P(c_i)\)</span>
+is the <em>prior probability</em> of class <span class="math notranslate nohighlight">\(c_i\)</span>, and <span class="math notranslate nohighlight">\(P(\x)\)</span> is the
+probability of observing <span class="math notranslate nohighlight">\(\x\)</span> from any of the <span class="math notranslate nohighlight">\(k\)</span> classes, given as</p>
+<div class="math notranslate nohighlight">
+\[P(\x)=\sum_{j=1}^kP(\x|c_j)\cd P(c_j)\]</div>
+<p>Because <span class="math notranslate nohighlight">\(P(\x)\)</span> is fixed for a given point, Bayes rule can be rewritten as</p>
+<div class="math notranslate nohighlight">
+\[\hat{y}=\arg\max_{c_i}\{P(c_i|\x)\}=\arg\max_{c_i}\bigg\{\frac{P(\x|c_i)\cd P(c_i)}{P(\x)}\bigg\}\]</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp =\arg\max_{c_i}\{P(\x|c_i)P(c_i)\}\)</span></p>
+</div>
+<p>In other words, the predicted class essentially depends on the likelihood of
+that class taking its prior probability into account.</p>
+<div class="section" id="estimating-the-prior-probability">
+<h3>18.1.1 Estimating the Prior Probability<a class="headerlink" href="#estimating-the-prior-probability" title="Permalink to this headline">¶</a></h3>
+<p>Let <span class="math notranslate nohighlight">\(\D_i\)</span> denote the subset of points in <span class="math notranslate nohighlight">\(\D\)</span> that are labeled with class <span class="math notranslate nohighlight">\(c_i\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\D_i=\{\x_j^T|\x_j\ rm{has\ class}\ y_i=c_i\}\]</div>
+<p>Let the size of the dataset <span class="math notranslate nohighlight">\(\D\)</span> be given as <span class="math notranslate nohighlight">\(|\D|=n\)</span>, and let the
+size of each class-specific subset <span class="math notranslate nohighlight">\(\D_i\)</span> be given as <span class="math notranslate nohighlight">\(|D_i|=n_i\)</span>.
+The prior probability for class <span class="math notranslate nohighlight">\(c_i\)</span> can be estimated as follows:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\hat{P}(c_i)=\frac{n_i}{n}\)</span></p>
+</div>
+</div>
+<div class="section" id="estimating-the-likelihood">
+<h3>18.1.2 Estimating the Likelihood<a class="headerlink" href="#estimating-the-likelihood" title="Permalink to this headline">¶</a></h3>
+<p>To estimate the likelihood <span class="math notranslate nohighlight">\(P(\x|c_i)\)</span>, we have to estimate the joint
+probability of <span class="math notranslate nohighlight">\(\x\)</span> across all the <span class="math notranslate nohighlight">\(d\)</span> dimensions, that is, we have
+to estimate <span class="math notranslate nohighlight">\(P(\x=(x_1,x_2,\cds,x_d)|c_i)\)</span>.</p>
+<p><strong>Numeric Attributes</strong></p>
+<p>In the parametric approach we typically assume that each class <span class="math notranslate nohighlight">\(c_i\)</span> is
+normally distributed around some mean <span class="math notranslate nohighlight">\(\mmu_i\)</span> with a corresponding
+covariance matrix <span class="math notranslate nohighlight">\(\Sg_i\)</span>, both of which are estimated from <span class="math notranslate nohighlight">\(\D_i\)</span>.
+For class <span class="math notranslate nohighlight">\(c_i\)</span>, the probability density at <span class="math notranslate nohighlight">\(\x\)</span> is thus given as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp f_i(\x)=f(\x|\mmu_i,\Sg_i)=\frac{1}{(\sqrt{2\pi})^d\sqrt{|\Sg_i|}}\)</span>
+<span class="math notranslate nohighlight">\(\dp\exp\bigg\{-\frac{(\x-\mmu_i)^T\Sg_i\im(\x-\mmu_i)}{2}\bigg\}\)</span></p>
+</div>
+<p>We can compute the likelihood by considiering a small interval <span class="math notranslate nohighlight">\(\epsilon&gt;0\)</span> centered at <span class="math notranslate nohighlight">\(\x\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[P(\x|c_i)=2\epsilon\cd f_i(\x)\]</div>
+<p>The posterior probability is then given as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp P(c_i|\x)=\frac{2\epsilon\cd f_i(\x)P(c_i)}{\Sg_{j=1}^k2\epsilon\cd f_j(\x)P(c_j)}\)</span>
+<span class="math notranslate nohighlight">\(\dp=\frac{f_i(\x)P(c_i)}{\Sg_{j=1}^kf_j(\x)P(c_j)}\)</span></p>
+</div>
+<p>Because <span class="math notranslate nohighlight">\(\Sg_{j=1}^kf_j(\x)P(c_j)\)</span> remain fixed for <span class="math notranslate nohighlight">\(\x\)</span>, we can predict the class for <span class="math notranslate nohighlight">\(\x\)</span> by</p>
+<div class="math notranslate nohighlight">
+\[\hat{y}=\arg\max_{c_i}\{f_i(\x)P(c_i)\}\]</div>
+<p>The sample mean for the class <span class="math notranslate nohighlight">\(c_i\)</span> can be estimated as</p>
+<div class="math notranslate nohighlight">
+\[\hat{\mmu_i}=\frac{1}{n_i}\Sg_{\x_j\in\D_i}\x_j\]</div>
+<p>and the sample covariance matrix for each class can be estimated as</p>
+<div class="math notranslate nohighlight">
+\[\hat{\Sg_i}=\frac{1}{n_i}\bar{\D_i}^T\bar{\D_i}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\bar{\D_i}\)</span> is the centered data matrix for class <span class="math notranslate nohighlight">\(c_i\)</span> given
+as <span class="math notranslate nohighlight">\(\bar{\D_i}=\D_i-\1\cd\hat{\mmu_i}^T\)</span>.
+These values can be used to estimate the probability density as <span class="math notranslate nohighlight">\(\hat{f_i}(\x)=f(\x|\hat{\mmu_i},\hat{\Sg_i})\)</span>.</p>
+<img alt="../_images/Algo18.1.png" src="../_images/Algo18.1.png" />
+<p>The cost of training is dominated by the covariance matrix computation step which takes <span class="math notranslate nohighlight">\(O(nd^2)\)</span> time.</p>
+<p><strong>Categorical Attributes</strong></p>
+<p>Let <span class="math notranslate nohighlight">\(X_j\)</span> be a categorical attribute over the domain <span class="math notranslate nohighlight">\(dom(X_j)=\{a_{j1},a_{j2},\cds,a_{jm_j}\}\)</span>.
+Each categorical attributes <span class="math notranslate nohighlight">\(X_j\)</span> is modeled as an <span class="math notranslate nohighlight">\(m_j\)</span>-dimensional
+multivariate Bernoulli random variable <span class="math notranslate nohighlight">\(\X_j\)</span> that takes on <span class="math notranslate nohighlight">\(m_j\)</span>
+distinct vector values <span class="math notranslate nohighlight">\(\e_{j1},\e_{j2},\cds,\e_{jm_j}\)</span>, where
+<span class="math notranslate nohighlight">\(\e_{jr}\)</span> is the <span class="math notranslate nohighlight">\(r\)</span>th standard basis vector in <span class="math notranslate nohighlight">\(\R^{m_j}\)</span>
+and corresponds to the <span class="math notranslate nohighlight">\(r\)</span>th value or symbol <span class="math notranslate nohighlight">\(a_{jr}\in dom(X_j)\)</span>.
+The entire <span class="math notranslate nohighlight">\(d\)</span>-dimensional dataset is modeled as the vector random variable <span class="math notranslate nohighlight">\(\X=(\X_1,\X_2,\cds,\X_d)^T\)</span>.
+Let <span class="math notranslate nohighlight">\(d\pr=\sum_{j=1}^dm_j\)</span>; a categorical point
+<span class="math notranslate nohighlight">\(\x=(x_1,x_2,\cds,x_d)^T\)</span> is therefore represented as the
+<span class="math notranslate nohighlight">\(d\pr\)</span>-dimensional binary vector</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\v=\bp \v_1\\\vds\\\v_d \ep=\bp \e_{1r_1}\\\vds\\\e_{dr_d} \ep\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\v_j=\e_{jr_j}\)</span> provided <span class="math notranslate nohighlight">\(x_j=a_{jr_j}\)</span> is the <span class="math notranslate nohighlight">\(r_j\)</span>th value in the domain of <span class="math notranslate nohighlight">\(X_j\)</span>.
+The probability of the categorical point <span class="math notranslate nohighlight">\(\x\)</span> is obtained from the joint
+probability mass function (PMF) for the vector random variable <span class="math notranslate nohighlight">\(\X\)</span>:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(P(\x|c_i)=f(\v|c_i)=f(\X_1=\e_1{r_1},\cds,\X_d=\e_{dr_d}|c_i)\)</span></p>
+</div>
+<p>The above joint PMF can be estimated directly from the data <span class="math notranslate nohighlight">\(\D_i\)</span> for each class <span class="math notranslate nohighlight">\(c_i\)</span> as follows:</p>
+<div class="math notranslate nohighlight">
+\[\hat{f}(\v|c_i)=\frac{n_i(\v)}{n_i}\]</div>
+<p>where <span class="math notranslate nohighlight">\(n_i(\v)\)</span> is the number of times the value <span class="math notranslate nohighlight">\(\v\)</span> occurs in class <span class="math notranslate nohighlight">\(c_i\)</span>.
+Unfortuantely, if the probability mass at the point <span class="math notranslate nohighlight">\(\v\)</span> is zero for one
+or both classes, it would lead to a zero value for the posterior probability.
+One simple solution is to assume a <em>pseudo-count</em> 1 for each value, that is, to
+assume that each value of <span class="math notranslate nohighlight">\(\X\)</span> occurs at least one time, and to augment
+this base count of 1 with the actual number of occurrences of the observed value
+<span class="math notranslate nohighlight">\(\v\)</span> in class <span class="math notranslate nohighlight">\(c_i\)</span>.
+The adjusted probability mass at <span class="math notranslate nohighlight">\(\v\)</span> is then given as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\hat{f}(\v|c_i)=\frac{n_i(\v)+1}{n_i+\prod_{j=1}^dm_j}\)</span></p>
+</div>
+<p><strong>Challenges</strong></p>
+<p>The main problem with the Bayes classifier is the lack of enough data to
+reliably estimate the joint probability density or mass function, especially for
+high-dimensional data.</p>
+</div>
+</div>
+<div class="section" id="naive-bayes-classifier">
+<h2>18.2 Naive Bayes Classifier<a class="headerlink" href="#naive-bayes-classifier" title="Permalink to this headline">¶</a></h2>
+<p>The naive Bayes approach makes the simple assumption that all the attributes are independent.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp P(\x|c_i)=P(x_1,x_2,\cds,x_d|c_i)=\prod_{j=1}^dP(x_j|c_i)\)</span></p>
+</div>
+<p><strong>Numeric Attributes</strong></p>
+<p>For numeric attributes we make the default assumption that each of them is
+normally distributed for each class <span class="math notranslate nohighlight">\(c_i\)</span>.
+Let <span class="math notranslate nohighlight">\(\mu_{ij}\)</span> and <span class="math notranslate nohighlight">\(\sg_{ij}^2\)</span> denote the mean and variance for
+attribute <span class="math notranslate nohighlight">\(X_j\)</span>, for class <span class="math notranslate nohighlight">\(c_i\)</span>.
+The likelihood for class <span class="math notranslate nohighlight">\(c_i\)</span>, for dimension <span class="math notranslate nohighlight">\(X_j\)</span>, is given as</p>
+<div class="math notranslate nohighlight">
+\[p(x_j|c_i)\varpropto f(x_j|\mu_{ij},\sg_{ij}^2)=\frac{1}
+{\sqrt{2\pi}\sg_{ij}}\exp\bigg\{-\frac{(x_j-\mu_{ij})^2}{2\sg_{ij}^2}\bigg\}\]</div>
+<p>Incidentallly, the naive assumption corresponds to setting all the covariances to zero in <span class="math notranslate nohighlight">\(\Sg_i\)</span>, that is,</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\Sg_i=\bp\sg_{i1}^2&amp;0&amp;\cds&amp;0\\0&amp;\sg_{12}^2&amp;\cds&amp;0\\\vds&amp;\vds&amp;\dds&amp;\vds\\0&amp;0&amp;\cds&amp;\sg_{id}^2\ep\end{split}\]</div>
+<p>This yields</p>
+<div class="math notranslate nohighlight">
+\[|\Sg_i|=\det(\Sg_i)=\sg_{i1}^2\sg_{i2}^2\cds\sg_{id}^2=\prod_{j=1}^d\sg_{ij}^2\]</div>
+<div class="math notranslate nohighlight">
+\[(\x-\mmu_i)^T\Sg_i\im(\x-\mmu_i)=\sum_{j=1}^d\frac{(x_j-\mu_{ij})^2}{\sg_{ij}^2}\]</div>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}P(\x|c_i)&amp;=\frac{1}{(\sqrt{2\pi})^d\sqrt{\prod_{j=1}^d\sg_{ij}^2}}
+\exp\bigg\{-\sum_{j=1}^d\frac{(x_j-\mu_{ij})^2}{2\sg_{ij}^2}\bigg\}\\&amp;=\prod_{j=1}^d\bigg(\frac{1}{\sqrt{2\pi}\sg_{ij}}\exp\bigg\{-\frac{x_i-\mu_{ij})^2}{2\sg_{ij}^2}\bigg\}\bigg)\\&amp;=\prod_{j=1}^dP(\x_j|c_i)\end{aligned}\end{align} \]</div>
+<p>The naive Bayes classifier uses the sample mean
+<span class="math notranslate nohighlight">\(\hat{\mmu_i}=(\hat{\mu_{i1}},\cds,\hat{\mu_{id}})^T\)</span> and a <em>diagonal</em>
+sample covariance matrix <span class="math notranslate nohighlight">\(\hat{\Sg_i}=diag(\sg_{i1}^2,\cds,\sg_{id}^2)\)</span>
+for each class <span class="math notranslate nohighlight">\(c_i\)</span>.
+Thus, in total <span class="math notranslate nohighlight">\(2d\)</span> parameters have to be estimated, corresponding to the
+sample mean and sample variance for each dimension <span class="math notranslate nohighlight">\(X_j\)</span>.</p>
+<img alt="../_images/Algo18.2.png" src="../_images/Algo18.2.png" />
+<p>Training the naive Bayes classifier is very fast, with <span class="math notranslate nohighlight">\(O(nd)\)</span> computational complexity.</p>
+<p><strong>Categorical Attributes</strong></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp P(\x|c_i)=\prod_{j=1}^dP(x_j|c_i)=\prod_{j=1}^df(\X_j=\e_{jr_j}|c_i)\)</span></p>
+</div>
+<p>where <span class="math notranslate nohighlight">\(f(\X_j=\e_{jr_j}|c_i)\)</span> is the probability mass function for
+<span class="math notranslate nohighlight">\(\X_j\)</span>, which can be estimated from <span class="math notranslate nohighlight">\(\D_i\)</span> as follows:</p>
+<div class="math notranslate nohighlight">
+\[\hat{f}(\v_j|c_i)=\frac{n_i(\v_j)}{n_i}\]</div>
+<p>where <span class="math notranslate nohighlight">\(n_i(\v_j)\)</span> is the observed frequency of the value
+<span class="math notranslate nohighlight">\(\v_j=\e_{jr_j}\)</span> corresponding to the <span class="math notranslate nohighlight">\(r_j\)</span>th categorical value
+<span class="math notranslate nohighlight">\(a_{jr_j}\)</span> for the attribute <span class="math notranslate nohighlight">\(X_j\)</span> for class <span class="math notranslate nohighlight">\(c_i\)</span>.
+The adjusted estimates with pseudo-counts are given as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\hat{f}(\v_j|c_i)=\frac{n_i(\v_j)+1}{n_i+m_j}\)</span></p>
+</div>
+<p>where <span class="math notranslate nohighlight">\(m_j=|dom(X_j)|\)</span>.</p>
+</div>
+<div class="section" id="k-nearest-neighbors-classifier">
+<h2>18.3 <span class="math notranslate nohighlight">\(K\)</span> Nearest Neighbors Classifier<a class="headerlink" href="#k-nearest-neighbors-classifier" title="Permalink to this headline">¶</a></h2>
+<p>We illustrate the non-parameteric approach using nearest neighbors density
+estimation from Section 15.2.3, which leads to the <em>K nearest neighbors</em> (KNN)
+classifier.</p>
+<p>Let <span class="math notranslate nohighlight">\(\D\)</span> be a training dataset comprising <span class="math notranslate nohighlight">\(n\)</span> points
+<span class="math notranslate nohighlight">\(\x_i\in\R^d\)</span>, and let <span class="math notranslate nohighlight">\(\D_i\)</span> denote the subset of points in
+<span class="math notranslate nohighlight">\(\D\)</span> that are labeled with class <span class="math notranslate nohighlight">\(c_i\)</span>, with <span class="math notranslate nohighlight">\(n_i=|\D_i|\)</span>.
+Given a test point <span class="math notranslate nohighlight">\(\x\in\R^d\)</span>, and <span class="math notranslate nohighlight">\(K\)</span>, the number of neighbors to
+consider, let <span class="math notranslate nohighlight">\(r\)</span> denote the distance from <span class="math notranslate nohighlight">\(\x\)</span> to its <span class="math notranslate nohighlight">\(K\)</span>th
+nearest neighbor in <span class="math notranslate nohighlight">\(\D\)</span>.</p>
+<p>Consider the <span class="math notranslate nohighlight">\(d\)</span>-dimensional hyperball of radius <span class="math notranslate nohighlight">\(r\)</span> around the test point <span class="math notranslate nohighlight">\(\x\)</span>, defined as</p>
+<div class="math notranslate nohighlight">
+\[B_d(\x,r)=\{\x_i\in\D|\lv\x-\x_i\rv\leq r\}\]</div>
+<p>We assume that <span class="math notranslate nohighlight">\(|B_d(\x,r)|=K\)</span>.</p>
+<p>Let <span class="math notranslate nohighlight">\(K_i\)</span> denote the number of points among the <span class="math notranslate nohighlight">\(K\)</span> nearest
+neighbors of <span class="math notranslate nohighlight">\(\x\)</span> that are labeled with class <span class="math notranslate nohighlight">\(c_i\)</span>, that is</p>
+<div class="math notranslate nohighlight">
+\[K_i=\{\x_j\in B_d(\x,r)|y_i=c_i\}\]</div>
+<p>The class conditional probability density at <span class="math notranslate nohighlight">\(\x\)</span> can be estimated as the
+fraction of points from class <span class="math notranslate nohighlight">\(c_i\)</span> that lie within the hyperball divided by its volume, that is</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\hat{f}(\x|c_i)=\frac{K_i/n_i}{V}=\frac{K_i}{n_iV}\)</span></p>
+</div>
+<p>where <span class="math notranslate nohighlight">\(V=vol(B_d(\x,r))\)</span> is the volume of the <span class="math notranslate nohighlight">\(d\)</span>-dimensional hyperball.</p>
+<div class="math notranslate nohighlight">
+\[P(c_i|\x)=\frac{\hat{f}(\x|c_i)\hat{P}(c_i)}{\sum_{j=1}^k\hat{f}(\x|c_j)\hat{P}(c_j)}\]</div>
+<div class="math notranslate nohighlight">
+\[\hat{f}(\x|c_i)\hat{P}(c_i)=\frac{K_i}{n_iV}\cd\frac{n_i}{n}=\frac{K_i}{nV}\]</div>
+<div class="math notranslate nohighlight">
+\[P(c_i|\x)=\frac{\frac{K_i}{nV}}{\sum_{j=1}^k\frac{K_j}{nV}}=\frac{K_i}{K}\]</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\hat{y}=\arg\max_{c_i}\{P(c_i|\x)\}=\arg\max_{c_i}\bigg\{\frac{K_i}{K}\bigg\}=\arg\max_{c_i}\{K_i\}\)</span></p>
+</div>
+<p>Beceause <span class="math notranslate nohighlight">\(K\)</span> is fixed, the KNN classifier predicts the class of <span class="math notranslate nohighlight">\(\x\)</span>
+as the majority class among its <span class="math notranslate nohighlight">\(K\)</span> nearest neighbors.</p>
+</div>
 </div>
 
 
@@ -236,7 +466,7 @@
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="chap19.html" class="btn btn-neutral float-right" title="&lt;no title&gt;" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="chap19.html" class="btn btn-neutral float-right" title="Chapter 19 Decision Tree Classifier" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
         <a href="index4.html" class="btn btn-neutral float-left" title="Part 4 Classification" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
