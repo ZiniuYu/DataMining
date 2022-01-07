@@ -42,7 +42,7 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="&lt;no title&gt;" href="chap20.html" />
+    <link rel="next" title="Chapter 20 Linear Discriminant Analysis" href="chap20.html" />
     <link rel="prev" title="Chapter 18 Probabilistic Classification" href="chap18.html" /> 
 </head>
 
@@ -94,7 +94,13 @@
 <li class="toctree-l1"><a class="reference internal" href="../part3/index3.html">Part 3 Clustering</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index4.html">Part 4 Classification</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="chap18.html">Chapter 18 Probabilistic Classification</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Chapter 19 Decision Tree Classifier</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Chapter 19 Decision Tree Classifier</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#decision-trees">19.1 Decision Trees</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="chap20.html">Chapter 20 Linear Discriminant Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chap21.html">Chapter 21 Support Vector Machines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chap22.html">Chapter 22 Classification Assessment</a></li>
 </ul>
 </li>
 </ul>
@@ -229,6 +235,88 @@
 \newcommand{\ppr}{^{\prime\prime}}\end{aligned}\end{align} \]</div>
 <div class="section" id="chapter-19-decision-tree-classifier">
 <h1>Chapter 19 Decision Tree Classifier<a class="headerlink" href="#chapter-19-decision-tree-classifier" title="Permalink to this headline">¶</a></h1>
+<p>Let <span class="math notranslate nohighlight">\(\cl{R}\)</span> denote the data space that encompasses the set of input points <span class="math notranslate nohighlight">\(\D\)</span>.
+A decision tree uses an axis-parallel hyperplane to split the data space
+<span class="math notranslate nohighlight">\(\cl{R}\)</span> into two resulting half-spaces or regines, <span class="math notranslate nohighlight">\(\cl{R}_1\)</span> and
+<span class="math notranslate nohighlight">\(\cl{R}_2\)</span>, which also induces a partition of the input points into
+<span class="math notranslate nohighlight">\(\D_1\)</span> and <span class="math notranslate nohighlight">\(\D_2\)</span>, respectively.
+Each of these regions is recursively split via axis-parallel hyperplanes until
+the points within an induced partition are relatively pure in terms of their
+class labels, that is, most of the points belong to the same class.
+The resulting hierarchy of split decisions constitutes the decision tree model,
+with the leaf nodes labeled with the majority class among pooints in those
+regions. To classify a new <em>test</em> point we have to recursively evaluate which
+half-space it belongs to until we reach a leaf node in the decision tree, at
+which point we predict its class as the label of the leaf.</p>
+<div class="section" id="decision-trees">
+<h2>19.1 Decision Trees<a class="headerlink" href="#decision-trees" title="Permalink to this headline">¶</a></h2>
+<p><strong>Axis-Parallel Hyperplanes</strong></p>
+<p>A hyperplane <span class="math notranslate nohighlight">\(h(\x)\)</span> is defined as the set of all points <span class="math notranslate nohighlight">\(\x\)</span> that satisfy the following equation</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(h(\x):\w^T\x+b=0\)</span></p>
+</div>
+<p>Here <span class="math notranslate nohighlight">\(\w\in\R^d\)</span> is a <em>weight vector</em> that is normal to the hyperplane,
+and <span class="math notranslate nohighlight">\(b\)</span> is the offset of the hyperplane from the origin.
+A decision tree considers only <em>axis-parallel hyperplanes</em>, that is, the weight
+vector must be parallel to one of the original dimensions or axes <span class="math notranslate nohighlight">\(X_j\)</span>.
+Put differently, the weight vector <span class="math notranslate nohighlight">\(\w\)</span> is restricted <em>a priori</em> to one of
+the standard basis vectors <span class="math notranslate nohighlight">\(\{\e_1,\e_2,\cds,\e_d\}\)</span>, where
+<span class="math notranslate nohighlight">\(\e_i\in\R^d\)</span> has a 1 for the <span class="math notranslate nohighlight">\(j\)</span>th dimension, and 0 for all other
+dimensions.
+If <span class="math notranslate nohighlight">\(\x=(x_1,x_2,\cds,x_d)^T\)</span> and assuming <span class="math notranslate nohighlight">\(\w=\e_j\)</span>, we can rewrite as</p>
+<div class="math notranslate nohighlight">
+\[h(\x):\e_j^T\x+b=x_j+b=0\]</div>
+<p>where the choice of the offset <span class="math notranslate nohighlight">\(b\)</span> yields different hyperplanes along dimension <span class="math notranslate nohighlight">\(X_j\)</span>.</p>
+<p><strong>Split Points</strong></p>
+<p>A hyperplane specifies a decision or <em>split point</em> because it splits the data space <span class="math notranslate nohighlight">\(\cl{R}\)</span> into two half-spaces.
+All points <span class="math notranslate nohighlight">\(\x\)</span> such that <span class="math notranslate nohighlight">\(h(\x)\leq 0\)</span> are on the hyperplane or to
+one side of the hyperplane, whereas all points such that <span class="math notranslate nohighlight">\(h(\x)&gt;0\)</span> are on
+the hyperplane or to one side of the hyperplane, whereas all points such that
+<span class="math notranslate nohighlight">\(h(\x)&gt;0\)</span> are on the other side.
+The split point associated with an axis-parallel hyperplane can be written as
+<span class="math notranslate nohighlight">\(h(\x)\leq 0\)</span>, which implies that <span class="math notranslate nohighlight">\(x_i+b\leq 0\)</span>, or
+<span class="math notranslate nohighlight">\(x_i\leq-b\)</span>.
+Because <span class="math notranslate nohighlight">\(x_i\)</span> is some value from dimension <span class="math notranslate nohighlight">\(X_j\)</span> and the offset
+<span class="math notranslate nohighlight">\(b\)</span> can be chosen to be any value, the generic form of a split point for a
+numeric attribute <span class="math notranslate nohighlight">\(X_j\)</span> is given as</p>
+<div class="math notranslate nohighlight">
+\[X_j\leq v\]</div>
+<p>where <span class="math notranslate nohighlight">\(v=-b\)</span> is some value in the domain of attribute <span class="math notranslate nohighlight">\(X_j\)</span>.
+The decision or split point <span class="math notranslate nohighlight">\(X_j\leq v\)</span> thus splits the input data space
+<span class="math notranslate nohighlight">\(\cl{R}\)</span> into two regions <span class="math notranslate nohighlight">\(\cl{R}_Y\)</span> and <span class="math notranslate nohighlight">\(\cl{R}_N\)</span>, which
+denote the set of <em>all possible points</em> that satisfy the decision and those that
+do not.</p>
+<p><strong>Data partition</strong></p>
+<p>Each split of <span class="math notranslate nohighlight">\(\cl{R}\)</span> into <span class="math notranslate nohighlight">\(\cl{R}_Y\)</span> and <span class="math notranslate nohighlight">\(\cl{R}_N\)</span> also
+induces a binary partition of the corresponding input data points <span class="math notranslate nohighlight">\(\D\)</span>.
+That is, a split point of the form <span class="math notranslate nohighlight">\(X_j\leq v\)</span> induces the data partition</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\D_Y=\{\x^T|\x\in\D,x_j\leq v\}\\\D_N=\{\x^T|\x\in\D,x_j&gt;v\}\end{aligned}\end{align} \]</div>
+<p><strong>Purity</strong></p>
+<p>Purity is the fraction of points with the majority label in <span class="math notranslate nohighlight">\(\D_j\)</span></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp purity(\D_j)=\max_i\bigg\{\frac{n_{ji}}{n_j}\bigg\}\)</span></p>
+</div>
+<p>where <span class="math notranslate nohighlight">\(n_j=|\D_j|\)</span> is the total number of data points in the region
+<span class="math notranslate nohighlight">\(\cl{R}_j\)</span>, and <span class="math notranslate nohighlight">\(n_{ji}\)</span> is the number of points in <span class="math notranslate nohighlight">\(\D_j\)</span>
+with class label <span class="math notranslate nohighlight">\(c_i\)</span>.</p>
+<p><strong>Categorical Attributes</strong></p>
+<p>For a categorical attribute <span class="math notranslate nohighlight">\(X_j\)</span>, the split points or decisions are of
+the <span class="math notranslate nohighlight">\(X_j\in V\)</span>, where <span class="math notranslate nohighlight">\(V\subset dom(X_j)\)</span>, and <span class="math notranslate nohighlight">\(dom(X_j)\)</span>
+denotes the domain for <span class="math notranslate nohighlight">\(X_j\)</span>.
+It results in two “half-spaces”, one region <span class="math notranslate nohighlight">\(\cl{R}_Y\)</span> consisting of
+points <span class="math notranslate nohighlight">\(\x\)</span> that satisfy the condition <span class="math notranslate nohighlight">\(x_i\in V\)</span>, and the other
+region <span class="math notranslate nohighlight">\(\cl{R}_N\)</span> comprising points that satisfy the condition
+<span class="math notranslate nohighlight">\(x_i\notin V\)</span>.</p>
+<p><strong>Decision Rules</strong></p>
+<p>A tree can be read as set of decision rules, with each rule’s antecedent
+comprising the decisions on the internal nodes along a path to a leaf, and its
+consequent being the label of the leaf node.
+Further, because the regions are all disjoint and cover the entire space, the
+set of rules can be interpreted as a set of alternatives or disjunctions.</p>
+</div>
 </div>
 
 
@@ -237,7 +325,7 @@
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="chap20.html" class="btn btn-neutral float-right" title="&lt;no title&gt;" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="chap20.html" class="btn btn-neutral float-right" title="Chapter 20 Linear Discriminant Analysis" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
         <a href="chap18.html" class="btn btn-neutral float-left" title="Chapter 18 Probabilistic Classification" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
