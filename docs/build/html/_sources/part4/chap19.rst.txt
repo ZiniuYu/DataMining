@@ -107,3 +107,84 @@ comprising the decisions on the internal nodes along a path to a leaf, and its
 consequent being the label of the leaf node. 
 Further, because the regions are all disjoint and cover the entire space, the 
 set of rules can be interpreted as a set of alternatives or disjunctions.
+
+19.2 Decision Tree Algorithm
+----------------------------
+
+.. image:: ../_static/Algo19.1.png
+
+19.2.1 Split Point Evaluation Measures
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+**Entropy**
+
+.. note::
+
+    :math:`\dp H(\D)=-\sum_{i=1}^kP(c_i|\D)\log_2P(C_i|\D)`
+
+where :math:`P(c_i|\D)` is the probability of class :math:`c_i` in :math:`\D`, and :math:`k` is the number of classes.
+If a region is pure, that is, has points from the same class, then the entropy is zero.
+On the other hand, if the classes are all miaxed up, and each appears with equal 
+probability :math:`P(c_i|\D)=\frac{1}{k}`, then the entropy has the highest
+value, :math:`H(\D)=\log_2k`.
+
+Define the *split entropy* as the weighted entropy of the resulting partitions, given as
+
+.. note::
+
+    :math:`\dp H(\D_Y,\D_N)=\frac{n_Y}{n}H(\D_Y)+\frac{n_N}{n}H(\D_N)`
+
+where :math:`n=|\D|` is the number of points in :math:`\D`, and :math:`n_Y=|\D_Y|` and :math:`n_N=|\D_N|`.
+
+The *information gain* for a given split point is defined as follows:
+
+.. note::
+
+    :math:`Gain(\D,\D_Y,\D_N)=H(\D)-H(\D_Y,\D_N)`
+
+The higher the information gain, the more the reduction in entropy, and the 
+better the split point. Thus, given split points and their corresponding 
+partitions, we can score each split point and choose the one that gives the 
+highest information gain.
+
+**Gini Index**
+
+.. note::
+
+    :math:`\dp G(\D)=1-\sum_{i=1}^kP(c_i|\D)^2`
+
+If the partition is pure, then the probability of the majority class is 1 and 
+the probability of all other classes is 0, and thus, the Gini index is 0.
+On the other hand, when each class is equally represented, with probability 
+:math:`P(c_i|\D)=\frac{1}{k}`, then the Gini index has value 
+:math:`\frac{k-1}{k}`.
+
+We can compute the weighted Gini index of a split point as follows:
+
+.. math::
+
+    G(\D_Y,\D_N)=\frac{n_Y}{n}G(\D_Y)+\frac{n_N}{n}G(\D_N)
+
+The lower the Gini index value, the better the split point.
+
+The Classification And Regression Trees (CART) measure is given as
+
+.. note::
+
+    :math:`\dp CART(\D_Y,\D_N)=2\frac{n_Y}{n}\frac{n_N}{n}\sum_{i=1}^k|P(c_i|\D_Y)-P(c_i|\D_N)|`
+
+This measure thus prefers a split point that maximizes the difference between 
+the class probability mass function for the two partitions; the higher the CART
+measure, the better the split point.
+
+19.2.2 Evaluating Split Points
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+**Numeric Attributes**
+
+One reasonable approach is to consider only the midpoints between two successive 
+distinct values for :math:`X` in the sample :math:`\D`.
+Because there can be at most :math:`n` distinct values for :math:`X`, there are 
+at most :math:`n-1` midpoint values to consider.
+
+.. image:: ../_static/Algo19.2.png

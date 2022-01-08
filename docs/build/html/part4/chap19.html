@@ -96,6 +96,11 @@
 <li class="toctree-l2"><a class="reference internal" href="chap18.html">Chapter 18 Probabilistic Classification</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Chapter 19 Decision Tree Classifier</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#decision-trees">19.1 Decision Trees</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#decision-tree-algorithm">19.2 Decision Tree Algorithm</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#split-point-evaluation-measures">19.2.1 Split Point Evaluation Measures</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#evaluating-split-points">19.2.2 Evaluating Split Points</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="chap20.html">Chapter 20 Linear Discriminant Analysis</a></li>
@@ -316,6 +321,69 @@ comprising the decisions on the internal nodes along a path to a leaf, and its
 consequent being the label of the leaf node.
 Further, because the regions are all disjoint and cover the entire space, the
 set of rules can be interpreted as a set of alternatives or disjunctions.</p>
+</div>
+<div class="section" id="decision-tree-algorithm">
+<h2>19.2 Decision Tree Algorithm<a class="headerlink" href="#decision-tree-algorithm" title="Permalink to this headline">¶</a></h2>
+<img alt="../_images/Algo19.1.png" src="../_images/Algo19.1.png" />
+<div class="section" id="split-point-evaluation-measures">
+<h3>19.2.1 Split Point Evaluation Measures<a class="headerlink" href="#split-point-evaluation-measures" title="Permalink to this headline">¶</a></h3>
+<p><strong>Entropy</strong></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp H(\D)=-\sum_{i=1}^kP(c_i|\D)\log_2P(C_i|\D)\)</span></p>
+</div>
+<p>where <span class="math notranslate nohighlight">\(P(c_i|\D)\)</span> is the probability of class <span class="math notranslate nohighlight">\(c_i\)</span> in <span class="math notranslate nohighlight">\(\D\)</span>, and <span class="math notranslate nohighlight">\(k\)</span> is the number of classes.
+If a region is pure, that is, has points from the same class, then the entropy is zero.
+On the other hand, if the classes are all miaxed up, and each appears with equal
+probability <span class="math notranslate nohighlight">\(P(c_i|\D)=\frac{1}{k}\)</span>, then the entropy has the highest
+value, <span class="math notranslate nohighlight">\(H(\D)=\log_2k\)</span>.</p>
+<p>Define the <em>split entropy</em> as the weighted entropy of the resulting partitions, given as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp H(\D_Y,\D_N)=\frac{n_Y}{n}H(\D_Y)+\frac{n_N}{n}H(\D_N)\)</span></p>
+</div>
+<p>where <span class="math notranslate nohighlight">\(n=|\D|\)</span> is the number of points in <span class="math notranslate nohighlight">\(\D\)</span>, and <span class="math notranslate nohighlight">\(n_Y=|\D_Y|\)</span> and <span class="math notranslate nohighlight">\(n_N=|\D_N|\)</span>.</p>
+<p>The <em>information gain</em> for a given split point is defined as follows:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(Gain(\D,\D_Y,\D_N)=H(\D)-H(\D_Y,\D_N)\)</span></p>
+</div>
+<p>The higher the information gain, the more the reduction in entropy, and the
+better the split point. Thus, given split points and their corresponding
+partitions, we can score each split point and choose the one that gives the
+highest information gain.</p>
+<p><strong>Gini Index</strong></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp G(\D)=1-\sum_{i=1}^kP(c_i|\D)^2\)</span></p>
+</div>
+<p>If the partition is pure, then the probability of the majority class is 1 and
+the probability of all other classes is 0, and thus, the Gini index is 0.
+On the other hand, when each class is equally represented, with probability
+<span class="math notranslate nohighlight">\(P(c_i|\D)=\frac{1}{k}\)</span>, then the Gini index has value
+<span class="math notranslate nohighlight">\(\frac{k-1}{k}\)</span>.</p>
+<p>We can compute the weighted Gini index of a split point as follows:</p>
+<div class="math notranslate nohighlight">
+\[G(\D_Y,\D_N)=\frac{n_Y}{n}G(\D_Y)+\frac{n_N}{n}G(\D_N)\]</div>
+<p>The lower the Gini index value, the better the split point.</p>
+<p>The Classification And Regression Trees (CART) measure is given as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp CART(\D_Y,\D_N)=2\frac{n_Y}{n}\frac{n_N}{n}\sum_{i=1}^k|P(c_i|\D_Y)-P(c_i|\D_N)|\)</span></p>
+</div>
+<p>This measure thus prefers a split point that maximizes the difference between
+the class probability mass function for the two partitions; the higher the CART
+measure, the better the split point.</p>
+</div>
+<div class="section" id="evaluating-split-points">
+<h3>19.2.2 Evaluating Split Points<a class="headerlink" href="#evaluating-split-points" title="Permalink to this headline">¶</a></h3>
+<p><strong>Numeric Attributes</strong></p>
+<p>One reasonable approach is to consider only the midpoints between two successive
+distinct values for <span class="math notranslate nohighlight">\(X\)</span> in the sample <span class="math notranslate nohighlight">\(\D\)</span>.
+Because there can be at most <span class="math notranslate nohighlight">\(n\)</span> distinct values for <span class="math notranslate nohighlight">\(X\)</span>, there are
+at most <span class="math notranslate nohighlight">\(n-1\)</span> midpoint values to consider.</p>
+<img alt="../_images/Algo19.2.png" src="../_images/Algo19.2.png" />
+</div>
 </div>
 </div>
 
