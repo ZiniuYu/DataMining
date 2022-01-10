@@ -95,7 +95,7 @@ rst_prolog = r'''
     \newcommand{\z}{\boldsymbol{\mathrm{z}}}
 
     \newcommand{\A}{\boldsymbol{\mathrm{A}}}
-    \newcommand{\B}{\boldsymbol{B}}
+    \newcommand{\B}{\boldsymbol{\mathrm{B}}}
     \newcommand{\C}{\boldsymbol{C}}
     \newcommand{\D}{\boldsymbol{\mathrm{D}}}
     \newcommand{\I}{\boldsymbol{\mathrm{I}}}

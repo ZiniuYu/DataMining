@@ -95,7 +95,10 @@
 <li class="toctree-l1 current"><a class="reference internal" href="index4.html">Part 4 Classification</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="chap18.html">Chapter 18 Probabilistic Classification</a></li>
 <li class="toctree-l2"><a class="reference internal" href="chap19.html">Chapter 19 Decision Tree Classifier</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Chapter 20 Linear Discriminant Analysis</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Chapter 20 Linear Discriminant Analysis</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#optimal-linear-discriminant">20.1 Optimal Linear Discriminant</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="chap21.html">Chapter 21 Support Vector Machines</a></li>
 <li class="toctree-l2"><a class="reference internal" href="chap22.html">Chapter 22 Classification Assessment</a></li>
 </ul>
@@ -203,7 +206,7 @@
 \newcommand{\x}{\boldsymbol{\mathrm{x}}}
 \newcommand{\y}{\boldsymbol{\mathrm{y}}}
 \newcommand{\z}{\boldsymbol{\mathrm{z}}}\\\newcommand{\A}{\boldsymbol{\mathrm{A}}}
-\newcommand{\B}{\boldsymbol{B}}
+\newcommand{\B}{\boldsymbol{\mathrm{B}}}
 \newcommand{\C}{\boldsymbol{C}}
 \newcommand{\D}{\boldsymbol{\mathrm{D}}}
 \newcommand{\I}{\boldsymbol{\mathrm{I}}}
@@ -232,6 +235,62 @@
 \newcommand{\ppr}{^{\prime\prime}}\end{aligned}\end{align} \]</div>
 <div class="section" id="chapter-20-linear-discriminant-analysis">
 <h1>Chapter 20 Linear Discriminant Analysis<a class="headerlink" href="#chapter-20-linear-discriminant-analysis" title="Permalink to this headline">¶</a></h1>
+<p>Given labeled data consisting of <span class="math notranslate nohighlight">\(d\)</span>-dimensional points <span class="math notranslate nohighlight">\(\x_i\)</span> along
+with their classes <span class="math notranslate nohighlight">\(y_i\)</span>, the goal of linear discriminant analysis (LDA)
+is to find a vector <span class="math notranslate nohighlight">\(\w\)</span> that maximizes the separation between the classes
+after projection onto <span class="math notranslate nohighlight">\(\w\)</span>.</p>
+<div class="section" id="optimal-linear-discriminant">
+<h2>20.1 Optimal Linear Discriminant<a class="headerlink" href="#optimal-linear-discriminant" title="Permalink to this headline">¶</a></h2>
+<p>Let us assume that the dataset <span class="math notranslate nohighlight">\(\D\)</span> consists of <span class="math notranslate nohighlight">\(n\)</span> points
+<span class="math notranslate nohighlight">\(\x_i\in\R^d\)</span>, with the corresponding class label
+<span class="math notranslate nohighlight">\(y_i\in\{c_1,c_2,\cds,c_k\}\)</span>.
+Let <span class="math notranslate nohighlight">\(\D_i\)</span> denote the subset of points labeled with class <span class="math notranslate nohighlight">\(c_i\)</span>,
+i.e., <span class="math notranslate nohighlight">\(\D_i=\{\x_j^T|y_j=c_i\}\)</span>, and let <span class="math notranslate nohighlight">\(|\D_i|=n_i\)</span> denote the
+number of points with class <span class="math notranslate nohighlight">\(c_i\)</span>.
+We assume that there are only <span class="math notranslate nohighlight">\(k=2\)</span> classes.
+Thus, the dataset <span class="math notranslate nohighlight">\(\D\)</span> can be partitioned into <span class="math notranslate nohighlight">\(\D_1\)</span> and <span class="math notranslate nohighlight">\(\D_2\)</span>.</p>
+<p>Let <span class="math notranslate nohighlight">\(\w\)</span> be a unit vector, that is, <span class="math notranslate nohighlight">\(\w^T\w=1\)</span>.
+The projection of any <span class="math notranslate nohighlight">\(d\)</span>-dimensional point <span class="math notranslate nohighlight">\(\x_i\)</span> onto the vector <span class="math notranslate nohighlight">\(\w\)</span> is given as</p>
+<div class="math notranslate nohighlight">
+\[\x_i\pr=\bigg(\frac{\w^T\x_i}{\w^T\w}\bigg)\w=(\w^T\x_i)\w=a_i\w\]</div>
+<p>where <span class="math notranslate nohighlight">\(a_i\)</span> is the offset or scalar projection of <span class="math notranslate nohighlight">\(\x_i\)</span> on the line <span class="math notranslate nohighlight">\(\w\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[a_i=\w^T\x_i\]</div>
+<p>We also call <span class="math notranslate nohighlight">\(a_i\)</span> a <em>projected point</em>.
+Thus the set of <span class="math notranslate nohighlight">\(n\)</span> projected points <span class="math notranslate nohighlight">\(\{a_1,a_2,\cds,a_n\}\)</span>
+represents a mapping from <span class="math notranslate nohighlight">\(\R^d\)</span> to <span class="math notranslate nohighlight">\(\R\)</span>, that is, from the original
+<span class="math notranslate nohighlight">\(d\)</span>-dimensional space to a 1-dimensional space of offsets along
+<span class="math notranslate nohighlight">\(\w\)</span>.</p>
+<p>Each projected point <span class="math notranslate nohighlight">\(a_i\)</span> has associated with it the original class label
+<span class="math notranslate nohighlight">\(y_i\)</span>, and thus we can compute, for each of the two classes, the mean of
+the projected points ,called the <em>projected mean</em>, as follows:</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}m_1&amp;=\frac{1}{n_1}\sum_{\x_i\in\D_1}a_i\\&amp;=\frac{1}{n_1}\sum_{\x_i\in\D_1}\w^T\x_i\\&amp;=\w^T\bigg(\frac{1}{n_1}\sum_{\x_i\in\D_1}\x_i\bigg)\\&amp;=\w^T\mmu_1\end{aligned}\end{align} \]</div>
+<p>where <span class="math notranslate nohighlight">\(\mmu_1\)</span> is the mean of all point in <span class="math notranslate nohighlight">\(\D_1\)</span>.
+Likewise, we can obtain</p>
+<div class="math notranslate nohighlight">
+\[m_2=\w^T\mmu_2\]</div>
+<p>To maximize the separation between the classes, it seems reasonable to maximize
+the difference between the projected means, <span class="math notranslate nohighlight">\(|m_1-m_2|\)</span>.
+For good separation, the variance of the projected points for each class should also not be too large.
+LDA maximizes the separation by ensuring that the <em>scatter</em> <span class="math notranslate nohighlight">\(s_i^2\)</span> for
+the projected points within each class is small</p>
+<div class="math notranslate nohighlight">
+\[s_i^2=\sum_{\x_j\in\D_i}(a_j-m_i)^2=n_i\sg_i^2\]</div>
+<p>We can incorporate the two LDA criteria, namely, maximizing the distance between
+projected means and minimizing the sum of projected scatter, into a single
+maximization criterion called the <em>Fisher LDA objective</em>:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\max_\w J(\w)\frac{(m_1-m_2)^2}{s_1^2+s_2^2}\)</span></p>
+</div>
+<p>The vector <span class="math notranslate nohighlight">\(\w\)</span> is also called the <em>optimal linear discriminant (LD)</em>.</p>
+<p>We can rewrite <span class="math notranslate nohighlight">\((m_1-m_2)^2\)</span> as follows:</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}(m_1-m_2)^2&amp;=(\w^T(\mmu_1-\mmu_2))^2\\&amp;=\w^T((\mmu_1-\mmu_2)(\mmu_1-\mmu_2)^T)\w\\&amp;=\w^T\B\w\end{aligned}\end{align} \]</div>
+<p>where <span class="math notranslate nohighlight">\(\B=(\mmu_1-\mmu_2)(\mmu_1-\mmu_2)^T\)</span> is a <span class="math notranslate nohighlight">\(d\times d\)</span>
+rank-one matrix called the <em>between-class scatter matrix</em>.</p>
+</div>
 </div>
 
 
