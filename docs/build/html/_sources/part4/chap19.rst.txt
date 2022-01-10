@@ -187,4 +187,130 @@ distinct values for :math:`X` in the sample :math:`\D`.
 Because there can be at most :math:`n` distinct values for :math:`X`, there are 
 at most :math:`n-1` midpoint values to consider.
 
+Let :math:`\{v_1,\cds,v_m\}` denote the set of all such midpoints, such that :math:`v_1<v_2<\cds<v_m`.
+For each split point :math:`X\leq v`, we have to estimate the class PMFs:
+
+.. math::
+
+    \hat{P}(c_i|\D_Y)=\hat{P}(c_i|X\leq v)
+
+    \hat{P}(c_i|\D_N)=\hat{P}(c_i|X>v)
+
+Let :math:`I()` be an indicator variable that takes on the value 1 only when its argument is true, and is 0 otherwise.
+
+.. math::
+
+    \hat{P}(c_i|X\leq v)=\frac{\hat{P}(X\leq v|c_i)\hat{P}(c_i)}
+    {\hat{P}(X\leq v)}=\frac{\hat{P}(X\leq v|c_i)\hat{P}(c_i)}
+    {\sum_{j=1}^k\hat{P}(X\leq v|c_j)\hat{P}(c_j)}
+
+.. math::
+
+    \hat{P}(c_i)=\frac{1}{n}\sum_{j=1}^nI(y_j=c_i)=\frac{n_i}{n}
+
+Define :math:`N_{vi}` as the number of points :math:`x_j\leq v` with class 
+:math:`c_i`, where :math:`x_j` is the value of data point :math:`\x_j` for the 
+attribute :math:`X`, given as
+
+.. math::
+
+    N_{vi}=\sum_{j=1}^nI(x_j\leq v\ \rm{and}\ y_j=c_i)
+
+We can then estimate :math:`P(X\leq v|c_i)` as follows:
+
+.. math::
+
+    \hat{P}(X\leq v|c_i)=\frac{\hat{P}(X\leq v\ \rm{and}\ c_i)}{\hat{P}(c_i)}=
+    \bigg(\frac{1}{n}\sum_{j=1}^nI(x_j\leq v\ \rm{and}\ y_j=c_i)\bigg)\bigg/
+    (n_i/n)=\frac{N_{vi}}{n_i}
+
+.. note::
+
+    :math:`\dp\hat{P}(c_i|\D_N)=\hat{P}(c_i|X>v)=`
+    :math:`\dp\frac{\hat{P}(X>v|c_i)|\hat{P}(c_i)}{\sum_{j=1}^k\hat{P}(X>v|c_j)\hat{P}(c_j)}`
+    :math:`=\dp\frac{n_i-N_{vi}}{\sum_{j=1}^k(n_j-N_{vj})}`
+
 .. image:: ../_static/Algo19.2.png
+
+The total cost of numeric split point evaluation is :math:`O(n\log n)`.
+
+**Categorical Attributes**
+
+If :math:`X` is a categorical attribute we evaluate split points of the form 
+:math:`X\in V`, where :math:`V\subset dom(X)` and :math:`V\ne\emptyset`.
+Because the split point :math:`X\in V` yields the same partition as 
+:math:`X\in\bar{V}`, where :math:`\bar{V}=dom(X)\\V` is the complement of 
+:math:`V`, the total number of distinct partitions is given as
+
+.. math::
+
+    \sum_{i=1}^{\lfloor m/2\rfloor}\bp m\\i\ep=O(2^{m-1})
+
+where :math:`m=|dom(X)|`.
+The number of possible split points to consider is therefore exponential in 
+:math:`m`, which can pose problems if :math:`m` is large.
+One simplification is to restrict :math:`V` to be of size one, so that there are 
+only :math:`m` split points of the form :math:`X_j\in\{ v\}`, where 
+:math:`v\in dom(X_j)`.
+
+To evaluate a given split point :math:`X\in V` we have to compute the following class probability mass functions:
+
+.. math::
+
+    P(c_i|\D_Y)=P(c_i|X\in V)\quad\quad P(c_i|\D_N)=P(c_i|X\notin V)
+
+Making use of the Bayes theorem, we have
+
+.. math::
+
+    P(c_i|X\in V)=\frac{P(X\in V|c_i)P(c_i)}{P(X\in V)}=\frac{P(X\in V|c_i)P(c_i)}{\sum_{j=1}^kP(X\in V|c_j)P(c_j)}
+
+However, note that a given point :math:`\x` can take on only one value in the 
+domain of :math:`X`, and thus the values :math:`v\in dom(X)` are mutually 
+exclusive.
+Therefore, we have
+
+.. math::
+
+    P(X\in V|c_i)=\sum_{v\in V}P(X=v|c_i)
+
+.. math::
+
+    P(c_i|\D_Y)=\frac{\sum_{v\in V}P(X=v|c_i)P(c_i)}{\sum_{j=1}^k\sum_{v\in V}P(X=v|c_j)P(c_j)}
+
+Define :math:`n_{vi}` as the number of points :math:`\x_j\in\D`, with value
+:math:`x_j=v` for attribute :math:`X` and having class :math:`y_j=c_i`:
+
+.. math::
+
+    n_{vi}=\sum_{j=1}^nI(x_j=v\ \rm{and}\ y_j=c_i)
+
+The class conditional empirical PMF for :math:`X` is then given as
+
+.. math::
+
+    \hat{P}(X=v|c_i)=\frac{\hat{P}(X=v\ \rm{and}\ c_i)}{\hat{P}(c_i)}
+    =\bigg(\frac{1}{n}\sum_{j=1}^nI(x_j=v\ \rm{and}\ y_i=c_i)\bigg)\bigg/(n_i/n)
+    =\frac{n_{vi}}{n_i}
+
+.. note::
+
+    :math:`\dp\hat{P}(c_i|\D_Y)=`
+    :math:`\dp\frac{\sum_{v\in V}\hat{P}(X=v|c_i)\hat{P}(c_i)}{\sum_{j=1}^k\sum_{v\in V}\hat{P}(X=v|c_j)\hat{P}(c_j)}`
+    :math:`\dp=\frac{\sum_{v\in V}n_{vi}}{\sum_{j=1}^k\sum_{v\in V}n_{vj}}`
+
+.. note::
+
+    :math:`\dp\hat{P}(c_i|\D_N)=\hat{P}(c_i|X\notin V)=\frac{\sum_{v\notin V}n_{vi}}{\sum_{j=1}^k\sum_{v\notin V}n_{vj}}`
+
+.. image:: ../_static/Algo19.3.png
+
+The total cost for categorical attributes is :math:`O(n+mk2^{m-1})`.
+If we make the assumption that :math:`2^{m-1}=O(n)`, that is, if we bound the
+maximum size of :math:`V` to :math:`l=O(\log n)`, then the cost of categorical
+splits is bounded as :math:`O(n\log n)`, ignoring :math:`k`.
+
+19.2.3 Computational Complexity
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The total cost in the worst case is :math:`O(dn^2\log n)`.

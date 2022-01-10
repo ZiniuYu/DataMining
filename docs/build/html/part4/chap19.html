@@ -99,6 +99,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#decision-tree-algorithm">19.2 Decision Tree Algorithm</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#split-point-evaluation-measures">19.2.1 Split Point Evaluation Measures</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#evaluating-split-points">19.2.2 Evaluating Split Points</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#computational-complexity">19.2.3 Computational Complexity</a></li>
 </ul>
 </li>
 </ul>
@@ -382,7 +383,91 @@ measure, the better the split point.</p>
 distinct values for <span class="math notranslate nohighlight">\(X\)</span> in the sample <span class="math notranslate nohighlight">\(\D\)</span>.
 Because there can be at most <span class="math notranslate nohighlight">\(n\)</span> distinct values for <span class="math notranslate nohighlight">\(X\)</span>, there are
 at most <span class="math notranslate nohighlight">\(n-1\)</span> midpoint values to consider.</p>
+<p>Let <span class="math notranslate nohighlight">\(\{v_1,\cds,v_m\}\)</span> denote the set of all such midpoints, such that <span class="math notranslate nohighlight">\(v_1&lt;v_2&lt;\cds&lt;v_m\)</span>.
+For each split point <span class="math notranslate nohighlight">\(X\leq v\)</span>, we have to estimate the class PMFs:</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\hat{P}(c_i|\D_Y)=\hat{P}(c_i|X\leq v)\\\hat{P}(c_i|\D_N)=\hat{P}(c_i|X&gt;v)\end{aligned}\end{align} \]</div>
+<p>Let <span class="math notranslate nohighlight">\(I()\)</span> be an indicator variable that takes on the value 1 only when its argument is true, and is 0 otherwise.</p>
+<div class="math notranslate nohighlight">
+\[\hat{P}(c_i|X\leq v)=\frac{\hat{P}(X\leq v|c_i)\hat{P}(c_i)}
+{\hat{P}(X\leq v)}=\frac{\hat{P}(X\leq v|c_i)\hat{P}(c_i)}
+{\sum_{j=1}^k\hat{P}(X\leq v|c_j)\hat{P}(c_j)}\]</div>
+<div class="math notranslate nohighlight">
+\[\hat{P}(c_i)=\frac{1}{n}\sum_{j=1}^nI(y_j=c_i)=\frac{n_i}{n}\]</div>
+<p>Define <span class="math notranslate nohighlight">\(N_{vi}\)</span> as the number of points <span class="math notranslate nohighlight">\(x_j\leq v\)</span> with class
+<span class="math notranslate nohighlight">\(c_i\)</span>, where <span class="math notranslate nohighlight">\(x_j\)</span> is the value of data point <span class="math notranslate nohighlight">\(\x_j\)</span> for the
+attribute <span class="math notranslate nohighlight">\(X\)</span>, given as</p>
+<div class="math notranslate nohighlight">
+\[N_{vi}=\sum_{j=1}^nI(x_j\leq v\ \rm{and}\ y_j=c_i)\]</div>
+<p>We can then estimate <span class="math notranslate nohighlight">\(P(X\leq v|c_i)\)</span> as follows:</p>
+<div class="math notranslate nohighlight">
+\[\hat{P}(X\leq v|c_i)=\frac{\hat{P}(X\leq v\ \rm{and}\ c_i)}{\hat{P}(c_i)}=
+\bigg(\frac{1}{n}\sum_{j=1}^nI(x_j\leq v\ \rm{and}\ y_j=c_i)\bigg)\bigg/
+(n_i/n)=\frac{N_{vi}}{n_i}\]</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\hat{P}(c_i|\D_N)=\hat{P}(c_i|X&gt;v)=\)</span>
+<span class="math notranslate nohighlight">\(\dp\frac{\hat{P}(X&gt;v|c_i)|\hat{P}(c_i)}{\sum_{j=1}^k\hat{P}(X&gt;v|c_j)\hat{P}(c_j)}\)</span>
+<span class="math notranslate nohighlight">\(=\dp\frac{n_i-N_{vi}}{\sum_{j=1}^k(n_j-N_{vj})}\)</span></p>
+</div>
 <img alt="../_images/Algo19.2.png" src="../_images/Algo19.2.png" />
+<p>The total cost of numeric split point evaluation is <span class="math notranslate nohighlight">\(O(n\log n)\)</span>.</p>
+<p><strong>Categorical Attributes</strong></p>
+<p>If <span class="math notranslate nohighlight">\(X\)</span> is a categorical attribute we evaluate split points of the form
+<span class="math notranslate nohighlight">\(X\in V\)</span>, where <span class="math notranslate nohighlight">\(V\subset dom(X)\)</span> and <span class="math notranslate nohighlight">\(V\ne\emptyset\)</span>.
+Because the split point <span class="math notranslate nohighlight">\(X\in V\)</span> yields the same partition as
+<span class="math notranslate nohighlight">\(X\in\bar{V}\)</span>, where <span class="math notranslate nohighlight">\(\bar{V}=dom(X)\\V\)</span> is the complement of
+<span class="math notranslate nohighlight">\(V\)</span>, the total number of distinct partitions is given as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\sum_{i=1}^{\lfloor m/2\rfloor}\bp m\\i\ep=O(2^{m-1})\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(m=|dom(X)|\)</span>.
+The number of possible split points to consider is therefore exponential in
+<span class="math notranslate nohighlight">\(m\)</span>, which can pose problems if <span class="math notranslate nohighlight">\(m\)</span> is large.
+One simplification is to restrict <span class="math notranslate nohighlight">\(V\)</span> to be of size one, so that there are
+only <span class="math notranslate nohighlight">\(m\)</span> split points of the form <span class="math notranslate nohighlight">\(X_j\in\{ v\}\)</span>, where
+<span class="math notranslate nohighlight">\(v\in dom(X_j)\)</span>.</p>
+<p>To evaluate a given split point <span class="math notranslate nohighlight">\(X\in V\)</span> we have to compute the following class probability mass functions:</p>
+<div class="math notranslate nohighlight">
+\[P(c_i|\D_Y)=P(c_i|X\in V)\quad\quad P(c_i|\D_N)=P(c_i|X\notin V)\]</div>
+<p>Making use of the Bayes theorem, we have</p>
+<div class="math notranslate nohighlight">
+\[P(c_i|X\in V)=\frac{P(X\in V|c_i)P(c_i)}{P(X\in V)}=\frac{P(X\in V|c_i)P(c_i)}{\sum_{j=1}^kP(X\in V|c_j)P(c_j)}\]</div>
+<p>However, note that a given point <span class="math notranslate nohighlight">\(\x\)</span> can take on only one value in the
+domain of <span class="math notranslate nohighlight">\(X\)</span>, and thus the values <span class="math notranslate nohighlight">\(v\in dom(X)\)</span> are mutually
+exclusive.
+Therefore, we have</p>
+<div class="math notranslate nohighlight">
+\[P(X\in V|c_i)=\sum_{v\in V}P(X=v|c_i)\]</div>
+<div class="math notranslate nohighlight">
+\[P(c_i|\D_Y)=\frac{\sum_{v\in V}P(X=v|c_i)P(c_i)}{\sum_{j=1}^k\sum_{v\in V}P(X=v|c_j)P(c_j)}\]</div>
+<p>Define <span class="math notranslate nohighlight">\(n_{vi}\)</span> as the number of points <span class="math notranslate nohighlight">\(\x_j\in\D\)</span>, with value
+<span class="math notranslate nohighlight">\(x_j=v\)</span> for attribute <span class="math notranslate nohighlight">\(X\)</span> and having class <span class="math notranslate nohighlight">\(y_j=c_i\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[n_{vi}=\sum_{j=1}^nI(x_j=v\ \rm{and}\ y_j=c_i)\]</div>
+<p>The class conditional empirical PMF for <span class="math notranslate nohighlight">\(X\)</span> is then given as</p>
+<div class="math notranslate nohighlight">
+\[\hat{P}(X=v|c_i)=\frac{\hat{P}(X=v\ \rm{and}\ c_i)}{\hat{P}(c_i)}
+=\bigg(\frac{1}{n}\sum_{j=1}^nI(x_j=v\ \rm{and}\ y_i=c_i)\bigg)\bigg/(n_i/n)
+=\frac{n_{vi}}{n_i}\]</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\hat{P}(c_i|\D_Y)=\)</span>
+<span class="math notranslate nohighlight">\(\dp\frac{\sum_{v\in V}\hat{P}(X=v|c_i)\hat{P}(c_i)}{\sum_{j=1}^k\sum_{v\in V}\hat{P}(X=v|c_j)\hat{P}(c_j)}\)</span>
+<span class="math notranslate nohighlight">\(\dp=\frac{\sum_{v\in V}n_{vi}}{\sum_{j=1}^k\sum_{v\in V}n_{vj}}\)</span></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\hat{P}(c_i|\D_N)=\hat{P}(c_i|X\notin V)=\frac{\sum_{v\notin V}n_{vi}}{\sum_{j=1}^k\sum_{v\notin V}n_{vj}}\)</span></p>
+</div>
+<img alt="../_images/Algo19.3.png" src="../_images/Algo19.3.png" />
+<p>The total cost for categorical attributes is <span class="math notranslate nohighlight">\(O(n+mk2^{m-1})\)</span>.
+If we make the assumption that <span class="math notranslate nohighlight">\(2^{m-1}=O(n)\)</span>, that is, if we bound the
+maximum size of <span class="math notranslate nohighlight">\(V\)</span> to <span class="math notranslate nohighlight">\(l=O(\log n)\)</span>, then the cost of categorical
+splits is bounded as <span class="math notranslate nohighlight">\(O(n\log n)\)</span>, ignoring <span class="math notranslate nohighlight">\(k\)</span>.</p>
+</div>
+<div class="section" id="computational-complexity">
+<h3>19.2.3 Computational Complexity<a class="headerlink" href="#computational-complexity" title="Permalink to this headline">¶</a></h3>
+<p>The total cost in the worst case is <span class="math notranslate nohighlight">\(O(dn^2\log n)\)</span>.</p>
 </div>
 </div>
 </div>
