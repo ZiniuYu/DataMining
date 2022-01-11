@@ -97,6 +97,7 @@
 <li class="toctree-l2"><a class="reference internal" href="chap19.html">Chapter 19 Decision Tree Classifier</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Chapter 20 Linear Discriminant Analysis</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#optimal-linear-discriminant">20.1 Optimal Linear Discriminant</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#kernel-discriminant-analysis">20.2 Kernel Discriminant Analysis</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="chap21.html">Chapter 21 Support Vector Machines</a></li>
@@ -191,11 +192,13 @@
 \newcommand{\a}{\boldsymbol{\mathrm{a}}}
 \newcommand{\b}{\boldsymbol{\mathrm{b}}}
 \newcommand{\c}{\boldsymbol{\mathrm{c}}}
+\newcommand{\d}{\boldsymbol{\mathrm{d}}}
 \newcommand{\e}{\boldsymbol{\mathrm{e}}}
 \newcommand{\f}{\boldsymbol{\mathrm{f}}}
 \newcommand{\g}{\boldsymbol{\mathrm{g}}}
 \newcommand{\i}{\boldsymbol{\mathrm{i}}}
 \newcommand{\j}{\boldsymbol{j}}
+\newcommand{\m}{\boldsymbol{\mathrm{m}}}
 \newcommand{\n}{\boldsymbol{\mathrm{n}}}
 \newcommand{\p}{\boldsymbol{\mathrm{p}}}
 \newcommand{\q}{\boldsymbol{\mathrm{q}}}
@@ -290,6 +293,140 @@ maximization criterion called the <em>Fisher LDA objective</em>:</p>
 \[ \begin{align}\begin{aligned}(m_1-m_2)^2&amp;=(\w^T(\mmu_1-\mmu_2))^2\\&amp;=\w^T((\mmu_1-\mmu_2)(\mmu_1-\mmu_2)^T)\w\\&amp;=\w^T\B\w\end{aligned}\end{align} \]</div>
 <p>where <span class="math notranslate nohighlight">\(\B=(\mmu_1-\mmu_2)(\mmu_1-\mmu_2)^T\)</span> is a <span class="math notranslate nohighlight">\(d\times d\)</span>
 rank-one matrix called the <em>between-class scatter matrix</em>.</p>
+<p>As for the projected scatter for class <span class="math notranslate nohighlight">\(c_1\)</span>, we can compute it as follows:</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}s_1^2&amp;=\sum_{\x_i\in\D_1}(a_i-m_1)^2\\&amp;=\sum_{\x_i\in\D_1}(\w^T\x_i-\w^T\mmu_1)^2\\&amp;=\sum_{\x_i\in\D_1}(\w^T(\x_i-\mmu_1))^2\\&amp;=\w^T\bigg(\sum_{\x_i\in\D_1}(\x_i-\mmu_1)(\x_i-\mmu_1)^T\bigg)\w\\&amp;=\w^T\S_1\w\end{aligned}\end{align} \]</div>
+<p>where <span class="math notranslate nohighlight">\(\S_1\)</span> is the <em>scatter matrix</em> for <span class="math notranslate nohighlight">\(\D_1\)</span>.
+Likewise, we can obtain</p>
+<div class="math notranslate nohighlight">
+\[s_2^2=\w^T\S_2\w\]</div>
+<p>Notice again that the scatter matrix is essentially the same as the covariance
+matrix, but instead of recording the average deviation from the mean, it records
+the total deviation, that is,</p>
+<div class="math notranslate nohighlight">
+\[\S_i=n_i\Sg_i\]</div>
+<div class="math notranslate nohighlight">
+\[s_1^2+s_2^2=\w^T\S_1\w+\w^T\S_2\w=\w^T(\S_1+\S_2)\w=\w^T\S\w\]</div>
+<p>where <span class="math notranslate nohighlight">\(\S=\S_1+\S_2\)</span> denote the <em>within-class scatter matrix</em> for the pooled data.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\max_\w J(\w)=\frac{\w^T\B\w}{\w^T\S\w}\)</span></p>
+</div>
+<div class="math notranslate nohighlight">
+\[\frac{d}{d\w}J(\w)=\frac{2\B\w(\w^T\S\w)-2\B\w(\w^T\B\w)}{(\w^T\S\w)^2}=\0\]</div>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\B\w(\w^T\S\w)&amp;=\S\w(\w^T\B\w)\\\B\w&amp;=\S\w\bigg(\frac{\w^T\B\w}{\w^T\S\w}\bigg)\\\B\w&amp;=J(\w)\S\w\\\B\w&amp;=\ld\S\w\end{aligned}\end{align} \]</div>
+<p>where <span class="math notranslate nohighlight">\(\ld=J(\w)\)</span>.
+If <span class="math notranslate nohighlight">\(\S\)</span> is <em>nonsingular</em>, that is, if <span class="math notranslate nohighlight">\(\S\im\)</span> exists</p>
+<div class="math notranslate nohighlight">
+\[\S\im\B\w=\ld\S\im\S\w\]</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\((\S\im\B)\w=\ld\w\)</span></p>
+</div>
+<p>Thus, if <span class="math notranslate nohighlight">\(\S\im\)</span> exists, then <span class="math notranslate nohighlight">\(\ld=J(\w)\)</span> is an eigenvalue, and
+<span class="math notranslate nohighlight">\(\w\)</span> is an eigenvector of the matrix <span class="math notranslate nohighlight">\(\S\im\B\)</span>.
+To maximize <span class="math notranslate nohighlight">\(J(\w)\)</span> we look for the largest eigenvalue <span class="math notranslate nohighlight">\(\ld\)</span>, and
+the coresponding dominant eigenvector <span class="math notranslate nohighlight">\(\w\)</span> specifies the best linear
+discriminant vector.</p>
+<img alt="../_images/Algo20.1.png" src="../_images/Algo20.1.png" />
+<p>The total time complexity is <span class="math notranslate nohighlight">\(O(d^3+nd^2)\)</span>.</p>
+<p>For the two class scenario, if <span class="math notranslate nohighlight">\(\S\)</span> is nonsingular, we can directly solve
+for <span class="math notranslate nohighlight">\(\w\)</span> without computing the eigenvalues and eigenvectors.</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\B\w&amp;=((\mmu_1-\mmu_2)(\mmu_1-\mmu_2)^T)\w\\&amp;=(\mmu_1-\mmu_2)((\mmu_1-\mmu_2)^T\w)\\&amp;=b(\mmu_1-\mmu_2)\end{aligned}\end{align} \]</div>
+<p>where <span class="math notranslate nohighlight">\(n=(\mmu_1-\mmu_2)^T\w\)</span> is just a scalar multiplier.</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\B\w&amp;=\ld\S\w\\b(\mmu_1-\mmu_2)&amp;=\ld\S\w\\\w&amp;=\frac{b}{\ld}\S\im(\mmu_1-\mmu_2)\end{aligned}\end{align} \]</div>
+<p>Because <span class="math notranslate nohighlight">\(\frac{b}{\ld}\)</span> is just a scalar, we can solve for the best linear discriminant as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\w=\S\im(\mmu_1-\mmu_2)\)</span></p>
+</div>
+</div>
+<div class="section" id="kernel-discriminant-analysis">
+<h2>20.2 Kernel Discriminant Analysis<a class="headerlink" href="#kernel-discriminant-analysis" title="Permalink to this headline">¶</a></h2>
+<p>The goal of kernel LDA is to find the direction vector <span class="math notranslate nohighlight">\(\w\)</span> in feature space that maximizes</p>
+<div class="math notranslate nohighlight">
+\[\max_\w J(\w)=\frac{(m_1-m_2)^2}{s_1^2+s_2^2}\]</div>
+<p><strong>Optimal LD: Linear Combination of Feature Points</strong></p>
+<p>The mean for class <span class="math notranslate nohighlight">\(c_i\)</span> in feature space is given as</p>
+<div class="math notranslate nohighlight">
+\[\mmu_i^\phi=\frac{1}{n_i}\sum_{\x_j\in\D_i}\phi(\x_j)\]</div>
+<p>and the covariance matrix for class <span class="math notranslate nohighlight">\(c_i\)</span> in feature space is</p>
+<div class="math notranslate nohighlight">
+\[\Sg_i^\phi=\frac{1}{n_i}\sum_{\x_j\in\D_i}(\phi(\x_j)-\mmu_i^\phi)(\phi(\x_j)-\mmu_I^\phi)^T\]</div>
+<p>The between-class and within-class scatter matrices are defined as</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\B_\phi=(\mmu_1^\phi-\mmu_2^\phi)(\mmu_1^\phi-\mmu_2^\phi)^T=\d_\phi\d_\phi^T\\\S_\phi=n_1\Sg_1^\phi+n_2\Sg_2^\phi\end{aligned}\end{align} \]</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\((\S_\phi\im\B_\phi)\w=\ld\w\)</span></p>
+</div>
+<p>where we assume that <span class="math notranslate nohighlight">\(\S_\phi\)</span> is non-singular.
+Let <span class="math notranslate nohighlight">\(\delta_i\)</span> denote the <span class="math notranslate nohighlight">\(i\)</span>th eigenvalue and <span class="math notranslate nohighlight">\(\u_i\)</span> the
+<span class="math notranslate nohighlight">\(i\)</span>th eigenvector of <span class="math notranslate nohighlight">\(\S_\phi\)</span>, for <span class="math notranslate nohighlight">\(i=1,\cds,d\)</span>.
+The eigen-decomposition of <span class="math notranslate nohighlight">\(\S_\phi\)</span> yields <span class="math notranslate nohighlight">\(\S_\phi=\U\Delta\U^T\)</span>,
+with the inverse of <span class="math notranslate nohighlight">\(\S_\phi\)</span> given as <span class="math notranslate nohighlight">\(\S_\phi\im=\U\Delta\im\U^T\)</span>.
+Here <span class="math notranslate nohighlight">\(\U\)</span> is the matrix whose columns are the eigenvectors of
+<span class="math notranslate nohighlight">\(\S_\phi\)</span> and <span class="math notranslate nohighlight">\(\Delta\)</span> is the diagonal matrix of eigenvalues of
+<span class="math notranslate nohighlight">\(\S_\phi\)</span>.
+The inverse <span class="math notranslate nohighlight">\(\S_\phi\im\)</span> can thus be expressed as the spectral sum</p>
+<div class="math notranslate nohighlight">
+\[\S_\phi\im=\sum_{r=1}^d\frac{1}{\delta_r}\u_r\u_r^T\]</div>
+<div class="math notranslate nohighlight">
+\[\ld\w=\bigg(\sum_{r=1}^d\frac{1}{\delta_r}\u_r\u_r^T\bigg)\d_\phi\d_\phi^T\w
+=\sum_{r=1}^d\frac{1}{\delta_r}(\u_r(\u_r^T\d_\phi)(\d_\phi^T\w))=
+\sum_{r=1}^db_r\u_r\]</div>
+<p>where <span class="math notranslate nohighlight">\(b_r=\frac{1}{\delta_r}(\u_r^T\d_\phi)(\d_\phi^T\w)\)</span> is a scalar value.</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\w&amp;=\frac{1}{\ld}\sum_{r=1}^db_r\bigg(\sum_{j=1}^nc_{rj}\phi(\x_j)\bigg)\\&amp;=\sum_{j=1}^n\phi(\x_j)\bigg(\sum_{r=1}^d\frac{b_rc_{rj}}{\ld}\bigg)\\&amp;=\sum_{j=1}^na_j\phi(\x_j)\end{aligned}\end{align} \]</div>
+<p>where <span class="math notranslate nohighlight">\(a_j=\sum_{r=1}^db_rc_{rj}/\ld\)</span> is a scalar value for the feature point <span class="math notranslate nohighlight">\(\phi(\x_j)\)</span>.
+Therefore, the direction vector <span class="math notranslate nohighlight">\(\w\)</span> can be expressed as a linear combination of the points in feature space.</p>
+<p><strong>LDA Objective via Kernel Matrix</strong></p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}m_i=\w^T\mmu_i^\phi&amp;=\bigg(\sum_{j=1}^na_j\phi(\x_j)\bigg)^T\bigg(\frac{1}{n_i}\sum_{\x_k\in\D_i}\phi(\x_k)\bigg)\\&amp;=\frac{1}{n_i}\sum_{j=1}^n\sum_{\x_k\in\D_i}a_j\phi(\x_j)^T\phi(\x_k)\\&amp;=\frac{1}{n_i}\sum_{j=1}^n\sum_{\x_k\in\D_i}a_jK(\x_j,\x_k)\\&amp;=\a^T\m_i\end{aligned}\end{align} \]</div>
+<p>where <span class="math notranslate nohighlight">\(\a=(a_1,a_2,\cds,a_m)^T\)</span> is the weight vector, and</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\m_i=\frac{1}{n_i}\bp \sum_{\x_k\in\D_i}K(\x_1,\x_k)\\
+\sum_{\x_k\in\D_i}K(\x_2,\x_k)\\\vds\\\sum_{\x_k\in\D_i}K(\x_n,\x_k)\ep=
+\frac{1}{n_i}\K^{c_i}\1_{n_i}\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}(m_1-m_2)^2&amp;=(\w^T\mmu_1^\phi-\w^T\mmu_2^\phi)^2\\&amp;=(\a^T\m_1-\a^T\m_2)^2\\&amp;=\a^T(\m_1-\m_2)(\m_1-\m_2)^T\a\\&amp;=\a^T\M\a\end{aligned}\end{align} \]</div>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}s_1^2&amp;=\sum_{\x_i\in\D_1}\lv\w^T\phi(\x_i)-\w^T\mmu_1^\phi\rv^2\\&amp;=\sum_{\x_i\in\D_1}\lv\w^T\phi(\x_i)\rv^2-2\sum_{\x_i\in\D_1}
+\w^T\phi(\x_i)\cd\w^T\mmu_1^\phi+\sum_{\x_i\in\D_1}\lv\w^T\mmu_1^\phi\rv^2\\&amp;=\bigg(\sum_{\x_i\in\D_1}\lv\sum_{j=1}^na_j\phi(\x_j)^T
+\phi(\x_i)\rv^2\bigg)-2\cd n_1\cd\lv\w^T\mmu_1^\phi\rv^2+
+n_1\cd\lv\w^T\mmu_1^\phi\rv^2\\&amp;=\bigg(\sum_{\x_i\in\D_1}\a^T\K_i\K_i^T\a\bigg)-n_1\cd\a^T\m_1\m_1^T\a\\&amp;=\a^T\bigg(\bigg(\sum_{\x_i\in\D_1}\K_i\K_i^T\bigg)-n_1\m_1\m_1^T\bigg)\a\\&amp;=\a^T\N_1\a\end{aligned}\end{align} \]</div>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\N_1&amp;=\bigg(\sum_{\x_i\in\D_1}\K_i\K_i^T\bigg)-n_1\m_1\m_1^T\\&amp;=(\K^{c_1})\bigg(\I_{n_1}-\frac{1}{n_1}\1_{n_1\times n_1}\bigg)(\K^{c_1})^T\end{aligned}\end{align} \]</div>
+<p>In a similar manner we get <span class="math notranslate nohighlight">\(s_2^2=\a^T\N_2\a\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[s_1^2+s_2^2=\a^T(\N_1+\N_2)\a=\a^T\N\a\]</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\max_\w J(\w)=\max_\a J(\a)=\frac{\a^T\M\a}{\a^\N\a}\)</span></p>
+</div>
+<p>The weight vector <span class="math notranslate nohighlight">\(\a\)</span> is the eigenvector corresponding to the largest
+eigenvalue of the generalized eigenvalue problem:</p>
+<div class="math notranslate nohighlight">
+\[\M\a=\ld_1\N\a\]</div>
+<p>If <span class="math notranslate nohighlight">\(\N\)</span> is nonsingular, <span class="math notranslate nohighlight">\(\a\)</span> is the dominant eigenvetor
+corresponding to the largest eigenvalue for the system</p>
+<div class="math notranslate nohighlight">
+\[(\N\im\M)\a=\ld_1\a\]</div>
+<p>As in the case of linear discriminant analysis, when there are only two classes
+we do not have to solve for the eigenvector because <span class="math notranslate nohighlight">\(\a\)</span> can be obtained
+directly:</p>
+<div class="math notranslate nohighlight">
+\[\a=\N\im(\m_1-\m_2)\]</div>
+<p>we can ensure that <span class="math notranslate nohighlight">\(\w\)</span> is a unit vector if we scale <span class="math notranslate nohighlight">\(\a\)</span> by <span class="math notranslate nohighlight">\(\frac{1}{\sqrt{\a^T\K\a}}\)</span></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\w^T\phi(\x)=\sum_{j=1}^na_j\phi(\x_j)^T\phi(\x)=\sum_{j=1}^na_jK(\x_j,\x)\)</span></p>
+</div>
+<img alt="../_images/Algo20.2.png" src="../_images/Algo20.2.png" />
+<p>The complexity of kernel discriminant analysis is <span class="math notranslate nohighlight">\(O(n^3\)</span>.</p>
 </div>
 </div>
 
