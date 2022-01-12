@@ -70,6 +70,7 @@ rst_prolog = r'''
     \newcommand{\ra}{\rightarrow}
     \newcommand{\rv}{\rVert}
     \newcommand{\seq}{\subseteq}
+    \newcommand{\td}{\tilde}
     \newcommand{\vds}{\vdots}
     \newcommand{\wh}{\widehat}
 
