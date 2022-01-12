@@ -96,7 +96,16 @@
 <li class="toctree-l2"><a class="reference internal" href="chap18.html">Chapter 18 Probabilistic Classification</a></li>
 <li class="toctree-l2"><a class="reference internal" href="chap19.html">Chapter 19 Decision Tree Classifier</a></li>
 <li class="toctree-l2"><a class="reference internal" href="chap20.html">Chapter 20 Linear Discriminant Analysis</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Chapter 21 Support Vector Machines</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Chapter 21 Support Vector Machines</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#support-vectors-and-margins">21.1 Support Vectors and Margins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#svm-linear-and-separable-case">21.2 SVM: Linear and Separable Case</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#hinge-loss">21.3.1 Hinge Loss</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#quadratic-loss">21.3.2 Quadratic Loss</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#kernel-svm-nonliear-case">21.4 Kernel SVM: Nonliear Case</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="chap22.html">Chapter 22 Classification Assessment</a></li>
 </ul>
 </li>
@@ -234,6 +243,283 @@
 \newcommand{\ppr}{^{\prime\prime}}\end{aligned}\end{align} \]</div>
 <div class="section" id="chapter-21-support-vector-machines">
 <h1>Chapter 21 Support Vector Machines<a class="headerlink" href="#chapter-21-support-vector-machines" title="Permalink to this headline">¶</a></h1>
+<p>The goal of Support Vector Machines (SVMs) is to find the optimal hyperplane
+that maximizes the gap or margin between the classes.</p>
+<div class="section" id="support-vectors-and-margins">
+<h2>21.1 Support Vectors and Margins<a class="headerlink" href="#support-vectors-and-margins" title="Permalink to this headline">¶</a></h2>
+<p>Let <span class="math notranslate nohighlight">\(\D\)</span> be a classification dataset, with <span class="math notranslate nohighlight">\(n\)</span> points <span class="math notranslate nohighlight">\(\x_i\)</span> in a <span class="math notranslate nohighlight">\(d\)</span>-dimensional space.
+Let us assume that there are only two class labels, that is,
+<span class="math notranslate nohighlight">\(y_i\in\{+1,-1\}\)</span>, denoting the positive and negative classes.</p>
+<p><strong>Hyperplane</strong></p>
+<p>A hyperplane in <span class="math notranslate nohighlight">\(d\)</span> dimensions is given as the set of all points
+<span class="math notranslate nohighlight">\(\x\in\R^d\)</span> that satisfy the equation <span class="math notranslate nohighlight">\(h(\x)=0\)</span>, where <span class="math notranslate nohighlight">\(h(\x)\)</span>
+is the <em>hyperplane function</em>, defined as follows:</p>
+<div class="math notranslate nohighlight">
+\[h(\x)=\w^T\x+b=w_1x_1+w_2x_2+\cds+w_dx_d+b\]</div>
+<p><span class="math notranslate nohighlight">\(\w\)</span> is a <span class="math notranslate nohighlight">\(d\)</span> dimeniosnal <em>weight vector</em> and <span class="math notranslate nohighlight">\(b\)</span> is a scalar, called the <em>bias</em>.
+For points that lie on the hyperplane, we have</p>
+<div class="math notranslate nohighlight">
+\[h(\x)=\w^T\x+b=0\]</div>
+<p>The hyperplane is thus defined as the set of all points such that <span class="math notranslate nohighlight">\(\w^T\x=-b\)</span>.</p>
+<p><strong>Separating Hyperplane</strong></p>
+<p>A hyperplane splits the original <span class="math notranslate nohighlight">\(d\)</span>-dimensional space into two <em>half-spaces</em>.
+A dataset is said to be <em>linearly separable</em> if each half-space has points only from a single class.
+The hyperplane function <span class="math notranslate nohighlight">\(h(\x)\)</span> serves as a linear classifier or a linear
+discriminant, which predicts the class <span class="math notranslate nohighlight">\(y\)</span> for any given point <span class="math notranslate nohighlight">\(\x\)</span>,
+according to the decision rule:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\left\{\begin{array}{lr}+1\quad\rm{if\ }h(\x)&gt;0\\-1\quad\rm{if\ }h(\x)&lt;0\end{array}\right.\end{split}\]</div>
+<p><strong>Distance of a Point to the Hyperplane</strong></p>
+<p>Consider a point <span class="math notranslate nohighlight">\(\x\in\R^d\)</span>, such that <span class="math notranslate nohighlight">\(\x\)</span> does not lie on the hyperplane.
+Let <span class="math notranslate nohighlight">\(\x_p\)</span> be the orthogonal projection of <span class="math notranslate nohighlight">\(\x\)</span> on the hyperplane, and let <span class="math notranslate nohighlight">\(\r=\x-\x_p\)</span>, then</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\x&amp;=\x_p+\r\\\x&amp;=\x_p+r\frac{\w}{\lv\w\rv}\end{aligned}\end{align} \]</div>
+<p>wherer <span class="math notranslate nohighlight">\(r\)</span> is the <em>directed distance</em> of the point <span class="math notranslate nohighlight">\(\x\)</span> from
+<span class="math notranslate nohighlight">\(\x_p\)</span>, that is, <span class="math notranslate nohighlight">\(r\)</span> gives the offset of <span class="math notranslate nohighlight">\(\x\)</span> from
+<span class="math notranslate nohighlight">\(\x_p\)</span> in terms of the unit weight vector <span class="math notranslate nohighlight">\(\frac{\w}{\lv\w\rv}\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}h(\x)&amp;=h\bigg(\x_p+r\frac{w}{\lv\w\rv}\bigg)\\&amp;=\w^T\bigg(\x_p+r\frac{\w}{\lv\w\rv}\bigg)+b\\&amp;=\w^T\x_p+b+r\frac{\w^T\w}{\lv\w\rv}\\&amp;=h(\x_p)+r\lv\w\rv\\&amp;=r\lv\w\rv\end{aligned}\end{align} \]</div>
+<p>Using the result above, we obtain an expression for the directed distance of a point to the hyperplane:</p>
+<div class="math notranslate nohighlight">
+\[r=\frac{h(\x)}{\lv\w\rv}\]</div>
+<p>To obatain distance, which must be non-negative, we can conveniently multiply
+<span class="math notranslate nohighlight">\(r\)</span> by the class label <span class="math notranslate nohighlight">\(y\)</span> of the point.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\delta=yr=\frac{yh(\x)}{\lv\w\rv}\)</span></p>
+</div>
+<p>In particular, for the origin <span class="math notranslate nohighlight">\(\x=\0\)</span>, the directed distance is</p>
+<div class="math notranslate nohighlight">
+\[r=\frac{h(\0)}{\lv\w\rv}=\frac{\w^T\0+b}{\lv\w\rv}=\frac{b}{\lv\w\rv}\]</div>
+<p><strong>Margin and Support Vectors of a Hyperplane</strong></p>
+<div class="math notranslate nohighlight">
+\[\delta_i=\frac{y_ih(\x_i)}{\lv\w\rv}=\frac{y_i(\w^T\x_i+b)}{\lv\w\rv}\]</div>
+<p>Over all the <span class="math notranslate nohighlight">\(n\)</span> points, we define the <em>margin</em> of the linear classifier
+as the minimum distance of a point from the separating hyperplane, given as</p>
+<blockquote>
+<div><div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\delta^*=\min_{\x_i}\bigg\{\frac{y_i(\w^T\w_i+b)}{\lv\w\rv}\bigg\}\)</span>.</p>
+</div>
+</div></blockquote>
+<p>Note that <span class="math notranslate nohighlight">\(\delta^*\ne 0\)</span>, since <span class="math notranslate nohighlight">\(h(\x)\)</span> is assumed to be a separating hyperplane.</p>
+<p>All the points (or vectors) that achieve this minimum distance are called <em>support vectors</em> for the hyperplane.
+In other words, a support vector <span class="math notranslate nohighlight">\(\x^*\)</span> is a point that lies precisely on
+the margin of the classifier, and thus satisfies the condition</p>
+<div class="math notranslate nohighlight">
+\[\delta^*=\frac{y^*(\w^T\x^*+b)}{\lv\w\rv}\]</div>
+<p><strong>Canonical Hyperplane</strong></p>
+<div class="math notranslate nohighlight">
+\[sh(\x)=s\w^T\x+sb=(s\w)^T\x+(sb)=0\]</div>
+<p>To obtain the unique or <em>canonical</em> hyperplane, we choose the scalar <span class="math notranslate nohighlight">\(s\)</span>
+such that the absolute distance of a support vector from the hyperplane is 1.</p>
+<div class="math notranslate nohighlight">
+\[sy^*(\w^T\x^*+b)=1\]</div>
+<p>which implies</p>
+<div class="math notranslate nohighlight">
+\[s=\frac{1}{y^*(\w^T\x^*+b)}=\frac{1}{y^*h(\x^*)}\]</div>
+<p>Henceforth, we will assume that any separating hyperplane is canonical.
+That is, it has already been suitably rescaled so that <span class="math notranslate nohighlight">\(y^*h(\x^*)=1\)</span> for
+a support vector <span class="math notranslate nohighlight">\(\x^*\)</span>, and the margin is given as</p>
+<div class="math notranslate nohighlight">
+\[\delta^*=\frac{y^*h(\x^*)}{\lv\w\rv}=\frac{1}{\lv\w\rv}\]</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(y_i(\w^T\x_i+b)\geq 1\)</span>, for all points <span class="math notranslate nohighlight">\(\x_i\in\D\)</span>.</p>
+</div>
+</div>
+<div class="section" id="svm-linear-and-separable-case">
+<h2>21.2 SVM: Linear and Separable Case<a class="headerlink" href="#svm-linear-and-separable-case" title="Permalink to this headline">¶</a></h2>
+<p>Let us assume for the moment that the points are linearly separable, that is,
+there exists a separating hyperplane that perfectly classifies each point.</p>
+<p><strong>Maximum Margin Hyperplane</strong></p>
+<p>The fundamental idea behind SVMs is to choose the canonical hyperplane,
+specified by the weight vector <span class="math notranslate nohighlight">\(\w\)</span> and the bias <span class="math notranslate nohighlight">\(b\)</span>, that yields
+the maximum margin among all possible separating hyperplanes.
+If <span class="math notranslate nohighlight">\(\delta_h^*\)</span> represents the margin for hyperplane <span class="math notranslate nohighlight">\(h(\x)=0\)</span>, then
+the goal is to find the optimal hyperplane <span class="math notranslate nohighlight">\(h^*\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[h^*=\arg\max_h\{\delta_h^*\}=\arg\max_{\w,b}\bigg\{\frac{1}{\lv\w\rv}\bigg\}\]</div>
+<p>The SVM task is to find the hyperplane that maximizes the margin
+<span class="math notranslate nohighlight">\(\frac{1}{\lv\w\rv}\)</span>, subject to the <span class="math notranslate nohighlight">\(n\)</span> constraints,
+<span class="math notranslate nohighlight">\(\y_i(\w^T\x_i+b)\geq 1\)</span>, for all points <span class="math notranslate nohighlight">\(\x_i\in\D\)</span>.
+Instead of maximizing the margin <span class="math notranslate nohighlight">\(\frac{1}{\lv\w\rv}\)</span>, we can minimize <span class="math notranslate nohighlight">\(\lv\w\rv\)</span>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>Objective Functions:</strong> <span class="math notranslate nohighlight">\(\dp\min_{\w,b}\bigg\{\frac{\lv\w\rv^2}{2}\bigg\}\)</span></p>
+<p><strong>Linear Constraints:</strong> <span class="math notranslate nohighlight">\(y_i(\w^T\x_i+b)\geq 1,\forall\x_i\in\D\)</span></p>
+</div>
+<p>We can solve the <em>dual</em> problem via the use of <em>Lagrange multipliers</em>.
+The main idea is to introduce a Lagrange multiplier <span class="math notranslate nohighlight">\(\alpha_i\)</span> for each
+constraint, which satisfies the Karush-Kuhn-Tucker (KKT) conditions at the
+optimal solution:</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\alpha_i(y_i(\w^T\x_i+b)-1)=0\\\rm{and}\ \alpha_i\geq 0\end{aligned}\end{align} \]</div>
+<p>Incorporating all the <span class="math notranslate nohighlight">\(n\)</span> constraints, the new objective function, called the <em>Lagrangian</em>, then becomes</p>
+<div class="math notranslate nohighlight">
+\[\min L=\frac{1}{2}\lv\w\rv^2-\sum_{i=1}^n\alpha_i(y_i(\w^T\x_i+b)-1)\]</div>
+<p><span class="math notranslate nohighlight">\(L\)</span> should be minimized with respect to <span class="math notranslate nohighlight">\(\w\)</span> and <span class="math notranslate nohighlight">\(b\)</span>, and it
+should be maximized with respect to <span class="math notranslate nohighlight">\(\alpha_i\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\frac{\pd}{\pd\w}L=\w-\sum_{i=1}^n\alpha_iy_i\x_i=\0\ \rm{or}\ \w=\sum_{i=1}^n\alpha_iy_i\x_i\\\frac{\pd}{\pd b}L=\sum_{i=1}^n\alpha_iy_i=0\end{aligned}\end{align} \]</div>
+<p>We obtain the <em>dual Lagrangian</em> objective funtion, which is specified purely in terms of the lagrange multipliers:</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}L_{dual}&amp;=\frac{1}{2}\w^T\w-\w^T\bigg(\sum_{i=1}^n\alpha_iy_i\x_i\bigg)
+-b\sum_{i=1}^n\alpha_iy_i+\sum_{i=1}^n\alpha_i\\&amp;=-\frac{1}{2}\w^T\w+\sum_{i=1}^n\alpha_i\\&amp;=\sum_{i=1}^n\alpha_i-\frac{1}{2}\sum_{i=1}^n\sum_{j=1}^n\alpha_i\alpha_jy_iy_j\x_i^Y\x_j\end{aligned}\end{align} \]</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>Objective Function:</strong> <span class="math notranslate nohighlight">\(\dp\max_{\bs{\alpha}}L_{dual}=\sum_{i=1}^n\alpha_i\)</span>
+<span class="math notranslate nohighlight">\(\dp-\frac{1}{2}\sum_{i=1}^n\sum_{j=1}^n\alpha_i\alpha_jy_iy_j\x_i^Y\x_j\)</span></p>
+<p><strong>Linear Constraints</strong>: <span class="math notranslate nohighlight">\(\alpha_i\geq 0,\forall i\in\D\)</span> and <span class="math notranslate nohighlight">\(\dp\sum_{i=1}^n\alpha_iy_i=0\)</span></p>
+</div>
+<p><strong>Weight Vector and Bias</strong></p>
+<p>According to the KKT conditions, we have</p>
+<div class="math notranslate nohighlight">
+\[\alpha_i(y_i(\w^T\x_i+b)-1)=0\]</div>
+<p>which gives rise to two cases:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(\alpha_i=0\)</span>, or</p></li>
+<li><p><span class="math notranslate nohighlight">\(y_i(\w^T\x_i+b)-1=0\)</span>, which implies <span class="math notranslate nohighlight">\(y_i(\w^T\x_i+b)=1\)</span>.</p></li>
+</ol>
+</div></blockquote>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\w=\sum_{\alpha_i&gt;0}\alpha_iy_i\x_i\)</span></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp b_i=\frac{1}{y_i}-\w^T\x_i=y_i-\w^T\x_i\)</span></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp b=\rm{avg}_{\alpha_i&gt;0}\{b_i\}\)</span></p>
+</div>
+<p><strong>SVM Classifier</strong></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\hat{y}=\rm{sign}(h(\z))=\rm{sign}(\w^T\z+b)\)</span></p>
+</div>
+<p><strong>Soft Margin SVM: Linear and Nonseparable Case</strong></p>
+<p>Here we consider the case where the classes overlap to some extent so that a perfect separation is not possible.</p>
+<p>SVM can handle non-separable points by introducing <em>slack variable</em> <span class="math notranslate nohighlight">\(\xi_i\)</span> as follows:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(y_i(\w^T\x_i+b)\geq 1-\xi_i\)</span></p>
+</div>
+<p>where <span class="math notranslate nohighlight">\(\xi_i\geq 0\)</span> is the slack variable for point <span class="math notranslate nohighlight">\(\x_i\)</span>, which
+indicates how much the point violates the separability condition, that is, the
+point may no longer be at least <span class="math notranslate nohighlight">\(1/\lv\w\rv\)</span> away from the hyperplane.
+The slack values indicate three types of point.
+If <span class="math notranslate nohighlight">\(\xi_i=0\)</span>, then the corresponding point <span class="math notranslate nohighlight">\(\x_i\)</span> is at least
+<span class="math notranslate nohighlight">\(\frac{1}{\lv\w\rv}\)</span> away from the hyperplane.
+If <span class="math notranslate nohighlight">\(0&lt;\xi_i&lt;1\)</span>, then the point is within the margin and still correctly
+classified, that is, it is on the correct side of the hyperplane.
+However, if <span class="math notranslate nohighlight">\(\xi\geq 1\)</span> then the point is misclassified and appears on the wrong side of the hyperplane.</p>
+<p>In the nonseparable case, also called the <em>soft margin</em> case, the goal of SVM
+classification is to find the hyperplane iwth maximum margin that also minimizes
+the slack terms.
+The new objective function is given as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>Objective Function:</strong> <span class="math notranslate nohighlight">\(\dp\min_{\w,b,\xi_i}\bigg\{\frac{\lv\w\rv^2}{w}+C\sum_{i=1}^n(\xi_i)^k\bigg\}\)</span></p>
+<p><strong>Linear Constraints:</strong> <span class="math notranslate nohighlight">\(y_i(\w^T\x_i+b)\geq 1-\xi_i,\forall\x_i\in\D\quad\xi_i\geq 0,\forall\x_i\in\D\)</span></p>
+</div>
+<p>where <span class="math notranslate nohighlight">\(C\)</span> and <span class="math notranslate nohighlight">\(k\)</span> are constants that incorporate the cost of misclassification.
+The term <span class="math notranslate nohighlight">\(\sum_{i=1}^n(\xi_i)^k\)</span> gives the <em>loss</em>, that is, an estimate of the deviation from the separable case.
+The scalar <span class="math notranslate nohighlight">\(C\geq 0\)</span>, which is chosen empirically, is a
+<em>regularization constant</em> that controls the trade-off between maximizing the
+margin or minimizing the loss.
+The constant <span class="math notranslate nohighlight">\(k&gt;0\)</span> governs the form of the loss.
+Typically <span class="math notranslate nohighlight">\(k\)</span> is set to 1 or 2.
+When <span class="math notranslate nohighlight">\(k=1\)</span>, called <em>hinge loss</em>, the goal is to minimize the sum of the
+slack variables, whereas when <span class="math notranslate nohighlight">\(k=2\)</span>, called <em>quadratic loss</em>, the goal is
+to minimize the sum of the squared slack variables.</p>
+<div class="section" id="hinge-loss">
+<h3>21.3.1 Hinge Loss<a class="headerlink" href="#hinge-loss" title="Permalink to this headline">¶</a></h3>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\alpha_i(y_i(\w^T\x_i+b)-1+\xi_i)=0\ \rm{with}\ \alpha_i\geq 0\\\beta_i(\xi_i-0)=0\ \rm{with}\ \beta_i\geq 0\end{aligned}\end{align} \]</div>
+<p>The Lagrangian is then given as</p>
+<div class="math notranslate nohighlight">
+\[L=\frac{1}{2}\lv\w\rv^2+C\sum_{i=1}^n\xi_i-\sum_{i=1}^n\alpha_i(y_i(\w^T\x_i+b)-1+\xi_i)-\sum_{i=1}^n\beta_i\xi_i\]</div>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\frac{\pd}{\pd\w}L&amp;=\w-\sum_{i=1}^n\alpha_iy_i\x_i=\0\ \rm{or}\ \w=\sum_{i=1}^n\alpha_iy_i\x_i\\\frac{\pd}{\pd b}L&amp;=\sum_{i=1}^n\alpha_iy_i=0\\\frac{\pd}{\pd\xi_i}L&amp;=C-\alpha_i-\beta_i=0\ \rm{or}\ \beta_i=C-\alpha_i\end{aligned}\end{align} \]</div>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}L_{dual}&amp;=\frac{1}{2}\w^T\w-\w^T\bigg(\sum_{i=1}^n\alpha_iy_i\x_i\bigg)
+-b\sum_{i=1}^n\alpha_iy_i+\sum_{i=1}^n\alpha_i+
+\sum_{i=1}^n(C-\alpha_i-\beta_i)\xi_i\\&amp;=\sum_{i=1}^n\alpha_i-\frac{1}{2}\sum_{i=1}^n\sum_{j=1}^n\alpha_i\alpha_jy_iy_j\x_i^T\x_j\end{aligned}\end{align} \]</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>Objective Function:</strong> <span class="math notranslate nohighlight">\(\dp\max_{\bs{\alpha}}L_{dual}=\sum_{i=1}^n\alpha_i\)</span>
+<span class="math notranslate nohighlight">\(\dp-\frac{1}{2}\sum_{i=1}^n\sum_{j=1}^n\alpha_i\alpha_jy_iy_j\x_i^T\x_j\)</span></p>
+<p><strong>Lienar Constraints:</strong> <span class="math notranslate nohighlight">\(0\leq\alpha_i\leq C,\forall i\in\D\)</span> and <span class="math notranslate nohighlight">\(\dp\sum_{i=1}^n\alpha_iy_i=0\)</span></p>
+</div>
+<p><strong>Weight Vector and Bias</strong></p>
+<p>Once we solve for <span class="math notranslate nohighlight">\(\alpha_i\)</span>, we have <span class="math notranslate nohighlight">\(\alpha_i=0\)</span> for points that
+are not support vectors, and <span class="math notranslate nohighlight">\(\alpha_i&gt;0\)</span> only for the support vectors,
+which comprise all points <span class="math notranslate nohighlight">\(\x_i\)</span> for which we have</p>
+<div class="math notranslate nohighlight">
+\[y_i(\w^T\x_i+b)=1-\xi_i\]</div>
+<p>Notice that the support vectors now include all points that are on the margin,
+which have zero slack, as well as all points with postivie slack.</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\w=\sum_{\alpha_i&gt;0}\alpha_iy_i\x_i\\\beta_i=C-\alpha_i\\(C-\alpha_i)\xi_i=0\end{aligned}\end{align} \]</div>
+<p>For the support vectors with <span class="math notranslate nohighlight">\(\alpha_i&gt;0\)</span>, we have two cases to consider:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(\xi_i&gt;0\)</span>, which implies that <span class="math notranslate nohighlight">\(C-\alpha_i=0\)</span>, that is, <span class="math notranslate nohighlight">\(\alpha_i=C\)</span>, or`</p></li>
+<li><p><span class="math notranslate nohighlight">\(C-\alpha_i&gt;0\)</span>, that is <span class="math notranslate nohighlight">\(\alpha_i&lt;C\)</span>.
+In this case, we must have <span class="math notranslate nohighlight">\(\xi_i=0\)</span>.
+In other words, these are precisely those support vectors that are on the margin.</p></li>
+</ol>
+</div></blockquote>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\alpha_i(y_i(\w^T\x_i+b_i)-1)=0\\y_i(\w^T\x_i+b_i)=1\\b_i=\frac{1}{y_i}-\w^T\x_i=y_i-\w^T\x_i\end{aligned}\end{align} \]</div>
+<p>To obtain the final bias <span class="math notranslate nohighlight">\(b\)</span>, we can take the average over all the <span class="math notranslate nohighlight">\(b_i\)</span> values.</p>
+<div class="math notranslate nohighlight">
+\[\hat{y}=\rm{sign}(h(\z))=\rm{sign}(\w^T\z+b)\]</div>
+</div>
+<div class="section" id="quadratic-loss">
+<h3>21.3.2 Quadratic Loss<a class="headerlink" href="#quadratic-loss" title="Permalink to this headline">¶</a></h3>
+<p>In this case we can drop the positivity constraint <span class="math notranslate nohighlight">\(\xi_i\geq 0\)</span> due to
+the fact that (1) the sum of the slack terms <span class="math notranslate nohighlight">\(\sum_{i=1}^n\xi_i^2\)</span> is
+always positive, and (2) a potential negative value of slack will be ruled out
+during optimization because a choice of <span class="math notranslate nohighlight">\(\xi_i=0\)</span> leads to a smaller value
+of the primary objective, and it still satisfies the constraint
+<span class="math notranslate nohighlight">\(y_i(\w^T\x_i+b)\geq 1-\xi_i\)</span> whenever <span class="math notranslate nohighlight">\(\xi&lt;0\)</span>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>Objective Function:</strong> <span class="math notranslate nohighlight">\(\dp\min_{\w,b,\xi_i}\bigg\{\frac{\lv\w\rv^2}{2}+C\sum_{i=1}^n\xi_i^2\bigg\}\)</span></p>
+<p><strong>Linear Constraints:</strong> <span class="math notranslate nohighlight">\(y_i(\w^T\x_i+b)\geq 1-\xi_i,\forall\x_i\in\D\)</span></p>
+</div>
+<div class="math notranslate nohighlight">
+\[L=\frac{1}{2}\lv\w\rv^2+C\sum_{i=1}^n\xi_i^2-\sum_{i=1}^n\alpha_i(y_i(\w^T\x_i+b)-1+\xi_i)\]</div>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\w=\sum_{i=1}^n\alpha_iy_i\x_i\\\sum_{i=1}^n\alpha_iy_i=0\\\xi_i=\frac{1}{2C}\alpha_i\end{aligned}\end{align} \]</div>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}L_{dual}&amp;=\sum_{i=1}^n\alpha_i-\frac{1}{2}\sum_{i=1}^n\sum_{j=1}^n
+\alpha_i\alpha_jy_iy_j\x_i^T\x_j-\frac{1}{4C}\sum_{i=1}^n\alpha_i^2\\&amp;=\sum_{i=1}^n\alpha_i-\frac{1}{2}\sum_{i=1}^n\sum_{j=1}^n\alpha_i\alpha_j
+y_iy_j\bigg(\x_i^T\x_j+\frac{1}{2C}\delta_{ij}\bigg)\end{aligned}\end{align} \]</div>
+<p>where <span class="math notranslate nohighlight">\(\delta\)</span> is the <em>Kronecker delta</em> function, defined as
+<span class="math notranslate nohighlight">\(\delta_{ij}=1\)</span> if <span class="math notranslate nohighlight">\(i=j\)</span>, and <span class="math notranslate nohighlight">\(\delta_{ij}=0\)</span> otherwise.</p>
+<p>Thus, the dual objective is given as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\max_{\bs{\alpha}}=\sum_{i=1}^n\alpha_i-\frac{1}{2}\sum_{i=1}^n\sum_{j=1}^n\alpha_i\alpha_jy_iy_j\)</span>
+<span class="math notranslate nohighlight">\(\dp\bigg(\x_i^T\x_j+\frac{1}{2C}\delta_{ij}\bigg)\)</span></p>
+<p>subject to the constraints <span class="math notranslate nohighlight">\(\alpha_i\geq 0,\forall i\in\D\)</span>, and <span class="math notranslate nohighlight">\(\dp\sum_{i=1}^n\alpha_iy_i=0\)</span></p>
+</div>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\w=\sum_{\alpha_i&gt;0}\alpha_iy_i\x_i\\b=\rm{avg}_{\alpha_i&gt;0}\{y_i-\w^T\x_i\}\end{aligned}\end{align} \]</div>
+</div>
+<div class="section" id="kernel-svm-nonliear-case">
+<h3>21.4 Kernel SVM: Nonliear Case<a class="headerlink" href="#kernel-svm-nonliear-case" title="Permalink to this headline">¶</a></h3>
+<p>To apply the kernel trick for nonlinear SVM classification, we have to show that
+all operations require only the kernel function:</p>
+<div class="math notranslate nohighlight">
+\[K(\x_i,\x_j)=\phi(\x_i)^T\phi(\x_j)\]</div>
+</div>
+</div>
 </div>
 
 
