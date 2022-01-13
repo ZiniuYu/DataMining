@@ -589,3 +589,58 @@ The augmented kernel value is therefore given as
 
     **Linear Constraints:** :math:`0\leq\alpha_i\leq C,\forall i=1,2,\cds,n`
     
+21.5.1 Dual Solution: Stochastic Gradient Ascent
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. math::
+
+    J(\alpha_k)=\alpha_k-\frac{1}{2}\alpha_k^2y_k^2\td{K}(\x_k,\x_k)-
+    \alpha_ky_k\sum_{i=1,i\ne k}^n\alpha_iy_i\td{K}(\x_i,\x_k)
+
+.. math::
+
+    \nabla J(\bs{\alpha})=\bigg(\frac{\pd J(\bs{\alpha})}{\pd\alpha_1},
+    \frac{\pd J(\bs{\alpha})}{\pd\alpha_2},\cds,
+    \frac{\pd J(\bs{\alpha})}{\pd\alpha_n}\bigg)^T
+
+where the :math:`k`\ th component of the gradient is obtained by differentiating
+:math:`J(\alpha_k)` with respect to :math:`\alpha_k`:
+
+.. math::
+
+    \frac{\pd J(\bs{\alpha})}{\pd\alpha_k}=\frac{\pd J(\alpha_k)}{\pd\alpha_k}=
+    1-y_k\bigg(\sum_{i=1}^n\alpha_iy_i\td{K}(\x_i,\x_k)\bigg)
+
+Starting from an initial :math:`\bs{\alpha}`, the gradient ascent approach successively updates it as follows:
+
+.. math::
+
+    \bs{\alpha}_{t+1}=\bs{\alpha}_t+\eta_t\nabla J(\bs{\alpha}_t)
+
+The update rule for the :math:`k`\ th component is given as
+
+.. math::
+
+    \alpha_k=\alpha_k+\eta_k\frac{\pd J(\bs{\alpha})}{\pd\alpha_k}=
+    \alpha_k+\eta_k\bigg(1-y_k\sum_{i=1}^n\alpha_iy_i\td{K}(\x_i,\x_k)\bigg)
+
+We also have to ensure that the constraints :math:`\alpha_k\in[0,C]` are satisfied.
+Thus, in the update step above, if :math:`\alpha_k<0` we reset it to 
+:math:`\alpha_k=0`, and if :math:`\alpha_k>C` we reset it to :math:`\alpha_k=C`.
+
+.. image:: ../_static/Algo21.1.png
+
+.. math::
+
+    \eta_k=\frac{1}{\td{K}(\x_k,\x_k)}
+
+The method successively updates :math:`\bs{\alpha}` and stops when the change
+falls below a given threshold :math:`\epsilon`.
+The computational complexity of the method is :math:`O(n^2)` per iteration.
+
+**Testing**
+
+.. note::
+
+    :math:`\hat{y}=\rm{sign}(h(\td\phi(\z)))=\rm{sign}(\td\w^T\td\phi(\z))=`
+    :math:`\dp\rm{sign}\bigg(\sum_{\alpha_i>0}\alpha_iy_i\td{K}(\x_i,\z)\bigg)`
