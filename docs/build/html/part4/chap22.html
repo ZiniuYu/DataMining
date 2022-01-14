@@ -96,7 +96,15 @@
 <li class="toctree-l2"><a class="reference internal" href="chap19.html">Chapter 19 Decision Tree Classifier</a></li>
 <li class="toctree-l2"><a class="reference internal" href="chap20.html">Chapter 20 Linear Discriminant Analysis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="chap21.html">Chapter 21 Support Vector Machines</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Chapter 22 Classification Assessment</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Chapter 22 Classification Assessment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#classification-performance-measures">22.1 Classification Performance Measures</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#contingency-table-based-measures">22.1.1 Contingency Table-based Measures</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#binary-classification-positive-and-negative-class">22.1.2 Binary Classification: Positive and Negative Class</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#roc-analysis">22.1.3 ROC Analysis</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -234,6 +242,189 @@
 \newcommand{\ppr}{^{\prime\prime}}\end{aligned}\end{align} \]</div>
 <div class="section" id="chapter-22-classification-assessment">
 <h1>Chapter 22 Classification Assessment<a class="headerlink" href="#chapter-22-classification-assessment" title="Permalink to this headline">¶</a></h1>
+<p>We may think of the classifier as a model or function <span class="math notranslate nohighlight">\(M\)</span> that predicts
+the class label <span class="math notranslate nohighlight">\(\hat{y}\)</span> for a given input example <span class="math notranslate nohighlight">\(\x\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\hat{y}=M(\x)\]</div>
+<p>where <span class="math notranslate nohighlight">\(\x=(x_1,x_2,\cds,x_d)^T\in\R^d\)</span> is a point in <span class="math notranslate nohighlight">\(d\)</span>-dimensional
+space and <span class="math notranslate nohighlight">\(\hat{y}=\{c_1,c_2,\cds,c_k\}\)</span> is its predicted class.</p>
+<p>To build the classification model <span class="math notranslate nohighlight">\(M\)</span> we need a <em>training set</em> of points along with their known classes.
+Different classifiers are obtained depending on the assumptions used to build the model <span class="math notranslate nohighlight">\(M\)</span>.
+Once the model <span class="math notranslate nohighlight">\(M\)</span> has been trained, we assess its performance over a
+separate <em>testing set</em> of points for which we know the true classes.
+Finally, the model can be deployed to predict the class for future points whose class we typically do not know.</p>
+<div class="section" id="classification-performance-measures">
+<h2>22.1 Classification Performance Measures<a class="headerlink" href="#classification-performance-measures" title="Permalink to this headline">¶</a></h2>
+<p>Let <span class="math notranslate nohighlight">\(\D\)</span> be the testing set comprising <span class="math notranslate nohighlight">\(n\)</span> points in a <span class="math notranslate nohighlight">\(d\)</span>
+dimensional space, let <span class="math notranslate nohighlight">\(\{c_1,c_2,\cds,c_k\}\)</span> denote the set of <span class="math notranslate nohighlight">\(k\)</span>
+class labels, and let <span class="math notranslate nohighlight">\(M\)</span> be a classifier.
+For <span class="math notranslate nohighlight">\(\x_i\in\D\)</span>, let <span class="math notranslate nohighlight">\(y_i\)</span> denote its true class, and let
+<span class="math notranslate nohighlight">\(\hat{y_i}=M(\x_i)\)</span> denote its predicted class.</p>
+<p><strong>Error Rate</strong></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp Error\ Rate=\frac{1}{n}\sum_{i=1}^nI(y_i\ne\hat{y_i})\)</span></p>
+</div>
+<p><strong>Accuracy</strong></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp Accuracy=\frac{1}{n}\sum_{i=1}^nI(y_i=\hat{y_i})=1-Error\ Rate\)</span></p>
+</div>
+<div class="section" id="contingency-table-based-measures">
+<h3>22.1.1 Contingency Table-based Measures<a class="headerlink" href="#contingency-table-based-measures" title="Permalink to this headline">¶</a></h3>
+<p>Let <span class="math notranslate nohighlight">\(\cl{D}=\{\D_1,\D_2,\cds,\D_k\}\)</span> denote a partitioning of the testing
+points based on their true class labels, where</p>
+<div class="math notranslate nohighlight">
+\[\D_j=\{\x_i^T|y_i=c_j\}\quad\rm{and}\quad n_i=|\D_i|\]</div>
+<p>Let <span class="math notranslate nohighlight">\(\cl{R}=\{\bs{R}_1,\bs{R}_2,\cds,\bs{R}_k\}\)</span> denote a partitioning of
+the testing points based on the predicted labels, that is,</p>
+<div class="math notranslate nohighlight">
+\[\bs{R}_j=\{\x_i^T|\hat{y_i}=c_j\}\quad\rm{and}\quad m_j=|\bs{R}_j|\]</div>
+<p>The partitionings <span class="math notranslate nohighlight">\(\cl{R}\)</span> and <span class="math notranslate nohighlight">\(\cl{D}\)</span> induce a <span class="math notranslate nohighlight">\(k\times k\)</span>
+contingency table <span class="math notranslate nohighlight">\(\N\)</span>, also called a <em>confusion matrix</em>, defined as
+follows:</p>
+<div class="math notranslate nohighlight">
+\[\N(i,j)=n_{ij}=|\bs{R}_i\cap\D_j|=|\{\x_a\in\D|\hat{y_a}=c_i\ \rm{and}\ y_a=c_j\}|\]</div>
+<p>where <span class="math notranslate nohighlight">\(1\leq i,j\leq k\)</span>.</p>
+<p><strong>Accuracy/Precision</strong></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp acc_i=prec_i=\frac{n_{ii}}{m_i}\)</span></p>
+</div>
+<p>where <span class="math notranslate nohighlight">\(m_i\)</span> is the number of examples predicted as <span class="math notranslate nohighlight">\(c_i\)</span> by classifier <span class="math notranslate nohighlight">\(M\)</span>.
+The higher the accuracy on class <span class="math notranslate nohighlight">\(c_i\)</span> the better the classifier.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp Accuracy=Precision=\sum_{i=1}^k\bigg(\frac{m_i}{n}\bigg)acc_i=\frac{1}{n}\sum_{i=1}^kn_{ii}\)</span></p>
+</div>
+<p><strong>Coverage/Recall</strong></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp coverage_i=recall_i=\frac{n_{ii}}{n_i}\)</span></p>
+</div>
+<p>where <span class="math notranslate nohighlight">\(n_i\)</span> is the number of points in class <span class="math notranslate nohighlight">\(c_i\)</span>.
+The higher the coverage the better the classifier.</p>
+<p><strong>F-measure</strong></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp F_i=\frac{2}{\frac{1}{prec_i}+\frac{1}{recall_i}}=\frac{2\cd prec_i\cd recall_i}{prec_i+recall_i}\)</span>
+<span class="math notranslate nohighlight">\(\dp=\frac{2n_{ii}}{n_i+m_i}\)</span></p>
+</div>
+<p>The higher the <span class="math notranslate nohighlight">\(F_i\)</span> value the better the classifier.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp F=\frac{1}{k}\sum_{i=1}^rF_i\)</span></p>
+</div>
+<p>For a perfect classifier, the maximum value of the F-measure is 1.</p>
+</div>
+<div class="section" id="binary-classification-positive-and-negative-class">
+<h3>22.1.2 Binary Classification: Positive and Negative Class<a class="headerlink" href="#binary-classification-positive-and-negative-class" title="Permalink to this headline">¶</a></h3>
+<p>When there are only <span class="math notranslate nohighlight">\(k=2\)</span> classes, we call class <span class="math notranslate nohighlight">\(c_i\)</span> the positive
+class and <span class="math notranslate nohighlight">\(c_2\)</span> the negative class.</p>
+<ul class="simple">
+<li><p><em>True Positives (TP)</em></p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[TP=n_{11}|\{\x_i|\hat{y_1}=y_1=c_1\}|\]</div>
+<ul class="simple">
+<li><p><em>False Positives (FP)</em></p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[FP=n_{12}=|\{\x_i|\hat{y_i}=c_1\ \rm{and}\ y_i=c_2\}|\]</div>
+<ul class="simple">
+<li><p><em>False Negatives (FN)</em></p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[FN=n_{21}=|\{\x_i|\hat{y_i}=c_2\ \rm{and}\ y_i=c_1\}|\]</div>
+<ul class="simple">
+<li><p><em>True Negatives (TN)</em></p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[TN=n_{22}=|\{\x_i|\hat{y_i}=y_i=c_2\}|\]</div>
+<p><strong>Error Rate</strong></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp Error\ Rate=\frac{FP+FN}{n}\)</span></p>
+</div>
+<p><strong>Accuracy</strong></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp Accuracy=\frac{TP+TN}{n}\)</span></p>
+</div>
+<p><strong>Class-specific Precision</strong></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp prec_P=\frac{TP}{TP+FP}=\frac{TP}{m_1}\)</span></p>
+<p><span class="math notranslate nohighlight">\(\dp prec_N=\frac{TN}{TN+FN}=\frac{TN}{m_2}\)</span></p>
+</div>
+<p>where <span class="math notranslate nohighlight">\(m_i=|\bs{R}_i|\)</span> is the number of points predicted by <span class="math notranslate nohighlight">\(M\)</span> as having class <span class="math notranslate nohighlight">\(c_i\)</span>.</p>
+<p><strong>Sensitivity: True Positive Rate</strong></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp TPR=recall_P=\frac{TP}{TP+FN}=\frac{TP}{n_1}\)</span></p>
+</div>
+<p>where <span class="math notranslate nohighlight">\(n_1\)</span> is the size of the positive class.</p>
+<p><strong>Specificity: True Negative Rate</strong></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp TNR=specificity=recall_N=\frac{TN}{FP+TN}=\frac{TN}{n_2}\)</span></p>
+</div>
+<p>where <span class="math notranslate nohighlight">\(n_2\)</span> is the size of the negative class.</p>
+<p><strong>False Negative Rate</strong></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(FNR=\frac{FN}{TP+FN}=\frac{FN}{n_1}=1-sensitivity\)</span></p>
+</div>
+<p><strong>False Positive Rate</strong></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(FPR=\frac{FP}{FP+TN}=\frac{FP}{n_2}=1-specificity\)</span></p>
+</div>
+</div>
+<div class="section" id="roc-analysis">
+<h3>22.1.3 ROC Analysis<a class="headerlink" href="#roc-analysis" title="Permalink to this headline">¶</a></h3>
+<p>Receiver Operating Characteristic (ROC) analysis is a popular strategy for
+assessing the performance of classifiers when there are two classes.</p>
+<p>Typically, a binary calssifier chooses some positive score threshold
+<span class="math notranslate nohighlight">\(\rho\)</span>, and classifies all points with score above <span class="math notranslate nohighlight">\(\rho\)</span> as
+positive, with the remaining points classified as negative.
+ROC analysis plots the performance of the classifier over all possible values of
+the threshold parameter <span class="math notranslate nohighlight">\(\rho\)</span>.
+In particular, for each value of <span class="math notranslate nohighlight">\(\rho\)</span>, it plots the false positive rate
+on the <span class="math notranslate nohighlight">\(x\)</span>-axis versus the true positive rate on the <span class="math notranslate nohighlight">\(y\)</span>-axis.
+The resulting plot is called the <em>ROC curve</em> or <em>ROC plot</em> for the classifier.</p>
+<p>Let <span class="math notranslate nohighlight">\(S(\x_i)\)</span> denote the real-valued score for the positive class output
+by a classifier <span class="math notranslate nohighlight">\(M\)</span> for the point <span class="math notranslate nohighlight">\(\x_i\)</span>.
+Let the maximum and minimum score thresholds observed on testing dataset <span class="math notranslate nohighlight">\(\D\)</span> be as follows:</p>
+<div class="math notranslate nohighlight">
+\[\rho^\min=\min_i\{S(\x_i)\}\quad\quad\rho^\max=\max_i\{S(\x_i)\}\]</div>
+<p>Initially, we classify all points as negative.
+Both <em>TP</em> and <em>FP</em> are thus initially zero, resulting in <em>TPR</em> and <em>FPR</em> rates
+of zero, which correspond to the point (0,0) at the lower left corner in
+the ROC plot.
+Next for each distinct value of <span class="math notranslate nohighlight">\(\rho\)</span> in the range
+<span class="math notranslate nohighlight">\([\rho^\min,\rho^\max]\)</span>, we tabulate the set of positive points:</p>
+<div class="math notranslate nohighlight">
+\[\bs{R}_1(\rho)=\{\x_i\in\D:S(\x_i)&gt;\rho\}\]</div>
+<p>and we compute the corresponding true and false positive rates, to obtain a new point in the ROC plot.
+Finally, in the last step, we classify all points as positive.
+Both <em>FN</em> and <em>TN</em> are thus zero, resulting in <em>TPR</em> and <em>FPR</em> values of 1.
+This results in the point (1,1) at the top right-hand corner in the ROC plot.
+An ideal classifier corresponds to the top left point (0,1), which correspoinds
+to the case <span class="math notranslate nohighlight">\(FPR=0\)</span> and <span class="math notranslate nohighlight">\(TPR=1\)</span>, that is, the classifier has no
+false positives, and identifies all true positives.</p>
+<p>As such, a ROC curve indicates the extent to which the classifier ranks positive
+instances higher than the negative instances.
+An ideal classifier should score all positive points higher than any negative point.
+Thus, a classifier with a curve closer to the ideal case, that is, closer to the
+upper left corner, is a better classifier.</p>
+<p><strong>Area Under ROC Curve</strong></p>
+<p>Because the total area of the plot is 1, the AUC lies in the interval <span class="math notranslate nohighlight">\([0,1]\)</span> - the higher the better.
+The AUC value is essentially the probability that the classifier will rank a
+random positive test case higher than a random negative test instance.</p>
+<p><strong>ROC/AUC Algorithm</strong></p>
+</div>
+</div>
 </div>
 
 
