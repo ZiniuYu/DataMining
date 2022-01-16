@@ -103,6 +103,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#roc-analysis">22.1.3 ROC Analysis</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="#classifier-evaluation">22.2 Classifier Evaluation</a></li>
 </ul>
 </li>
 </ul>
@@ -423,7 +424,22 @@ upper left corner, is a better classifier.</p>
 The AUC value is essentially the probability that the classifier will rank a
 random positive test case higher than a random negative test instance.</p>
 <p><strong>ROC/AUC Algorithm</strong></p>
+<img alt="../_images/Algo22.1.png" src="../_images/Algo22.1.png" />
+<p><strong>Random Classifier</strong></p>
+<p>A random classifier corresponds to a diagonal line in the ROC plot.
+It follows that if the ROC curve for any classifier is below the diagonal, it
+indicates performance worse than random guessing.
+For such cases, inverting the class assignment will produce a better classifier.</p>
+<p><strong>Class Imbalance</strong></p>
+<p>It is worth remarking that ROC curves are insensitive to class skew.
+This is because the <em>TPR</em>, interpreted a s the probability of predicting a
+positive point as positive, and the <em>FPR</em>, interpreted as the probability of
+predicting a negative point as positive, do not depend on the ratio of the
+positive to negative class size.</p>
 </div>
+</div>
+<div class="section" id="classifier-evaluation">
+<h2>22.2 Classifier Evaluation<a class="headerlink" href="#classifier-evaluation" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 

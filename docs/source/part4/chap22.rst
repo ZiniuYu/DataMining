@@ -238,3 +238,22 @@ random positive test case higher than a random negative test instance.
 
 **ROC/AUC Algorithm**
 
+.. image:: ../_static/Algo22.1.png
+
+**Random Classifier**
+
+A random classifier corresponds to a diagonal line in the ROC plot.
+It follows that if the ROC curve for any classifier is below the diagonal, it 
+indicates performance worse than random guessing.
+For such cases, inverting the class assignment will produce a better classifier.
+
+**Class Imbalance**
+
+It is worth remarking that ROC curves are insensitive to class skew. 
+This is because the *TPR*, interpreted a s the probability of predicting a 
+positive point as positive, and the *FPR*, interpreted as the probability of 
+predicting a negative point as positive, do not depend on the ratio of the 
+positive to negative class size.
+
+22.2 Classifier Evaluation
+--------------------------
