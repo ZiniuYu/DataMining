@@ -257,3 +257,302 @@ positive to negative class size.
 
 22.2 Classifier Evaluation
 --------------------------
+
+The input dataset :math:`\D` is randomly split into a disjoint training set and testing set.
+The training set is used to learn the model :math:`M`, and the testing set is
+used to evaluate the measure :math:`\theta`.
+
+22.2.1 :math:`K`-fold Cross-Validation
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Cross-validation divides the dataset :math:`\D` into :math:`K` equal-sized 
+parts, called *folds*, namely :math:`\D_1,\D_2,\cds,\D_k`.
+Each fold :math:`\D_i` is, in turn, treated as the testing set, with the 
+remaining folds comprising the training set 
+:math:`\D\backslash\D_i=\bigcup_{j\ne i}\D_j`.
+After training the model :math:`M_i` on :math:`\D\backslash\D_i`, we assess its
+performance on the testing set :math:`\D_i` to obtain the :math:`i`\ th estimate
+:math:`\th_i`.
+The expected value of the performance measure can then be estimated as
+
+.. math::
+
+    \hat{\mu_\th}=E[\th]=\frac{1}{K}\sum_{i=1}^K\th_i
+
+and its variance as
+
+.. math::
+
+    \hat{\sg_\th}^2=\frac{1}{K}\sum_{i=1}^K(\th_i-\hat{\mu_\th})^2
+
+.. image:: ../_static/Algo22.2.png
+
+Usually :math:`K` is chosen to be 5 or 10.
+The special case, when :math:`K=n`, is called *leave-one-out* cross-validation, 
+where the tseting set comprises a single point and the remaining data is used 
+for training purposes.
+
+22.2.2 Bootstrap Resampling
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The bootstrap method draws :math:`K` random samples of size :math:`n` *with replacement* from :math:`\D`.
+Each sample :math:`\D_i` is thus the same size as :math:`\D`, and has several repeated points.
+The probability that a point is selected is given as :math:`p=\frac{1}{n}`, and 
+thus the probability that it is not selected is
+
+.. math::
+
+    q=1-p=\bigg(1-\frac{1}{n}\bigg)
+
+Because :math:`\D_i` has :math:`n` points, the probability that :math:`\x_j` is 
+not selected even after :math:`n` tries is given as
+
+.. math::
+
+    P(\x_j\notin\D_i)=q^n=\bigg(1-\frac{1}{n}\bigg)^n\simeq e\im=0.368
+
+On the other hand, the probability that :math:`\x_j\in\D_i` is given as
+
+.. math::
+
+    P(\x_j\in\D_i)=1-P(\x_j\notin\D_i)=1-0.368=0.632
+
+This means that each bootstrp sample contains approximately 63.2% of the points from :math:`\D`.
+
+.. image:: ../_static/Algo22.3.png
+
+22.2.3 Confidence Intervals
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The sum of a large number of independent and identically distributed (IID) 
+random variables has approximately a normal distribution, regardless of the
+distribution of the individual random variables.
+Let :math:`\th_1,\th_2,\cds,\th_K` be a sequence of IID random variables,
+representing, for example, the error rate or some other performance measure over
+the :math:`K`-folds in cross-validation or :math:`K` bootstrap samples.
+Assume that each :math:`\th_i` has a finite mean :math:`E[\th_i]=\mu` and finite
+variance :math:`\rm{var}(\th_i)=\sg^2`.
+
+.. math::
+
+    \hat{\mu}=\frac{1}{K}(\th_1+\th_2+\cds+\th_K)
+
+.. math::
+
+    E[\hat{mu}]=E\bigg[\frac{1}{K}(\th_1+\th_2+\cds+\th_K)\bigg]=\frac{1}{K}\sum_{i=1}^KE[\th_i]=\frac{1}{K}(K\mu)=\mu
+
+.. math::
+
+    \rm{var}(\hat{\mu})=var\bigg(\frac{1}{K}(\th_1+\th_2+\cds+\th_K)\bigg)=
+    \frac{1}{K^2}\sum_{i=1}^K\rm{var}(\th_i)=\frac{1}{K^2}(K\sg^2)=
+    \frac{\sg^2}{K}
+
+.. math::
+
+    std(\hat{\mu})=\sqrt{\rm{var}(\hat{\mu})}=\frac{\sg}{\sqrt{K}}
+
+.. math::
+
+    Z_K=\frac{\hat{\mu}-E[\hat{\mu}]}{std(\hat{\mu})}=\frac{\hat{\mu}-\mu}
+    {\frac{\sg}{\sqrt{K}}}=\sqrt{K}\bigg(\frac{\hat{\mu}-\mu}{\sg}\bigg)
+
+:math:`Z_K` specifiese the deviation of the estimated mean from the true mean in terms of its standard deviation.
+The central limit theorem states that, as the sample size increases, the random 
+variable :math:`Z_K` *converges in distribution* to the standard normal 
+distribution.
+That is, as :math:`K\rightarrow\infty`, for any :math:`x\in\R`, we have
+
+.. math::
+
+    \lim_{k\rightarrow\infty}P(Z_K\leq x)=\Phi(x)
+
+where :math:`\Phi(x)` is the cumulative distribution function for the standard normal density function :math:`f(x|0,1)`.
+Given significance level :math:`\alpha\in(0,1)`, let :math:`z_{\alpha/w}` denote 
+the critical :math:`z`-score value for the standard normal distribution that 
+encompasses :math:`\alpha/2` of the probability mass in the right tail, defined 
+as
+
+.. math::
+
+    P(Z_K\geq z_{\alpha/w})=\frac{\alpha}{2},\rm{or\ equivalently\ }
+    \Phi(z_{\alpha/2})=P(Z_K\leq z_{\alpha/2})=1-\frac{\alpha}{2}
+
+Also, because the normal distribution is symmetric about the mean, we have
+
+.. math::
+
+    P(Z_K\geq -z_{\alpha/2})=1-\frac{\alpha}{2},\rm{or\ equivalently\ }\Phi(-z_{\alpha/2})=\frac{\alpha}{2}
+
+Thus, given confidence level :math:`1-\alpha`, we can find the lower and upper 
+critical :math:`z`-score values, so as to encompass :math:`1-\alpha` fraction of
+the probability mass, which is given as
+
+.. math::
+
+    P(-z_{\alpha/2}\leq Z_K\leq z_{\alpha/2})=\Phi(z_{\alpha/2})-
+    \Phi(-z_{\alpha/2})=1-\frac{\alpha}{2}-\frac{\alpha}{2}=1-\alpha
+
+Note that
+
+.. math::
+
+    -z_{\alpha/2}\leq Z_K\leq z_{\alpha/2}&\Rightarrow -z_{\alpha/2}\leq\sqrt{K}
+    \bigg(\frac{\hat{\mu}-\mu}{\sg}\bigg)\leq z_{\alpha/2}
+
+    &\Rightarrow -z_{\alpha/2}\frac{\sg}{\sqrt{K}}\leq\hat{\mu}-\mu\leq z_{\alpha/2}\frac{\sg}{\sqrt{K}}
+
+    &\Rightarrow \bigg(\hat{\mu}-z_{\alpha/2}\frac{\sg}{\sqrt{K}}\bigg)\leq\mu
+    \leq\bigg(\hat{\mu}+z_{\alpha/2}\frac{\sg}{\sqrt{K}}\bigg)
+
+.. note::
+
+    :math:`\dp P\bigg(\hat{\mu}-z_{\alpha/2}\frac{\sg}{\sqrt{K}}\leq\mu`
+    :math:`\dp\leq\hat{\mu}+z_{\alpha/2}\frac{\sg}{\sqrt{K}}\bigg)=1-\alpha`
+
+Thus, for any given level of confidence :math:`1-\alpha`, we can compute the
+corresponding :math:`100(1-\alpha)\%` confidence interval 
+:math:`(\hat{\mu}-z_{\alpha/2}\frac{\sg}{\sqrt{K}},`
+:math:`\hat{\mu}+z_{\alpha/2}\frac{\sg}{\sqrt{K}})`.
+
+**Unknown Variance**
+
+We can replace :math:`\sg^2` by the sample variance
+
+.. math::
+
+    \hat{\sg}^2=\frac{1}{K}\sum_{i=1}^K(\th_i\hat{\mu})^2
+
+because :math:`\hat{\sg}^2` is a *consistent* estimator for :math:`\sg^2`, that 
+is, as :math:`K\rightarrow\infty`, :math:`\hat{\sg}^2` converges with 
+probability 1, also called *converges almost surely*, to :math:`\sg^2`.
+The central limit theorem then states that the random variable :math:`Z_K^*`
+defined below converges in distribution to the standard normal distribution:
+
+.. math::
+
+    Z_K^*=\sqrt{K}\bigg(\frac{\hat{\mu}-\mu}{\hat{\sg}}\bigg)
+
+.. note::
+
+    :math:`\dp\lim_{K\rightarrow\infty}P\bigg(\hat{\mu}-z_{\alpha/2}\frac{\hat{\sg}}{\sqrt{K}})`
+    :math:`\dp\leq\mu\leq\hat{\mu}-z_{\alpha/2}\frac{\hat{\sg}}{\sqrt{K}}\bigg)=1-\alpha`
+
+In other words, :math:`(\hat{\mu}-z_{\alpha/2}\frac{\hat{\sg}}{\sqrt{K}},)`
+:math:`\hat{\mu}-z_{\alpha/2}\frac{\hat{\sg}}{\sqrt{K}})` is the 
+:math:`100(1-\alpha)\%` confidence interval for :math:`\mu`.
+
+**Small Sample Size**
+
+Consider the random variables :math:`V_i`, for :math:`i=1,\cds,K`, defined as
+
+.. math::
+
+    V_i=\frac{\th_i-\hat{\mu}}{\sg}
+
+Further, consider the sum of their squares:
+
+.. math::
+
+    S=\sum_{i=1}^KV_i^2=\sum_{i=1}^K\bigg(\frac{\th_i-\hat{\mu}}{\sg}\bigg)^2=
+    \frac{1}{\sg^2}\sum_{i=1}^K(\th_i-\hat{\mu})^2=\frac{K\hat{\sg}^2}{\sg^2}
+
+If we assume that the :math:`V_i`'s are IID with the standard normal 
+distribution, then the sum :math:`S` follows a chi-squared distribution with
+:math:`K-1` degrees of freedom, denoted :math:`\chi^2(K-1)`, since :math:`S` is
+the sum of the squares of :math:`K` random variables :math:`V_i`.
+There are only :math:`K-1` degrees of freedom because each :math:`V_i` depends
+on :math:`\hat{\mu}` and the sum of the :math:`\th_i`'s is thus fixed.
+
+.. math::
+
+    Z_K^*&=\sqrt{K}\bigg(\frac{\hat{\mu}-\mu}{\hat{\sg}}\bigg)=\bigg(\frac{\hat{\mu}-\mu}{\hat{\sg}/\sqrt{K}}\bigg)
+
+    &=\bigg(\frac{\hat{\mu}-\mu}{\hat{\sg}/\sqrt{K}}\bigg/
+    \frac{\hat{\sg}/\sqrt{K}}{\sg/\sqrt{K}}\bigg)=\bigg(
+    \frac{\frac{\hat{\mu}-\mu}{\hat{\sg}/\sqrt{K}}}{\hat{\sg}/\sg}\bigg)=
+    \frac{Z_K}{\sqrt{S/K}}
+
+Assuming that :math:`Z_K` follows a standard normal distribution, and noting 
+that :math:`S` follows a chi-squared distribution with :math:`K-1` degrees of
+freedom, then the distribution of :math:`Z_K^*` is precisely the Student's
+:math:`t` distribution with :math:`K-1` degrees of freedom.
+Thus, in the small sample case, instead of using the standard normal density to 
+derive the confidence interval, we use the :math:`t` distribution.
+In particular, given confidence level :math:`1-\alpha` we choose the critical
+value :math:`t_{\alpha/2}` such that the cumulative :math:`t` distribution 
+function with :math:`K-1` degrees of freedom encompasses :math:`\alpha/2` of the
+probability mass in the right tail.
+That is,
+
+.. math::
+
+    P(Z_K^*\geq t_{\alpha/2})=1-T_{K-1}(t_{\alpha/2})=\alpha/2
+
+.. math::
+
+    P\bigg(\hat{\mu}-t_{\alpha/2}\frac{\hat{\sg}}{\sqrt{K}}\leq\mu\leq
+    \hat{\mu}-t_{\alpha/2}\frac{\hat{\sg}}{\sqrt{K}}\bigg)=1-\alpha
+
+The :math:`100(1-\alpha)%` confidence interval for the true mean :math:`\mu` is thus
+
+.. note::
+
+    :math:`\dp\bigg(\hat{\mu}-t_{\alpha/2}\frac{\hat{\sg}}{\sqrt{K}}\leq`
+    :math:`\dp\mu\leq\hat{\mu}-t_{\alpha/2}\frac{\hat{\sg}}{\sqrt{K}}\bigg)`
+
+As :math:`K` increases, the :math:`t` distribution very rapidly converges in 
+distribution to the standard normal distribution, consistent with the large 
+sample case.
+Thus, for large samples, we may use the usual :math:`z_{\alpha/2}` threshold.
+
+22.2.4 Comparing Classifiers: Paired :math:`t`-Test
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+We look at a method that allows us to test for a significant difference in the 
+classification performance of two alternative classifiers, :math:`M^A` and 
+:math:`M^B`.
+We want to assess which of them has a superior classification performance on a given dataset :math:`\D`.
+We perform a *paired test*, with both classifiers trained and tested on the same data.
+Let :math:`\th_1^A,\th_2^A,\cds,\th_K^A` and 
+:math:`\th_1^B,\th_2^B,\cds,\th_K^B` denote the performance values for 
+:math:`M^A` and :math:`M^B`, respectively.
+To determine if the two classifiers have different or similar performance, 
+define the random variable :math:`\delta_i` as the difference in their
+performance on the :math:`i`\ th dataset:
+
+.. math::
+
+    \delta_i=\th_i^A-\th_i^B
+
+.. math::
+
+    \hat{\mu_delta}=\frac{1}{K}\sum_{i=1}^K\delta_i\quad\quad\hat{\sg_\delta}^2=
+    \frac{1}{K}\sum_{i=1}^K(\delta_i-\hat{\mu_\delta})^2
+
+The null hypothesis :math:`H_0` is that their performance is the same, that is, 
+the true expected difference is zero, whereas the alternative hypothesis 
+:math:`H_a` is that they are not the same, that is, the true expected difference
+:math:`\mu_\delta` is not zero:
+
+.. math::
+
+    H_0: \mu_\delta=0\quad\quad H_a:\mu_\delta\neq 0
+
+.. math::
+
+    Z_\delta^*=\sqrt{K}\bigg(\frac{\hat{\mu_\delta}-\mu_\delta}{\hat{\sg_\delta}}\bigg)
+
+.. note::
+
+    :math:`\dp Z_\delta^*=\frac{\sqrt{K}\hat{\mu_\delta}}{\hat{\sg_\delta}}\sum t_{K-1}`
+
+where the notation :math:`Z_\delta^*\sim t_{K-1}` means that :math:`Z_\delta^*` 
+follows the :math:`t` distribution with :math:`K-1` degress of freedom.
+
+Given a desired confidence level :math:`1-\alpha`, we conclude that
+
+.. math::
+
+    P(-t_{\alpha/2}\leq Z_\delta^*\leq t_{\alpha/2})=1-\alpha
+
+.. image:: ../_static/Algo22.4.png

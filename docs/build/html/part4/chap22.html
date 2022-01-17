@@ -103,7 +103,13 @@
 <li class="toctree-l4"><a class="reference internal" href="#roc-analysis">22.1.3 ROC Analysis</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#classifier-evaluation">22.2 Classifier Evaluation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#classifier-evaluation">22.2 Classifier Evaluation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#k-fold-cross-validation">22.2.1 <span class="math notranslate nohighlight">\(K\)</span>-fold Cross-Validation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#bootstrap-resampling">22.2.2 Bootstrap Resampling</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#confidence-intervals">22.2.3 Confidence Intervals</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#comparing-classifiers-paired-t-test">22.2.4 Comparing Classifiers: Paired <span class="math notranslate nohighlight">\(t\)</span>-Test</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -440,6 +446,212 @@ positive to negative class size.</p>
 </div>
 <div class="section" id="classifier-evaluation">
 <h2>22.2 Classifier Evaluation<a class="headerlink" href="#classifier-evaluation" title="Permalink to this headline">¶</a></h2>
+<p>The input dataset <span class="math notranslate nohighlight">\(\D\)</span> is randomly split into a disjoint training set and testing set.
+The training set is used to learn the model <span class="math notranslate nohighlight">\(M\)</span>, and the testing set is
+used to evaluate the measure <span class="math notranslate nohighlight">\(\theta\)</span>.</p>
+<div class="section" id="k-fold-cross-validation">
+<h3>22.2.1 <span class="math notranslate nohighlight">\(K\)</span>-fold Cross-Validation<a class="headerlink" href="#k-fold-cross-validation" title="Permalink to this headline">¶</a></h3>
+<p>Cross-validation divides the dataset <span class="math notranslate nohighlight">\(\D\)</span> into <span class="math notranslate nohighlight">\(K\)</span> equal-sized
+parts, called <em>folds</em>, namely <span class="math notranslate nohighlight">\(\D_1,\D_2,\cds,\D_k\)</span>.
+Each fold <span class="math notranslate nohighlight">\(\D_i\)</span> is, in turn, treated as the testing set, with the
+remaining folds comprising the training set
+<span class="math notranslate nohighlight">\(\D\backslash\D_i=\bigcup_{j\ne i}\D_j\)</span>.
+After training the model <span class="math notranslate nohighlight">\(M_i\)</span> on <span class="math notranslate nohighlight">\(\D\backslash\D_i\)</span>, we assess its
+performance on the testing set <span class="math notranslate nohighlight">\(\D_i\)</span> to obtain the <span class="math notranslate nohighlight">\(i\)</span>th estimate
+<span class="math notranslate nohighlight">\(\th_i\)</span>.
+The expected value of the performance measure can then be estimated as</p>
+<div class="math notranslate nohighlight">
+\[\hat{\mu_\th}=E[\th]=\frac{1}{K}\sum_{i=1}^K\th_i\]</div>
+<p>and its variance as</p>
+<div class="math notranslate nohighlight">
+\[\hat{\sg_\th}^2=\frac{1}{K}\sum_{i=1}^K(\th_i-\hat{\mu_\th})^2\]</div>
+<img alt="../_images/Algo22.2.png" src="../_images/Algo22.2.png" />
+<p>Usually <span class="math notranslate nohighlight">\(K\)</span> is chosen to be 5 or 10.
+The special case, when <span class="math notranslate nohighlight">\(K=n\)</span>, is called <em>leave-one-out</em> cross-validation,
+where the tseting set comprises a single point and the remaining data is used
+for training purposes.</p>
+</div>
+<div class="section" id="bootstrap-resampling">
+<h3>22.2.2 Bootstrap Resampling<a class="headerlink" href="#bootstrap-resampling" title="Permalink to this headline">¶</a></h3>
+<p>The bootstrap method draws <span class="math notranslate nohighlight">\(K\)</span> random samples of size <span class="math notranslate nohighlight">\(n\)</span> <em>with replacement</em> from <span class="math notranslate nohighlight">\(\D\)</span>.
+Each sample <span class="math notranslate nohighlight">\(\D_i\)</span> is thus the same size as <span class="math notranslate nohighlight">\(\D\)</span>, and has several repeated points.
+The probability that a point is selected is given as <span class="math notranslate nohighlight">\(p=\frac{1}{n}\)</span>, and
+thus the probability that it is not selected is</p>
+<div class="math notranslate nohighlight">
+\[q=1-p=\bigg(1-\frac{1}{n}\bigg)\]</div>
+<p>Because <span class="math notranslate nohighlight">\(\D_i\)</span> has <span class="math notranslate nohighlight">\(n\)</span> points, the probability that <span class="math notranslate nohighlight">\(\x_j\)</span> is
+not selected even after <span class="math notranslate nohighlight">\(n\)</span> tries is given as</p>
+<div class="math notranslate nohighlight">
+\[P(\x_j\notin\D_i)=q^n=\bigg(1-\frac{1}{n}\bigg)^n\simeq e\im=0.368\]</div>
+<p>On the other hand, the probability that <span class="math notranslate nohighlight">\(\x_j\in\D_i\)</span> is given as</p>
+<div class="math notranslate nohighlight">
+\[P(\x_j\in\D_i)=1-P(\x_j\notin\D_i)=1-0.368=0.632\]</div>
+<p>This means that each bootstrp sample contains approximately 63.2% of the points from <span class="math notranslate nohighlight">\(\D\)</span>.</p>
+<img alt="../_images/Algo22.3.png" src="../_images/Algo22.3.png" />
+</div>
+<div class="section" id="confidence-intervals">
+<h3>22.2.3 Confidence Intervals<a class="headerlink" href="#confidence-intervals" title="Permalink to this headline">¶</a></h3>
+<p>The sum of a large number of independent and identically distributed (IID)
+random variables has approximately a normal distribution, regardless of the
+distribution of the individual random variables.
+Let <span class="math notranslate nohighlight">\(\th_1,\th_2,\cds,\th_K\)</span> be a sequence of IID random variables,
+representing, for example, the error rate or some other performance measure over
+the <span class="math notranslate nohighlight">\(K\)</span>-folds in cross-validation or <span class="math notranslate nohighlight">\(K\)</span> bootstrap samples.
+Assume that each <span class="math notranslate nohighlight">\(\th_i\)</span> has a finite mean <span class="math notranslate nohighlight">\(E[\th_i]=\mu\)</span> and finite
+variance <span class="math notranslate nohighlight">\(\rm{var}(\th_i)=\sg^2\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[\hat{\mu}=\frac{1}{K}(\th_1+\th_2+\cds+\th_K)\]</div>
+<div class="math notranslate nohighlight">
+\[E[\hat{mu}]=E\bigg[\frac{1}{K}(\th_1+\th_2+\cds+\th_K)\bigg]=\frac{1}{K}\sum_{i=1}^KE[\th_i]=\frac{1}{K}(K\mu)=\mu\]</div>
+<div class="math notranslate nohighlight">
+\[\rm{var}(\hat{\mu})=var\bigg(\frac{1}{K}(\th_1+\th_2+\cds+\th_K)\bigg)=
+\frac{1}{K^2}\sum_{i=1}^K\rm{var}(\th_i)=\frac{1}{K^2}(K\sg^2)=
+\frac{\sg^2}{K}\]</div>
+<div class="math notranslate nohighlight">
+\[std(\hat{\mu})=\sqrt{\rm{var}(\hat{\mu})}=\frac{\sg}{\sqrt{K}}\]</div>
+<div class="math notranslate nohighlight">
+\[Z_K=\frac{\hat{\mu}-E[\hat{\mu}]}{std(\hat{\mu})}=\frac{\hat{\mu}-\mu}
+{\frac{\sg}{\sqrt{K}}}=\sqrt{K}\bigg(\frac{\hat{\mu}-\mu}{\sg}\bigg)\]</div>
+<p><span class="math notranslate nohighlight">\(Z_K\)</span> specifiese the deviation of the estimated mean from the true mean in terms of its standard deviation.
+The central limit theorem states that, as the sample size increases, the random
+variable <span class="math notranslate nohighlight">\(Z_K\)</span> <em>converges in distribution</em> to the standard normal
+distribution.
+That is, as <span class="math notranslate nohighlight">\(K\rightarrow\infty\)</span>, for any <span class="math notranslate nohighlight">\(x\in\R\)</span>, we have</p>
+<div class="math notranslate nohighlight">
+\[\lim_{k\rightarrow\infty}P(Z_K\leq x)=\Phi(x)\]</div>
+<p>where <span class="math notranslate nohighlight">\(\Phi(x)\)</span> is the cumulative distribution function for the standard normal density function <span class="math notranslate nohighlight">\(f(x|0,1)\)</span>.
+Given significance level <span class="math notranslate nohighlight">\(\alpha\in(0,1)\)</span>, let <span class="math notranslate nohighlight">\(z_{\alpha/w}\)</span> denote
+the critical <span class="math notranslate nohighlight">\(z\)</span>-score value for the standard normal distribution that
+encompasses <span class="math notranslate nohighlight">\(\alpha/2\)</span> of the probability mass in the right tail, defined
+as</p>
+<div class="math notranslate nohighlight">
+\[P(Z_K\geq z_{\alpha/w})=\frac{\alpha}{2},\rm{or\ equivalently\ }
+\Phi(z_{\alpha/2})=P(Z_K\leq z_{\alpha/2})=1-\frac{\alpha}{2}\]</div>
+<p>Also, because the normal distribution is symmetric about the mean, we have</p>
+<div class="math notranslate nohighlight">
+\[P(Z_K\geq -z_{\alpha/2})=1-\frac{\alpha}{2},\rm{or\ equivalently\ }\Phi(-z_{\alpha/2})=\frac{\alpha}{2}\]</div>
+<p>Thus, given confidence level <span class="math notranslate nohighlight">\(1-\alpha\)</span>, we can find the lower and upper
+critical <span class="math notranslate nohighlight">\(z\)</span>-score values, so as to encompass <span class="math notranslate nohighlight">\(1-\alpha\)</span> fraction of
+the probability mass, which is given as</p>
+<div class="math notranslate nohighlight">
+\[P(-z_{\alpha/2}\leq Z_K\leq z_{\alpha/2})=\Phi(z_{\alpha/2})-
+\Phi(-z_{\alpha/2})=1-\frac{\alpha}{2}-\frac{\alpha}{2}=1-\alpha\]</div>
+<p>Note that</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}-z_{\alpha/2}\leq Z_K\leq z_{\alpha/2}&amp;\Rightarrow -z_{\alpha/2}\leq\sqrt{K}
+\bigg(\frac{\hat{\mu}-\mu}{\sg}\bigg)\leq z_{\alpha/2}\\&amp;\Rightarrow -z_{\alpha/2}\frac{\sg}{\sqrt{K}}\leq\hat{\mu}-\mu\leq z_{\alpha/2}\frac{\sg}{\sqrt{K}}\\&amp;\Rightarrow \bigg(\hat{\mu}-z_{\alpha/2}\frac{\sg}{\sqrt{K}}\bigg)\leq\mu
+\leq\bigg(\hat{\mu}+z_{\alpha/2}\frac{\sg}{\sqrt{K}}\bigg)\end{aligned}\end{align} \]</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp P\bigg(\hat{\mu}-z_{\alpha/2}\frac{\sg}{\sqrt{K}}\leq\mu\)</span>
+<span class="math notranslate nohighlight">\(\dp\leq\hat{\mu}+z_{\alpha/2}\frac{\sg}{\sqrt{K}}\bigg)=1-\alpha\)</span></p>
+</div>
+<p>Thus, for any given level of confidence <span class="math notranslate nohighlight">\(1-\alpha\)</span>, we can compute the
+corresponding <span class="math notranslate nohighlight">\(100(1-\alpha)\%\)</span> confidence interval
+<span class="math notranslate nohighlight">\((\hat{\mu}-z_{\alpha/2}\frac{\sg}{\sqrt{K}},\)</span>
+<span class="math notranslate nohighlight">\(\hat{\mu}+z_{\alpha/2}\frac{\sg}{\sqrt{K}})\)</span>.</p>
+<p><strong>Unknown Variance</strong></p>
+<p>We can replace <span class="math notranslate nohighlight">\(\sg^2\)</span> by the sample variance</p>
+<div class="math notranslate nohighlight">
+\[\hat{\sg}^2=\frac{1}{K}\sum_{i=1}^K(\th_i\hat{\mu})^2\]</div>
+<p>because <span class="math notranslate nohighlight">\(\hat{\sg}^2\)</span> is a <em>consistent</em> estimator for <span class="math notranslate nohighlight">\(\sg^2\)</span>, that
+is, as <span class="math notranslate nohighlight">\(K\rightarrow\infty\)</span>, <span class="math notranslate nohighlight">\(\hat{\sg}^2\)</span> converges with
+probability 1, also called <em>converges almost surely</em>, to <span class="math notranslate nohighlight">\(\sg^2\)</span>.
+The central limit theorem then states that the random variable <span class="math notranslate nohighlight">\(Z_K^*\)</span>
+defined below converges in distribution to the standard normal distribution:</p>
+<div class="math notranslate nohighlight">
+\[Z_K^*=\sqrt{K}\bigg(\frac{\hat{\mu}-\mu}{\hat{\sg}}\bigg)\]</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\lim_{K\rightarrow\infty}P\bigg(\hat{\mu}-z_{\alpha/2}\frac{\hat{\sg}}{\sqrt{K}})\)</span>
+<span class="math notranslate nohighlight">\(\dp\leq\mu\leq\hat{\mu}-z_{\alpha/2}\frac{\hat{\sg}}{\sqrt{K}}\bigg)=1-\alpha\)</span></p>
+</div>
+<p>In other words, <span class="math notranslate nohighlight">\((\hat{\mu}-z_{\alpha/2}\frac{\hat{\sg}}{\sqrt{K}},)\)</span>
+<span class="math notranslate nohighlight">\(\hat{\mu}-z_{\alpha/2}\frac{\hat{\sg}}{\sqrt{K}})\)</span> is the
+<span class="math notranslate nohighlight">\(100(1-\alpha)\%\)</span> confidence interval for <span class="math notranslate nohighlight">\(\mu\)</span>.</p>
+<p><strong>Small Sample Size</strong></p>
+<p>Consider the random variables <span class="math notranslate nohighlight">\(V_i\)</span>, for <span class="math notranslate nohighlight">\(i=1,\cds,K\)</span>, defined as</p>
+<div class="math notranslate nohighlight">
+\[V_i=\frac{\th_i-\hat{\mu}}{\sg}\]</div>
+<p>Further, consider the sum of their squares:</p>
+<div class="math notranslate nohighlight">
+\[S=\sum_{i=1}^KV_i^2=\sum_{i=1}^K\bigg(\frac{\th_i-\hat{\mu}}{\sg}\bigg)^2=
+\frac{1}{\sg^2}\sum_{i=1}^K(\th_i-\hat{\mu})^2=\frac{K\hat{\sg}^2}{\sg^2}\]</div>
+<p>If we assume that the <span class="math notranslate nohighlight">\(V_i\)</span>’s are IID with the standard normal
+distribution, then the sum <span class="math notranslate nohighlight">\(S\)</span> follows a chi-squared distribution with
+<span class="math notranslate nohighlight">\(K-1\)</span> degrees of freedom, denoted <span class="math notranslate nohighlight">\(\chi^2(K-1)\)</span>, since <span class="math notranslate nohighlight">\(S\)</span> is
+the sum of the squares of <span class="math notranslate nohighlight">\(K\)</span> random variables <span class="math notranslate nohighlight">\(V_i\)</span>.
+There are only <span class="math notranslate nohighlight">\(K-1\)</span> degrees of freedom because each <span class="math notranslate nohighlight">\(V_i\)</span> depends
+on <span class="math notranslate nohighlight">\(\hat{\mu}\)</span> and the sum of the <span class="math notranslate nohighlight">\(\th_i\)</span>’s is thus fixed.</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}Z_K^*&amp;=\sqrt{K}\bigg(\frac{\hat{\mu}-\mu}{\hat{\sg}}\bigg)=\bigg(\frac{\hat{\mu}-\mu}{\hat{\sg}/\sqrt{K}}\bigg)\\&amp;=\bigg(\frac{\hat{\mu}-\mu}{\hat{\sg}/\sqrt{K}}\bigg/
+\frac{\hat{\sg}/\sqrt{K}}{\sg/\sqrt{K}}\bigg)=\bigg(
+\frac{\frac{\hat{\mu}-\mu}{\hat{\sg}/\sqrt{K}}}{\hat{\sg}/\sg}\bigg)=
+\frac{Z_K}{\sqrt{S/K}}\end{aligned}\end{align} \]</div>
+<p>Assuming that <span class="math notranslate nohighlight">\(Z_K\)</span> follows a standard normal distribution, and noting
+that <span class="math notranslate nohighlight">\(S\)</span> follows a chi-squared distribution with <span class="math notranslate nohighlight">\(K-1\)</span> degrees of
+freedom, then the distribution of <span class="math notranslate nohighlight">\(Z_K^*\)</span> is precisely the Student’s
+<span class="math notranslate nohighlight">\(t\)</span> distribution with <span class="math notranslate nohighlight">\(K-1\)</span> degrees of freedom.
+Thus, in the small sample case, instead of using the standard normal density to
+derive the confidence interval, we use the <span class="math notranslate nohighlight">\(t\)</span> distribution.
+In particular, given confidence level <span class="math notranslate nohighlight">\(1-\alpha\)</span> we choose the critical
+value <span class="math notranslate nohighlight">\(t_{\alpha/2}\)</span> such that the cumulative <span class="math notranslate nohighlight">\(t\)</span> distribution
+function with <span class="math notranslate nohighlight">\(K-1\)</span> degrees of freedom encompasses <span class="math notranslate nohighlight">\(\alpha/2\)</span> of the
+probability mass in the right tail.
+That is,</p>
+<div class="math notranslate nohighlight">
+\[P(Z_K^*\geq t_{\alpha/2})=1-T_{K-1}(t_{\alpha/2})=\alpha/2\]</div>
+<div class="math notranslate nohighlight">
+\[P\bigg(\hat{\mu}-t_{\alpha/2}\frac{\hat{\sg}}{\sqrt{K}}\leq\mu\leq
+\hat{\mu}-t_{\alpha/2}\frac{\hat{\sg}}{\sqrt{K}}\bigg)=1-\alpha\]</div>
+<p>The <span class="math notranslate nohighlight">\(100(1-\alpha)%\)</span> confidence interval for the true mean <span class="math notranslate nohighlight">\(\mu\)</span> is thus</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\bigg(\hat{\mu}-t_{\alpha/2}\frac{\hat{\sg}}{\sqrt{K}}\leq\)</span>
+<span class="math notranslate nohighlight">\(\dp\mu\leq\hat{\mu}-t_{\alpha/2}\frac{\hat{\sg}}{\sqrt{K}}\bigg)\)</span></p>
+</div>
+<p>As <span class="math notranslate nohighlight">\(K\)</span> increases, the <span class="math notranslate nohighlight">\(t\)</span> distribution very rapidly converges in
+distribution to the standard normal distribution, consistent with the large
+sample case.
+Thus, for large samples, we may use the usual <span class="math notranslate nohighlight">\(z_{\alpha/2}\)</span> threshold.</p>
+</div>
+<div class="section" id="comparing-classifiers-paired-t-test">
+<h3>22.2.4 Comparing Classifiers: Paired <span class="math notranslate nohighlight">\(t\)</span>-Test<a class="headerlink" href="#comparing-classifiers-paired-t-test" title="Permalink to this headline">¶</a></h3>
+<p>We look at a method that allows us to test for a significant difference in the
+classification performance of two alternative classifiers, <span class="math notranslate nohighlight">\(M^A\)</span> and
+<span class="math notranslate nohighlight">\(M^B\)</span>.
+We want to assess which of them has a superior classification performance on a given dataset <span class="math notranslate nohighlight">\(\D\)</span>.
+We perform a <em>paired test</em>, with both classifiers trained and tested on the same data.
+Let <span class="math notranslate nohighlight">\(\th_1^A,\th_2^A,\cds,\th_K^A\)</span> and
+<span class="math notranslate nohighlight">\(\th_1^B,\th_2^B,\cds,\th_K^B\)</span> denote the performance values for
+<span class="math notranslate nohighlight">\(M^A\)</span> and <span class="math notranslate nohighlight">\(M^B\)</span>, respectively.
+To determine if the two classifiers have different or similar performance,
+define the random variable <span class="math notranslate nohighlight">\(\delta_i\)</span> as the difference in their
+performance on the <span class="math notranslate nohighlight">\(i\)</span>th dataset:</p>
+<div class="math notranslate nohighlight">
+\[\delta_i=\th_i^A-\th_i^B\]</div>
+<div class="math notranslate nohighlight">
+\[\hat{\mu_delta}=\frac{1}{K}\sum_{i=1}^K\delta_i\quad\quad\hat{\sg_\delta}^2=
+\frac{1}{K}\sum_{i=1}^K(\delta_i-\hat{\mu_\delta})^2\]</div>
+<p>The null hypothesis <span class="math notranslate nohighlight">\(H_0\)</span> is that their performance is the same, that is,
+the true expected difference is zero, whereas the alternative hypothesis
+<span class="math notranslate nohighlight">\(H_a\)</span> is that they are not the same, that is, the true expected difference
+<span class="math notranslate nohighlight">\(\mu_\delta\)</span> is not zero:</p>
+<div class="math notranslate nohighlight">
+\[H_0: \mu_\delta=0\quad\quad H_a:\mu_\delta\neq 0\]</div>
+<div class="math notranslate nohighlight">
+\[Z_\delta^*=\sqrt{K}\bigg(\frac{\hat{\mu_\delta}-\mu_\delta}{\hat{\sg_\delta}}\bigg)\]</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp Z_\delta^*=\frac{\sqrt{K}\hat{\mu_\delta}}{\hat{\sg_\delta}}\sum t_{K-1}\)</span></p>
+</div>
+<p>where the notation <span class="math notranslate nohighlight">\(Z_\delta^*\sim t_{K-1}\)</span> means that <span class="math notranslate nohighlight">\(Z_\delta^*\)</span>
+follows the <span class="math notranslate nohighlight">\(t\)</span> distribution with <span class="math notranslate nohighlight">\(K-1\)</span> degress of freedom.</p>
+<p>Given a desired confidence level <span class="math notranslate nohighlight">\(1-\alpha\)</span>, we conclude that</p>
+<div class="math notranslate nohighlight">
+\[P(-t_{\alpha/2}\leq Z_\delta^*\leq t_{\alpha/2})=1-\alpha\]</div>
+<img alt="../_images/Algo22.4.png" src="../_images/Algo22.4.png" />
+</div>
 </div>
 </div>
 
