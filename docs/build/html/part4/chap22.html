@@ -110,6 +110,8 @@
 <li class="toctree-l4"><a class="reference internal" href="#comparing-classifiers-paired-t-test">22.2.4 Comparing Classifiers: Paired <span class="math notranslate nohighlight">\(t\)</span>-Test</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="#bias-variance-decomposition">22.3 Bias-Variance Decomposition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ensemble-classifiers">22.4 Ensemble Classifiers</a></li>
 </ul>
 </li>
 </ul>
@@ -652,6 +654,66 @@ follows the <span class="math notranslate nohighlight">\(t\)</span> distribution
 \[P(-t_{\alpha/2}\leq Z_\delta^*\leq t_{\alpha/2})=1-\alpha\]</div>
 <img alt="../_images/Algo22.4.png" src="../_images/Algo22.4.png" />
 </div>
+</div>
+<div class="section" id="bias-variance-decomposition">
+<h2>22.3 Bias-Variance Decomposition<a class="headerlink" href="#bias-variance-decomposition" title="Permalink to this headline">¶</a></h2>
+<p>Given a training set <span class="math notranslate nohighlight">\(\D\)</span> comprising <span class="math notranslate nohighlight">\(n\)</span> points <span class="math notranslate nohighlight">\(\x_i\in\R^d\)</span>,
+with their corresponding classes <span class="math notranslate nohighlight">\(y_i\)</span>, a learned classification model
+<span class="math notranslate nohighlight">\(M\)</span> predicts the class for a given test point <span class="math notranslate nohighlight">\(\x\)</span>.
+A <em>loss function</em> specifies the cost or penalty of predicting the class to be
+<span class="math notranslate nohighlight">\(\hat{y}=M(\x)\)</span>, when the true class is <span class="math notranslate nohighlight">\(y\)</span>.
+A commonly used loss function for classification is the <em>zero-one loss</em>, defined as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}L(y,M(\x))=I(M(\x)\neq y)=\left\{\begin{array}{lr}0\quad\rm{if\ }M(\x)=y\\
+1\quad\rm{if\ }M(\x)\neq y\end{array}\right.\end{split}\]</div>
+<p>Another commonly used loss function is the <em>squared loss</em>, defined as</p>
+<div class="math notranslate nohighlight">
+\[L(y,M(\x))=(y-M(\x))^2\]</div>
+<p>where we assume that the classes are discrete valued, and not categorical.</p>
+<p><strong>Expected Loss</strong></p>
+<p>The goal of learning a classification model can be cast as minimizing the expected loss:</p>
+<div class="math notranslate nohighlight">
+\[E_y[L(y,M(\x))|\x]=\sum_yL(y,M(\x))\cd P(y|\x)\]</div>
+<p>where <span class="math notranslate nohighlight">\(E_y\)</span> denotes that the expectation is taken over the different class values <span class="math notranslate nohighlight">\(y\)</span>.</p>
+<p>Minimizing the expected zero-one loss corresponds to minimizing the error rate.
+Let <span class="math notranslate nohighlight">\(M(\x)=c_i\)</span>, then we have</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}E_y[L(y,M(\x))|\x]&amp;=E_y[I(y\neq M(\x))|\x]\\&amp;=\sum_y I(y\neq c_i)\cd P(y|\x)\\&amp;=\sum_{y\neq c_i}P(y|\x)\\&amp;=1-P(c_i|\x)\end{aligned}\end{align} \]</div>
+<p>Thus, to minimize the expected loss we should choose <span class="math notranslate nohighlight">\(c_i\)</span> as the class
+that maximizes the posterior probability, that is,
+<span class="math notranslate nohighlight">\(c_i=\arg\max_yP(y|\x)\)</span>.</p>
+<p><strong>Bias and Variance</strong></p>
+<p>Intuitively, the <em>bias</em> of a classifier refers to the systematic deviation of
+its predicted decision boundary from the true decision boundary, whereas the
+<em>variance</em> of a classifier refers to the deviation among the learned decision
+boundaries over different training sets.
+More formally, because <span class="math notranslate nohighlight">\(M\)</span> depends on the training set, given a test point
+<span class="math notranslate nohighlight">\(\x\)</span>, we denote its predicted value as <span class="math notranslate nohighlight">\(M(\x,\D)\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}E[L&amp;(y,M(\x,\D))|\x,\D]\\&amp;=E_y[(y-M(\x,\D))^2|\x,\D]\\&amp;=E_y[(y-E_y[y|\x]+E_y[y|\x]-M(\x,\D))^2|\x,\D]\\&amp;=E_y[(y-E_y[y|\x])^2|\x,\D]+E_y[(M(\x,\D)-E_y[y|\x])^2|\x,\D]\\&amp;\quad+E_y[2(y-E_y[y|\x])\cd(E_y[y|\x]-M(\x,\D))|\x,\D]\\&amp;=E_y[(y-E_y[y|\x])^2|\x,\D]+(M(\x,\D)-E_y[y|\x])^2\\&amp;\quad+2(E_y[y|\x]-M(\x,\D))\cd(E_y[y|\x]-E_y[y|\x])\\&amp;=E_y[(y-E_y[y|\x])^2|\x,\D]+(M(\x,\D)-E_y[y|\x])^2\end{aligned}\end{align} \]</div>
+<p>The average or expected squared error for a given test point <span class="math notranslate nohighlight">\(\x\)</span> over all training sets is then given as</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}E_\D[&amp;(M(\x,\D)-E_y[y|\x])^2]\\&amp;=E_\D[(M(\x,\D)-E_\D[M(\x,\D)]+E_\D[M(\x,\D)]-E_y[y|\x])^2]\\&amp;=E_\D[(M(\x,\D)-E_\D[M(\x,\D)])^2]+E_\D[(E_\D[M(\x,\D)]-E_y[y|\x])^2]\\&amp;\quad+2(E_\D[M(\x,\D)]-E_y[y|\x])\cd(E_\D[M(\x,\D)]-E_\D[M(\x,\D)])\\&amp;=E_\D[(M(\x,\D)-E_\D[M(\x,\D)])^2]+(E_\D[M(\x,\D)]-E_y[y|\x])^2\end{aligned}\end{align} \]</div>
+<p>The expected squared loss over all test points <span class="math notranslate nohighlight">\(\x\)</span> and over all training
+sets <span class="math notranslate nohighlight">\(\D\)</span> of size <span class="math notranslate nohighlight">\(n\)</span> yields the following decomposition into noise,
+variance and bias terms:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(E_{\x,\D,y}[(y-M(\x,\D))^2]\)</span></p>
+<p><span class="math notranslate nohighlight">\(\quad=E_{\x,\D,y}[(y-E_y[y|\x])^2|\x,\D]+E_{\x,\D}[(M(\x,\D)-E_y[y|\x])^2]\)</span></p>
+<p><span class="math notranslate nohighlight">\(\quad=E_{\x,y}[(y-E_y[y|\x])^2]+E_{\x,\D}[(M(\x,\D)-E_\D[M(\x,\D)])]\)</span></p>
+<p><span class="math notranslate nohighlight">\(\quad\quad+E_\x[(E_\D[M(\x,\D)]-E_y[y|\x])^2]\)</span></p>
+</div>
+<p>Thus, the expected square loss over all test points and training sets can be
+decomposed into three terms: noise, average bias, and average variance.
+In general, the expected loss can be attributed to high bias or high variance,
+with typically a trade-off between these two terms.
+Ideally, we seek a balance between these opposing trends, that is, we prefer a
+classifier with an acceptable bias (reﬂecting domain or dataset specific
+assumptions) and as low a variance as possible.</p>
+</div>
+<div class="section" id="ensemble-classifiers">
+<h2>22.4 Ensemble Classifiers<a class="headerlink" href="#ensemble-classifiers" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 

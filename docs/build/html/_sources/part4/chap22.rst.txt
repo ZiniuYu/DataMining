@@ -556,3 +556,119 @@ Given a desired confidence level :math:`1-\alpha`, we conclude that
     P(-t_{\alpha/2}\leq Z_\delta^*\leq t_{\alpha/2})=1-\alpha
 
 .. image:: ../_static/Algo22.4.png
+
+22.3 Bias-Variance Decomposition
+--------------------------------
+
+Given a training set :math:`\D` comprising :math:`n` points :math:`\x_i\in\R^d`,
+with their corresponding classes :math:`y_i`, a learned classification model
+:math:`M` predicts the class for a given test point :math:`\x`.
+A *loss function* specifies the cost or penalty of predicting the class to be 
+:math:`\hat{y}=M(\x)`, when the true class is :math:`y`.
+A commonly used loss function for classification is the *zero-one loss*, defined as
+
+.. math::
+
+    L(y,M(\x))=I(M(\x)\neq y)=\left\{\begin{array}{lr}0\quad\rm{if\ }M(\x)=y\\
+    1\quad\rm{if\ }M(\x)\neq y\end{array}\right.
+
+Another commonly used loss function is the *squared loss*, defined as
+
+.. math::
+
+    L(y,M(\x))=(y-M(\x))^2
+
+where we assume that the classes are discrete valued, and not categorical.
+
+**Expected Loss**
+
+The goal of learning a classification model can be cast as minimizing the expected loss:
+
+.. math::
+
+    E_y[L(y,M(\x))|\x]=\sum_yL(y,M(\x))\cd P(y|\x)
+
+where :math:`E_y` denotes that the expectation is taken over the different class values :math:`y`.
+
+Minimizing the expected zero-one loss corresponds to minimizing the error rate.
+Let :math:`M(\x)=c_i`, then we have
+
+.. math::
+
+    E_y[L(y,M(\x))|\x]&=E_y[I(y\neq M(\x))|\x]
+
+    &=\sum_y I(y\neq c_i)\cd P(y|\x)
+
+    &=\sum_{y\neq c_i}P(y|\x)
+
+    &=1-P(c_i|\x)
+
+Thus, to minimize the expected loss we should choose :math:`c_i` as the class 
+that maximizes the posterior probability, that is, 
+:math:`c_i=\arg\max_yP(y|\x)`.
+
+**Bias and Variance**
+
+Intuitively, the *bias* of a classifier refers to the systematic deviation of 
+its predicted decision boundary from the true decision boundary, whereas the 
+*variance* of a classifier refers to the deviation among the learned decision
+boundaries over different training sets.
+More formally, because :math:`M` depends on the training set, given a test point
+:math:`\x`, we denote its predicted value as :math:`M(\x,\D)`.
+
+.. math::
+
+    E[L&(y,M(\x,\D))|\x,\D]
+    
+    &=E_y[(y-M(\x,\D))^2|\x,\D]
+
+    &=E_y[(y-E_y[y|\x]+E_y[y|\x]-M(\x,\D))^2|\x,\D]
+
+    &=E_y[(y-E_y[y|\x])^2|\x,\D]+E_y[(M(\x,\D)-E_y[y|\x])^2|\x,\D]
+    
+    &\quad+E_y[2(y-E_y[y|\x])\cd(E_y[y|\x]-M(\x,\D))|\x,\D]
+
+    &=E_y[(y-E_y[y|\x])^2|\x,\D]+(M(\x,\D)-E_y[y|\x])^2
+
+    &\quad+2(E_y[y|\x]-M(\x,\D))\cd(E_y[y|\x]-E_y[y|\x])
+
+    &=E_y[(y-E_y[y|\x])^2|\x,\D]+(M(\x,\D)-E_y[y|\x])^2
+
+The average or expected squared error for a given test point :math:`\x` over all training sets is then given as
+
+.. math::
+
+    E_\D[&(M(\x,\D)-E_y[y|\x])^2]
+    
+    &=E_\D[(M(\x,\D)-E_\D[M(\x,\D)]+E_\D[M(\x,\D)]-E_y[y|\x])^2]
+
+    &=E_\D[(M(\x,\D)-E_\D[M(\x,\D)])^2]+E_\D[(E_\D[M(\x,\D)]-E_y[y|\x])^2]
+
+    &\quad+2(E_\D[M(\x,\D)]-E_y[y|\x])\cd(E_\D[M(\x,\D)]-E_\D[M(\x,\D)])
+
+    &=E_\D[(M(\x,\D)-E_\D[M(\x,\D)])^2]+(E_\D[M(\x,\D)]-E_y[y|\x])^2
+
+The expected squared loss over all test points :math:`\x` and over all training 
+sets :math:`\D` of size :math:`n` yields the following decomposition into noise,
+variance and bias terms:
+
+.. note::
+
+    :math:`E_{\x,\D,y}[(y-M(\x,\D))^2]`
+
+    :math:`\quad=E_{\x,\D,y}[(y-E_y[y|\x])^2|\x,\D]+E_{\x,\D}[(M(\x,\D)-E_y[y|\x])^2]`
+
+    :math:`\quad=E_{\x,y}[(y-E_y[y|\x])^2]+E_{\x,\D}[(M(\x,\D)-E_\D[M(\x,\D)])]`
+
+    :math:`\quad\quad+E_\x[(E_\D[M(\x,\D)]-E_y[y|\x])^2]`
+
+Thus, the expected square loss over all test points and training sets can be
+decomposed into three terms: noise, average bias, and average variance.
+In general, the expected loss can be attributed to high bias or high variance, 
+with typically a trade-off between these two terms. 
+Ideally, we seek a balance between these opposing trends, that is, we prefer a 
+classifier with an acceptable bias (reﬂecting domain or dataset specific 
+assumptions) and as low a variance as possible.
+
+22.4 Ensemble Classifiers
+-------------------------
