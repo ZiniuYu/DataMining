@@ -814,7 +814,14 @@ of the <span class="math notranslate nohighlight">\(K\)</span> base classifiers 
 <p>Let <span class="math notranslate nohighlight">\(\D\)</span> be the input training set, comprising <span class="math notranslate nohighlight">\(n\)</span> points <span class="math notranslate nohighlight">\(\x_i\in\R^d\)</span>.
 The boosting process will be repeated <span class="math notranslate nohighlight">\(K\)</span> times.
 Let <span class="math notranslate nohighlight">\(t\)</span> denote the iteration and let <span class="math notranslate nohighlight">\(\alpha_t\)</span> denote the weight
-for the <span class="math notranslate nohighlight">\(r\)</span>th classifier <span class="math notranslate nohighlight">\(M_t\)</span>.</p>
+for the <span class="math notranslate nohighlight">\(r\)</span>th classifier <span class="math notranslate nohighlight">\(M_t\)</span>.
+Let <span class="math notranslate nohighlight">\(w_i^t\)</span> denote the weight for <span class="math notranslate nohighlight">\(\x_i\)</span>, with
+<span class="math notranslate nohighlight">\(\w^t=(w_1^t,w_2^t,\cds,w_n^t)^T\)</span> being the weight vector over all the
+points for the <span class="math notranslate nohighlight">\(t\)</span>th iteration.
+In fact, <span class="math notranslate nohighlight">\(\w\)</span> is a probability vector, whose elements sum to one.
+Initially all points have equal weights, that is,</p>
+<div class="math notranslate nohighlight">
+\[\w^0=\bigg(\frac{1}{n},\frac{1}{n},\cds,\frac{1}{n}\bigg)^T=\frac{1}{n}\1\]</div>
 </div>
 </div>
 </div>

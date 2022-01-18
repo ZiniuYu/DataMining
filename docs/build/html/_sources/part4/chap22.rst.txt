@@ -797,3 +797,13 @@ Let :math:`\D` be the input training set, comprising :math:`n` points :math:`\x_
 The boosting process will be repeated :math:`K` times.
 Let :math:`t` denote the iteration and let :math:`\alpha_t` denote the weight 
 for the :math:`r`\ th classifier :math:`M_t`.
+Let :math:`w_i^t` denote the weight for :math:`\x_i`, with 
+:math:`\w^t=(w_1^t,w_2^t,\cds,w_n^t)^T` being the weight vector over all the 
+points for the :math:`t`\ th iteration.
+In fact, :math:`\w` is a probability vector, whose elements sum to one.
+Initially all points have equal weights, that is,
+
+.. math::
+
+    \w^0=\bigg(\frac{1}{n},\frac{1}{n},\cds,\frac{1}{n}\bigg)^T=\frac{1}{n}\1
+
