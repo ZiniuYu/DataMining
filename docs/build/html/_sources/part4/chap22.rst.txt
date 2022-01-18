@@ -672,3 +672,128 @@ assumptions) and as low a variance as possible.
 
 22.4 Ensemble Classifiers
 -------------------------
+
+A classifier is called *unstable* if small pertubations in the training set 
+result in large changes in the prediction or decision boundary.
+High variance classifiers are inherently unstable, since they tend to overfit the data.
+On the other hand, high bias methods typically underfit the data, and usually have low variance.
+In either case, the aim of learning is to reduce classification error by reducing the variance or bias, ideally both.
+Ensemble methods create a *combined classifier* using the output of multiple 
+*base classifiers*, which are trained on different data subsets.
+
+22.4.1 Bagging
+^^^^^^^^^^^^^^
+
+*Bagging*, which stands for *Bootstrap Aggregation*, is an ensemble 
+classification method that employs multiple bootstrap samples (with replacement)
+from the input training data :math:`\D` to create slightly different training
+set :math:`\D_t,t=1,2,\cds,K`.
+Different base classifiers :math:`M_t` are learned, with :math:`M_t` trained on :math:`\D_t`.
+Given any test point :math:`\x`, it is first classified using each of the :math:`K` base classifiers, :math:`M_t`.
+Let the number of classifiers that predict the class of :math:`\x` as :math:`c_j` be given as
+
+.. math::
+
+    v_j(\x)=|\{M_t(\x)=c_j|t=1,\cds,L\}|
+
+The combined classifier, denoted :math:`\M^K`, predicts the class of a test 
+point :math:`\x` by *majority voting* among the :math:`k` classes:
+
+.. math::
+
+    \M^K(\x)=\arg\max_{c_j}\{v_j(\x)|j=1,\cds,k\}
+
+For binary classification, assuming that the classes are given as 
+:math:`\{+1,-1\}`, the combined classifier :math:`\M^K` can be expressed more
+simply as
+
+.. math::
+
+    \M^K(\x)=\rm{sign}\bigg(\sum_{t=1}^KM_t(\x)\bigg)
+
+Bagging can help reduce the variance, especially if the base classifiers are 
+unstable, due to the averaging effect of majority voting. It does not, in 
+general, have much effect on the bias.
+
+22.4.2 Random Forest: Bagging Decision Trees
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+A *random forest* is an ensemble of :math:`K` classifiers, :math:`M_1,\cds,M_K`,
+where each classifier is a decision tree created from a different bootstrap 
+sample, as in bagging.
+However, the key difference from bagging is that the trees are built by sampling
+a random subset of the attributes at each internal node in the decision tree.
+The random sampling of the attributes results in reducing the correlation between the trees in the ensemble.
+
+Let :math:`\D` be the training dataset comprising :math:`n` points 
+:math:`\x_j\in\R^d` along with the corresponding class :math:`y_j`.
+Let :math:`\D_t` denote the :math:`t`\ th bootstrap sample of size :math:`n` 
+drawn from :math:`\D` via sampling with replacement.
+Let :math:`p\leq d` denote the number of attributes to sample for evaluating the split points.
+The random forest algorithm uses the :math:`t`\ th bootstrap sample to learn a 
+decision tree model :math:`M_t` via the decision tree method with one major 
+change.
+Instead of evaluating all the :math:`d` attributes to find the best split point,
+it samples :math:`p\leq d` attributes at random, and evaluates split points for
+only those attributes.
+
+The :math:`K` decision trees :math:`M_1,M_2,\cds,M_K` comprise the random forest 
+model :math:`\M_k`, which predicts the class of a test point :math:`\x` by 
+majority voting as in bagging:
+
+.. math::
+
+    \M^K(\x)=\arg\max_{c_j}\{v_j(\x)|j=1,\cds,k\}
+
+where :math:`v_j` is the number of trees that predict the class of :math:`\x` as :math:`c_j`.
+That is,
+
+.. math::
+
+    v_j(\x)=|\{M_t(\x)=c_j|t=1,\cds,K\}|
+
+Notice that if :math:`p=d` the the random forest approach is equivalent to bagging over decision tree models.
+
+.. image:: ../_static/Algo22.5.png
+
+Given bootstrap sample :math:`\D_t`, any point in :math:`\D\backslash\D_t` is
+called an *out-of-bag* point for classifier :math:`M_t`, since it was not used
+to train :math:`M_t`.
+One of the side-benefits of the bootstrap approach is that we can compute the
+*out-of-bag* error rate for the random forest by considering the prediction of
+each model :math:`M_t` over its out-of-bag points.
+Let :math:`v_j(\x)` be the number of votes for class :math:`c_j` over all 
+decision trees in the ensemble where :math:`\x` was out-of-bag.
+We can aggregate these votes after we train each classifier :math:`M_t`, by
+incrementing the value :math:`v_j(\x)` if :math:`\hat{y}=M_t(\x)=c_j` and if 
+:math:`\x` is out-of-bag for :math:`M_t`.
+The out-of-bag (OOB) error for the random forest is given as:
+
+.. math::
+
+    \epsilon_{oob}=\frac{1}{n}\cd\sum_{i=1}^nI(y_i\ne\arg\max_{c_j}\{v_j(\x_i)|(\x_i,y_i)\in\D\})
+
+The out-of-bag error rate approximates the cross-validation error rate quite 
+well, and can be used in lieu of :math:`k`-fold cross-validation to evaluate the 
+random forest model.
+
+22.4.3 Boosting
+^^^^^^^^^^^^^^^
+
+Starting from an initial training sample :math:`\D_1`, we train the base 
+classifier :math:`M_1`, and obtain its training error rate.
+To construct the next sample :math:`\D_2`, we select the misclassified instances
+with higher probability, and after training :math:`M_2`, we obtain its training 
+error rate.
+To construct :math:`\D_3`, those instances that are hard to classify by 
+:math:`M_1` or :math:`M_2`, have a higher probability of being selected.
+This process is repeated for :math:`K` iterations.
+Finally, the combined classifier is obtained via weighted voting over the output 
+of the :math:`K` base classifiers :math:`M_1,M_2,\cds,M_K`.
+
+**Adaptive Boosting: AdaBoost**
+
+Let :math:`\D` be the input training set, comprising :math:`n` points :math:`\x_i\in\R^d`.
+The boosting process will be repeated :math:`K` times.
+Let :math:`t` denote the iteration and let :math:`\alpha_t` denote the weight 
+for the :math:`r`\ th classifier :math:`M_t`.

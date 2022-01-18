@@ -111,7 +111,12 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#bias-variance-decomposition">22.3 Bias-Variance Decomposition</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#ensemble-classifiers">22.4 Ensemble Classifiers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ensemble-classifiers">22.4 Ensemble Classifiers</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#bagging">22.4.1 Bagging</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#random-forest-bagging-decision-trees">22.4.2 Random Forest: Bagging Decision Trees</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#boosting">22.4.3 Boosting</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -714,6 +719,103 @@ assumptions) and as low a variance as possible.</p>
 </div>
 <div class="section" id="ensemble-classifiers">
 <h2>22.4 Ensemble Classifiers<a class="headerlink" href="#ensemble-classifiers" title="Permalink to this headline">¶</a></h2>
+<p>A classifier is called <em>unstable</em> if small pertubations in the training set
+result in large changes in the prediction or decision boundary.
+High variance classifiers are inherently unstable, since they tend to overfit the data.
+On the other hand, high bias methods typically underfit the data, and usually have low variance.
+In either case, the aim of learning is to reduce classification error by reducing the variance or bias, ideally both.
+Ensemble methods create a <em>combined classifier</em> using the output of multiple
+<em>base classifiers</em>, which are trained on different data subsets.</p>
+<div class="section" id="bagging">
+<h3>22.4.1 Bagging<a class="headerlink" href="#bagging" title="Permalink to this headline">¶</a></h3>
+<p><em>Bagging</em>, which stands for <em>Bootstrap Aggregation</em>, is an ensemble
+classification method that employs multiple bootstrap samples (with replacement)
+from the input training data <span class="math notranslate nohighlight">\(\D\)</span> to create slightly different training
+set <span class="math notranslate nohighlight">\(\D_t,t=1,2,\cds,K\)</span>.
+Different base classifiers <span class="math notranslate nohighlight">\(M_t\)</span> are learned, with <span class="math notranslate nohighlight">\(M_t\)</span> trained on <span class="math notranslate nohighlight">\(\D_t\)</span>.
+Given any test point <span class="math notranslate nohighlight">\(\x\)</span>, it is first classified using each of the <span class="math notranslate nohighlight">\(K\)</span> base classifiers, <span class="math notranslate nohighlight">\(M_t\)</span>.
+Let the number of classifiers that predict the class of <span class="math notranslate nohighlight">\(\x\)</span> as <span class="math notranslate nohighlight">\(c_j\)</span> be given as</p>
+<div class="math notranslate nohighlight">
+\[v_j(\x)=|\{M_t(\x)=c_j|t=1,\cds,L\}|\]</div>
+<p>The combined classifier, denoted <span class="math notranslate nohighlight">\(\M^K\)</span>, predicts the class of a test
+point <span class="math notranslate nohighlight">\(\x\)</span> by <em>majority voting</em> among the <span class="math notranslate nohighlight">\(k\)</span> classes:</p>
+<div class="math notranslate nohighlight">
+\[\M^K(\x)=\arg\max_{c_j}\{v_j(\x)|j=1,\cds,k\}\]</div>
+<p>For binary classification, assuming that the classes are given as
+<span class="math notranslate nohighlight">\(\{+1,-1\}\)</span>, the combined classifier <span class="math notranslate nohighlight">\(\M^K\)</span> can be expressed more
+simply as</p>
+<div class="math notranslate nohighlight">
+\[\M^K(\x)=\rm{sign}\bigg(\sum_{t=1}^KM_t(\x)\bigg)\]</div>
+<p>Bagging can help reduce the variance, especially if the base classifiers are
+unstable, due to the averaging effect of majority voting. It does not, in
+general, have much effect on the bias.</p>
+</div>
+<div class="section" id="random-forest-bagging-decision-trees">
+<h3>22.4.2 Random Forest: Bagging Decision Trees<a class="headerlink" href="#random-forest-bagging-decision-trees" title="Permalink to this headline">¶</a></h3>
+<p>A <em>random forest</em> is an ensemble of <span class="math notranslate nohighlight">\(K\)</span> classifiers, <span class="math notranslate nohighlight">\(M_1,\cds,M_K\)</span>,
+where each classifier is a decision tree created from a different bootstrap
+sample, as in bagging.
+However, the key difference from bagging is that the trees are built by sampling
+a random subset of the attributes at each internal node in the decision tree.
+The random sampling of the attributes results in reducing the correlation between the trees in the ensemble.</p>
+<p>Let <span class="math notranslate nohighlight">\(\D\)</span> be the training dataset comprising <span class="math notranslate nohighlight">\(n\)</span> points
+<span class="math notranslate nohighlight">\(\x_j\in\R^d\)</span> along with the corresponding class <span class="math notranslate nohighlight">\(y_j\)</span>.
+Let <span class="math notranslate nohighlight">\(\D_t\)</span> denote the <span class="math notranslate nohighlight">\(t\)</span>th bootstrap sample of size <span class="math notranslate nohighlight">\(n\)</span>
+drawn from <span class="math notranslate nohighlight">\(\D\)</span> via sampling with replacement.
+Let <span class="math notranslate nohighlight">\(p\leq d\)</span> denote the number of attributes to sample for evaluating the split points.
+The random forest algorithm uses the <span class="math notranslate nohighlight">\(t\)</span>th bootstrap sample to learn a
+decision tree model <span class="math notranslate nohighlight">\(M_t\)</span> via the decision tree method with one major
+change.
+Instead of evaluating all the <span class="math notranslate nohighlight">\(d\)</span> attributes to find the best split point,
+it samples <span class="math notranslate nohighlight">\(p\leq d\)</span> attributes at random, and evaluates split points for
+only those attributes.</p>
+<p>The <span class="math notranslate nohighlight">\(K\)</span> decision trees <span class="math notranslate nohighlight">\(M_1,M_2,\cds,M_K\)</span> comprise the random forest
+model <span class="math notranslate nohighlight">\(\M_k\)</span>, which predicts the class of a test point <span class="math notranslate nohighlight">\(\x\)</span> by
+majority voting as in bagging:</p>
+<div class="math notranslate nohighlight">
+\[\M^K(\x)=\arg\max_{c_j}\{v_j(\x)|j=1,\cds,k\}\]</div>
+<p>where <span class="math notranslate nohighlight">\(v_j\)</span> is the number of trees that predict the class of <span class="math notranslate nohighlight">\(\x\)</span> as <span class="math notranslate nohighlight">\(c_j\)</span>.
+That is,</p>
+<div class="math notranslate nohighlight">
+\[v_j(\x)=|\{M_t(\x)=c_j|t=1,\cds,K\}|\]</div>
+<p>Notice that if <span class="math notranslate nohighlight">\(p=d\)</span> the the random forest approach is equivalent to bagging over decision tree models.</p>
+<img alt="../_images/Algo22.5.png" src="../_images/Algo22.5.png" />
+<p>Given bootstrap sample <span class="math notranslate nohighlight">\(\D_t\)</span>, any point in <span class="math notranslate nohighlight">\(\D\backslash\D_t\)</span> is
+called an <em>out-of-bag</em> point for classifier <span class="math notranslate nohighlight">\(M_t\)</span>, since it was not used
+to train <span class="math notranslate nohighlight">\(M_t\)</span>.
+One of the side-benefits of the bootstrap approach is that we can compute the
+<em>out-of-bag</em> error rate for the random forest by considering the prediction of
+each model <span class="math notranslate nohighlight">\(M_t\)</span> over its out-of-bag points.
+Let <span class="math notranslate nohighlight">\(v_j(\x)\)</span> be the number of votes for class <span class="math notranslate nohighlight">\(c_j\)</span> over all
+decision trees in the ensemble where <span class="math notranslate nohighlight">\(\x\)</span> was out-of-bag.
+We can aggregate these votes after we train each classifier <span class="math notranslate nohighlight">\(M_t\)</span>, by
+incrementing the value <span class="math notranslate nohighlight">\(v_j(\x)\)</span> if <span class="math notranslate nohighlight">\(\hat{y}=M_t(\x)=c_j\)</span> and if
+<span class="math notranslate nohighlight">\(\x\)</span> is out-of-bag for <span class="math notranslate nohighlight">\(M_t\)</span>.
+The out-of-bag (OOB) error for the random forest is given as:</p>
+<div class="math notranslate nohighlight">
+\[\epsilon_{oob}=\frac{1}{n}\cd\sum_{i=1}^nI(y_i\ne\arg\max_{c_j}\{v_j(\x_i)|(\x_i,y_i)\in\D\})\]</div>
+<p>The out-of-bag error rate approximates the cross-validation error rate quite
+well, and can be used in lieu of <span class="math notranslate nohighlight">\(k\)</span>-fold cross-validation to evaluate the
+random forest model.</p>
+</div>
+<div class="section" id="boosting">
+<h3>22.4.3 Boosting<a class="headerlink" href="#boosting" title="Permalink to this headline">¶</a></h3>
+<p>Starting from an initial training sample <span class="math notranslate nohighlight">\(\D_1\)</span>, we train the base
+classifier <span class="math notranslate nohighlight">\(M_1\)</span>, and obtain its training error rate.
+To construct the next sample <span class="math notranslate nohighlight">\(\D_2\)</span>, we select the misclassified instances
+with higher probability, and after training <span class="math notranslate nohighlight">\(M_2\)</span>, we obtain its training
+error rate.
+To construct <span class="math notranslate nohighlight">\(\D_3\)</span>, those instances that are hard to classify by
+<span class="math notranslate nohighlight">\(M_1\)</span> or <span class="math notranslate nohighlight">\(M_2\)</span>, have a higher probability of being selected.
+This process is repeated for <span class="math notranslate nohighlight">\(K\)</span> iterations.
+Finally, the combined classifier is obtained via weighted voting over the output
+of the <span class="math notranslate nohighlight">\(K\)</span> base classifiers <span class="math notranslate nohighlight">\(M_1,M_2,\cds,M_K\)</span>.</p>
+<p><strong>Adaptive Boosting: AdaBoost</strong></p>
+<p>Let <span class="math notranslate nohighlight">\(\D\)</span> be the input training set, comprising <span class="math notranslate nohighlight">\(n\)</span> points <span class="math notranslate nohighlight">\(\x_i\in\R^d\)</span>.
+The boosting process will be repeated <span class="math notranslate nohighlight">\(K\)</span> times.
+Let <span class="math notranslate nohighlight">\(t\)</span> denote the iteration and let <span class="math notranslate nohighlight">\(\alpha_t\)</span> denote the weight
+for the <span class="math notranslate nohighlight">\(r\)</span>th classifier <span class="math notranslate nohighlight">\(M_t\)</span>.</p>
+</div>
 </div>
 </div>
 
