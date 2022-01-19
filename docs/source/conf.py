@@ -118,6 +118,7 @@ rst_prolog = r'''
     \newcommand{\sg}{\sigma}
     \newcommand{\Sg}{\boldsymbol{\mathrm{\Sigma}}}
     \newcommand{\th}{\theta}
+    \newcommand{\ve}{\varepsilon}
 
     \newcommand{\mmu}{\boldsymbol{\mu}}
     \newcommand{\ppi}{\boldsymbol{\pi}}

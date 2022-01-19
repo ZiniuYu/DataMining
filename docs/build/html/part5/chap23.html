@@ -41,7 +41,9 @@
 
     
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Chapter 24 Logistic Regression" href="chap24.html" />
+    <link rel="prev" title="Part 5 Regression" href="index5.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -87,10 +89,25 @@
             
             
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../part1/index1.html">Part 1 Data Analysis Foundations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../part3/index3.html">Part 3 Clustering</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../part4/index4.html">Part 4 Classification</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index5.html">Part 5 Regression</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Chapter 23 Linear Regression</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#linear-regression-model">23.1 Linear Regression Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#bivariate-regression">23.2 Bivariate Regression</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#geometry-of-bivariate-regression">23.2.1 Geometry of Bivariate Regression</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="chap24.html">Chapter 24 Logistic Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chap25.html">Chapter 25 Neural Networks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chap26.html">Chapter 26 Deep Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chap27.html">Chapter 27 Regression Evaluation</a></li>
+</ul>
+</li>
 </ul>
 
             
@@ -138,6 +155,8 @@
   <ul class="wy-breadcrumbs">
     
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index5.html">Part 5 Regression</a> &raquo;</li>
         
       <li>Chapter 23 Linear Regression</li>
     
@@ -210,7 +229,8 @@
 \newcommand{\Ld}{\boldsymbol{\mathrm{\Lambda}}}
 \newcommand{\sg}{\sigma}
 \newcommand{\Sg}{\boldsymbol{\mathrm{\Sigma}}}
-\newcommand{\th}{\theta}\\\newcommand{\mmu}{\boldsymbol{\mu}}
+\newcommand{\th}{\theta}
+\newcommand{\ve}{\varepsilon}\\\newcommand{\mmu}{\boldsymbol{\mu}}
 \newcommand{\ppi}{\boldsymbol{\pi}}
 \newcommand{\CC}{\mathcal{C}}
 \newcommand{\TT}{\mathcal{T}}\\
@@ -224,6 +244,115 @@
 \newcommand{\ppr}{^{\prime\prime}}\end{aligned}\end{align} \]</div>
 <div class="section" id="chapter-23-linear-regression">
 <h1>Chapter 23 Linear Regression<a class="headerlink" href="#chapter-23-linear-regression" title="Permalink to this headline">¶</a></h1>
+<p>Given a set of attributes or variables <span class="math notranslate nohighlight">\(X_1,X_2,\cds,X_d\)</span>, called the
+<em>predictor</em>, <em>explanatory</em>, or <em>independent</em> variables, and given a real-valued
+attribute of interest <span class="math notranslate nohighlight">\(Y\)</span>, called the <em>response</em> or <em>dependent</em> variable,
+the aim of <em>regression</em> is to predict the response variable based on the
+independent variables.
+That is, the goal is to learn a <em>regression function</em> <span class="math notranslate nohighlight">\(f\)</span>, such that</p>
+<div class="math notranslate nohighlight">
+\[Y=f(X_1,X_2,\cds,X_d)+\ve=f(\X)+\ve\]</div>
+<p>where <span class="math notranslate nohighlight">\(\X=(X_1,X_2,\cds,X_d)^T\)</span> is the multivariate random variable
+comprising the predictor attributes, and <span class="math notranslate nohighlight">\(\ve\)</span> is a random <em>error term</em>
+that is assumed to be independent of <span class="math notranslate nohighlight">\(\X\)</span>.
+In other words, <span class="math notranslate nohighlight">\(Y\)</span> is comrpised of two components, one dependent on the
+observed predictor attributes, and the other, coming from the error term,
+independent of the predictor attributes.
+The error term encapsulates inherent uncertainty in <span class="math notranslate nohighlight">\(Y\)</span>, as well as,
+possibly the effect of unobserved, hidden or <em>latent</em> variables.</p>
+<div class="section" id="linear-regression-model">
+<h2>23.1 Linear Regression Model<a class="headerlink" href="#linear-regression-model" title="Permalink to this headline">¶</a></h2>
+<p>In <em>linear regression</em> the function <span class="math notranslate nohighlight">\(f\)</span> is assumed to be linear in its parameters, that is</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp f(\X)=\beta+\omega_1X_1+\omega_2X_2+\cds+\omega_dX_d=\beta+\sum_{i=1}^d\omega_iX_i=\beta+\bs{\omega}^T\X\)</span></p>
+</div>
+<p>Here, the parameter <span class="math notranslate nohighlight">\(\beta\)</span> is the true (unknown) <em>bias</em> term, the
+parameter <span class="math notranslate nohighlight">\(\omega_i\)</span> is the true (unknown) <em>regression coefficient</em> or
+<em>weight</em> for attribute <span class="math notranslate nohighlight">\(X_i\)</span>, and
+<span class="math notranslate nohighlight">\(\bs{\omega}=(\omega_1,\omega_2,\cds,\omega_d)^T\)</span> is the true <span class="math notranslate nohighlight">\(d\)</span>-
+dimensional weight vector.
+Observe that <span class="math notranslate nohighlight">\(f\)</span> specifies a hyperplane in <span class="math notranslate nohighlight">\(\R^{d+1}\)</span>, where
+<span class="math notranslate nohighlight">\(\bs{\omega}\)</span> is the weight vector that is normal or orthogonal to the
+hyperplane, and <span class="math notranslate nohighlight">\(\beta\)</span> is the <em>intercept</em> or offset term.
+We can see that <span class="math notranslate nohighlight">\(f\)</span> is completely specified by the <span class="math notranslate nohighlight">\(d+1\)</span> parameters
+comprising <span class="math notranslate nohighlight">\(\beta\)</span> and <span class="math notranslate nohighlight">\(\omega_i\)</span>, for <span class="math notranslate nohighlight">\(i=1,\cds,\d\)</span>.</p>
+<p>The true bias and regression coefficients are unknown.
+Therefore, we have to estimate them from the training dataset <span class="math notranslate nohighlight">\(\D\)</span>
+comprising <span class="math notranslate nohighlight">\(n\)</span> points <span class="math notranslate nohighlight">\(\x_i\in\R^d\)</span> in a <span class="math notranslate nohighlight">\(d\)</span>-dimensional
+space, and the corresponding response values <span class="math notranslate nohighlight">\(y_i\in\R\)</span>, for
+<span class="math notranslate nohighlight">\(i=1,2,\cds,n\)</span>.
+Let <span class="math notranslate nohighlight">\(b\)</span> denote the estimated value for the true bias <span class="math notranslate nohighlight">\(\beta\)</span>, and
+let <span class="math notranslate nohighlight">\(w_i\)</span> denote the estimated value for the true regression coefficient
+<span class="math notranslate nohighlight">\(w_i\)</span>, for <span class="math notranslate nohighlight">\(i=1,2,\cds,d\)</span>.
+Let <span class="math notranslate nohighlight">\(\w=(w_1,w_2,\cds,w_d)^T\)</span> denote the vector of estimated weights.
+Given the estimated bias and weight values, we can predict the response for any
+given input or test point <span class="math notranslate nohighlight">\(\x=(x_1,x_2,\cds,x_d)^T\)</span>, as follows:</p>
+<div class="math notranslate nohighlight">
+\[\hat{y}=b+w_1x_1+\cds+w_dx_d=b+\w^T\x\]</div>
+<p>The difference between the observed and predicted response, called the <em>residual error</em>, is given as</p>
+<div class="math notranslate nohighlight">
+\[\epsilon=y-\hat{y}=y-b-\w^T\X\]</div>
+<p>The residual error <span class="math notranslate nohighlight">\(\epsilon\)</span> is an estimator of the random error term <span class="math notranslate nohighlight">\(\ve\)</span>.</p>
+<p>A common approach to predicting the bias and regression coefficients is to use the method of <em>least squares</em>.
+That is, given the training data <span class="math notranslate nohighlight">\(\D\)</span> with points <span class="math notranslate nohighlight">\(\x_i\)</span> and
+response values <span class="math notranslate nohighlight">\(y_i\)</span> (for <span class="math notranslate nohighlight">\(i=1,\cds,n\)</span>), we seek values <span class="math notranslate nohighlight">\(b\)</span>
+and <span class="math notranslate nohighlight">\(\w\)</span>, so as to minimize the sum of squared residual errors (SSE)</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp SSE=\sum_{i=1}^n\epsilon_i^2=\sum_{i=1}^n(y_i-\hat{y_i})^2=\sum_{i=1}^n(y_i-b-\w^T\x_i)^2\)</span></p>
+</div>
+</div>
+<div class="section" id="bivariate-regression">
+<h2>23.2 Bivariate Regression<a class="headerlink" href="#bivariate-regression" title="Permalink to this headline">¶</a></h2>
+<p>Let us first consider the case where the input data <span class="math notranslate nohighlight">\(\D\)</span> comprises a
+single predictor attribute, <span class="math notranslate nohighlight">\(W=(x_1,x_2,\cds,x_n)^T\)</span>, along with the
+response variable, <span class="math notranslate nohighlight">\(Y=(y_1,y_2,\cds,y_n)^T\)</span>.
+Since <span class="math notranslate nohighlight">\(f\)</span> is linear, we have</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\hat{y_i}=f(x_i)=b+w\cd x_i\)</span></p>
+</div>
+<p>Thus, we seek the straight line <span class="math notranslate nohighlight">\(f(x)\)</span> with slope <span class="math notranslate nohighlight">\(w\)</span> and intercept <span class="math notranslate nohighlight">\(b\)</span> that <em>best fits</em> the data.
+The residual error, which is the difference between the predicted value (also
+called <em>fitted value</em>) and the observed value of the response variable, is given
+as</p>
+<div class="math notranslate nohighlight">
+\[\epsilon_i=y_i-\hat{y_i}\]</div>
+<p>Note that <span class="math notranslate nohighlight">\(|\epsilon_i|\)</span> denotes the vertical distance between the fitted and observed response.
+The best fitting line minimizes the sum of squared errors</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\min_{b,w}SSE=\sum_{i=1}^n\epsilon_i^2=\sum_{i=1}^n(y_i-\hat{y_i})^2=\sum_{i=1}^n(y_i-b-w\cd x_i)^2\)</span></p>
+</div>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\frac{\pd}{\pd b}SSE&amp;=-2\sum_{i=1}^n(y_i-b-w\cd x_i)=0\\&amp;\Rightarrow\sum_{i=1}^n b=\sum_{i=1}^ny_i-w\sum_{i=1}^nx_i\\&amp;\Rightarrow b=\frac{1}{n}\sum_{i=1}^ny_i-w\cd\frac{1}{n}\sum_{i=1}^nx_i\end{aligned}\end{align} \]</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(b=\mu_Y-w\cd\mu_X\)</span></p>
+</div>
+<p>where <span class="math notranslate nohighlight">\(\mu_Y\)</span> is the sample mean for the response and <span class="math notranslate nohighlight">\(\mu_X\)</span> is the
+sample mean for the predictor attribute.</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\frac{\pd}{\pd w}SSE&amp;=-2\sum_{i=1}^nx_i(y_i-b-w\cd x_i)=0\\&amp;\Rightarrow\sum_{i=1}^nx_i\cd y_i-b\sum_{i=1}^nx_i-w\sum_{i=1}^nx_i^2=0\\&amp;\Rightarrow\sum_{i=1}^nx_i\cd y_i-\mu_Y\sum_{i=1}^nx_i+w\cd\mu_X\sum_{i=1}^nx_i-w\sum_{i=1}^nx_i^2=0\\&amp;\Rightarrow w\bigg(\sum_{i=1}^nx_i^2-n\cd\mu_X^2\bigg)=\bigg(\sum_{i=1}^nx_i\cd y_i\bigg)-n\cd\mu_X\mu_Y\\&amp;\Rightarrow w=\frac{(\sum_{i=1}^nx_i\cd y_i)-n\cd\mu_X\cd\mu_Y}{(\sum_{i=1}^nx_i^2)-n\cd\mu_X^2}\end{aligned}\end{align} \]</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp w=\frac{\sum_{i=1}^n(x_i-\mu_X)(y_i-\mu_Y)}{\sum_{i=1}^n(x_i-\mu_X)^2}=\)</span>
+<span class="math notranslate nohighlight">\(\dp\frac{\sg_{XY}}{\sg_X^2}=\frac{\rm{cov}(X,Y)}{\rm{var}(X)}\)</span></p>
+</div>
+<p>where <span class="math notranslate nohighlight">\(\sg_X^2\)</span> is the variance of <span class="math notranslate nohighlight">\(X\)</span> and <span class="math notranslate nohighlight">\(\sg_{XY}\)</span> is the
+covariance between <span class="math notranslate nohighlight">\(X\)</span> and <span class="math notranslate nohighlight">\(Y\)</span>.
+Noting that the correlation between <span class="math notranslate nohighlight">\(X\)</span> and <span class="math notranslate nohighlight">\(Y\)</span> is given as
+<span class="math notranslate nohighlight">\(\rho_{XY}=\frac{\sg_{XY}}{\sg_X\cd\sg_Y}\)</span>, we can also write <span class="math notranslate nohighlight">\(w\)</span> as</p>
+<div class="math notranslate nohighlight">
+\[w=\rho_{XY}=\frac{\sg_Y}{\sg_X}\]</div>
+<div class="math notranslate nohighlight">
+\[\hat{y_i}=b+w\cd x_i=\mu_Y-w\cd\mu_X+w\cd x_i=\mu_Y+w(x_i-\mu_X)\]</div>
+<p>Thus, the point <span class="math notranslate nohighlight">\((\mu_X,\mu_Y)\)</span> lins on the regression line.</p>
+<div class="section" id="geometry-of-bivariate-regression">
+<h3>23.2.1 Geometry of Bivariate Regression<a class="headerlink" href="#geometry-of-bivariate-regression" title="Permalink to this headline">¶</a></h3>
+</div>
+</div>
 </div>
 
 
@@ -231,6 +360,10 @@
            
           </div>
           <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="chap24.html" class="btn btn-neutral float-right" title="Chapter 24 Logistic Regression" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="index5.html" class="btn btn-neutral float-left" title="Part 5 Regression" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
 
   <hr/>
 
