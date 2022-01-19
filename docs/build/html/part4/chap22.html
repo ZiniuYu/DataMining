@@ -115,6 +115,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#bagging">22.4.1 Bagging</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#random-forest-bagging-decision-trees">22.4.2 Random Forest: Bagging Decision Trees</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#boosting">22.4.3 Boosting</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#stacking">22.4.4 Stacking</a></li>
 </ul>
 </li>
 </ul>
@@ -822,6 +823,64 @@ In fact, <span class="math notranslate nohighlight">\(\w\)</span> is a probabili
 Initially all points have equal weights, that is,</p>
 <div class="math notranslate nohighlight">
 \[\w^0=\bigg(\frac{1}{n},\frac{1}{n},\cds,\frac{1}{n}\bigg)^T=\frac{1}{n}\1\]</div>
+<p>During iteration <span class="math notranslate nohighlight">\(t\)</span>, the training sample <span class="math notranslate nohighlight">\(\D_t\)</span> is obtained via
+weighted resampling using the distribution <span class="math notranslate nohighlight">\(\w^{t-1}\)</span>, that is, we draw a
+sample of size <span class="math notranslate nohighlight">\(n\)</span> with replacement, such that the <span class="math notranslate nohighlight">\(i\)</span>th point is
+chosen according to its probability <span class="math notranslate nohighlight">\(w_i^{t-1}\)</span>.
+Next, we train the classifier <span class="math notranslate nohighlight">\(M_t\)</span> using <span class="math notranslate nohighlight">\(\D_t\)</span>, and compute its
+weighted error rate <span class="math notranslate nohighlight">\(\epsilon_t\)</span> on the entire input dataset <span class="math notranslate nohighlight">\(\D\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\epsilon_t=\sum_{i=1}^nw_i^{t-1}\cd I(M_t(\x_i)\neq y_i)\]</div>
+<p>The weight <span class="math notranslate nohighlight">\(\alpha_t\)</span> for the <span class="math notranslate nohighlight">\(t\)</span>th classifier is then set as</p>
+<div class="math notranslate nohighlight">
+\[\alpha_t=\ln\bigg(\frac{1-\epsilon_t}{\epsilon_t}\bigg)\]</div>
+<p>and the weight for each point <span class="math notranslate nohighlight">\(\x_i\in\D\)</span> is updated based on whether the point is misclassified or not</p>
+<div class="math notranslate nohighlight">
+\[w_i^t=w_i^{t-1}\cd\exp\{\alpha_t\cd I(M_t(\x_i)\neq y_i)\}\]</div>
+<p>Thus, if the predicted class matches the true class, that is, if
+<span class="math notranslate nohighlight">\(M_t(\x_i)=y_i\)</span>, then <span class="math notranslate nohighlight">\(I(M_t(\x_i)\neq y_i)=0\)</span>, and the weight for
+point <span class="math notranslate nohighlight">\(\x_i\)</span> remains unchanged.
+On the other hand, if the point is misclassified, that is,
+<span class="math notranslate nohighlight">\(M_t(\x_i)\neq y_i\)</span>, then we have <span class="math notranslate nohighlight">\(I(M_t(\x_i)\neq y_i)=1\)</span> and</p>
+<div class="math notranslate nohighlight">
+\[w_i^t=w_i^{t-1}\cd\exp\{\alpha_t\}=w_i^{t-1}\exp\bigg\{\ln\bigg(
+    \frac{1-\epsilon_t}{\epsilon}\bigg)\bigg\}=w_i^{t-1}
+    \bigg(\frac{1}{\epsilon_t}-1\bigg)\]</div>
+<p>Once the point weights have been updated, we re-normalize the weights so that <span class="math notranslate nohighlight">\(\w^t\)</span> is a probability vector:</p>
+<div class="math notranslate nohighlight">
+\[\w_t=\frac{\w^t}{\1^T\w^t}=\frac{1}{\sum_{j=1}^nw_j^t}(w_1^t,w_2^t,\cds,w_n^t)^T\]</div>
+<img alt="../_images/Algo22.6.png" src="../_images/Algo22.6.png" />
+<p><strong>Combined Classifier</strong></p>
+<p>Given the set of boosted classifiers, <span class="math notranslate nohighlight">\(M_1,M_2,\cds,M_K\)</span>, along with their
+weights <span class="math notranslate nohighlight">\(\alpha_1,\alpha_2,\cds,\alpha_K\)</span>, the class for a test case
+<span class="math notranslate nohighlight">\(\x\)</span> is obtained via weighted majority voting.
+Let <span class="math notranslate nohighlight">\(v_j(\x)\)</span> denote the weighted vote for class <span class="math notranslate nohighlight">\(c_j\)</span> over the <span class="math notranslate nohighlight">\(K\)</span> classifiers, given as</p>
+<div class="math notranslate nohighlight">
+\[v_j(\x)=\sum_{t=1}^K\alpha_t\cd I(M_t(\x)=c_j)\]</div>
+<p>The combined classifier, denoted <span class="math notranslate nohighlight">\(\M^K\)</span>, then predicts the class for <span class="math notranslate nohighlight">\(\x\)</span> as follows:</p>
+<div class="math notranslate nohighlight">
+\[\M^K(\x)=\arg\max_{c_j}\{v_j(\x)|j=1,\cds,k\}\]</div>
+<p>In the case of binary classification, with classes <span class="math notranslate nohighlight">\(\{+1,-1\}\)</span>, the
+combined classifier <span class="math notranslate nohighlight">\(\M^K\)</span> can be expressed more simply as</p>
+<div class="math notranslate nohighlight">
+\[\M^K(\x)=\rm{sign}\bigg(\sum_{t=1}^K\alpha_tM_t(\x)\bigg)\]</div>
+<p><strong>Bagging as a Special Case of AdaBoost</strong></p>
+<p>Bagging can be considered as a special case of AdaBoost, where
+<span class="math notranslate nohighlight">\(w_t=\frac{1}{n}\1\)</span>, and <span class="math notranslate nohighlight">\(\alpha_t=1\)</span> for all <span class="math notranslate nohighlight">\(K\)</span> iterations.</p>
+</div>
+<div class="section" id="stacking">
+<h3>22.4.4 Stacking<a class="headerlink" href="#stacking" title="Permalink to this headline">¶</a></h3>
+<p>Stacking or staced generalization is an ensemble technique where we employ two layers of classifiers.
+The first layer is composed of <span class="math notranslate nohighlight">\(K\)</span> base classifiers which are trained
+independently on the entire training data <span class="math notranslate nohighlight">\(\D\)</span>.
+However, the base classiﬁers should differ from or be complementary to each
+other as much as possible so that they perform well on different subsets of the
+input space.
+The second layer comprises a combiner classiﬁer <span class="math notranslate nohighlight">\(C\)</span> that is trained on the
+predicted classes from the base classiﬁers, so that it automatically learns how
+to combine the outputs of the base classiﬁers to make the ﬁnal prediction for a
+given input.</p>
+<img alt="../_images/Algo22.7.png" src="../_images/Algo22.7.png" />
 </div>
 </div>
 </div>

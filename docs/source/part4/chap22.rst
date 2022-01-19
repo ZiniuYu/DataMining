@@ -807,3 +807,90 @@ Initially all points have equal weights, that is,
 
     \w^0=\bigg(\frac{1}{n},\frac{1}{n},\cds,\frac{1}{n}\bigg)^T=\frac{1}{n}\1
 
+During iteration :math:`t`, the training sample :math:`\D_t` is obtained via
+weighted resampling using the distribution :math:`\w^{t-1}`, that is, we draw a
+sample of size :math:`n` with replacement, such that the :math:`i`\ th point is
+chosen according to its probability :math:`w_i^{t-1}`.
+Next, we train the classifier :math:`M_t` using :math:`\D_t`, and compute its
+weighted error rate :math:`\epsilon_t` on the entire input dataset :math:`\D`:
+
+.. math::
+
+    \epsilon_t=\sum_{i=1}^nw_i^{t-1}\cd I(M_t(\x_i)\neq y_i)
+
+The weight :math:`\alpha_t` for the :math:`t`\ th classifier is then set as
+
+.. math::
+
+    \alpha_t=\ln\bigg(\frac{1-\epsilon_t}{\epsilon_t}\bigg)
+
+and the weight for each point :math:`\x_i\in\D` is updated based on whether the point is misclassified or not
+
+.. math::
+
+    w_i^t=w_i^{t-1}\cd\exp\{\alpha_t\cd I(M_t(\x_i)\neq y_i)\}
+
+Thus, if the predicted class matches the true class, that is, if 
+:math:`M_t(\x_i)=y_i`, then :math:`I(M_t(\x_i)\neq y_i)=0`, and the weight for
+point :math:`\x_i` remains unchanged.
+On the other hand, if the point is misclassified, that is, 
+:math:`M_t(\x_i)\neq y_i`, then we have :math:`I(M_t(\x_i)\neq y_i)=1` and
+
+.. math::
+
+    w_i^t=w_i^{t-1}\cd\exp\{\alpha_t\}=w_i^{t-1}\exp\bigg\{\ln\bigg(
+        \frac{1-\epsilon_t}{\epsilon}\bigg)\bigg\}=w_i^{t-1}
+        \bigg(\frac{1}{\epsilon_t}-1\bigg)
+
+Once the point weights have been updated, we re-normalize the weights so that :math:`\w^t` is a probability vector:
+
+.. math::
+
+    \w_t=\frac{\w^t}{\1^T\w^t}=\frac{1}{\sum_{j=1}^nw_j^t}(w_1^t,w_2^t,\cds,w_n^t)^T
+
+.. image:: ../_static/Algo22.6.png
+
+**Combined Classifier**
+
+Given the set of boosted classifiers, :math:`M_1,M_2,\cds,M_K`, along with their
+weights :math:`\alpha_1,\alpha_2,\cds,\alpha_K`, the class for a test case 
+:math:`\x` is obtained via weighted majority voting.
+Let :math:`v_j(\x)` denote the weighted vote for class :math:`c_j` over the :math:`K` classifiers, given as
+
+.. math::
+
+    v_j(\x)=\sum_{t=1}^K\alpha_t\cd I(M_t(\x)=c_j)
+
+The combined classifier, denoted :math:`\M^K`, then predicts the class for :math:`\x` as follows:
+
+.. math::
+
+    \M^K(\x)=\arg\max_{c_j}\{v_j(\x)|j=1,\cds,k\}
+
+In the case of binary classification, with classes :math:`\{+1,-1\}`, the 
+combined classifier :math:`\M^K` can be expressed more simply as
+
+.. math::
+
+    \M^K(\x)=\rm{sign}\bigg(\sum_{t=1}^K\alpha_tM_t(\x)\bigg)
+
+**Bagging as a Special Case of AdaBoost**
+
+Bagging can be considered as a special case of AdaBoost, where 
+:math:`w_t=\frac{1}{n}\1`, and :math:`\alpha_t=1` for all :math:`K` iterations.
+
+22.4.4 Stacking
+^^^^^^^^^^^^^^^
+
+Stacking or staced generalization is an ensemble technique where we employ two layers of classifiers.
+The first layer is composed of :math:`K` base classifiers which are trained 
+independently on the entire training data :math:`\D`.
+However, the base classiﬁers should differ from or be complementary to each 
+other as much as possible so that they perform well on different subsets of the 
+input space. 
+The second layer comprises a combiner classiﬁer :math:`C` that is trained on the 
+predicted classes from the base classiﬁers, so that it automatically learns how 
+to combine the outputs of the base classiﬁers to make the ﬁnal prediction for a 
+given input.
+
+.. image:: ../_static/Algo22.7.png
