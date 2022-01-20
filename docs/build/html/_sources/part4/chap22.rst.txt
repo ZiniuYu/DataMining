@@ -48,12 +48,12 @@ points based on their true class labels, where
 
     \D_j=\{\x_i^T|y_i=c_j\}\quad\rm{and}\quad n_i=|\D_i|
 
-Let :math:`\cl{R}=\{\bs{R}_1,\bs{R}_2,\cds,\bs{R}_k\}` denote a partitioning of
-the testing points based on the predicted labels, that is,
+Let :math:`\cl{R}=\{\bs{\rm{R}}_1,\bs{\rm{R}}_2,\cds,\bs{\rm{R}}_k\}` denote a 
+partitioning of the testing points based on the predicted labels, that is,
 
 .. math::
 
-    \bs{R}_j=\{\x_i^T|\hat{y_i}=c_j\}\quad\rm{and}\quad m_j=|\bs{R}_j|
+    \bs{\rm{R}}_j=\{\x_i^T|\hat{y_i}=c_j\}\quad\rm{and}\quad m_j=|\bs{\rm{R}}_j|
 
 The partitionings :math:`\cl{R}` and :math:`\cl{D}` induce a :math:`k\times k` 
 contingency table :math:`\N`, also called a *confusion matrix*, defined as 
@@ -61,7 +61,7 @@ follows:
 
 .. math::
 
-    \N(i,j)=n_{ij}=|\bs{R}_i\cap\D_j|=|\{\x_a\in\D|\hat{y_a}=c_i\ \rm{and}\ y_a=c_j\}|
+    \N(i,j)=n_{ij}=|\bs{\rm{R}}_i\cap\D_j|=|\{\x_a\in\D|\hat{y_a}=c_i\ \rm{and}\ y_a=c_j\}|
 
 where :math:`1\leq i,j\leq k`.
 
@@ -152,7 +152,7 @@ class and :math:`c_2` the negative class.
 
     :math:`\dp prec_N=\frac{TN}{TN+FN}=\frac{TN}{m_2}`
 
-where :math:`m_i=|\bs{R}_i|` is the number of points predicted by :math:`M` as having class :math:`c_i`.
+where :math:`m_i=|\bs{\rm{R}}_i|` is the number of points predicted by :math:`M` as having class :math:`c_i`.
 
 **Sensitivity: True Positive Rate**
 
@@ -214,7 +214,7 @@ Next for each distinct value of :math:`\rho` in the range
 
 .. math::
 
-    \bs{R}_1(\rho)=\{\x_i\in\D:S(\x_i)>\rho\}
+    \bs{\rm{R}}_1(\rho)=\{\x_i\in\D:S(\x_i)>\rho\}
 
 and we compute the corresponding true and false positive rates, to obtain a new point in the ROC plot.
 Finally, in the last step, we classify all points as positive.

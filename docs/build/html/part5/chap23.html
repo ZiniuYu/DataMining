@@ -100,6 +100,12 @@
 <li class="toctree-l4"><a class="reference internal" href="#geometry-of-bivariate-regression">23.2.1 Geometry of Bivariate Regression</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="#multiple-regression">22.3 Multiple Regression</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#geometry-of-multiple-regression">23.3.1 Geometry of Multiple Regression</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#multiple-regression-algorithm">23.3.2 Multiple Regression Algorithm</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#multiple-regression-stochastic-gradient-descent">23.3.3 Multiple Regression: Stochastic Gradient Descent</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="chap24.html">Chapter 24 Logistic Regression</a></li>
@@ -222,6 +228,7 @@
 \newcommand{\M}{\boldsymbol{\mathrm{M}}}
 \newcommand{\N}{\boldsymbol{\mathrm{N}}}
 \newcommand{\P}{\boldsymbol{\mathrm{P}}}
+\newcommand{\Q}{\boldsymbol{\mathrm{Q}}}
 \newcommand{\S}{\boldsymbol{\mathrm{S}}}
 \newcommand{\U}{\boldsymbol{\mathrm{U}}}
 \newcommand{\W}{\boldsymbol{\mathrm{W}}}
@@ -351,6 +358,225 @@ Noting that the correlation between <span class="math notranslate nohighlight">\
 <p>Thus, the point <span class="math notranslate nohighlight">\((\mu_X,\mu_Y)\)</span> lins on the regression line.</p>
 <div class="section" id="geometry-of-bivariate-regression">
 <h3>23.2.1 Geometry of Bivariate Regression<a class="headerlink" href="#geometry-of-bivariate-regression" title="Permalink to this headline">¶</a></h3>
+<p>Let <span class="math notranslate nohighlight">\(X=(x_1,x_2,\cds,x_n)^T\)</span> be the <span class="math notranslate nohighlight">\(n\)</span>-dimensional vector denoting
+the training data sample, <span class="math notranslate nohighlight">\(Y=(y_1,y_2,\cds,y_n)^T\)</span> the sample vector for
+the response variable, and
+<span class="math notranslate nohighlight">\(\hat{Y}=(\hat{y_1},\hat{y_2},\cds,\hat{y_n})^T\)</span> the vector of predicted
+values, then we can express the <span class="math notranslate nohighlight">\(n\)</span> equations, <span class="math notranslate nohighlight">\(y_i=b+w\cd x_i\)</span> for
+<span class="math notranslate nohighlight">\(i=1,2,\cds,n\)</span>, as a single vector equation:</p>
+<div class="math notranslate nohighlight">
+\[\hat{Y}=b\cd\1+w\cd X\]</div>
+<p>This equation indicates that the predicted vector <span class="math notranslate nohighlight">\(\hat{Y}\)</span> is a linear
+combination of <span class="math notranslate nohighlight">\(\1\)</span> and <span class="math notranslate nohighlight">\(X\)</span>, i.e., it must lie in the column space
+spanned by <span class="math notranslate nohighlight">\(\1\)</span> and <span class="math notranslate nohighlight">\(X\)</span>, given as <span class="math notranslate nohighlight">\(\rm{span}(\{\1,X\})\)</span>.
+On the other hand, the response vector <span class="math notranslate nohighlight">\(Y\)</span> will not usually lie in the same column space.
+In fact, the residual error vector
+<span class="math notranslate nohighlight">\(\bs{\epsilon}=(\epsilon_1,\epsilon_2,\cds,\epsilon_n)^T\)</span> captures the
+deviation between the response and predicted vectors</p>
+<div class="math notranslate nohighlight">
+\[\bs{\epsilon}=Y-\hat{Y}\]</div>
+<p>The geometry of the problem makes it clear that the optimal <span class="math notranslate nohighlight">\(\hat{Y}\)</span> that
+minimizes the error is the orthogonal projection of <span class="math notranslate nohighlight">\(Y\)</span> onto the subspace
+spanned by <span class="math notranslate nohighlight">\(\1\)</span> and <span class="math notranslate nohighlight">\(X\)</span>.
+The residual error vector <span class="math notranslate nohighlight">\(\bs{\epsilon}\)</span> is thus <em>orthogonal</em> to the
+subspace spanned by <span class="math notranslate nohighlight">\(\1\)</span> and <span class="math notranslate nohighlight">\(X\)</span>, and its squared length (or
+magnitude) equals the SSE value, Since</p>
+<div class="math notranslate nohighlight">
+\[\lv\bs{\epsilon}\rv^2=\lv Y-\hat{Y}\rv^2=\sum_{i=1}^n(y_i-\hat{y_i})^2=\sum_{i=1}^n\epsilon_i=SSE\]</div>
+<p>Even though <span class="math notranslate nohighlight">\(\1\)</span> and <span class="math notranslate nohighlight">\(X\)</span> are linearly independent and form a basis
+for the column space, they need not be orthogonal.
+We can create an orthogonal basis by decomposing <span class="math notranslate nohighlight">\(X\)</span> into a component
+along <span class="math notranslate nohighlight">\(\1\)</span> and a component orthogonal to <span class="math notranslate nohighlight">\(\1\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[\rm{proj}_\1(X)\cd\1=\bigg(\frac{X^T\1}{\1^T\1}\bigg)\cd\1=\bigg(\frac{\sum_{i=1}^nx_i}{n}\bigg)\cd\1=\mu_X\cd\1\]</div>
+<div class="math notranslate nohighlight">
+\[X=\mu_X\cd\1+(X-\mu_X\cd\1)=\mu_X\cd\1+\bar{X}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\bar{X}=X-\mu_X\cd\1\)</span> is the centered attribute vector, obtained by
+subtracting the mean <span class="math notranslate nohighlight">\(\mu_X\)</span> from all points.</p>
+<p>The two vectors <span class="math notranslate nohighlight">\(\1\)</span> and <span class="math notranslate nohighlight">\(\bar{X}\)</span> form an <em>orthogonal basis</em> for the subspace.
+We can thus obtain the predicted vector <span class="math notranslate nohighlight">\(\bar{Y}\)</span> by projecting <span class="math notranslate nohighlight">\(Y\)</span>
+onto <span class="math notranslate nohighlight">\(\1\)</span> and <span class="math notranslate nohighlight">\(\bar{X}\)</span>, and summing up these two components.
+That is,</p>
+<div class="math notranslate nohighlight">
+\[\hat{Y}=\rm{proj}_\1(Y)\cd\1+\rm{proj}_{\bar{X}}(Y)\cd\bar{X}=
+\bigg(\frac{Y^T\1}{\1^T\1}\bigg)\1+
+\bigg(\frac{Y^T\bar{X}}{\bar{X}^T\bar{X}}\bigg)\bar{X}=
+\mu_Y\cd\1+\bigg(\frac{Y^T\bar{X}}{\bar{X}^T\bar{X}}\bigg)\bar{X}\]</div>
+<div class="math notranslate nohighlight">
+\[\hat{Y}=b\cd\1+w\cd X=b\cd\1+w(\mu_X\cd\1+\bar{X})=(b+w\cd\mu_X)\cd\1+w\cd\bar{X}\]</div>
+<p>Since both are expressions for <span class="math notranslate nohighlight">\(\hat{Y}\)</span>, we can equate them to obtain</p>
+<div class="math notranslate nohighlight">
+\[\mu_Y=b+w\cd\mu_X\quad\rm{or}\quad b=\mu_Y-w\cd\mu_X\quad\quad w=\frac{y^T\bar{X}}{\bar{X}^T\bar{X}}\]</div>
+<div class="math notranslate nohighlight">
+\[w=\frac{y^T\bar{X}}{\bar{X}^T\bar{X}}=\frac{Y^T\bar{X}}{\lv\bar{X}\rv^2}=
+\frac{Y^T(X-\mu_X\cd\1)}{\lv X-\mu_X\cd\1\rv^2}=\frac{(\sum_{i=1}^nx_i\cd
+y_i)-n\cd\mu_X\cd\mu_Y}{(\sum_{i=1}^nx_i^2)-n\cd\mu_X^2}\]</div>
+</div>
+</div>
+<div class="section" id="multiple-regression">
+<h2>22.3 Multiple Regression<a class="headerlink" href="#multiple-regression" title="Permalink to this headline">¶</a></h2>
+<p>We now consider the more general case called <em>multiple regression</em> where we have
+multiple predictor attributes <span class="math notranslate nohighlight">\(X_1,X_2,\cds,X_d\)</span> and a single response
+attribute <span class="math notranslate nohighlight">\(Y\)</span>.
+The training data sample <span class="math notranslate nohighlight">\(\D\in\R^{n\times d}\)</span> comprises <span class="math notranslate nohighlight">\(n\)</span> points
+<span class="math notranslate nohighlight">\(\x_i=(x_{i1},x_{i2},\cds,x_{id})^T\)</span> in a <span class="math notranslate nohighlight">\(d\)</span>-dimensional space,
+along with the corresponding observed response value <span class="math notranslate nohighlight">\(y_i\)</span>.
+The vector <span class="math notranslate nohighlight">\(Y=(y_1,y_2,\cds,y_n)^T\)</span> denotes the observed response vector.
+The predicted response value for input <span class="math notranslate nohighlight">\(\x_i\)</span> is given as</p>
+<div class="math notranslate nohighlight">
+\[\hat{y_i}=b+w_1x_{i1}+w_2x_{i2}+\cds+w_dx_{id}=b+\w^T\x_i\]</div>
+<p>where <span class="math notranslate nohighlight">\(\w=(w_1,w_2,\cds,w_d)^T\)</span> is the weight vector comprising the
+regression coefficients or weights <span class="math notranslate nohighlight">\(w_j\)</span> along each attribute <span class="math notranslate nohighlight">\(X_j\)</span>.</p>
+<p>Instead of dealing with the bias <span class="math notranslate nohighlight">\(b\)</span> separately from the weights
+<span class="math notranslate nohighlight">\(w_i\)</span> for each attribute, we can introduce a new “constant” valued
+attribute <span class="math notranslate nohighlight">\(X_0\)</span> whose value is always fixed at 1, so that each input point
+<span class="math notranslate nohighlight">\(\x_i=(x_{i1},x_{i2},\cds,x_{id})^T\in\R^d\)</span> is mapped to an augmented
+point <span class="math notranslate nohighlight">\(\td{\x_i}=(x_{i0},x_{i1},x_{i2},\cds,x_{id})^T\in\R^{d+1}\)</span>, where
+<span class="math notranslate nohighlight">\(x_{i0}=1\)</span>.
+Likewise, the weight vector <span class="math notranslate nohighlight">\(\w=(w_1,w_2,\cds,w_d)^T\)</span> is mapped to an
+augmented weight vector <span class="math notranslate nohighlight">\(\td{\w}=(w_0,w_1,w_2,\cds,w_d)^T\)</span>, where
+<span class="math notranslate nohighlight">\(w_0=b\)</span>.
+The predicted response value for an augmented <span class="math notranslate nohighlight">\((d+1)\)</span> dimensional point <span class="math notranslate nohighlight">\(\td{\x_i}\)</span> can be written as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\hat{y_i}=w_0x_{i0}+w_1x_{i1}+w_2x_{i2}+\cds+w_dx_{id}=\td{\w}^T\td{\x_i}\)</span></p>
+</div>
+<p>We can compactly write all thes <span class="math notranslate nohighlight">\(n\)</span> equations as a single matrix equation, given as</p>
+<div class="math notranslate nohighlight">
+\[\hat{Y}=\td{\D}\td{\w}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\td{\D}\in\R^{n\times(d+1})\)</span> is the <em>augmented data matrix</em>, which
+includes the constant attribute <span class="math notranslate nohighlight">\(X_0\)</span> in addition to the predictor
+attributes <span class="math notranslate nohighlight">\(X_1,X_2,\cds,X_d\)</span>, and
+<span class="math notranslate nohighlight">\(\hat{Y}=(\hat{y_1},\hat{y_2},\cds,\hat{y_n})^T\)</span> is the vector of
+predicted responses.</p>
+<p>The multiple regression task can now be stated as finding the <em>best fitting</em>
+<em>hyperplane</em> defined by the weight vector <span class="math notranslate nohighlight">\(\td{\w}\)</span> that minimizes the sum
+of squared errors</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\min_{\td\w}SSE&amp;=\sum_{i=1}^n\epsilon_i^2=\lv\bs\epsilon\rv^2=\lv Y-\hat{Y}\rv^2\\&amp;=(Y-\hat{Y})^T(Y-\hat{Y})=Y^TY-2Y^T\hat{Y}+\hat{Y}^T\hat{Y}\\&amp;=Y^TY-2Y^T(\td\D\td\w)+(\td\D\td\w)^T(\td\D\td\w)\\&amp;=Y^TY-2\td\w^T(\td\D^TY)+\td\w^T(\td\D^T\td\D)\td\w\end{aligned}\end{align} \]</div>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\frac{\pd}{\pd\td\w}SSE&amp;=-2\td\D^TY+2(\td\D^T\td\D)\td\w=\0\\&amp;\Rightarrow(\td\D^T\td\D)\td\w=\td\D^TY\end{aligned}\end{align} \]</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\td\w=(\td\D^T\td\D)\im\td\D^TY\)</span></p>
+</div>
+<div class="math notranslate nohighlight">
+\[\hat{Y}=\td\D\td\w=\td\D(\td\D^T\td\D)\im\td\D Y=\bs{\rm{H}}Y\]</div>
+<div class="section" id="geometry-of-multiple-regression">
+<h3>23.3.1 Geometry of Multiple Regression<a class="headerlink" href="#geometry-of-multiple-regression" title="Permalink to this headline">¶</a></h3>
+<p>Let <span class="math notranslate nohighlight">\(\td\D\)</span> be the augmented data matrix comprising the <span class="math notranslate nohighlight">\(d\)</span>
+independent attributes <span class="math notranslate nohighlight">\(X_i\)</span>, along with the new constant attribute
+<span class="math notranslate nohighlight">\(X_0=\1\in\R^n\)</span>, given as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\td\D=\bp |&amp;|&amp;|&amp;&amp;|\\X_0&amp;X_1&amp;X_2&amp;\cds&amp;X_d\\|&amp;|&amp;|&amp;&amp;| \ep\end{split}\]</div>
+<p>Let <span class="math notranslate nohighlight">\(\td\w=(w_0,w_1,\cds,w_d)^T\in\R^(d+1)\)</span> be the augmented weight vector
+that incorporates the bias term <span class="math notranslate nohighlight">\(b=w_0\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[\hat{Y}=b\cd\1+w_1\cd X_1+w_2\cd X_2+\cds+w_d\cd X_d=\sum_{i=0}^dw_i\cd X_i=\td\D\td\w\]</div>
+<p>This euqation makes it clear that the predicted vector must lie in the column
+space of the augmented data matrix <span class="math notranslate nohighlight">\(\td\D\)</span>, denoted <span class="math notranslate nohighlight">\(col(\td\D)\)</span>,
+i.e., it must be a linear combination of the attribute vectors <span class="math notranslate nohighlight">\(X_i\)</span>,
+<span class="math notranslate nohighlight">\(i=0,\cds,d\)</span>.</p>
+<p>To minimize the error in prediction, <span class="math notranslate nohighlight">\(\hat{Y}\)</span> must be the orthogonal
+projection of <span class="math notranslate nohighlight">\(Y\)</span> onto the subspace <span class="math notranslate nohighlight">\(col(\td\D)\)</span>.
+The residual error vector <span class="math notranslate nohighlight">\(\bs\epsilon=Y-\hat{Y}\)</span> is thus orthogonal to
+the subspace <span class="math notranslate nohighlight">\(col(\td\D)\)</span>, which means that it is orthogonal to each
+attribute vector <span class="math notranslate nohighlight">\(X_i\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}&amp;\ \ \ \ \ \ \ X_i^T\bs\epsilon=0\\&amp;\Rightarrow X_i^T(Y-\hat{Y})=0\\&amp;\Rightarrow X_i^T\hat{Y}=X_i^TY\\&amp;\Rightarrow X_i^T(\td\D\td\w)=X_i^TY\\&amp;\Rightarrow w_0\cd X_i^TX_0+w_1\cd X_i^TX_1+\cds+w_d\cd X_i^TX_d=X_i^TY\end{aligned}\end{align} \]</div>
+<p>We thus have <span class="math notranslate nohighlight">\((d+1)\)</span> equations, called the <em>normal equations</em>, in
+<span class="math notranslate nohighlight">\((d+1)\)</span> unknowns, namely the regression coefficients or weights
+<span class="math notranslate nohighlight">\(w_i\)</span> (including the bias term <span class="math notranslate nohighlight">\(w_0\)</span>).</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\bp X_0^TX_0&amp;X_0^TX_1&amp;\cds&amp;X_0^TX_d\\X_1^TX_0&amp;X_1^TX_1&amp;\cds&amp;X_1^TX_d\\
+\vds&amp;\vds&amp;\dds&amp;\vds\\X_d^TX_0&amp;X_d^TX_1&amp;\cds&amp;X_d^TX_d\ep\td\w=\td\D^TY\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}(\td\D^T\td\D)\td\w&amp;=\td\D^TY\\\td\w&amp;=(\td\D^T\td\D)\im(\td\D^TY)\end{aligned}\end{align} \]</div>
+<p>More insight can be obtained by noting that the attribute vectors comprising the
+column space of <span class="math notranslate nohighlight">\(\td\D\)</span> are not necessarily orthogonal, even if we assume
+they are linearly independent.
+To obtain the projected vector <span class="math notranslate nohighlight">\(\hat{Y}\)</span>, we first need to construct an orthogonal basis for <span class="math notranslate nohighlight">\(col(\td\D)\)</span>.</p>
+<p>Let <span class="math notranslate nohighlight">\(U_0,U_1,\cds,U_d\)</span> denote the set of orthogonal basis vectors for <span class="math notranslate nohighlight">\(col(\td\D)\)</span>.
+We construct these vectors in a step-wise manner via <em>Gram-Schmidt orthogonalization</em>, as follows</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}U_0&amp;=X_0\\U_1&amp;=X_1-p_{10}\cd U_0\\U_2&amp;=X_2-p_{20}\cd U_0-p_{21}\cd U_1\\\vds&amp;=\vds\\U_d&amp;=X_d-p_{d0}\cd U_0-p_{d1}\cd U_1-\cd-p_{d,d-1}\cd U_{d-1}\end{aligned}\end{align} \]</div>
+<p>where</p>
+<div class="math notranslate nohighlight">
+\[p_{ji}=\rm{proj}_{U_i}(X_j)=\frac{X_j^TU_i}{\lv U_i\rv^2}\]</div>
+<p>denotes the scalar projection of attribute <span class="math notranslate nohighlight">\(X_j\)</span> onto the basis vector <span class="math notranslate nohighlight">\(U_i\)</span>.</p>
+<p>Rearranging the equations above, we get</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}X_0&amp;=U_0\\X_1&amp;=p_{10}\cd U_0+U_1\\X_2&amp;=P_{20}\cd U_0+p_{21}\cd U_1+U_2\\\vds&amp;=\vds\\X_d&amp;=p_{d0}\cd U_0+p_{d1}\cd U_1+\cds+p_{d,d-1}\cd U_{d-1}+U_d\end{aligned}\end{align} \]</div>
+<p>The Gram-Schmidt method thus results in the so-called <em>QR-factorization</em> of the
+data matrix, namely <span class="math notranslate nohighlight">\(\td\D=\bs{\rm{Q}}\bs{\rm{R}}\)</span>, where by construction
+<span class="math notranslate nohighlight">\(\bs{\rm{Q}}\)</span> is an <span class="math notranslate nohighlight">\(n\times(d+1)\)</span> matrix with orthogonal columns</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\bs{\rm{Q}}=\bp |&amp;|&amp;|&amp;&amp;|\\U_0&amp;U_1&amp;U_2&amp;\cds&amp;U_d\\|&amp;|&amp;|&amp;&amp;| \ep\end{split}\]</div>
+<p>and <span class="math notranslate nohighlight">\(\bs{\rm{R}}\)</span> is the <span class="math notranslate nohighlight">\((d+1)\times(d+1)\)</span> upper-triangular matrix</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\bs{\rm{R}}=\bp 1&amp;p_{10}&amp;p_{20}&amp;\cds&amp;p_{d0}\\0&amp;1&amp;p_{21}&amp;\cds&amp;p_{d1}\\0&amp;0&amp;1&amp;
+\cds&amp;p_{d2}\\\vds&amp;\vds&amp;\vds&amp;\dds&amp;\vds\\0&amp;0&amp;0&amp;1&amp;p_{d,d-1}\\0&amp;0&amp;0&amp;0&amp;1\ep\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\hat{Y}=\rm{proj}_{U_0}(Y)\cd U_0+\rm{proj}_{U_1}(Y)\cd U_1+\cds+\rm{proj}_{U_d}(Y)\cd U_d\]</div>
+<p><strong>Bias Term</strong></p>
+<p>Defien <span class="math notranslate nohighlight">\(\bar{X_i}\)</span> to be the centered attribute vector</p>
+<div class="math notranslate nohighlight">
+\[\bar{X_i}=X_i-\mu_{X_i}\cd\1\]</div>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\hat{Y}&amp;=b\cd\1+w_1\cd X_1+w_2\cd X_2+\cds+2_d\cd X_d\\&amp;=b\cd\1+w_1\cd(\bar{X_1}+\mu_{X_1}\cd\1)+\cds+w_d\cd(\bar{X_d}+\mu_{X_d}\cd\1)\\&amp;=(b+w_1\cd\mu_{X_1}+\cds+w_d\cd\mu_{X_d})\cd\1+w_1\cd\bar{X_1}+\cds+w_d\cd\bar{X_d}\end{aligned}\end{align} \]</div>
+<p>On the other hand, since <span class="math notranslate nohighlight">\(\1\)</span> is orthogonal to all <span class="math notranslate nohighlight">\(\bar{X_i}\)</span>, we
+can obtain another expression for <span class="math notranslate nohighlight">\(\bar{Y}\)</span> in terms of the projection of
+<span class="math notranslate nohighlight">\(Y\)</span> onto the subspace spanned by the vectors
+<span class="math notranslate nohighlight">\(\{\1,\bar{X_1},\cds,\bar{X_d}\}\)</span>.
+Let the new orthogonal basis for these centered attribute vectors be
+<span class="math notranslate nohighlight">\(\{\bar{U_0},\bar{U_1},\cds,\bar{U_d}\}\)</span>, where <span class="math notranslate nohighlight">\(\bar{U_0}=\1\)</span>.
+Thus, <span class="math notranslate nohighlight">\(\hat{Y}\)</span> can also be written as</p>
+<div class="math notranslate nohighlight">
+\[\hat{Y}=\rm{proj}_{\bar{U_0}}(Y)\cd\bar{U_0}+\sum_{i=1}^d
+\rm{proj}_{\bar{U_i}}(Y)\cd\bar{U_i}=\rm{proj}_\1+\sum_{i=1}^d\rm{proj}_
+{\bar{U_i}}(Y)\cd\bar{U_i}\]</div>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\rm{proj}_\1(Y)=\mu_Y&amp;=(b+w_1\cd\mu_{X_1}+\cds+w_d\cd\mu_{X_d})\\\Rightarrow b&amp;=\mu_Y-w_1\cd\mu_{X_1}-\cds-w_d\cd\mu_{X_d}=\mu_Y-\sum_{i=1}^dw_i\cd\mu_{X_i}\end{aligned}\end{align} \]</div>
+<div class="math notranslate nohighlight">
+\[\rm{proj}_\1(Y)=\frac{Y^T\1}{\1^T\1}=\frac{1}{n}\sum_{i=1}^ny_i=\mu_Y\]</div>
+</div>
+<div class="section" id="multiple-regression-algorithm">
+<h3>23.3.2 Multiple Regression Algorithm<a class="headerlink" href="#multiple-regression-algorithm" title="Permalink to this headline">¶</a></h3>
+<img alt="../_images/Algo23.1.png" src="../_images/Algo23.1.png" />
+<div class="math notranslate nohighlight">
+\[\begin{split}\Q^T\Q=\bp\lv U_0\rv^2&amp;0&amp;\cds&amp;0\\0&amp;\lv U_1\rv^2&amp;\cds&amp;0\\0&amp;0&amp;\dds&amp;0\\0&amp;0&amp;\cds&amp;\lv U_d\rv^2\ep=\Delta\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}(\td\D^T\td\D)\td\w&amp;=\td\D^TY\\(\Q\bs{\rm{R}})^T(\Q\bs{\rm{R}})\td\w&amp;=(\Q\bs{\rm{R}})^TY\\\bs{\rm{R}}^T(\Q^T\Q)\bs{\rm{R}}\td\w&amp;=\bs{\rm{R}}^TQ^TY\\\bs{\rm{R}}^T\Delta\bs{\rm{R}}\td\w&amp;=\bs{\rm{R}}^TQ^TY\\\Delta\bs{\rm{R}}\td\w&amp;=\Q^TY\\\bs{\rm{R}}\td\w&amp;=\Delta\im\Q^TY\end{aligned}\end{align} \]</div>
+<div class="math notranslate nohighlight">
+\[\hat{Y}=\td\D\td\w=\Q\bs{\rm{R}}\bs{\rm{R}}\im\Delta\im\Q^TY=\Q(\Delta\im\Q^TY)\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}\Delta\im\Q^TY=\bp\rm{proj}_{U_0}(Y)\\\rm{proj}_{U_1}(Y)\\\vds\\\rm{proj}_{U_d}(Y)\ep\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}\hat{Y}=\Q\bp\rm{proj}_{U_0}(Y)\\\rm{proj}_{U_1}(Y)\\\vds\\
+\rm{proj}_{U_d}(Y)\ep=\rm{proj}_{U_0}(Y)\cd U_0+\rm{proj}_{U_1}(Y)\cd U_1+
+\cds+\rm{proj}_{U_d}(Y)\cd U_d\end{split}\]</div>
+</div>
+<div class="section" id="multiple-regression-stochastic-gradient-descent">
+<h3>23.3.3 Multiple Regression: Stochastic Gradient Descent<a class="headerlink" href="#multiple-regression-stochastic-gradient-descent" title="Permalink to this headline">¶</a></h3>
+<p>Consider the SSE obejective</p>
+<div class="math notranslate nohighlight">
+\[\min_{\td\w}SSE=\frac{1}{2}(Y^TY-2\td\w^T(\td\D^TY)+\td\w^T(\td\D^T\td\D)\td\w)\]</div>
+<p>The gradient of the SSE objective is given as</p>
+<div class="math notranslate nohighlight">
+\[\nabla_{\td\w}=\frac{\pd}{\pd\td\w}SSE=-\td\D^TY+(\td\D^T\td\D)\td\w\]</div>
+<p>Using gradient descent, starting from an initial weight vector estimate
+<span class="math notranslate nohighlight">\(\td\w^0\)</span>, we can iteratively update <span class="math notranslate nohighlight">\(\td\w\)</span> as follows</p>
+<div class="math notranslate nohighlight">
+\[\td\w^{t+1}=\td\w^t-\eta\cd\nabla_{\td\w}=\td\w^t+\eta\cd\td\D^T(Y-\td\D\cd\td\w^t)\]</div>
+<p>In stochastic gradient descent (SGD), we update the weight vector by considering only one (random) point at each time.
+Restricting to a single point <span class="math notranslate nohighlight">\(\td\x_k\)</span> in the training data
+<span class="math notranslate nohighlight">\(\td\D\)</span>, the gradient at the point <span class="math notranslate nohighlight">\(\td\x_k\)</span> is given as</p>
+<div class="math notranslate nohighlight">
+\[\nabla_{\td\w}(\td\x_k)=-\td\x_ky_k+\td\x_k\td\x_k^T\td\w=-(y_k-\td\x_k^T\td\w)\td\x_k\]</div>
+<p>Therefore, the stochastic gradient update rule is given as</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\td\w^{t+1}&amp;=\td\w^t-\eta\cd\nabla_{\td\w}(\td\x_k)\\&amp;=\td\w^t+\eta\cd(y_k-\td\x_k^T\td\w^t)\cd\td\x_k\end{aligned}\end{align} \]</div>
+<img alt="_static/Algo23.2.png" src="_static/Algo23.2.png" />
 </div>
 </div>
 </div>

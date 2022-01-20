@@ -238,6 +238,7 @@
 \newcommand{\M}{\boldsymbol{\mathrm{M}}}
 \newcommand{\N}{\boldsymbol{\mathrm{N}}}
 \newcommand{\P}{\boldsymbol{\mathrm{P}}}
+\newcommand{\Q}{\boldsymbol{\mathrm{Q}}}
 \newcommand{\S}{\boldsymbol{\mathrm{S}}}
 \newcommand{\U}{\boldsymbol{\mathrm{U}}}
 \newcommand{\W}{\boldsymbol{\mathrm{W}}}
@@ -294,15 +295,15 @@ For <span class="math notranslate nohighlight">\(\x_i\in\D\)</span>, let <span c
 points based on their true class labels, where</p>
 <div class="math notranslate nohighlight">
 \[\D_j=\{\x_i^T|y_i=c_j\}\quad\rm{and}\quad n_i=|\D_i|\]</div>
-<p>Let <span class="math notranslate nohighlight">\(\cl{R}=\{\bs{R}_1,\bs{R}_2,\cds,\bs{R}_k\}\)</span> denote a partitioning of
-the testing points based on the predicted labels, that is,</p>
+<p>Let <span class="math notranslate nohighlight">\(\cl{R}=\{\bs{\rm{R}}_1,\bs{\rm{R}}_2,\cds,\bs{\rm{R}}_k\}\)</span> denote a
+partitioning of the testing points based on the predicted labels, that is,</p>
 <div class="math notranslate nohighlight">
-\[\bs{R}_j=\{\x_i^T|\hat{y_i}=c_j\}\quad\rm{and}\quad m_j=|\bs{R}_j|\]</div>
+\[\bs{\rm{R}}_j=\{\x_i^T|\hat{y_i}=c_j\}\quad\rm{and}\quad m_j=|\bs{\rm{R}}_j|\]</div>
 <p>The partitionings <span class="math notranslate nohighlight">\(\cl{R}\)</span> and <span class="math notranslate nohighlight">\(\cl{D}\)</span> induce a <span class="math notranslate nohighlight">\(k\times k\)</span>
 contingency table <span class="math notranslate nohighlight">\(\N\)</span>, also called a <em>confusion matrix</em>, defined as
 follows:</p>
 <div class="math notranslate nohighlight">
-\[\N(i,j)=n_{ij}=|\bs{R}_i\cap\D_j|=|\{\x_a\in\D|\hat{y_a}=c_i\ \rm{and}\ y_a=c_j\}|\]</div>
+\[\N(i,j)=n_{ij}=|\bs{\rm{R}}_i\cap\D_j|=|\{\x_a\in\D|\hat{y_a}=c_i\ \rm{and}\ y_a=c_j\}|\]</div>
 <p>where <span class="math notranslate nohighlight">\(1\leq i,j\leq k\)</span>.</p>
 <p><strong>Accuracy/Precision</strong></p>
 <div class="admonition note">
@@ -375,7 +376,7 @@ class and <span class="math notranslate nohighlight">\(c_2\)</span> the negative
 <p><span class="math notranslate nohighlight">\(\dp prec_P=\frac{TP}{TP+FP}=\frac{TP}{m_1}\)</span></p>
 <p><span class="math notranslate nohighlight">\(\dp prec_N=\frac{TN}{TN+FN}=\frac{TN}{m_2}\)</span></p>
 </div>
-<p>where <span class="math notranslate nohighlight">\(m_i=|\bs{R}_i|\)</span> is the number of points predicted by <span class="math notranslate nohighlight">\(M\)</span> as having class <span class="math notranslate nohighlight">\(c_i\)</span>.</p>
+<p>where <span class="math notranslate nohighlight">\(m_i=|\bs{\rm{R}}_i|\)</span> is the number of points predicted by <span class="math notranslate nohighlight">\(M\)</span> as having class <span class="math notranslate nohighlight">\(c_i\)</span>.</p>
 <p><strong>Sensitivity: True Positive Rate</strong></p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -423,7 +424,7 @@ the ROC plot.
 Next for each distinct value of <span class="math notranslate nohighlight">\(\rho\)</span> in the range
 <span class="math notranslate nohighlight">\([\rho^\min,\rho^\max]\)</span>, we tabulate the set of positive points:</p>
 <div class="math notranslate nohighlight">
-\[\bs{R}_1(\rho)=\{\x_i\in\D:S(\x_i)&gt;\rho\}\]</div>
+\[\bs{\rm{R}}_1(\rho)=\{\x_i\in\D:S(\x_i)&gt;\rho\}\]</div>
 <p>and we compute the corresponding true and false positive rates, to obtain a new point in the ROC plot.
 Finally, in the last step, we classify all points as positive.
 Both <em>FN</em> and <em>TN</em> are thus zero, resulting in <em>TPR</em> and <em>FPR</em> values of 1.
