@@ -1,5 +1,6 @@
 Part 1 Data Analysis Foundations
 ================================
+.. image:: ../_static/Algo23.3.png
 
 .. toctree::
     :maxdepth: 2

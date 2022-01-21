@@ -106,6 +106,17 @@
 <li class="toctree-l4"><a class="reference internal" href="#multiple-regression-stochastic-gradient-descent">23.3.3 Multiple Regression: Stochastic Gradient Descent</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="#ridge-regression">23.4 Ridge Regression</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#ridge-regression-stochastic-gradient-descent">23.4.1 Ridge Regression: Stochastic Gradient Descent</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#kernel-regression">23.5 Kernel Regression</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#l-1-regression-lasso">23.6 <span class="math notranslate nohighlight">\(L_1\)</span> Regression: Lasso</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#subgradients-and-subdifferential">23.6.1 Subgradients and Subdifferential</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#bivariate-l-1-regression">23.6.2 Bivariate <span class="math notranslate nohighlight">\(L_1\)</span> Regression</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#multiple-l-1-regression">23.6.3 Multiple <span class="math notranslate nohighlight">\(L_1\)</span> Regression</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="chap24.html">Chapter 24 Logistic Regression</a></li>
@@ -576,7 +587,254 @@ Restricting to a single point <span class="math notranslate nohighlight">\(\td\x
 <p>Therefore, the stochastic gradient update rule is given as</p>
 <div class="math notranslate nohighlight">
 \[ \begin{align}\begin{aligned}\td\w^{t+1}&amp;=\td\w^t-\eta\cd\nabla_{\td\w}(\td\x_k)\\&amp;=\td\w^t+\eta\cd(y_k-\td\x_k^T\td\w^t)\cd\td\x_k\end{aligned}\end{align} \]</div>
-<img alt="_static/Algo23.2.png" src="_static/Algo23.2.png" />
+<img alt="../_images/Algo23.2.png" src="../_images/Algo23.2.png" />
+</div>
+</div>
+<div class="section" id="ridge-regression">
+<h2>23.4 Ridge Regression<a class="headerlink" href="#ridge-regression" title="Permalink to this headline">¶</a></h2>
+<p>Instead of trying to simply minimize the squared residual error
+<span class="math notranslate nohighlight">\(\lv Y-\hat{Y}\rv^2\)</span>, we add a regularization term involving the squared
+norm of the weight vector <span class="math notranslate nohighlight">\((\lv\w\rv^2)\)</span> as follows:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\min_{\td\w}J(\td\w)=\lv Y-\hat{Y}\rv^2+\alpha\cd\lv\td\w\rv^2=\lv Y-\td\D\td\w\rv^2+\alpha\cd\lv\td\w\rv^2\)</span></p>
+</div>
+<p>Here <span class="math notranslate nohighlight">\(\alpha\geq 0\)</span> is a regularization constant that controls the
+tradeoff between minimizing the squared norm of the weight vector and the
+squared error.
+Recall that <span class="math notranslate nohighlight">\(\lv\td\w\rv^2=\sum_{i=1}^dw_i^2\)</span> is the <span class="math notranslate nohighlight">\(L_2\)</span>tdw`.
+For this reason ridge regression is also called <span class="math notranslate nohighlight">\(L_2\)</span> regularized regression.
+When <span class="math notranslate nohighlight">\(\alpha=0\)</span>, there is no regularization, but as <span class="math notranslate nohighlight">\(\alpha\)</span>
+increases there is more emphasis on minimizing the regression coefficients.</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\frac{\pd}{\pd\td\w}&amp;J(\td\w)=\frac{\pd}{\pd\td\w}\{\lv Y-\td\D\td\w\rv^2+\alpha\cd\lv\td\w\rv^2\}=\0\\&amp;\Rightarrow\frac{\pd}{\pd\td\w}\{Y^TY-2\td\w^T(\td\D^TY)+\td\w^T(\td\D^T\td\D)\td\w+\alpha\cd\td\w^T\td\w\}=\0\\&amp;\Rightarrow-2\td\D^TY+2(\td\D^T\td\D)\td\w+2\alpha\cd\td\w=\0\\&amp;\Rightarrow(\td\D^T\td\D+\alpha\cd\I)\td\w=\td\D^TY\end{aligned}\end{align} \]</div>
+<p>Therefore, the optimal solution is</p>
+<div class="math notranslate nohighlight">
+\[\td\w=(\td\D^T\td\D+\alpha\cd\I)\im\td\D^TY\]</div>
+<p>Regularized regression is also called <em>ridge regression</em> since we add a “ridge”
+along the main diagonal of the <span class="math notranslate nohighlight">\(\td\D^T\td\D\)</span> matrix, i.e., the optimal
+solution depends on the regularized matrix <span class="math notranslate nohighlight">\((\td\D^T\td\D+\alpha\cd\I)\)</span>.
+Another advantage of regularization is that if we choose a small positive
+<span class="math notranslate nohighlight">\(\alpha\)</span> we are always guaranteed a solution.</p>
+<p><strong>Unpenalized Bias Term</strong></p>
+<p>To avoid panalizing the bias term, consider the new regulalrized objective with
+<span class="math notranslate nohighlight">\(\w=(w_1,w_2,\cds,w_d)^T\)</span>, and without <span class="math notranslate nohighlight">\(w_0\)</span> given as</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\min_\w J(\w)&amp;=\lv Y-w_0\cd\1-\D\w\rv^2+\alpha\cd\lv\w\rv^2\\&amp;=\lv Y-w_0\cd\1-\sum_{i=1}^dw_i\cd X_i\rv^2+\alpha\cd\bigg(\sum_{i=1}^dw_i^2\bigg)\\&amp;=\lv Y-w_0\cd\1-\D\w\rv^2+\alpha\cd\lv\w\rv^2\\&amp;=\lv Y-(\mu_Y-\mmu^T\w)\cd\1-\D\w\rv^2+\alpha\cd\lv\w\rv^2\\&amp;=\lv(Y-\mu_Y\cd\1)-(\D-\1\mmu^T)\w\rv^2+\alpha\cd\lv\w\rv^2\end{aligned}\end{align} \]</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\min_\w J(\w)=\lv\bar{Y}-\bar\D\bar\w\rv^2+\alpha\cd\lv\w\rv^2\)</span></p>
+</div>
+<p>where <span class="math notranslate nohighlight">\(\bar{Y}=Y-\mu_Y\cd\1\)</span> is the centered response vector, and
+<span class="math notranslate nohighlight">\(\bar\D=\D-\1\mmu^T\)</span> is the centered data matrix.
+In other words, we can exclude <span class="math notranslate nohighlight">\(w_0\)</span> from the <span class="math notranslate nohighlight">\(L_2\)</span> regularization
+obejctive by simply centering the response vector and the unaugmented data
+matrix.</p>
+<div class="section" id="ridge-regression-stochastic-gradient-descent">
+<h3>23.4.1 Ridge Regression: Stochastic Gradient Descent<a class="headerlink" href="#ridge-regression-stochastic-gradient-descent" title="Permalink to this headline">¶</a></h3>
+<div class="math notranslate nohighlight">
+\[\nabla_{\td\w}=\frac{\pd}{\pd\td\w}J(\td\w)=-\td\D^TY+(\td\D^T\td\D)\td\w+\alpha\cd\td\w\]</div>
+<p>Using (batch) gradient descent, we can iteratively compute <span class="math notranslate nohighlight">\(\td\w\)</span> as follows</p>
+<div class="math notranslate nohighlight">
+\[\td\w^{t+1}=\td\w^T-\eta\cd\nabla_{\td\w}=(1-\eta\cd\alpha)\td\w^t+\eta\cd\td\D^T(Y-\td\D\cd\td\w^t)\]</div>
+<p>In stochastic gradient descent (SGD), we update the weight vector by considering only one (random) point at each time.
+The gradient at the point <span class="math notranslate nohighlight">\(\td{\x_k}\)</span> is given as</p>
+<div class="math notranslate nohighlight">
+\[\nabla_{\td\w}(\td{\x_k})=-\td{\x_k}y_k+\td{\x_k}\td{\x_k}^T\td\w+
+\frac{\alpha}{n}\td\w=-(y_k-\td{\x_k}^T\td\w)\td{\x_k}+\frac{\alpha}{n}\td\w\]</div>
+<p>Here, we scale the regularization constant <span class="math notranslate nohighlight">\(\alpha\)</span> by dividing it by
+<span class="math notranslate nohighlight">\(n\)</span>, the number of points in the training data, since the original ridge
+value <span class="math notranslate nohighlight">\(\alpha\)</span> is for all the <span class="math notranslate nohighlight">\(n\)</span> points, whereas we are now
+considering only one point at a time.</p>
+<div class="math notranslate nohighlight">
+\[\td\w^{t+1}=\td\w^t-\eta\cd\nabla_{\td\w}(\td{\x_k})=\bigg(1-
+\frac{\eta\cd\alpha}{n}\bigg)\td\w^t+\eta\cd(y_k-\td{\x_k}^T\td\w^t)\cd
+\td{\x_k}\]</div>
+<img alt="../_images/Algo23.3.png" src="../_images/Algo23.3.png" />
+</div>
+</div>
+<div class="section" id="kernel-regression">
+<h2>23.5 Kernel Regression<a class="headerlink" href="#kernel-regression" title="Permalink to this headline">¶</a></h2>
+<p>To avoid explicitly dealing with the bias term, we add the fixed value 1 as the
+first element of <span class="math notranslate nohighlight">\(\phi(\x_i)\)</span> to obtain the <em>augmented transformed point</em>
+<span class="math notranslate nohighlight">\(\td\phi(\x_i)^T=\bp 1&amp;\phi(\x_i)^T\ep\)</span>.
+Let <span class="math notranslate nohighlight">\(\td{\D_\phi}\)</span> denote the <em>augmented dataset in feature space</em>,
+comprising the transformed points <span class="math notranslate nohighlight">\(\td\phi(\x_i)\)</span> for
+<span class="math notranslate nohighlight">\(i=1,2,\cds,n\)</span>.
+The <em>augmented kernel function</em> in feature space is given as</p>
+<div class="math notranslate nohighlight">
+\[\td{K}(\x_i,\x_j)=\td\phi(\x_i)^T\td\phi(\x_j)=1+\phi(\x_i)^T\phi(\x_j)=1+K(\x_i,\x_j)\]</div>
+<p>Let <span class="math notranslate nohighlight">\(Y\)</span> denote the observed response vector.
+We model the predicted response as</p>
+<div class="math notranslate nohighlight">
+\[\hat{Y}=\td{\D_\phi}\td\w\]</div>
+<p>where <span class="math notranslate nohighlight">\(\td\w\)</span> is the augmented weight vector in feature space.
+The first element of <span class="math notranslate nohighlight">\(\td\w\)</span> denotes the bias in feature space.</p>
+<p>For regularized regression, we have to solve the following objective in feature space:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\min_{\td\w}J(\td\w)=\lv Y-\hat{Y}\rv^2+\alpha\cd\lv\td\w\rv^2=\)</span>
+<span class="math notranslate nohighlight">\(\lv Y-\td{\D_\phi}\td\w\rv^2+\alpha\cd\lv\td\w\rv^2\)</span></p>
+</div>
+<p>where <span class="math notranslate nohighlight">\(\alpha\geq 0\)</span> is the regularization constant.</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\frac{\pd}{\pd\td\w}&amp;J(\td\w)=\frac{\pd}{\pd\td\w}\{\lv Y-\td{\D_\phi}\td\w\rv^2+\alpha\lv\td\w\rv^2\}=\0\\&amp;\Rightarrow\frac{\pd}{\pd\td\w}\{Y^TY-2\td\w^T(\td{\D\phi}Y)+
+\td\w^T(\td{\D_\phi}^T\td{\D_\phi})\td\w+\alpha\cd\td\w^T\td\w\}=\0\\&amp;\Rightarrow-2\td{\D_\phi}^TY+2(\td{\D_\phi}^T\td{\D_\phi})\td\w+2\alpha\cd\td\w=\0\\&amp;\Rightarrow\alpha\cd\td\w=\td{\D_\phi}^TY-(\td{\D_\phi}^T\td{\D_\phi})\td\w\\&amp;\Rightarrow\td\w=\td{\D_\phi}^T\bigg(\frac{1}{\alpha}(Y-\td{\D_\phi}\td\w)\bigg)\\&amp;\Rightarrow\td\w=\td{\D_\phi}^T\c=\sum_{i=1}^nc_i\cd\td\phi(\x_i)\end{aligned}\end{align} \]</div>
+<p>where <span class="math notranslate nohighlight">\(\c=(c_1,c_2,\cds,c_n)^T=\frac{1}{\alpha}(Y-\td{\D_\phi}\td\w)\)</span></p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\c&amp;=\frac{1}{\alpha}(Y-\td{\D_\phi}\td\w)\\\alpha\cd\c&amp;=Y-\td{\D_\phi}\td\w\\\alpha\cd\c&amp;=Y-\td{\D_\phi}(\td{\D_\phi}\c)\\(\td{\D_\phi}\td{\D_\phi}^T+\alpha\cd\I)\c&amp;=Y\\\c&amp;=(\td{\D_\phi}\td{\D_\phi}^T+\alpha\cd\I)\im Y\end{aligned}\end{align} \]</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\c=(\td\K+\alpha\cd\I)\im Y\)</span></p>
+</div>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\hat{Y}&amp;=\td{\D_\phi}\td\w\\&amp;=\td{\D_\phi}\td{\D_\phi}^T\c\\&amp;=(\td{\D_\phi}\td{\D_\phi}^T)(\td\K+\alpha\cd\I)\im Y\\&amp;=\td\K(\td\K+\alpha\cd\I)\im Y\end{aligned}\end{align} \]</div>
+<p>where <span class="math notranslate nohighlight">\(\td\K(\td\K+\alpha\cd\I)\im\)</span> is the <em>kernel hat matrix</em>.</p>
+<img alt="../_images/Algo23.4.png" src="../_images/Algo23.4.png" />
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\hat{y}&amp;=\td\phi(\z)^T\td\w=\td\phi(\z)^T(\td{\D_\phi}^T\c)=\td\phi(\z)^T\bigg(\sum_{i=1}^nc_i\cd\td\phi(\x_i)\bigg)\\&amp;=\sum_{i=1}^nc_i\cd\td\phi(\z)^T\td\phi(\x_i)=\sum_{i=1}^nc_i\cd\td{K}(\z,\x_i)=\c^T\td{\K_\z}\end{aligned}\end{align} \]</div>
+<div class="section" id="l-1-regression-lasso">
+<h3>23.6 <span class="math notranslate nohighlight">\(L_1\)</span> Regression: Lasso<a class="headerlink" href="#l-1-regression-lasso" title="Permalink to this headline">¶</a></h3>
+<p>The <em>Lasso</em>, which stands for <em>least absolute selection and shrinkage operator</em>,
+is a regularization method that aims to sparsify the regression weights.
+Instead of using the <span class="math notranslate nohighlight">\(L_2\)</span> or Euclidean norm for weight regularization as
+in ridge regression, the Lasso formulation uses the <span class="math notranslate nohighlight">\(L_1\)</span> norm for
+regularization</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\min_\w J(\w)=\frac{1}{2}\cd\lv\bar{Y}-\bar\D\w\rv^2+\alpha\cd\lv\w\rv_1\)</span></p>
+</div>
+<p>where <span class="math notranslate nohighlight">\(\alpha\geq 0\)</span> is the regularization constant and</p>
+<div class="math notranslate nohighlight">
+\[\lv\w\rv_1=\sum_{i=1}^d|w_i|\]</div>
+<p>We asume that</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\bar\D&amp;=\D-\1\cd\mmu^T\\\bar{Y}&amp;=Y-\mu_Y\cd\1\end{aligned}\end{align} \]</div>
+<p>One benefit of centering is that we do not have to explicitly deal with the bias
+term <span class="math notranslate nohighlight">\(b=w_0\)</span>, which is important since we usually do not want to penalize
+<span class="math notranslate nohighlight">\(b\)</span>.
+Once the regression coefficients have been estimated, we can obtain the bias term as follows:</p>
+<div class="math notranslate nohighlight">
+\[b=w_0=\mu_Y-\sum_{j=1}^dw_j\cd\mu_{X_j}\]</div>
+<p>The main advantage of using the <span class="math notranslate nohighlight">\(L_1\)</span> norm is that it leads to <em>sparsity</em> in the solution vector.
+That is, whereas ridge regression reduces the value of the regression
+coefficients <span class="math notranslate nohighlight">\(w_i\)</span>, they may remains small but still non-zero.
+On the other hand, <span class="math notranslate nohighlight">\(L_1\)</span> regression can drive the coefficients to zero,
+resulting in a more interpretable model, especially when there are many
+predictor attributes.</p>
+<p>The Lasso objective comprises two parts, the squared error term
+<span class="math notranslate nohighlight">\(\lv\bar{Y}-\bar\D\w\rv^2\)</span> which is convex and differentiable, and the
+<span class="math notranslate nohighlight">\(L_1\)</span> penalty term <span class="math notranslate nohighlight">\(\alpha\cd\lv\w\rv_1=\alpha\sum_{i=1}^d|w_i|\)</span>,
+which is convex but unfortunately non-differentiable at <span class="math notranslate nohighlight">\(w_i=0\)</span>.
+This means we cannot simply compute the gradient and set it to zero, as we did in the case of ridge regression.
+However, these kinds of problems can be colved via the generalized approach of <em>subgradients</em>.</p>
+</div>
+<div class="section" id="subgradients-and-subdifferential">
+<h3>23.6.1 Subgradients and Subdifferential<a class="headerlink" href="#subgradients-and-subdifferential" title="Permalink to this headline">¶</a></h3>
+<p>Consider the absolute value function <span class="math notranslate nohighlight">\(f:\R\rightarrow\R\)</span></p>
+<div class="math notranslate nohighlight">
+\[f(w)=|w|\]</div>
+<p>When <span class="math notranslate nohighlight">\(w&gt;0\)</span>, we can see that its derivative is <span class="math notranslate nohighlight">\(f\pr(w)=+1\)</span>, and when
+<span class="math notranslate nohighlight">\(w&lt;0\)</span>, its derivative is <span class="math notranslate nohighlight">\(f\pr(w)=-1\)</span>.
+On the other hand, there is a discontinuity at <span class="math notranslate nohighlight">\(w=0\)</span> where the derivative does not exist.</p>
+<p>We use the concept of a <em>subgradient</em> that generalizes the notion of a derivative.
+For the absolute value function, the slope <span class="math notranslate nohighlight">\(m\)</span> of any line that passes
+through <span class="math notranslate nohighlight">\(w=0\)</span> that remains below or touches the graph of <span class="math notranslate nohighlight">\(f\)</span> is
+called a subgradient of <span class="math notranslate nohighlight">\(f\)</span> at <span class="math notranslate nohighlight">\(w=0\)</span>.
+The set of all the subgradients at <span class="math notranslate nohighlight">\(w\)</span> is called the <em>subdifferential</em>, denoted as <span class="math notranslate nohighlight">\(\pd|w|\)</span>.
+Thus, the subdifferential at <span class="math notranslate nohighlight">\(w=0\)</span> is given as</p>
+<div class="math notranslate nohighlight">
+\[\pd|w|=[-1,1]\]</div>
+<p>since only lines with slope between <span class="math notranslate nohighlight">\(-1\)</span> and <span class="math notranslate nohighlight">\(+1\)</span> remain below or
+(partially) coincide with the absolute value graph.</p>
+<p>Considering all the cases, the subdifferential for the absolute value function is given as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\left\{\begin{array}{lr}1\quad\quad\quad\ \rm{iff\ }w&gt;0\\
+-1\quad\quad\ \ \rm{iff\ }w&lt;0\\ [-1,1]\quad\rm{iff\ }w=0\end{array}\right.\end{split}\]</div>
+<p>We can see that when the derivative exists, the subdifferential is unique and
+corresponds to the derivative (or gradient), and when the derivative does not
+exist the subdifferential corresponds to a set of subgradients.</p>
+</div>
+<div class="section" id="bivariate-l-1-regression">
+<h3>23.6.2 Bivariate <span class="math notranslate nohighlight">\(L_1\)</span> Regression<a class="headerlink" href="#bivariate-l-1-regression" title="Permalink to this headline">¶</a></h3>
+<p>The bivariate regression model is given as</p>
+<div class="math notranslate nohighlight">
+\[\hat{y_i}=w\cd\bar{x_i}\]</div>
+<p>The Lasso objective can then be written as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\min_wJ(w)=\frac{1}{2}\sum_{i=1}^n(\bar{y_i}-w\cd\bar{x_i})^2+\alpha\cd|w|\)</span></p>
+</div>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\pd J(w)&amp;=\frac{1}{2}\cd\sum_{i=1}^n2\cd(\bar{y_i}-w\cd\bar{x_i})\cd(-\bar{x_i})+\alpha\cd\pd|w|\\&amp;=-\sum_{i=1}^n\bar{x_i}\cd\bar{y_i}+w\cd\sum_{i=1}^n\bar{x_i}^2+\alpha\cd\pd|w|\\&amp;=-\bar{X}^T\bar{Y}+w\cd\lv\bar{X}\rv^2+\alpha\cd\pd|w|\end{aligned}\end{align} \]</div>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}&amp;\quad\ \ \pd J(w)=0\\&amp;\Rightarrow w\cd\lv\bar{X}\rv^2+\alpha\cd\pd|w|=\bar{X}^T\bar{Y}\\&amp;\Rightarrow w+\eta\cd\alpha\cd\pd|w|=\eta\cd\bar{X}^T\bar{Y}\end{aligned}\end{align} \]</div>
+<p>where <span class="math notranslate nohighlight">\(\eta=1/\lv\bar{X}\rv^2&gt;0\)</span> is a scaling constant.</p>
+<p><strong>Case I</strong> (<span class="math notranslate nohighlight">\(w&gt;0\)</span> and <span class="math notranslate nohighlight">\(\pd|w|=1\)</span>):</p>
+<blockquote>
+<div><div class="math notranslate nohighlight">
+\[w=\eta\cd\bar{X}^T\bar{Y}-\eta\cd\alpha\]</div>
+<p>Since <span class="math notranslate nohighlight">\(w&gt;0\)</span>, this implies <span class="math notranslate nohighlight">\(\eta\cd\bar{X}^T\bar{Y}&gt;\eta\cd\alpha\)</span>
+or <span class="math notranslate nohighlight">\(|\eta\cd\bar{X}^T\bar{Y}&gt;\eta\cd\alpha\)</span>.</p>
+</div></blockquote>
+<p><strong>Case II</strong> (<span class="math notranslate nohighlight">\(w&lt;0\)</span> and <span class="math notranslate nohighlight">\(\pd|w|=-1\)</span>):</p>
+<blockquote>
+<div><div class="math notranslate nohighlight">
+\[w=\eta\cd\bar{X}^T\bar{Y}+\eta\cd\alpha\]</div>
+<p>Since <span class="math notranslate nohighlight">\(w&lt;0\)</span>, this implies
+<span class="math notranslate nohighlight">\(\eta\cd\bar{X}^T\bar{Y}&lt;-\eta\cd\alpha\)</span> or
+<span class="math notranslate nohighlight">\(|\eta\cd\bar{X}^T\bar{Y}|&gt;\eta\cd\alpha\)</span>.</p>
+</div></blockquote>
+<p><strong>Case III</strong> (<span class="math notranslate nohighlight">\(w=0\)</span> and <span class="math notranslate nohighlight">\(\pd|w|\in[-1,1]\)</span>):</p>
+<blockquote>
+<div><div class="math notranslate nohighlight">
+\[w\in[\eta\cd\bar{X}^T\bar{Y}-\eta\cd\alpha,\eta\cd\bar{X}^T\bar{Y}+\eta\cd\alpha]\]</div>
+<p>However, since <span class="math notranslate nohighlight">\(w=0\)</span>, this implies
+<span class="math notranslate nohighlight">\(\eta\cd\bar{X}^T\bar{Y}-\eta\cd\alpha\leq 0\)</span> and
+<span class="math notranslate nohighlight">\(\eta\cd\bar{X}^T\bar{Y}+\eta\cd\alpha\geq 0\)</span>.
+In other words, <span class="math notranslate nohighlight">\(\eta\cd\bar{X}^T\bar{Y}\leq\eta\cd\alpha\)</span> and
+<span class="math notranslate nohighlight">\(\eta\cd\bar{X}^T\bar{Y}\geq-\eta\cd\alpha\)</span>.
+Therefore, <span class="math notranslate nohighlight">\(|\eta\cd\bar{X}^T\bar{Y}|\leq\eta\cd\alpha\)</span>.</p>
+</div></blockquote>
+<p>Let <span class="math notranslate nohighlight">\(\tau\geq 0\)</span> be some fixed value.
+Define the <em>soft-threshold</em> function <span class="math notranslate nohighlight">\(S_\tau:\R\rightarrow\R\)</span> as follows:</p>
+<div class="math notranslate nohighlight">
+\[S_\tau(z)=\rm{sign}(z)\cd\max\{0,(|z|-\tau)\}\]</div>
+<p>The the above three cases can be written compactly as:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(w=S_{\eta\cd\alpha}(\eta\cd\bar{X}^T\bar{Y})\)</span></p>
+</div>
+<p>with <span class="math notranslate nohighlight">\(\tau=\eta\cd\alpha\)</span>, where <span class="math notranslate nohighlight">\(w\)</span> is the optimal solution to the
+bivariate <span class="math notranslate nohighlight">\(L_1\)</span> regression problem.</p>
+</div>
+<div class="section" id="multiple-l-1-regression">
+<h3>23.6.3 Multiple <span class="math notranslate nohighlight">\(L_1\)</span> Regression<a class="headerlink" href="#multiple-l-1-regression" title="Permalink to this headline">¶</a></h3>
+<p>Consider the <span class="math notranslate nohighlight">\(L_1\)</span> regression objective</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\min_\w J(\w)&amp;=\frac{1}{2}\cd\lv\bar{Y}-\sum_{i=1}^dw_i\cd\bar{X_i}\rv^2+\alpha\cd\lv\w\rv_1\\&amp;=\frac{1}{2}\cd\bigg(\bar{Y}^T\bar{Y}-2\sum_{i=1}^dw_i\cd\bar{X_i}^T\bar{Y}
++\sum_{i=1}^d\sum_{j=1}^dw_i\cd w_j\cd\bar{X_i}^T\bar{X_j})+\alpha\cd
+\sum_{i=1}^d|w_i|\end{aligned}\end{align} \]</div>
+<p>We generalize the bivariate solution to the multiple <span class="math notranslate nohighlight">\(L_1\)</span> formulation by
+optimizing for each <span class="math notranslate nohighlight">\(w_k\)</span> individually, via the approach of
+<em>cyclical coordinate descent</em>. We rewrite the <span class="math notranslate nohighlight">\(L_1\)</span> objective by focusing
+only on the <span class="math notranslate nohighlight">\(w_k\)</span> terms, and ignoring all terms not involving <span class="math notranslate nohighlight">\(w_k\)</span>,
+which are assumed to be fixed:</p>
+<div class="math notranslate nohighlight">
+\[\min_{w_k}=J(w_k)=-w_k\cd\bar{X_k}^T\bar{Y}+\frac{1}{2}w_k^2\cd\lv\bar{X_k}
+\rv^2+w_k\cd\sum_{j\ne k}^dw_j\cd\bar{X_k}^T\bar{X_j}+\alpha\cd|w_k|\]</div>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}&amp;\quad\ \ \pd J(w_k)=0\\&amp;\Rightarrow w_k\cd\lv\bar{X_k}\rv^2+\alpha\cd\pd|w_k|=\bar{X_k}^T\bar{Y}-\sum_{j\ne k}^dw_j\cd\bar{X_k}^T\bar{X_j}\\&amp;\Rightarrow w_k\cd\lv\bar{X_k}\rv^2+\alpha\cd\pd|w_k|=\bar{X_k}^T\bar{Y}-
+\sum_{j=1}^dw_j\cd\bar{X_k}^T\bar{X_j}+w_k\bar{X_k}^T\bar{X_k}\\&amp;\Rightarrow w_k\cd\lv\bar{X_k}\rv^2+\alpha\cd\pd|w_k|=w_k\lv\bar{X_k}^T\rv^2+\bar{X_k}^T(\bar{Y}-\bar\D\w)\end{aligned}\end{align} \]</div>
+<p>The new estimate for <span class="math notranslate nohighlight">\(w_k\)</span> at step <span class="math notranslate nohighlight">\(t+1\)</span> is then given as</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}w_k^{t+1}+\frac{1}{\bar{X_k}}^2\cd\alpha\cd\pd|w_k^{t+1}|&amp;=w_k^t+
+\frac{1}{\lv\bar{X_k}\rv^2}\cd\bar{X_k}^T(\bar{Y}-\bar\D\w^t)\\w_k^{t+1}+\eta\cd\alpha\cd\pd|w_k^{t+1}|&amp;=w_k^t+\eta\cd\bar{X_k}^T(Y-\bar\D\w^t)\end{aligned}\end{align} \]</div>
+<p>where <span class="math notranslate nohighlight">\(\eta=1/\lv\bar{X_k}\rv^2&gt;0\)</span> is just a scaling constant.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(w_k^{t+1}=S_{\eta\cd\alpha}(w_k^t+\eta\cd\bar{X_k}^T(\bar{Y}-\bar\D\w^t))\)</span></p>
+</div>
 </div>
 </div>
 </div>
