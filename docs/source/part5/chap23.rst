@@ -945,3 +945,5 @@ where :math:`\eta=1/\lv\bar{X_k}\rv^2>0` is just a scaling constant.
 .. note::
 
     :math:`w_k^{t+1}=S_{\eta\cd\alpha}(w_k^t+\eta\cd\bar{X_k}^T(\bar{Y}-\bar\D\w^t))`
+
+.. image:: ../_static/Algo23.5.png
