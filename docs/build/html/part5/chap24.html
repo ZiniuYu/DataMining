@@ -95,7 +95,10 @@
 <li class="toctree-l1"><a class="reference internal" href="../part4/index4.html">Part 4 Classification</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index5.html">Part 5 Regression</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="chap23.html">Chapter 23 Linear Regression</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Chapter 24 Logistic Regression</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Chapter 24 Logistic Regression</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#binary-logistic-regression">24.1 Binary Logistic Regression</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="chap25.html">Chapter 25 Neural Networks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="chap26.html">Chapter 26 Deep Learning</a></li>
 <li class="toctree-l2"><a class="reference internal" href="chap27.html">Chapter 27 Regression Evaluation</a></li>
@@ -238,6 +241,103 @@
 \newcommand{\ppr}{^{\prime\prime}}\end{aligned}\end{align} \]</div>
 <div class="section" id="chapter-24-logistic-regression">
 <h1>Chapter 24 Logistic Regression<a class="headerlink" href="#chapter-24-logistic-regression" title="Permalink to this headline">¶</a></h1>
+<p>Given a set of predictor attributes or independent variables
+<span class="math notranslate nohighlight">\(X_1,X_2,\cds,X_d\)</span>, and given a <em>categorical</em> response or dependent
+variable <span class="math notranslate nohighlight">\(Y\)</span>, the aim of <em>logistic regression</em> is to predict the
+probability of the response variable values based on the independent variables.
+Logistic regression is in fact a classification technique, that given a point
+<span class="math notranslate nohighlight">\(\x_i\in\R^d\)</span> predicts <span class="math notranslate nohighlight">\(P(c_i|\x_j)\)</span> for each class <span class="math notranslate nohighlight">\(c_i\)</span> in
+the domain of <span class="math notranslate nohighlight">\(Y\)</span> (the set of possible classes or values for the response
+variable).</p>
+<div class="section" id="binary-logistic-regression">
+<h2>24.1 Binary Logistic Regression<a class="headerlink" href="#binary-logistic-regression" title="Permalink to this headline">¶</a></h2>
+<p>In logistic regression, we are given a set of <span class="math notranslate nohighlight">\(d\)</span> predictor or independent
+variables <span class="math notranslate nohighlight">\(X_1,X_2,\cds,X_d\)</span>, and a <em>binary</em> or <em>Bernoulli</em> response
+variable <span class="math notranslate nohighlight">\(Y\)</span> that takes on only two values, namely, 0 and 1.
+Thus, we are given a training dataset <span class="math notranslate nohighlight">\(\D\)</span> comprising <span class="math notranslate nohighlight">\(n\)</span> points
+<span class="math notranslate nohighlight">\(\x_i\in\R^d\)</span> and the corresponding observed values <span class="math notranslate nohighlight">\(y_i\in\{0,1\}\)</span>.
+We augment the data matrix <span class="math notranslate nohighlight">\(\D\)</span> by adding a new attribute <span class="math notranslate nohighlight">\(X_0\)</span> that
+is always fixed at the value 1 for each point, so that
+<span class="math notranslate nohighlight">\(\td{\x_i}=(1,x_1,x_2,\cds,x_d)^T\in\R^{d+1}\)</span> denotes the augmented point,
+and the multivariate random vector <span class="math notranslate nohighlight">\(\td\X\)</span>, comprising all the independent
+attributes is given as <span class="math notranslate nohighlight">\(\td\X=(X_0,X_1,\cds,X_d)^T\)</span>.
+The augmented training dataset is given as <span class="math notranslate nohighlight">\(\td\D\)</span> comprising the
+<span class="math notranslate nohighlight">\(n\)</span> augmented points <span class="math notranslate nohighlight">\(\td{\x_i}\)</span> along with the class labels
+<span class="math notranslate nohighlight">\(y_i\)</span> for <span class="math notranslate nohighlight">\(i=1,2,\cds,n\)</span>.</p>
+<p>Since there are only two outcomes for the response variable <span class="math notranslate nohighlight">\(Y\)</span>, its
+probability mass function for <span class="math notranslate nohighlight">\(\td\X=\td\x\)</span> is given as:</p>
+<div class="math notranslate nohighlight">
+\[P(Y=1|\td\X=\td\x)=\pi(\td\x)\quad\quad P(Y=0|\td\X=\td\x)=1-\pi(\td\x)\]</div>
+<p>where <span class="math notranslate nohighlight">\(\pi(\td\x)\)</span> is the unknown true parameter value, denoting the
+probability of <span class="math notranslate nohighlight">\(Y=1\)</span> given <span class="math notranslate nohighlight">\(\td\X=\td\x\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}E[Y|\td\X=\td\x]&amp;=1\cd P(Y=1|\td\X=\td\x)+0\cd P(Y=0|\td\X=\td\x)\\&amp;=P(Y=1|\td\X=\td\x)=\pi(\td\x)\end{aligned}\end{align} \]</div>
+<p>Therefore, in logistic regression, instead of directly predicting the response
+value, the goal is to learn the probability, <span class="math notranslate nohighlight">\(P(Y=1|\td\X=\td\x)\)</span>, which
+is also the expected value of <span class="math notranslate nohighlight">\(Y\)</span> given <span class="math notranslate nohighlight">\(\td\X=\td\x\)</span>.</p>
+<p>Since <span class="math notranslate nohighlight">\(P(Y=1|\td\X=\td\x)\)</span> is a probability, it is <strong>not appropriate</strong> to directly use the linear regression model</p>
+<div class="math notranslate nohighlight">
+\[f(\td\x)=\omega_0\cd x_0+\omega_1\cd x_1+\omega_2\cd x_2+\cds+\omega_d\cd x_d=\td{\bs\omega}^T\td\x\]</div>
+<p>where <span class="math notranslate nohighlight">\(\td{\bs\omega}=(\omega_0,\omega_1,\cds,\omega_d)^T\in\R^{d+1}\)</span> is
+the true augmented weight vector, with <span class="math notranslate nohighlight">\(\omega_0=\beta\)</span> the true unknown
+bias term, and <span class="math notranslate nohighlight">\(\omega_i\)</span> the true unknown regression coefficient or
+weight for attribute <span class="math notranslate nohighlight">\(X_i\)</span>.
+The reason we cannot simply use <span class="math notranslate nohighlight">\(P(Y=1|\td\X=\td\x)=f(\td\x)\)</span> is due to
+the fact that <span class="math notranslate nohighlight">\(f(\td\x)\)</span> can be arbitrarily large or arbitrarily small,
+whereas for logistic regression, we require that the output represents a
+probability value, and thus we need a model that results in an output that lies
+in the interval <span class="math notranslate nohighlight">\([0,1]\)</span>.
+The name “logistic regression” comes from the <em>logstic</em> function (also called
+the <em>sigmoid</em> function) that meets this requirement.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\th(z)=\frac{1}{1+\exp\{-z\}}=\frac{\exp\{z\}}{1+\exp\{z\}}\)</span></p>
+</div>
+<p>The logstic function “squashes” the output to be between 0 and 1 for any scalar input <span class="math notranslate nohighlight">\(z\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[1-\th(z)=1-\frac{\exp\{z\}}{1+\exp\{z\}}=\frac{1+\exp\{z\}-\exp\{z\}}{1+\exp\{z\}}=\frac{1}{1+\exp\{z\}}=\th(-z)\]</div>
+<p>Using the logistic function, we define the logistic regression model as follows:</p>
+<div class="math notranslate nohighlight">
+\[P(Y=1|\td\X=\td\x)=\pi(\td\x)=\th(f(\td\x))=\th(\td{\bs\omega}^T\td\x)-
+\frac{\exp\{\td{\bs\omega}^T\td\x\}}{1+\exp\{\td{\bs\omega}^T\td\x\}}\]</div>
+<p>On the other hand, the probability for <span class="math notranslate nohighlight">\(Y=0\)</span> is given as</p>
+<div class="math notranslate nohighlight">
+\[P(Y=0|\td\X=\td\x)=1-P(Y=1|\td\X=\td\x)=\th(-\td{\bs\omega}^T\td\x)=\frac{1}{1+\exp\{\td{\bs\omega}^T\td\x\}}\]</div>
+<p>Combining these two cases the full logistic regression model is given as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(P(Y|\td\X=\td\x)=\th(\td{\bs\omega}^T\td\x)^Y\cd\th(-\td{\bs\omega}^T\td\x)^{1-Y}\)</span></p>
+</div>
+<p><strong>Log-Odds Ratio</strong></p>
+<p>Define the <em>odds ratio</em> for the occurence of <span class="math notranslate nohighlight">\(Y=1\)</span> as follows:</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\rm{odds}(Y=1|\td\X=\td\x)&amp;=\frac{P(Y=1|\td\X=\td\x)}{P(Y=0|\td\X=\td\x)}=
+\frac{\th(\td{\bs\omega}^T\td\x)}{\th(-\td{\bs\omega}^T\td\x)}\\&amp;=\frac{\exp\{\td{\bs\omega}^T\td\x\}}{1+\exp\{\td{\bs\omega}^T\td\x\}}\cd(1+\exp\{\td{\bs\omega}^T\td\x\})\\&amp;=\exp\{\td{\bs\omega}^T\td\x\}\end{aligned}\end{align} \]</div>
+<p>The logarithm of the odds ratio, called the <em>log-odds ratio</em>, is therefore given as:</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\ln(\rm{odds}(Y=1|\td\X=\td\x))&amp;=\ln\bigg(\frac{P(Y=1|\td\X=\td\x)}
+{1-P(Y=1|\td\X=\td\x)}\bigg)=\ln(\exp\{\td{\bs\omega}^T\td\x\})=
+\td{\bs\omega}^T\td\x\\&amp;=\omega_0\cd x_0+\omega_1\cd x_1+\cds+\omega_d\cd x_d\end{aligned}\end{align} \]</div>
+<p>The log-odds ratio function is also called the <em>logit</em> function, defined as</p>
+<div class="math notranslate nohighlight">
+\[\rm{logit}(z)=\ln\bigg(\frac{z}{1-z}\bigg)\]</div>
+<p>It is the inverse of the logistic function.
+We can see that</p>
+<div class="math notranslate nohighlight">
+\[\ln(\rm{odds}(Y=1|\td\X=\td\x))=\rm{logit}(P(Y=1|\td\X=\td\x))\]</div>
+<p>The logistic regression model is therefore based on the assumption that the log-
+odds ratio for <span class="math notranslate nohighlight">\(Y=1\)</span> given <span class="math notranslate nohighlight">\(\td\X=\td\x\)</span> is a linear function (or a
+weighted sum) of the independent attributes.
+Let us consider the effect of attribute <span class="math notranslate nohighlight">\(X_i\)</span> by fixing the values for all other attributes; we get</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}&amp;\quad\ \ \ln(\rm{odds}(Y=1|\td\X=\td\x))=\omega_i\cd x_i+C\\&amp;\Rightarrow\rm{odds}(Y=1|\td\X=\td\x)=\exp\{\omega_i\cd x_i+C\}=
+\exp\{\omega_i\cd x_i\}\cd\exp\{C\}\propto\exp\{\omega_i\cd x_i\}\end{aligned}\end{align} \]</div>
+<p>where <span class="math notranslate nohighlight">\(C\)</span> is a constant comprising the fixed attributes.
+The regression coefficient <span class="math notranslate nohighlight">\(\omega_i\)</span> can therefore be interpreted as the
+change in the log-odds ratio for <span class="math notranslate nohighlight">\(Y=1\)</span> for a unit change in <span class="math notranslate nohighlight">\(X_i\)</span>,
+or equivalently the odds ratio for <span class="math notranslate nohighlight">\(Y=1\)</span> increases exponentially per unit
+change in <span class="math notranslate nohighlight">\(X_i\)</span>.</p>
+</div>
 </div>
 
 
