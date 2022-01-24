@@ -111,6 +111,7 @@ rst_prolog = r'''
     \newcommand{\U}{\boldsymbol{\mathrm{U}}}
     \newcommand{\W}{\boldsymbol{\mathrm{W}}}
     \newcommand{\X}{\boldsymbol{\mathrm{X}}}
+    \newcommand{\Y}{\boldsymbol{\mathrm{Y}}}
 
     \newcommand{\R}{\mathbb{R}}
 

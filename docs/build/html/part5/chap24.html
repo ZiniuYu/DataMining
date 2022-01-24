@@ -96,7 +96,14 @@
 <li class="toctree-l1 current"><a class="reference internal" href="index5.html">Part 5 Regression</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="chap23.html">Chapter 23 Linear Regression</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Chapter 24 Logistic Regression</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#binary-logistic-regression">24.1 Binary Logistic Regression</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#binary-logistic-regression">24.1 Binary Logistic Regression</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#maximum-likelihood-estimation">24.1.1 Maximum Likelihood Estimation</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#multiclass-logistic-regression">24.2 Multiclass Logistic Regression</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id1">24.2.1 Maximum Likelihood Estimation</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="chap25.html">Chapter 25 Neural Networks</a></li>
@@ -222,7 +229,8 @@
 \newcommand{\S}{\boldsymbol{\mathrm{S}}}
 \newcommand{\U}{\boldsymbol{\mathrm{U}}}
 \newcommand{\W}{\boldsymbol{\mathrm{W}}}
-\newcommand{\X}{\boldsymbol{\mathrm{X}}}\\\newcommand{\R}{\mathbb{R}}\\\newcommand{\ld}{\lambda}
+\newcommand{\X}{\boldsymbol{\mathrm{X}}}
+\newcommand{\Y}{\boldsymbol{\mathrm{Y}}}\\\newcommand{\R}{\mathbb{R}}\\\newcommand{\ld}{\lambda}
 \newcommand{\Ld}{\boldsymbol{\mathrm{\Lambda}}}
 \newcommand{\sg}{\sigma}
 \newcommand{\Sg}{\boldsymbol{\mathrm{\Sigma}}}
@@ -337,6 +345,137 @@ The regression coefficient <span class="math notranslate nohighlight">\(\omega_i
 change in the log-odds ratio for <span class="math notranslate nohighlight">\(Y=1\)</span> for a unit change in <span class="math notranslate nohighlight">\(X_i\)</span>,
 or equivalently the odds ratio for <span class="math notranslate nohighlight">\(Y=1\)</span> increases exponentially per unit
 change in <span class="math notranslate nohighlight">\(X_i\)</span>.</p>
+<div class="section" id="maximum-likelihood-estimation">
+<h3>24.1.1 Maximum Likelihood Estimation<a class="headerlink" href="#maximum-likelihood-estimation" title="Permalink to this headline">¶</a></h3>
+<p>Let <span class="math notranslate nohighlight">\(\td\D\)</span> be the augmented training dataset comprising the <span class="math notranslate nohighlight">\(n\)</span>
+augmented points <span class="math notranslate nohighlight">\(\td{\x_i}\)</span> along with their lables <span class="math notranslate nohighlight">\(y_i\)</span>.
+Let <span class="math notranslate nohighlight">\(\td\w=(w_0,w_1,\cds,w_d)^T\)</span> be the augmented weight vector for estimating <span class="math notranslate nohighlight">\(\td\w\)</span>.
+Note that <span class="math notranslate nohighlight">\(w_0=b\)</span> denotes the estimated bias term, and <span class="math notranslate nohighlight">\(w_i\)</span> the estimated weight for attribute <span class="math notranslate nohighlight">\(X_i\)</span>.
+<em>Likelihood</em> is defined as the probability of the obaserved data given the estimated parameters <span class="math notranslate nohighlight">\(\td\w\)</span>.
+We assume that the binary response variables <span class="math notranslate nohighlight">\(y_i\)</span> are all independent.
+Threfore, the likelihood of the observed responses is given as</p>
+<div class="math notranslate nohighlight">
+\[L(\td\w)=P(Y|\td\w)=\prod_{i=1}^nP(y_i|\td{\x_i})=\prod_{i=1}^n
+\th(\td\w^T\td{\x_i})^{y_i}\cd\th(-\td\w^T\td{\x_i})^{1-y_i}\]</div>
+<p>Instead of trying to maximize the likelihood, we can maximize the logarithm of
+the likelihood, called <em>log-likelihood</em>, to convert the product into a summation
+as follows:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\ln(L(\td\w))=\sum_{i=1}^ny_i\cd\ln(\th(\td\w^T\td{\x_i}))+(1-y_i)\cd\ln(\th(-\td\w^T\td{\x_i}))\)</span></p>
+</div>
+<p>The negative of the log-likelihood can also be considered as an error function,
+the <em>cross-entropy error function</em>, given as follows:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp E(\td\w)=-\ln(L(\td\w))=\sum_{i=1}^ny_i\cd\ln\bigg(\frac{1}{\th(\td\w^T\td{\x_i})}\bigg)\)</span>
+<span class="math notranslate nohighlight">\(\dp(1-y_i)\cd\ln\bigg(\frac{1}{1-\th(\td\w^T\td{\x_i})}\bigg)\)</span></p>
+</div>
+<p>The task of maximizing the log-likelihood is therefore equivalent to minimizing the cross-entropy error.</p>
+<p>We use an iterative <em>gradient ascent</em> method to compute the optimal value.
+It can be obtained by taking its partial derivative with respect to <span class="math notranslate nohighlight">\(\td\w\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[\nabla(\td\w)=\frac{\pd}{\pd\td\w}\{\ln(L(\td\w))\}=\frac{\pd}{\pd\td\w}
+\bigg\{\sum_{i=1}^ny_i\cd\ln(\th(z_i))+(1-y_i)\cd\ln(\th(-z-i))\bigg\}\]</div>
+<p>where <span class="math notranslate nohighlight">\(z_i=\td\w^T\td{\x_i}\)</span>.
+We use the chain rule to obtain the derivative of <span class="math notranslate nohighlight">\(\ln(\th(z_i))\)</span> with respect to <span class="math notranslate nohighlight">\(\td\w\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\frac{\pd}{\pd\th(z_i)}\{\ln(\th(z_i))\}&amp;=\frac{1}{\th(z_i)}\\\frac{\pd}{\pd\th(z_i)}\{\ln(\th(-z_i))\}&amp;=\frac{\pd}{\pd\th(z_i)}\{\ln(1-\th(z_i))\}=\frac{-1}{1-\th(z_i)}\\\frac{\pd\th(z_i)}{\pd z_i}&amp;=\th(z_i)\cd(1-\th(z_i))=\th(z_i)\cd\th(-z_i)\\\frac{\pd z_i}{\pd\td\w}&amp;=\frac{\pd\td\w^T\td{\x_i}}{\pd\td\w}=\td{\x_i}\end{aligned}\end{align} \]</div>
+<p>As per the chain rule, we have</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\frac{\ln(\th(z_i))}{\pd\td\w}&amp;=\frac{\pd\ln(\th(z_i))}{\pd\th(z_i)}\cd
+\frac{\pd\th(z_i)}{\pd(z_i)}\cd\frac{\pd z_i}{\pd\td\w}\\&amp;=\frac{1}{1-\th(z_i)}\cd(\th(z_i)\cd\th(z_i))\cd\td{\x_i}=\th(-z_i)\cd\td{\x_i}\end{aligned}\end{align} \]</div>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\frac{\ln(\th(-z_i))}{\pd\td\w}&amp;=\frac{\pd\ln(\th(-z_i))}{\pd\th(z_i)}\cd
+\frac{\pd\th(z_i)}{\pd(z_i)}\cd\frac{\pd z_i}{\pd\td\w}\\&amp;=\frac{-1}{1-\th(z_i)}\cd(\th(z_i)\cd(1-\th(z_i)))\cd\td{\x_i}=-\th(z_i)\cd\td{\x_i}\end{aligned}\end{align} \]</div>
+<p>Substituting the above equations, we get</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\nabla(\td\w)&amp;=\sum_{i=1}^ny_i\cd\th(-z_i)\cd\td{\x_i}-(1-y_i)\cd\th(z_i)\cd\td{\x_i}\\&amp;=\sum_{i=1}^ny_i\cd(\th(-z_i)+\th(z_i))\cd\td{\x_i}-\th(z_i)\cd\td{\x_i}\\&amp;=\sum_{i=1}^n(y_i-\th(z_i))\cd\td{\x_i}\\&amp;=\sum_{i=1}^n(y_i-\th(\td\w^T\td{\x_i}))\cd\td{\x_i}\end{aligned}\end{align} \]</div>
+<p>Given the current estimate <span class="math notranslate nohighlight">\(\td\w^t\)</span>, we can obtain the next estimate as follows:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\td\w^{t+1}=\td\w^t+\eta\cd\nabla(\td\w^t)\)</span></p>
+</div>
+<p>Here, <span class="math notranslate nohighlight">\(\eta&gt;0\)</span> is a user-specified parameter called the <em>learning rate</em>.
+At the optimal value of <span class="math notranslate nohighlight">\(\td\w\)</span>, the gradient will be zero, <span class="math notranslate nohighlight">\(\nabla(\td\w)=\0\)</span>, as desired.</p>
+<p><strong>Stochastic Gradient Ascent</strong></p>
+<p>The gradient ascent method computes the gradient by considering all the data
+points, and it is therefore called batch gradient ascent.
+For large datasets, it is typically much faster to compute the gradient by
+considering only one (randomly chosen) point at a time.
+The weight vector is updated after each such partial gradient step, giving rise
+to <em>stochastic gradient ascent</em> (SGA) for computing the optimal weight vector
+<span class="math notranslate nohighlight">\(\td\w\)</span>.</p>
+<p>Given a randomly chosen point <span class="math notranslate nohighlight">\(\td{\x_i}\)</span>, the point-specific gradient is given as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\nabla(\td\w,\td{\x_i})=(y_i-\th(\td\w^T\td{\x_i}))\cd\td{\x_i}\)</span></p>
+</div>
+<img alt="../_images/Algo24.1.png" src="../_images/Algo24.1.png" />
+<p>Once the model has been trained, we can predict the response for any new augmented test point <span class="math notranslate nohighlight">\(\td\z\)</span> as follows:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\hat{y}=\left\{\begin{array}{lr}1\quad\rm{if\ }\th(\td\w^T\z)\geq 0.5\\0\quad\rm{if\ }\th(\td\w^T\z)&lt;0.5\end{array}\right.\)</span></p>
+</div>
+</div>
+</div>
+<div class="section" id="multiclass-logistic-regression">
+<h2>24.2 Multiclass Logistic Regression<a class="headerlink" href="#multiclass-logistic-regression" title="Permalink to this headline">¶</a></h2>
+<p>We model <span class="math notranslate nohighlight">\(Y\)</span> as a <span class="math notranslate nohighlight">\(K\)</span>-dimensional multivariate Bernoulli random variable.
+Since <span class="math notranslate nohighlight">\(Y\)</span> can assume only one of the <span class="math notranslate nohighlight">\(K\)</span> values, we use the
+<em>one-hot encoding</em> approach to map each categorical value <span class="math notranslate nohighlight">\(c_i\)</span> to the
+<span class="math notranslate nohighlight">\(K\)</span>-dimensional binary vector</p>
+<div class="math notranslate nohighlight">
+\[\e_i=(0,\cds,0,1,0,\cds,0)^T\]</div>
+<p>whose <span class="math notranslate nohighlight">\(i\)</span>th element <span class="math notranslate nohighlight">\(e_{ii}=1\)</span>, and all other elements
+<span class="math notranslate nohighlight">\(e_{ij}=0\)</span>, so that <span class="math notranslate nohighlight">\(\sum_{j=1}^Ke_{ij}=1\)</span>.
+Henceforth, we assume that the categorical response variable <span class="math notranslate nohighlight">\(Y\)</span> is a
+multivariate Bernoulli variable <span class="math notranslate nohighlight">\(\Y\in\{\e_1,\e_2,\cds,\e_K\}\)</span>,
+with <span class="math notranslate nohighlight">\(Y_j\)</span> referring to the <span class="math notranslate nohighlight">\(j\)</span>th component of <span class="math notranslate nohighlight">\(\Y\)</span>.</p>
+<p>The probability mass function for <span class="math notranslate nohighlight">\(\Y\)</span> given <span class="math notranslate nohighlight">\(\td\X=\td\x\)</span> is</p>
+<div class="math notranslate nohighlight">
+\[P(\Y=\e_i|\td\X=\td\x)=\pi_i(\td\x),\ \rm{for}\ i=1,2,\cds,K\]</div>
+<p>Thus, there are <span class="math notranslate nohighlight">\(K\)</span> unknown parameters, which must satisfy the following constraint:</p>
+<div class="math notranslate nohighlight">
+\[\sum_{i=1}^K\pi_i(\td\x)=\sum_{i=1}^KP(\Y=\e_i|\td\X=\td\x)=1\]</div>
+<p>Given that only one element of <span class="math notranslate nohighlight">\(\Y\)</span> is 1, the probability mass function of <span class="math notranslate nohighlight">\(\Y\)</span> can be written compactly as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp P(\Y|\td\X=\td\x)=\prod_{j=1}^K(\pi_j(\td\x))^{Y_j}\)</span></p>
+</div>
+<p>The log-odds ratio of class <span class="math notranslate nohighlight">\(c_i\)</span> with respect to class <span class="math notranslate nohighlight">\(c_K\)</span> is assumed to satisfy</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\ln(\rm{odds}(\Y=\e_i|\td\X=\td\x))&amp;=\ln\bigg(\frac{P(\Y=\e_i|\td\X=\td\x)}
+{P(\Y=\e_K|\td\X=\td\x)}\bigg)=\ln\bigg(\frac{\pi_i(\td\x)}{\pi_K(\td\x)}
+\bigg)=\td{\bs\omega_i}^T\td\x\\&amp;=\omega_{i0}\cd x_0+\omega_{i1}\cd x_1+\cds+\omega_{id}\cd x_d\end{aligned}\end{align} \]</div>
+<p>where <span class="math notranslate nohighlight">\(\omega_{i0}=\beta_i\)</span> is the true bias value for class <span class="math notranslate nohighlight">\(c_i\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}&amp;\quad\ \frac{\pi_i(\td\x)}{\pi_K(\td\x)}=\exp\{\td{\bs\omega_i}^T\td\x\}\\&amp;\Rightarrow\pi_i(\td\x)=\exp\{\td{\bs\omega_i}^T\td\x\}\cd\pi_K(\td\x)\end{aligned}\end{align} \]</div>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}&amp;\quad \ \sum_{j=1}^K\pi_j(\td\x)=1\\&amp;\Rightarrow\bigg(\sum_{j\neq K}\exp\{\td{\bs\omega_j}^T\td\x\}\cd\pi_K(\td\x)\bigg)+\pi_K(\td\x)=1\\&amp;\Rightarrow\pi_K(\td\x)=\frac{1}{1+\sum_{j\neq K}\exp\{\td{\bs\omega_j}^T\td\x\}}\end{aligned}\end{align} \]</div>
+<div class="math notranslate nohighlight">
+\[\pi_i(\td\x)=\exp\{\td{\bs\omega_i}^T\td\x\}\cd\pi_K(\td\x)=\frac{\exp\{
+\td{\bs\omega_i}^T\td\x\}}{1+\sum_{j\neq K}\exp\{\td{\bs\omega_j}^T\td\x\}}\]</div>
+<p>Finally, setting <span class="math notranslate nohighlight">\(\td{\bs\omega_K}=\0\)</span>, we have
+<span class="math notranslate nohighlight">\(\exp\{\td{\bs\omega_K}^T\td\x\}=1\)</span> and thus we can write the full model for
+multiclass logistic regression as follows:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\pi_i(\td\x)=\frac{\exp\{\td{\bs\omega_i}^T\td\x\}}{\sum_{j=1}^K\exp\{\td{\bs\omega_j}^T\td\x\}}\)</span>
+<span class="math notranslate nohighlight">\(\ \rm{for\ all}\ i=1,2,\cds,K\)</span></p>
+</div>
+<p>This function is also called the <em>softmax</em> function.
+When <span class="math notranslate nohighlight">\(K=2\)</span>, this formulation yields exactly the same model as in binary logistic regression.</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\ln\bigg(\frac{\pi_i(\td\x)}{\pi_j(\td\x)}\bigg)&amp;=\ln\bigg(\frac{\pi_i
+(\td\x)}{\pi_K(\td\x)}\cd\frac{\pi_K(\td\x)}{\pi_j(\td\x)}\bigg)\\&amp;=\ln\bigg(\frac{\pi_i(\td\x)}{\pi_K(\td\x)}\bigg)+
+\ln\bigg(\frac{\pi_K(\td\x)}{\pi_j(\td\x)}\bigg)\\&amp;=ln\bigg(\frac{\pi_i(\td\x)}{\pi_K(\td\x)}\bigg)-
+\ln\bigg(\frac{\pi_j(\td\x)}{\pi_K(\td\x)}\bigg)\\&amp;=\td{\bs\omega_i}^T\td\x-\td{\bs\omega_j}^T\td\x\\&amp;=(\td{\bs\omega_i}-\td{\bs\omega_j})^T\td\x\end{aligned}\end{align} \]</div>
+<p>That is, the log-odds ratio between any two classes can be computed from the
+difference of the corresponding weight vectors.</p>
+<div class="section" id="id1">
+<h3>24.2.1 Maximum Likelihood Estimation<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+</div>
 </div>
 </div>
 
