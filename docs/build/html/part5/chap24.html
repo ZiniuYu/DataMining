@@ -475,6 +475,55 @@ When <span class="math notranslate nohighlight">\(K=2\)</span>, this formulation
 difference of the corresponding weight vectors.</p>
 <div class="section" id="id1">
 <h3>24.2.1 Maximum Likelihood Estimation<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>Let <span class="math notranslate nohighlight">\(\td\D\)</span> be the augmented dataset comprising <span class="math notranslate nohighlight">\(n\)</span> points <span class="math notranslate nohighlight">\(\td{\x_i}\)</span> and their labels <span class="math notranslate nohighlight">\(\y_i\)</span>.
+We assume that <span class="math notranslate nohighlight">\(\y_i\)</span> is a one-hot encoded (multivariate Bernoulli)
+response vector, so that <span class="math notranslate nohighlight">\(y_{ij}\)</span> denotes the <span class="math notranslate nohighlight">\(j\)</span>th element of <span class="math notranslate nohighlight">\(\y_i\)</span>.
+Let <span class="math notranslate nohighlight">\(\td\w_i\in\R^{d+1}\)</span> denote the estimated augmented weight vector for
+class <span class="math notranslate nohighlight">\(c_i\)</span>, with <span class="math notranslate nohighlight">\(w_{i0}=b_i\)</span> denoting the bias term.</p>
+<p>To find the <span class="math notranslate nohighlight">\(K\)</span> sets of regression weight vectors <span class="math notranslate nohighlight">\(\td{\w_i}\)</span>, for
+<span class="math notranslate nohighlight">\(i=1,2,\cds,K\)</span>, we use the gradient ascent approach to maximize the
+log-likelihood function.
+The likelihood of the data is given as</p>
+<div class="math notranslate nohighlight">
+\[L(\td\W)=P(\Y|\td\W)=\prod_{i=1}^nP(\y_i|\td\X=\td{\x_i})=\prod_{i=1}^n\prod_{j=1}^K(\pi_j(\td{\x_j}))^{y_{ij}}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\td\W=\{\td{\w_1},\td{\w_2},\cds,\td{\w_K}\}\)</span> is the set of <span class="math notranslate nohighlight">\(K\)</span> weight vectors.
+The log-likelihood is then given as:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\ln(L(\td\W))=\sum_{i=1}^n\sum_{j=1}^Ky_{ij}\cd\ln(\pi_j(\td{\x_i}))=\sum_{i=1}^n\sum_{j=1}^Ky_{ij}\cd\)</span>
+<span class="math notranslate nohighlight">\(\dp\ln\bigg(\frac{\exp\{\td{\w_j}^T\td{\x_i}\}}{\sum_{a=1}^K\exp\{\td{\w_a}^T\td{\x_i}\}}\bigg)\)</span></p>
+</div>
+<p>Note that the negative of the log-likelihood function can be regarded as an
+error function, commonly known as <em>cross-entropy error</em></p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\frac{\pd}{\pd\pi_j(\td{\x_i})}\ln(\pi_j(\td{\x_i}))=\frac{1}{\pi_j(\td\x_i)}\\\begin{split}\frac{\pd}{\pd\td{\w_a}}\pi_j(\td{\x_i})=\left\{\begin{array}{lr}
+\pi_a(\td{\x_i})\cd(1-\pi_a(\td{\x_i}))\cd\td{\x_i}\quad\rm{if}\ j=a\\
+-\pi_a(\td{\x_i})\cd\pi_j(\td{\x_i})\cd\td{\x_i}\quad\quad\quad\rm{if}
+\ j\neq a\end{array}\right.\end{split}\end{aligned}\end{align} \]</div>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\nabla(\td{\w_a})&amp;=\frac{\pd}{\pd\td{\w_a}}\{\ln(L(\td\W))\}\\&amp;=\sum_{i=1}^n\sum_{j=1}^Ky_{ij}\cd\frac{\pd\ln(\pi_j(\td{\x_i}))}
+{\pd\pi_j(\td{\x_i})}\cd\frac{\pd\pi_j(\td{\x_i})}{\pd\td{\w_a}}\\&amp;=\sum_{i=1}^n\bigg(y_{ia}\cd\frac{\pi_a(\td{\x_i})}{\pi_a(\td{\x_i})}\cd
+(1-\pi_a(\td{\x_i}))\cd\td{\x_i}+\sum_{j\neq a}y_{ij}\cd\frac{(-\pi_a
+(\td{\x_i})\cd\pi_j(\td{\x_i}))}{\pi_j(\td{\x_i})}\cd\td{\x_i}\bigg)\\&amp;=\sum_{i=1}^n\bigg(y_{ia}-y_{ia}\cd\pi_a(\td{\x_i})-\sum_{j\neq a}y_{ij}\cd\pi_a(\td{\x_i})\bigg)\cd\td{\x_i}\\&amp;=\sum_{i=1}^n\bigg(y_{ia}-\sum_{j=1}^Ky_{ij}\cd\pi_a(\td{\x_i})\bigg)\cd\td{\x_i}\\&amp;=\sum_{i=1}^n(y_{ia}-\pi_a(\td{\x_i}))\cd\td{\x_i}\end{aligned}\end{align} \]</div>
+<p>For stochastic gradient ascent, we update the weight vectors by considering only one point at a time.
+The gradient of the log-likelihood function with respect to <span class="math notranslate nohighlight">\(\td{\w_j}\)</span> at
+a given point <span class="math notranslate nohighlight">\(\td{\x_i}\)</span> is given as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\nabla(\td{\w_j},\td{\x_i})=(y_{ij}-\pi_j(\td{\x_i}))\cd\td{\x_i}\)</span></p>
+</div>
+<p>which results in the following update rule for the <span class="math notranslate nohighlight">\(j\)</span>th weight vector:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\td{\w_j}^{t+1}=\td{\w_j}^t+\eta\cd\nabla(\td{\w_j}^t,\td{\x_i})\)</span></p>
+</div>
+<img alt="../_images/Algo24.2.png" src="../_images/Algo24.2.png" />
+<p>Once the model has been trained, we can predict the class for any new augmented test point <span class="math notranslate nohighlight">\(\td\z\)</span> as follows:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\hat{y}=\arg\max_{c_i}\{\pi_i(\td\z)\}=\arg\max_{c_i}\)</span>
+<span class="math notranslate nohighlight">\(\dp\bigg\{\frac{\exp\{\td{\w_i}^T\td\z\}}{\sum_{j=1}^K\exp\{\td{\w_j}^T\td\z\}}\bigg\}\)</span></p>
+</div>
 </div>
 </div>
 </div>

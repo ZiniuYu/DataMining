@@ -363,3 +363,78 @@ difference of the corresponding weight vectors.
 
 24.2.1 Maximum Likelihood Estimation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Let :math:`\td\D` be the augmented dataset comprising :math:`n` points :math:`\td{\x_i}` and their labels :math:`\y_i`.
+We assume that :math:`\y_i` is a one-hot encoded (multivariate Bernoulli) 
+response vector, so that :math:`y_{ij}` denotes the :math:`j`\ th element of :math:`\y_i`.
+Let :math:`\td\w_i\in\R^{d+1}` denote the estimated augmented weight vector for 
+class :math:`c_i`, with :math:`w_{i0}=b_i` denoting the bias term.
+
+To find the :math:`K` sets of regression weight vectors :math:`\td{\w_i}`, for 
+:math:`i=1,2,\cds,K`, we use the gradient ascent approach to maximize the 
+log-likelihood function.
+The likelihood of the data is given as
+
+.. math::
+
+    L(\td\W)=P(\Y|\td\W)=\prod_{i=1}^nP(\y_i|\td\X=\td{\x_i})=\prod_{i=1}^n\prod_{j=1}^K(\pi_j(\td{\x_j}))^{y_{ij}}
+
+where :math:`\td\W=\{\td{\w_1},\td{\w_2},\cds,\td{\w_K}\}` is the set of :math:`K` weight vectors.
+The log-likelihood is then given as:
+
+.. note::
+
+    :math:`\dp\ln(L(\td\W))=\sum_{i=1}^n\sum_{j=1}^Ky_{ij}\cd\ln(\pi_j(\td{\x_i}))=\sum_{i=1}^n\sum_{j=1}^Ky_{ij}\cd`
+    :math:`\dp\ln\bigg(\frac{\exp\{\td{\w_j}^T\td{\x_i}\}}{\sum_{a=1}^K\exp\{\td{\w_a}^T\td{\x_i}\}}\bigg)`
+
+Note that the negative of the log-likelihood function can be regarded as an 
+error function, commonly known as *cross-entropy error*
+
+.. math::
+
+    \frac{\pd}{\pd\pi_j(\td{\x_i})}\ln(\pi_j(\td{\x_i}))=\frac{1}{\pi_j(\td\x_i)}
+
+    \frac{\pd}{\pd\td{\w_a}}\pi_j(\td{\x_i})=\left\{\begin{array}{lr}
+    \pi_a(\td{\x_i})\cd(1-\pi_a(\td{\x_i}))\cd\td{\x_i}\quad\rm{if}\ j=a\\
+    -\pi_a(\td{\x_i})\cd\pi_j(\td{\x_i})\cd\td{\x_i}\quad\quad\quad\rm{if}
+    \ j\neq a\end{array}\right.
+
+.. math::
+
+    \nabla(\td{\w_a})&=\frac{\pd}{\pd\td{\w_a}}\{\ln(L(\td\W))\}
+
+    &=\sum_{i=1}^n\sum_{j=1}^Ky_{ij}\cd\frac{\pd\ln(\pi_j(\td{\x_i}))}
+    {\pd\pi_j(\td{\x_i})}\cd\frac{\pd\pi_j(\td{\x_i})}{\pd\td{\w_a}}
+
+    &=\sum_{i=1}^n\bigg(y_{ia}\cd\frac{\pi_a(\td{\x_i})}{\pi_a(\td{\x_i})}\cd
+    (1-\pi_a(\td{\x_i}))\cd\td{\x_i}+\sum_{j\neq a}y_{ij}\cd\frac{(-\pi_a
+    (\td{\x_i})\cd\pi_j(\td{\x_i}))}{\pi_j(\td{\x_i})}\cd\td{\x_i}\bigg)
+
+    &=\sum_{i=1}^n\bigg(y_{ia}-y_{ia}\cd\pi_a(\td{\x_i})-\sum_{j\neq a}y_{ij}\cd\pi_a(\td{\x_i})\bigg)\cd\td{\x_i}
+
+    &=\sum_{i=1}^n\bigg(y_{ia}-\sum_{j=1}^Ky_{ij}\cd\pi_a(\td{\x_i})\bigg)\cd\td{\x_i}
+
+    &=\sum_{i=1}^n(y_{ia}-\pi_a(\td{\x_i}))\cd\td{\x_i}
+
+For stochastic gradient ascent, we update the weight vectors by considering only one point at a time.
+The gradient of the log-likelihood function with respect to :math:`\td{\w_j}` at 
+a given point :math:`\td{\x_i}` is given as
+
+.. note::
+
+    :math:`\nabla(\td{\w_j},\td{\x_i})=(y_{ij}-\pi_j(\td{\x_i}))\cd\td{\x_i}`
+
+which results in the following update rule for the :math:`j`\ th weight vector:
+
+.. note::
+
+    :math:`\td{\w_j}^{t+1}=\td{\w_j}^t+\eta\cd\nabla(\td{\w_j}^t,\td{\x_i})`
+
+.. image:: ../_static/Algo24.2.png
+
+Once the model has been trained, we can predict the class for any new augmented test point :math:`\td\z` as follows:
+
+.. note::
+
+    :math:`\dp\hat{y}=\arg\max_{c_i}\{\pi_i(\td\z)\}=\arg\max_{c_i}`
+    :math:`\dp\bigg\{\frac{\exp\{\td{\w_i}^T\td\z\}}{\sum_{j=1}^K\exp\{\td{\w_j}^T\td\z\}}\bigg\}`
