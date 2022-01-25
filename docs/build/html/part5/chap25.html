@@ -96,7 +96,17 @@
 <li class="toctree-l1 current"><a class="reference internal" href="index5.html">Part 5 Regression</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="chap23.html">Chapter 23 Linear Regression</a></li>
 <li class="toctree-l2"><a class="reference internal" href="chap24.html">Chapter 24 Logistic Regression</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Chapter 25 Neural Networks</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Chapter 25 Neural Networks</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#artificial-neuron-activation-functions">25.1 Artificial Neuron: Activation Functions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#derivatives-for-activation-functions">25.1.1 Derivatives for Activation Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#neural-networks-regression-and-classification">25.2 Neural Networks: Regression and Classification</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#regression">25.2.1 Regression</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="chap26.html">Chapter 26 Deep Learning</a></li>
 <li class="toctree-l2"><a class="reference internal" href="chap27.html">Chapter 27 Regression Evaluation</a></li>
 </ul>
@@ -198,6 +208,7 @@
 \newcommand{\j}{\boldsymbol{j}}
 \newcommand{\m}{\boldsymbol{\mathrm{m}}}
 \newcommand{\n}{\boldsymbol{\mathrm{n}}}
+\newcommand{\o}{\boldsymbol{\mathrm{o}}}
 \newcommand{\p}{\boldsymbol{\mathrm{p}}}
 \newcommand{\q}{\boldsymbol{\mathrm{q}}}
 \newcommand{\r}{\boldsymbol{\mathrm{r}}}
@@ -239,6 +250,156 @@
 \newcommand{\ppr}{^{\prime\prime}}\end{aligned}\end{align} \]</div>
 <div class="section" id="chapter-25-neural-networks">
 <h1>Chapter 25 Neural Networks<a class="headerlink" href="#chapter-25-neural-networks" title="Permalink to this headline">¶</a></h1>
+<p><em>Artificial neural networks</em> or simply <em>neural networks</em> are inspired by biological neuronal networks.
+Artifical neural networks are comprised of abstract neurons that try to mimic real neurons at a very high level.
+They can be described via a weighte directed graph <span class="math notranslate nohighlight">\(G=(V,E)\)</span>, with each
+node <span class="math notranslate nohighlight">\(v_i\in V\)</span> representing a neuron, and each directed edge
+<span class="math notranslate nohighlight">\((v_i,v_j)\in E\)</span> representing a synaptic to dendritic connection from
+<span class="math notranslate nohighlight">\(v_i\)</span> to <span class="math notranslate nohighlight">\(v_j\)</span>.
+The weight of the edge <span class="math notranslate nohighlight">\(w_{ij}\)</span> denotes the synaptic strength.
+Nerual networks are characterized by the type of activation function used to
+generate an output, and the architecture of the network in terms of how the
+nodes are interconnected.</p>
+<div class="section" id="artificial-neuron-activation-functions">
+<h2>25.1 Artificial Neuron: Activation Functions<a class="headerlink" href="#artificial-neuron-activation-functions" title="Permalink to this headline">¶</a></h2>
+<p>A neuro <span class="math notranslate nohighlight">\(z_k\)</span> has incoming edges from neurons <span class="math notranslate nohighlight">\(x_1,\cds,x_d\)</span>.
+Let <span class="math notranslate nohighlight">\(x_i\)</span> denotes neuron <span class="math notranslate nohighlight">\(i\)</span>, and also the value of that neuron.
+The net input at <span class="math notranslate nohighlight">\(z_k\)</span>, denoted <span class="math notranslate nohighlight">\(net_k\)</span>, is given as the weighted sum</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(net_k=b_k+\sum_{i=1}^dw_{ik}\cd x_i=b_k+\w^T\x\)</span></p>
+</div>
+<p>where <span class="math notranslate nohighlight">\(\w_k=(w_{1k},w_{2k},\cds,w_{dk})^T\in\R^d\)</span> and <span class="math notranslate nohighlight">\(\x=(x_1,x_2,\cds,x_d)^T\in\R^d\)</span> is an input point.
+Notice that <span class="math notranslate nohighlight">\(x_0\)</span> is a special <em>bias neuron</em> whose value is always fixed
+at 1, and the weight from <span class="math notranslate nohighlight">\(x_0\)</span> to <span class="math notranslate nohighlight">\(z_k\)</span> is <span class="math notranslate nohighlight">\(b_k\)</span>, which
+specifies the bias term for the neuron.
+Finally, the output value of <span class="math notranslate nohighlight">\(z_k\)</span> is given as some <em>activation function</em>,
+<span class="math notranslate nohighlight">\(f(\cd)\)</span>, applied to the net input at <span class="math notranslate nohighlight">\(z_k\)</span></p>
+<div class="math notranslate nohighlight">
+\[z_k=f(net_k)\]</div>
+<p>The value <span class="math notranslate nohighlight">\(z_k\)</span> is then passed along the outgoing edges from <span class="math notranslate nohighlight">\(z_k\)</span> to other neurons.</p>
+<p><strong>Linear/Identity Function:</strong></p>
+<blockquote>
+<div><div class="math notranslate nohighlight">
+\[f(net_k)=net_k\]</div>
+</div></blockquote>
+<p><strong>Step Function:</strong></p>
+<blockquote>
+<div><div class="math notranslate nohighlight">
+\[\begin{split}f(net_k)=\left\{\begin{array}{lr}1\quad\rm{if\ }net_k\leq 0\\0\quad\rm{if\ }net_k&gt;0\end{array}\right.\end{split}\]</div>
+</div></blockquote>
+<p><strong>Rectified Linear Unit (ReLU):</strong></p>
+<blockquote>
+<div><div class="math notranslate nohighlight">
+\[\begin{split}f(net_k)=\left\{\begin{array}{lr}1\quad\rm{if\ }net_k\leq 0\\net_k\quad\rm{if\ }net_k&gt;0\end{array}\right.\end{split}\]</div>
+<p>An alternative expression for the ReLU activation is given as <span class="math notranslate nohighlight">\(f(net_k)=\max\{0,net_k\}\)</span>.</p>
+</div></blockquote>
+<p><strong>Sigmoid:</strong></p>
+<blockquote>
+<div><div class="math notranslate nohighlight">
+\[f(net_k)=\frac{1}{1+\exp\{-net_k\}}\]</div>
+</div></blockquote>
+<p><strong>Hyperbolic Tangent (tanh):</strong></p>
+<blockquote>
+<div><div class="math notranslate nohighlight">
+\[f(net_k)=\frac{\exp\{net_k\}-\exp\{-net_k\}}{\exp\{net_k\}+\exp\{-net_k\}}=
+\frac{\exp\{2\cd net_k\}-1}{\exp\{2\cd net_k\}+1}\]</div>
+</div></blockquote>
+<p><strong>Softmax:</strong></p>
+<blockquote>
+<div><p>Softmax is mainly used at the output layer in a neural network, and unlike the
+other functions it depends not only on the net input at neuron <span class="math notranslate nohighlight">\(k\)</span>, but it
+depends on the net signal at all other neurons in the output layer.
+Thus, given the net input vector,
+<span class="math notranslate nohighlight">\(\bs{\rm{net}}=(net_1,net_2,\cds,net_p)^T\)</span>, for all the <span class="math notranslate nohighlight">\(p\)</span> output
+neurons, the output of the softmax function for the <span class="math notranslate nohighlight">\(k\)</span>th neuron is
+given as</p>
+<div class="math notranslate nohighlight">
+\[f(net_k|\bs{\rm{net}})=\frac{\exp\{net_k\}}{\sum_{i=1}^p\exp\{net_i\}}\]</div>
+</div></blockquote>
+<div class="section" id="derivatives-for-activation-functions">
+<h3>25.1.1 Derivatives for Activation Functions<a class="headerlink" href="#derivatives-for-activation-functions" title="Permalink to this headline">¶</a></h3>
+<p><strong>Linear/Identity Function:</strong></p>
+<blockquote>
+<div><div class="math notranslate nohighlight">
+\[\frac{\pd f(net_j)}{\pd net_j}=1\]</div>
+</div></blockquote>
+<p><strong>Step Function:</strong></p>
+<blockquote>
+<div><p>The step function has a derivative of 0 everywhere except for the
+discontinuity at 0, where the derivative is <span class="math notranslate nohighlight">\(\infty\)</span>.</p>
+</div></blockquote>
+<p><strong>Rectified Linear Unit (ReLU):</strong></p>
+<blockquote>
+<div><div class="math notranslate nohighlight">
+\[\begin{split}\frac{\pd f(net_k)}{\pd net_j}=\left\{\begin{array}{lr}0\quad\rm{if\ }net_j\leq 0\\1\quad\rm{if\ }net_k&gt;0\end{array}\right.\end{split}\]</div>
+<p>At 0, we can set the derivative to be any value in the range <span class="math notranslate nohighlight">\([0,1]\)</span>.</p>
+</div></blockquote>
+<p><strong>Sigmoid:</strong></p>
+<blockquote>
+<div><div class="math notranslate nohighlight">
+\[\frac{\pd f(net_j)}{\pd net_j}=f(net_j)\cd (1-f(net_j))\]</div>
+</div></blockquote>
+<p><strong>Hyperbolic Tangent (tanh):</strong></p>
+<blockquote>
+<div><div class="math notranslate nohighlight">
+\[\frac{\pd f(net_j)}{\pd net_j}=1-f(net_j)^2\]</div>
+</div></blockquote>
+<p><strong>Softmax:</strong></p>
+<blockquote>
+<div><p>Since softmax is used at the output layer, if we denote the <span class="math notranslate nohighlight">\(i\)</span>th
+output neuron as <span class="math notranslate nohighlight">\(o_i\)</span>, then <span class="math notranslate nohighlight">\(f(net_i)=o_i\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\frac{\pd f(net_j|\bs{\rm{net}})}{\pd net_k}=\frac{\pd o_j}{\pd net_k}=
+\left\{\begin{array}{lr}o+j\cd(1-o_j)\quad\rm{if\ }k=j\\
+-o_k\cd o_j\quad\quad\quad\quad\rm{if\ }k\ne j\end{array}\right.\end{split}\]</div>
+</div></blockquote>
+</div>
+</div>
+<div class="section" id="neural-networks-regression-and-classification">
+<h2>25.2 Neural Networks: Regression and Classification<a class="headerlink" href="#neural-networks-regression-and-classification" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="regression">
+<h3>25.2.1 Regression<a class="headerlink" href="#regression" title="Permalink to this headline">¶</a></h3>
+<p>Consider the multiple (linear) regression problem, where given an input
+<span class="math notranslate nohighlight">\(\x_i\in\R^d\)</span>, the goal is to predict the response as follows:</p>
+<div class="math notranslate nohighlight">
+\[\hat{y_i}=b+w_1x_{i1}+w_2x_{i2}+\cds+w_dx_{id}\]</div>
+<p>Given a training data <span class="math notranslate nohighlight">\(\D\)</span> comprising <span class="math notranslate nohighlight">\(n\)</span> points <span class="math notranslate nohighlight">\(\x_i\)</span> in a
+<span class="math notranslate nohighlight">\(d\)</span>-dimensional space, along with their corresponding true response value
+<span class="math notranslate nohighlight">\(y_i\)</span>, the bias and weights for linear regression are chosen so as to
+minimize the sum of squared errors between the true and predicted response over
+all data points</p>
+<div class="math notranslate nohighlight">
+\[SSE=\sum_{i=1}^n(y_i-\hat{y_i})^2\]</div>
+<p>A neural network with <span class="math notranslate nohighlight">\(d+1\)</span> input neurons <span class="math notranslate nohighlight">\(x_0,x_1,\cds,x_d\)</span>,
+including the bias neuron <span class="math notranslate nohighlight">\(x_0=1\)</span>, and a single output neuron <span class="math notranslate nohighlight">\(o\)</span>,
+all with identity activation functions and with <span class="math notranslate nohighlight">\(\hat{y}=o\)</span>, represents
+the exact same model as multiple linear regression.
+Wereas the multiple regression problem has a closed form solution, neural
+networks learn the bias and weights via a gradient descent approach that
+minimizes the squared error.</p>
+<p>Neural networks can just as easily model the multivariate (linear) regression
+task, where we have a <span class="math notranslate nohighlight">\(p\)</span>-dimensional response vector <span class="math notranslate nohighlight">\(\y_i\in\R^p\)</span>
+instead of a single value <span class="math notranslate nohighlight">\(y_i\)</span>.
+That is, the training data <span class="math notranslate nohighlight">\(\D\)</span> comprises <span class="math notranslate nohighlight">\(n\)</span> points
+<span class="math notranslate nohighlight">\(\x_i\in\R^d\)</span> and their true response vectors <span class="math notranslate nohighlight">\(\y_i\in\R^p\)</span>.
+Multivariate regression can be modeled by a neural network with <span class="math notranslate nohighlight">\(d+1\)</span>
+input neurons, and <span class="math notranslate nohighlight">\(p\)</span> output neurons <span class="math notranslate nohighlight">\(o_1,o_2,\cds,o_p\)</span>, with all
+input and output neurons using the identity activation function.
+A neural network learns the weights by comparing its predicted output
+<span class="math notranslate nohighlight">\(\hat\y=\o=(o_1,o_2,\cds,o_p)^T\)</span> with the true response vector
+<span class="math notranslate nohighlight">\(\y=(y_1,y_2,\cds,y_p)^T\)</span>.
+That is, training happens by first computing the <em>error function</em> or <em>loss function</em> between <span class="math notranslate nohighlight">\(\o\)</span> and <span class="math notranslate nohighlight">\(\y\)</span>.
+When the prediction matches the true output the loss should be zero.
+The most common loss function for regression is the squared error function</p>
+<div class="math notranslate nohighlight">
+\[\cl{E}_\x=\frac{1}{2}\lv\y-\o\rv^2=\frac{1}{2}\sum_{j=1}^p(y_j-o_j)^2\]</div>
+<p>where <span class="math notranslate nohighlight">\(\cl{E}_\x\)</span> denotes the error on input <span class="math notranslate nohighlight">\(\x\)</span>.
+Across all the points in a dataset, the total sum of squared error is</p>
+<div class="math notranslate nohighlight">
+\[\cl{E}=\sum_{i=1}^n\cl{E}_{\x_i}=\frac{1}{2}\cd\sum_{i=1}^n\lv\y_i-\o_i\rv^2\]</div>
+</div>
+</div>
 </div>
 
 
