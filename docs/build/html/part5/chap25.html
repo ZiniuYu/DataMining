@@ -103,6 +103,13 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#neural-networks-regression-and-classification">25.2 Neural Networks: Regression and Classification</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#regression">25.2.1 Regression</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#classification">25.2.2 Classification</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#error-functions">25.2.3 Error Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#multilayer-perceptron-one-hidden-layer">25.3 Multilayer Perceptron: One Hidden Layer</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#feed-forward-phase">25.3.1 Feed-forward Phase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#backpropagation-phase">25.3.2 Backpropagation Phase</a></li>
 </ul>
 </li>
 </ul>
@@ -398,6 +405,161 @@ The most common loss function for regression is the squared error function</p>
 Across all the points in a dataset, the total sum of squared error is</p>
 <div class="math notranslate nohighlight">
 \[\cl{E}=\sum_{i=1}^n\cl{E}_{\x_i}=\frac{1}{2}\cd\sum_{i=1}^n\lv\y_i-\o_i\rv^2\]</div>
+</div>
+<div class="section" id="classification">
+<h3>25.2.2 Classification<a class="headerlink" href="#classification" title="Permalink to this headline">¶</a></h3>
+<p>Consider the binary classification problem, where <span class="math notranslate nohighlight">\(y=1\)</span> dentoes that the
+point belongs to the positive class, and <span class="math notranslate nohighlight">\(y=0\)</span> means that it belongs to
+the negative class.
+In logistic regression, we model the probability of the positive class viar the logistic (or sigmoid) function:</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\pi(\x)=P(y=1|\x)=\frac{1}{1+\exp\{-(b+\w^T\x)\}}\\P(y=0|\x)=1-P(y=1|\x)=1-\pi(\x)\end{aligned}\end{align} \]</div>
+<p>Given input <span class="math notranslate nohighlight">\(\x\)</span>, true response <span class="math notranslate nohighlight">\(y\)</span>, and predicted response
+<span class="math notranslate nohighlight">\(o\)</span>, recall that the <em>cross-entropy error</em> is defined as</p>
+<div class="math notranslate nohighlight">
+\[\cl{E}_\x=-(y\cd\ln(o)+(1-y)\cd\ln(1-o))\]</div>
+<p>With sigmoid activation, the output of the neural network is given as</p>
+<div class="math notranslate nohighlight">
+\[o=f(net_o)=\rm{sigmoid}(b+\w^T\x)=\frac{1}{1+\exp\{-(b+\w^T\x)\}=\pi(\x)\]</div>
+<p>which is the same as the logstic regression model.</p>
+<p><strong>Multiclass Logistic Regression</strong></p>
+<p>For the general classification problem with <span class="math notranslate nohighlight">\(K\)</span> classes
+<span class="math notranslate nohighlight">\(\{c_1,c_2,\cds,c_K\}\)</span>, the true response <span class="math notranslate nohighlight">\(y\)</span> is encoded as a
+one-hot vector.
+Thus, class <span class="math notranslate nohighlight">\(c_i\)</span> is encoded as <span class="math notranslate nohighlight">\(\e_1=(1,0,\cds,0)^T\)</span>, and so on,
+with <span class="math notranslate nohighlight">\(\e_1\in\{0,1\}^K\)</span> for <span class="math notranslate nohighlight">\(i=1,2,\cds,K\)</span>.
+Thus, we encode <span class="math notranslate nohighlight">\(y\)</span> as a multivariate vector <span class="math notranslate nohighlight">\(\y\in\{\e_1,\e_2,\cds,\e_K\}\)</span>.
+Recall that in multiclass logistic regression the task is to estimate the per
+class bias <span class="math notranslate nohighlight">\(b_i\)</span> and weight vector <span class="math notranslate nohighlight">\(\w_i\in\R^d\)</span>, with the last
+class <span class="math notranslate nohighlight">\(c_K\)</span> used as the base class with fixed bias <span class="math notranslate nohighlight">\(b_K=0\)</span> and fixed
+weight vector <span class="math notranslate nohighlight">\(\w_K=(0,0,\cds,0)^T\in\R^d\)</span>.
+The probability vector across all <span class="math notranslate nohighlight">\(K\)</span> classes is modeled via the softmax function:</p>
+<div class="math notranslate nohighlight">
+\[\pi_i(\x)=\frac{\exp\{b_i+\w_i^T\x\}}{\sum_{j=1}^K\exp\{b_J+\w_J^T\x\}},\ \rm{for\ all\ }i=1,2,\cds,K\]</div>
+<p>Therefore, the neural network can solve the multiclass logistic regression task,
+provided we use a softmax activation at the outputs, and use the <span class="math notranslate nohighlight">\(K\)</span>-way
+cross-entropy error, defined as</p>
+<div class="math notranslate nohighlight">
+\[\cl{E}_\x=-(y_1\cd\ln(o_1)+\cds+y_K\cd\ln(o_K))\]</div>
+<p>where <span class="math notranslate nohighlight">\(\x\)</span> is an input vector, <span class="math notranslate nohighlight">\(\o=(o_1,o_2,\cds,o_K)^T\)</span> is the
+predicted response vector, and <span class="math notranslate nohighlight">\(\y=(y_1,y_2,\cds,y_k)^T\)</span> is the true
+response vector.
+Note that only one element of <span class="math notranslate nohighlight">\(\y\)</span> is 1, and the rest are 0, due to the one-hot encoding.</p>
+<p>With softmax activation, the output of the neural network is given as</p>
+<div class="math notranslate nohighlight">
+\[o_i=P(\y=\e_i|\x)=f(net_i|\bs{\rm{net}})=\frac{\exp\{net_i\}}{\sum_{j=1}^p\exp\{net_j\}}=\pi_i(\x)\]</div>
+<p>The only restriction we have to impose on the neural network is that weights on
+edges into the last output neuron should be zero to model the base class weights
+<span class="math notranslate nohighlight">\(\w_K\)</span>.
+However, in practice, we relax this restriction, and just learn a regular weight vector for class <span class="math notranslate nohighlight">\(c_K\)</span>.</p>
+</div>
+<div class="section" id="error-functions">
+<h3>25.2.3 Error Functions<a class="headerlink" href="#error-functions" title="Permalink to this headline">¶</a></h3>
+<p><strong>Squared Error:</strong></p>
+<blockquote>
+<div><p>Given an input vector <span class="math notranslate nohighlight">\(\x\in\R^d\)</span>, the squared error loss function
+measures the squared deviation between the predicted output vector
+<span class="math notranslate nohighlight">\(\o\in\R^p\)</span> and the true response <span class="math notranslate nohighlight">\(\y\in\R^p\)</span>, defined as
+follows:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\cl{E}_\x=\frac{1}{2}\lv\y-\o\rv^2=\frac{1}{2}\sum_{j=1}^p(y_j-o_j)^2\)</span></p>
+</div>
+<p>where <span class="math notranslate nohighlight">\(\cl{E}_\x\)</span> denotes the error on input <span class="math notranslate nohighlight">\(\x\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\frac{\pd\cl{E}_\x}{\pd o_j}=\frac{1}{2}\cd 2\cd(y_j-o_j)\cd -1=o_j-y_j\\\frac{\pd\cl{E}_\x}{\pd\o}=\o-\y\end{aligned}\end{align} \]</div>
+</div></blockquote>
+<p><strong>Cross-Entropy Error:</strong></p>
+<blockquote>
+<div><p>For classification tasks, with <span class="math notranslate nohighlight">\(K\)</span> classes
+<span class="math notranslate nohighlight">\(\{c_1,c_2,\cds,c_K\}\)</span>, we usually set the number of output neurons
+<span class="math notranslate nohighlight">\(p=K\)</span>, with one output neuron per class.
+Furthermore, each of the classes is coded as a one-hot vector, with class
+<span class="math notranslate nohighlight">\(c_i\)</span> encoded as the <span class="math notranslate nohighlight">\(i\)</span>th standard basis vector
+<span class="math notranslate nohighlight">\(\e_i=(e_{i1},e_{i2},\cds,e_{iK})^T\in\{0,1\}^K\)</span>, with
+<span class="math notranslate nohighlight">\(e_{ii}=1\)</span> and <span class="math notranslate nohighlight">\(e_{ij}=0\)</span> for all <span class="math notranslate nohighlight">\(j\ne i\)</span>.
+Thus, given input <span class="math notranslate nohighlight">\(\x\in\R^d\)</span>, with the true response
+<span class="math notranslate nohighlight">\(\y=(y_1,y_2,\cds,y_K)^T\)</span>, where <span class="math notranslate nohighlight">\(\y\in\{\e_1,\e_2,\cds,\e_K\}\)</span>,
+the cross-entropy loss is defined as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\cl{E}_\x=-\sum_{i=1}^Ky_i\cd\ln(o_i)=-(y_1\cd\ln(o_1)+\cds+y_K\cd\ln(o_K))\)</span></p>
+</div>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\frac{\pd\cl{E}_\x}{\dp o_j}=-\frac{y_j}{o_j}\\\frac{\pd\cl{E}_\x}{\pd\o}=\bigg(\frac{\pd\cl{E}_\x}{\dp o_1},
+\frac{\pd\cl{E}_\x}{\dp o_2},\cds,\frac{\pd\cl{E}_\x}{\dp o_K}\bigg)^T=
+\bigg(-\frac{y_1}{o_1},-\frac{y_2}{o_2},\cds,-\frac{y_K}{o_K}\bigg)^T\end{aligned}\end{align} \]</div>
+</div></blockquote>
+<p><strong>Binary Cross-Entropy Error:</strong></p>
+<blockquote>
+<div><p>For classification tasks with binary classes, it is typical to encode the
+positive class as 1 and the negative class as 0, as opposed to using a one-hot encoding as in the general <span class="math notranslate nohighlight">\(K\)</span>-class case.
+Given an input <span class="math notranslate nohighlight">\(\x\in\R^d\)</span>, with true response <span class="math notranslate nohighlight">\(y\in\{0,1\}\)</span>, there is only one output neuron <span class="math notranslate nohighlight">\(o\)</span>.
+Therefore, the binary cross-entropy error is defined as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\cl{E}_\x=-(y\cd\ln(o)+(1-y)\cd\ln(1-o))\)</span></p>
+</div>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\frac{\pd}{\cl{E}_\x}&amp;=\frac{\pd}{\pd o}\{y\cd\ln(o)-(1-y)\cd\ln(1-o)\}\\&amp;=-\bigg(\frac{y}{o}+\frac{1-y}{1-o}\cd-1\bigg)=\frac{-y\cd(1-o)+(1-y)\cd o}{o\cd(1-o)}\\&amp;=\frac{o-y}{o\cd(1-o)}\end{aligned}\end{align} \]</div>
+</div></blockquote>
+</div>
+</div>
+<div class="section" id="multilayer-perceptron-one-hidden-layer">
+<h2>25.3 Multilayer Perceptron: One Hidden Layer<a class="headerlink" href="#multilayer-perceptron-one-hidden-layer" title="Permalink to this headline">¶</a></h2>
+<p>A multilayer perceptron (MLP) is a neural network that has distinct layers of neurons.
+The inputs to the neural network comprise the <em>input layer</em>, and the ﬁnal
+outputs from the MLP comprise the <em>output layer</em>.
+Any intermediate layer is called a <em>hidden layer</em>, and an MLP can have one or many hidden layers.
+Networks with many hidden layers are called <em>deep neural networks</em>.
+An MLP is also a feed-forward network.
+Typically, MLPs are fully connected between layers.</p>
+<div class="section" id="feed-forward-phase">
+<h3>25.3.1 Feed-forward Phase<a class="headerlink" href="#feed-forward-phase" title="Permalink to this headline">¶</a></h3>
+<p>Let <span class="math notranslate nohighlight">\(\D\)</span> denote the training dataset, comprising <span class="math notranslate nohighlight">\(n\)</span> input points
+<span class="math notranslate nohighlight">\(\x_i\in\R^d\)</span> and corresponding true response vectors <span class="math notranslate nohighlight">\(\y_i\in\R^p\)</span>.
+For each pair <span class="math notranslate nohighlight">\((\x,\y)\)</span> in the data, in the feed-forward phase, the point
+<span class="math notranslate nohighlight">\(\x=(x_1,x_2,\cds,x_d)^T\in\R^d\)</span> is supplied as an input to the MLP.</p>
+<p>Given the input neuron values, we compute the output value for each hidden neuron <span class="math notranslate nohighlight">\(z_k\)</span> as follows:</p>
+<div class="math notranslate nohighlight">
+\[z_k=f(net_k)=f\bigg(b_K+\sum_{i=1}^dw_{ik}\cd x_i\bigg)\]</div>
+<p>where <span class="math notranslate nohighlight">\(w_{ik}\)</span> denotes the weight between input neuron <span class="math notranslate nohighlight">\(x_i\)</span> and hidden neuron <span class="math notranslate nohighlight">\(z_k\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[o_j=f(net_j)=f\bigg(b_j+\sum_{i=1}^mw_{ij}\cd z_i)\]</div>
+<p>where <span class="math notranslate nohighlight">\(w_{ij}\)</span> denotes the weight between hidden neuron <span class="math notranslate nohighlight">\(z_i\)</span> and output neuron <span class="math notranslate nohighlight">\(o_j\)</span>.</p>
+<p>We define the <span class="math notranslate nohighlight">\(d\times m\)</span> matrix <span class="math notranslate nohighlight">\(\W_h\)</span> comprising the weights
+between input and hidden layer neurons, and vector <span class="math notranslate nohighlight">\(\b_j\in\R^m\)</span>
+comprising the bias terms for hidden layer neurons, given as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\W_h=\bp w_{11}&amp;w_{12}&amp;\cds&amp;w_{1m}\\w_{21}&amp;w_{22}&amp;\cds&amp;w_{2m}\\\vds&amp;\vds&amp;
+\dds&amp;\vds\\w_{d1}&amp;w_{d2}&amp;\cds&amp;w_{dm}\ep\quad\b_h=\bp b_1\\b_2\\\vds\\b_m\ep\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(w_{ij}\)</span> denotes the weight on the edge between input neuron
+<span class="math notranslate nohighlight">\(x_i\)</span> and hidden neuron <span class="math notranslate nohighlight">\(z_j\)</span>, and <span class="math notranslate nohighlight">\(b_i\)</span> denotes the bias
+weight from <span class="math notranslate nohighlight">\(x_0\)</span> to <span class="math notranslate nohighlight">\(z_i\)</span>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\bs{\rm{net}}_h=\b_h+\W_h^T\x\)</span></p>
+<p><span class="math notranslate nohighlight">\(\z=f(\bs{\rm{net}}_h=f(\b_h+\w_h^T\x)\)</span></p>
+</div>
+<p>Here, <span class="math notranslate nohighlight">\(\bs{\rm{net}}_h=(net_1,\cds,net_m)^T\)</span> denotes the net input at each
+hidden neuron, and <span class="math notranslate nohighlight">\(\z=(z_1,z_2,\cds,z_m)^T\)</span> denotes the vector of hidden
+neuron values.</p>
+<p>Likewise, let <span class="math notranslate nohighlight">\(\W_o\in\R^{m\times p}\)</span> denote the weight matrix between the
+hidden and output layers, and let <span class="math notranslate nohighlight">\(\b_o\in\R^p\)</span> be the bias vector for
+output neurons, given as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\W_o=\bp w_{11}&amp;w_{12}&amp;\cds&amp;w_{1p}\\w_{21}&amp;w_{22}&amp;\cds&amp;w_{2p}\\\vds&amp;\vds&amp;
+\dds&amp;\vds\\w_{m1}&amp;w_{m2}&amp;\cds&amp;w_{mp}\ep\quad\b_h=\bp b_1\\b_2\\\vds\\b_p\ep\end{split}\]</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\bs{\rm{net}}_o=\b_o+\W_o^T\z\)</span></p>
+<p><span class="math notranslate nohighlight">\(\o=f(\bs{\rm{net}}_o=f(\b_o+\w_o^T\z)\)</span></p>
+</div>
+<div class="math notranslate nohighlight">
+\[\o=f(\b_o+\w_o^T\z)=f(\b_o+\W_o^T\cd f(\b_h+\W_h^T\x))\]</div>
+</div>
+<div class="section" id="backpropagation-phase">
+<h3>25.3.2 Backpropagation Phase<a class="headerlink" href="#backpropagation-phase" title="Permalink to this headline">¶</a></h3>
 </div>
 </div>
 </div>
