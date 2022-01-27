@@ -402,3 +402,184 @@ output neurons, given as
 25.3.2 Backpropagation Phase
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+For a given input pair :math:`(\x,\y)` in the training data, the MLP first 
+computes the output vector :math:`\o` via the feed-forward step.
+Next, it computes the error in the predicted output *vis-a-vis* the true 
+response :math:`\y` using the squared error function
+
+.. math::
+
+    \cl{E}_\x=\frac{1}{2}\lv\y-\o\rv^2=\frac{1}{2}\sum_{j=1}^p(y_j-o_j)^2
+
+The weight update is done via a gradient descent approach to minimize the error.
+Let :math:`\nabla_{w_{ij}}` be the gradient of the error function with respect 
+to :math:`w_{ij}`, or simply the *weight gradient* at :math:`w_{ij}`.
+Given the previous weight estimate :math:`w_{ij}`, a new weight is computed by
+taking a small step :math:`\eta` in a direction that is opposite to the weight
+gradient at :math:`w_{ij}`
+
+.. math::
+
+    w_{ij}=w_{ij}-\eta\cd\nabla_{w_{ij}}
+
+In a similar manner, the bias term :math:`b_j` is also updated via gradient descent
+
+.. math::
+
+    b_j=b_j-\eta\cd\nabla_{b_j}
+
+where :math:`\nabla_{b_j}` is the gradient of the error function with respect to
+:math:`b_j`, which we call the *bias gradient* at :math:`b_j`.
+
+**Updating Parameters Between Hidden and Output Layer**
+
+.. math::
+
+    \nabla_{w_{ij}}&=\frac{\pd\cl{E}_\x}{\pd w_{ij}}=\frac{\pd\cl{E}_\x}
+    {\pd net_j}\cd\frac{\pd net_j}{\pd w_{ij}}=\delta_j\cd z_i
+
+    \nabla_{b_j}&=\frac{\pd\cl{E}_\x}{\pd b_j}=\frac{\pd\cl{E}_\x}{\pd net_j}\cd
+    \frac{\pd net_j}{\pd b_j}=\delta_j
+
+where we use the symbol :math:`\delta_j` to denote the partial derivative of the
+error with respect to net signal at :math:`o_j`, which we also call the 
+*net gradient* at :math:`o_j`
+
+.. math::
+
+    \delta_j=\frac{\pd\cl{E}_\x}{\pd net_j}
+
+Futhermore, the partial derivative of :math:`net_j` with respect to :math:`w_{ij}` and :math:`b_j` is given as
+
+.. math::
+
+    \frac{\pd net_j}{\pd w_{ij}}=\frac{\pd}{\pd w_{ij}}\bigg\{b_j+\sum_{k=1}^m
+    w_{kj}\cd z_k\bigg\}=z_i\quad\quad\frac{\pd net_j}{\pd b_j}=\frac{\pd}
+    {\pd b_j}\bigg\{b_j+\sum_{k=1}^mw_{kj}\cd z_k\bigg\}=1
+
+.. math::
+
+    \delta_j=\frac{\pd\cl{E}_\x}{\pd net_j}=\frac{\pd\cl{E}_\x}{\pd f(net_j)}\cd\frac{\pd f(net_j)}{\pd net_j}
+
+Note that :math:`f(net_j)=o_j`, we have
+
+.. math::
+
+    \frac{\pd\cl{E}_\x}{\pd f(net_j)}=\frac{\pd\cl{E}_\x}{\pd o_j}=\frac{\pd}
+    {\pd o_j}\bigg\{\frac{1}{2}\sum_{k=1}^p(y_k-o_k)^2\bigg\}=(o_j-y_j)
+
+.. math::
+
+    \frac{\pd f(net_j)}{\pd net_j}=o_j\cd(1-o_j)
+
+Putting it all together, we get
+
+.. math::
+
+    \delta_j=(o_j-y_j)\cd o_j\cd(1-o_j)
+
+Let :math:`\bs\delta_o=(\delta_1,\delta_2,\cds,\delta_p)^T` denote the vector of 
+net gradients at each output neuron, which we call the *net gradient vector* for
+the output layer.
+We can write :math:`\bs\delta_o` as
+
+.. note::
+
+    :math:`\bs\delta_o=\o\od(\1-\o)\od(\o-\y)`
+
+where :math:`\od` denotes the element-wise product (also called the *Hadamard product*) between the vectors.
+
+Let :math:`\z=(z_1,z_2,\cds,z_m)^T` denote the vector comprising the values of 
+all hidden layer neurons (after applying the activation function).
+We can compute the gradients :math:`\delta_{w_{ij}}` for all hidden to output 
+neuron connections via the outer product of :math:`\z` and :math:`\bs\delta_o`:
+
+.. note::
+
+    :math:`\dp\bs\nabla_{\W_o}=\bp\delta_{w_{11}}&\delta_{w_{12}}&\cds&\delta_{w_{1p}}\\\delta_{w_{21}}&\delta_{w_{22}}&\cds&\delta_{w_{2p}}\\\vds&\vds&\dds&\vds\\\delta_{w_{m1}}&\delta_{w_{m2}}&\cds&\delta_{w_{mp}}\ep=\z\cd\bs\delta_o^T`
+
+The vector of bias gradients is given as:
+
+.. note::
+
+    :math:`\bs\nabla_{\b_o}=(\nabla_{b_1},\nabla_{b_2},\cds,\nabla_{b_p})^T=\bs\delta_o`
+
+.. note::
+
+    :math:`\W_o=\W_o-\eta\cd\bs\nabla_{\w_o}`
+
+    :math:`\b_o=\b_o-\eta\cd\nabla_{\b_o}`
+
+**Updating Parameters Between Input and Hidden Layer**
+
+.. math::
+
+    \nabla_{w_{ij}}&=\frac{\pd\cl{E}_\x}{\pd w_{ij}}=\frac{\pd\cl{E}_\x}
+    {\pd net_j}\cd\frac{\pd net_j}{\pd w_{ij}}=\delta_j\cd x_i
+
+    \nabla_{b_j}&=\frac{\pd\cl{E}_\x}{\pd b_j}=\frac{\pd\cl{E}_\x}{\pd net_j}\cd
+    \frac{\pd net_j}{\pd b_j}=\delta_j   
+
+which follows from 
+
+.. math::
+
+    \frac{\pd net_j}{\pd w_{ij}}=\frac{\pd}{\pd w_{ij}}\bigg\{b_j+\sum_{k=1}^m
+    w_{kj}\cd x_k\bigg\}=x_i\quad\quad\frac{\pd net_j}{\pd b_j}=\frac{\pd}
+    {\pd b_j}\bigg\{b_j+\sum_{k=1}^mw_{kj}\cd x_k\bigg\}=1
+
+.. math::
+
+    \delta_j&=\frac{\pd\cl{E}_\x}{\pd net_j}=\sum_{k=1}^p\frac{\pd\cl{E}_\x}
+    {\pd net_k}\cd\frac{\pd net_k}{\pd z_j}\cd\frac{\pd z_j}{\pd net_j}=
+    \frac{\pd z_j}{\pd net_j}\cd\sum_{k=1}^p\frac{\pd\cl{E}_\x}{\pd net_k}\cd
+    \frac{\pd net_k}{\pd z_j}
+
+    &=z_j\cd(1-z_j)\cd\sum_{k=1}^p\delta_k\cd w_{jk}
+
+where :math:`\frac{\pd z_j}{\pd net_j}=z_j\cd(1-z_j)`, since we assume a sigmoid 
+activation function for the hidden neurons.
+
+Let :math:`\bs\delta_o=(\delta_1,\delta_2,\cds,\delta_p)^T` denote the vector of 
+net gradients at the output nerurons, and 
+:math:`\bs\delta_h=(\delta_1,\delta_2,\cds,\delta_m)^T` the net gradients at the
+hidden layer neurons.
+We can write :math:`\bs\delta_h` compactly as
+
+.. note::
+
+    :math:`\bs\delta_h=\z\od(\1-\z)\od(\W_o\cd\bs\delta_o)`
+
+Furthermore, :math:`\W_o\cd\bs\delta_o\in\R^m` is the vector of weighted gradients at each hidden neuron, since
+
+.. math::
+
+    \W_o\cd\bs\delta_o=\bigg(\sum_{k=1}^p\delta_k\cd w_{1k},\sum_{k=1}^p\delta_k
+    \cd w_{2k},\cds,\sum_{k=1}^p\delta_k\cd w_{mk}\bigg)^T
+
+Let :math:`\x=(x_1,x_2,\cds,x_d)^T` denote the input vector, we can compute the
+gradients :math:`\nabla_{w_{ij}}` for all input to hidden layer connections via
+the outer product:
+
+.. note::
+
+    :math:`\dp\bs\nabla_{\W_h}=\bp\delta_{w_{11}}&\delta_{w_{12}}&\cds&\delta_{w_{1m}}\\\delta_{w_{21}}&\delta_{w_{22}}&\cds&\delta_{w_{2m}}\\\vds&\vds&\dds&\vds\\\delta_{w_{d1}}&\delta_{w_{d2}}&\cds&\delta_{w_{dm}}\ep=\x\cd\bs\delta_h^T`
+
+The vector of bias gradients is given as:
+
+.. note::
+
+    :math:`\nabla_{\b_j}=(\nabla_{b1},\nabla_{b2},\cds,\nabla_{bm})^T=\bs\delta_h`
+
+.. note::
+
+    :math:`\W_h=\W_h-\eta\cd\bs\nabla_{\W_h}`
+
+    :math:`\b_h=\b_h-\eta\cd\nabla_{\b_h}`
+
+25.3.3 MLP Training
+^^^^^^^^^^^^^^^^^^^
+
+.. image:: ../_static/Algo25.1.png
+
+The total training time per iteration is :math:`O(dm+mp)`.

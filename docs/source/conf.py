@@ -67,6 +67,7 @@ rst_prolog = r'''
     \newcommand{\dds}{\ddots}
     \newcommand{\lv}{\lVert}
     \newcommand{\ol}{\overline}
+    \newcommand{\od}{\odot}
     \newcommand{\ra}{\rightarrow}
     \newcommand{\rv}{\rVert}
     \newcommand{\seq}{\subseteq}

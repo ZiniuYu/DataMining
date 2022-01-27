@@ -110,6 +110,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#multilayer-perceptron-one-hidden-layer">25.3 Multilayer Perceptron: One Hidden Layer</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#feed-forward-phase">25.3.1 Feed-forward Phase</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#backpropagation-phase">25.3.2 Backpropagation Phase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#mlp-training">25.3.3 MLP Training</a></li>
 </ul>
 </li>
 </ul>
@@ -197,6 +198,7 @@
 \newcommand{\dds}{\ddots}
 \newcommand{\lv}{\lVert}
 \newcommand{\ol}{\overline}
+\newcommand{\od}{\odot}
 \newcommand{\ra}{\rightarrow}
 \newcommand{\rv}{\rVert}
 \newcommand{\seq}{\subseteq}
@@ -560,6 +562,130 @@ output neurons, given as</p>
 </div>
 <div class="section" id="backpropagation-phase">
 <h3>25.3.2 Backpropagation Phase<a class="headerlink" href="#backpropagation-phase" title="Permalink to this headline">¶</a></h3>
+<p>For a given input pair <span class="math notranslate nohighlight">\((\x,\y)\)</span> in the training data, the MLP first
+computes the output vector <span class="math notranslate nohighlight">\(\o\)</span> via the feed-forward step.
+Next, it computes the error in the predicted output <em>vis-a-vis</em> the true
+response <span class="math notranslate nohighlight">\(\y\)</span> using the squared error function</p>
+<div class="math notranslate nohighlight">
+\[\cl{E}_\x=\frac{1}{2}\lv\y-\o\rv^2=\frac{1}{2}\sum_{j=1}^p(y_j-o_j)^2\]</div>
+<p>The weight update is done via a gradient descent approach to minimize the error.
+Let <span class="math notranslate nohighlight">\(\nabla_{w_{ij}}\)</span> be the gradient of the error function with respect
+to <span class="math notranslate nohighlight">\(w_{ij}\)</span>, or simply the <em>weight gradient</em> at <span class="math notranslate nohighlight">\(w_{ij}\)</span>.
+Given the previous weight estimate <span class="math notranslate nohighlight">\(w_{ij}\)</span>, a new weight is computed by
+taking a small step <span class="math notranslate nohighlight">\(\eta\)</span> in a direction that is opposite to the weight
+gradient at <span class="math notranslate nohighlight">\(w_{ij}\)</span></p>
+<div class="math notranslate nohighlight">
+\[w_{ij}=w_{ij}-\eta\cd\nabla_{w_{ij}}\]</div>
+<p>In a similar manner, the bias term <span class="math notranslate nohighlight">\(b_j\)</span> is also updated via gradient descent</p>
+<div class="math notranslate nohighlight">
+\[b_j=b_j-\eta\cd\nabla_{b_j}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\nabla_{b_j}\)</span> is the gradient of the error function with respect to
+<span class="math notranslate nohighlight">\(b_j\)</span>, which we call the <em>bias gradient</em> at <span class="math notranslate nohighlight">\(b_j\)</span>.</p>
+<p><strong>Updating Parameters Between Hidden and Output Layer</strong></p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\nabla_{w_{ij}}&amp;=\frac{\pd\cl{E}_\x}{\pd w_{ij}}=\frac{\pd\cl{E}_\x}
+{\pd net_j}\cd\frac{\pd net_j}{\pd w_{ij}}=\delta_j\cd z_i\\\nabla_{b_j}&amp;=\frac{\pd\cl{E}_\x}{\pd b_j}=\frac{\pd\cl{E}_\x}{\pd net_j}\cd
+\frac{\pd net_j}{\pd b_j}=\delta_j\end{aligned}\end{align} \]</div>
+<p>where we use the symbol <span class="math notranslate nohighlight">\(\delta_j\)</span> to denote the partial derivative of the
+error with respect to net signal at <span class="math notranslate nohighlight">\(o_j\)</span>, which we also call the
+<em>net gradient</em> at <span class="math notranslate nohighlight">\(o_j\)</span></p>
+<div class="math notranslate nohighlight">
+\[\delta_j=\frac{\pd\cl{E}_\x}{\pd net_j}\]</div>
+<p>Futhermore, the partial derivative of <span class="math notranslate nohighlight">\(net_j\)</span> with respect to <span class="math notranslate nohighlight">\(w_{ij}\)</span> and <span class="math notranslate nohighlight">\(b_j\)</span> is given as</p>
+<div class="math notranslate nohighlight">
+\[\frac{\pd net_j}{\pd w_{ij}}=\frac{\pd}{\pd w_{ij}}\bigg\{b_j+\sum_{k=1}^m
+w_{kj}\cd z_k\bigg\}=z_i\quad\quad\frac{\pd net_j}{\pd b_j}=\frac{\pd}
+{\pd b_j}\bigg\{b_j+\sum_{k=1}^mw_{kj}\cd z_k\bigg\}=1\]</div>
+<div class="math notranslate nohighlight">
+\[\delta_j=\frac{\pd\cl{E}_\x}{\pd net_j}=\frac{\pd\cl{E}_\x}{\pd f(net_j)}\cd\frac{\pd f(net_j)}{\pd net_j}\]</div>
+<p>Note that <span class="math notranslate nohighlight">\(f(net_j)=o_j\)</span>, we have</p>
+<div class="math notranslate nohighlight">
+\[\frac{\pd\cl{E}_\x}{\pd f(net_j)}=\frac{\pd\cl{E}_\x}{\pd o_j}=\frac{\pd}
+{\pd o_j}\bigg\{\frac{1}{2}\sum_{k=1}^p(y_k-o_k)^2\bigg\}=(o_j-y_j)\]</div>
+<div class="math notranslate nohighlight">
+\[\frac{\pd f(net_j)}{\pd net_j}=o_j\cd(1-o_j)\]</div>
+<p>Putting it all together, we get</p>
+<div class="math notranslate nohighlight">
+\[\delta_j=(o_j-y_j)\cd o_j\cd(1-o_j)\]</div>
+<p>Let <span class="math notranslate nohighlight">\(\bs\delta_o=(\delta_1,\delta_2,\cds,\delta_p)^T\)</span> denote the vector of
+net gradients at each output neuron, which we call the <em>net gradient vector</em> for
+the output layer.
+We can write <span class="math notranslate nohighlight">\(\bs\delta_o\)</span> as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\bs\delta_o=\o\od(\1-\o)\od(\o-\y)\)</span></p>
+</div>
+<p>where <span class="math notranslate nohighlight">\(\od\)</span> denotes the element-wise product (also called the <em>Hadamard product</em>) between the vectors.</p>
+<p>Let <span class="math notranslate nohighlight">\(\z=(z_1,z_2,\cds,z_m)^T\)</span> denote the vector comprising the values of
+all hidden layer neurons (after applying the activation function).
+We can compute the gradients <span class="math notranslate nohighlight">\(\delta_{w_{ij}}\)</span> for all hidden to output
+neuron connections via the outer product of <span class="math notranslate nohighlight">\(\z\)</span> and <span class="math notranslate nohighlight">\(\bs\delta_o\)</span>:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\bs\nabla_{\W_o}=\bp\delta_{w_{11}}&amp;\delta_{w_{12}}&amp;\cds&amp;\delta_{w_{1p}}\\\delta_{w_{21}}&amp;\delta_{w_{22}}&amp;\cds&amp;\delta_{w_{2p}}\\\vds&amp;\vds&amp;\dds&amp;\vds\\\delta_{w_{m1}}&amp;\delta_{w_{m2}}&amp;\cds&amp;\delta_{w_{mp}}\ep=\z\cd\bs\delta_o^T\)</span></p>
+</div>
+<p>The vector of bias gradients is given as:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\bs\nabla_{\b_o}=(\nabla_{b_1},\nabla_{b_2},\cds,\nabla_{b_p})^T=\bs\delta_o\)</span></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\W_o=\W_o-\eta\cd\bs\nabla_{\w_o}\)</span></p>
+<p><span class="math notranslate nohighlight">\(\b_o=\b_o-\eta\cd\nabla_{\b_o}\)</span></p>
+</div>
+<p><strong>Updating Parameters Between Input and Hidden Layer</strong></p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\nabla_{w_{ij}}&amp;=\frac{\pd\cl{E}_\x}{\pd w_{ij}}=\frac{\pd\cl{E}_\x}
+{\pd net_j}\cd\frac{\pd net_j}{\pd w_{ij}}=\delta_j\cd x_i\\\nabla_{b_j}&amp;=\frac{\pd\cl{E}_\x}{\pd b_j}=\frac{\pd\cl{E}_\x}{\pd net_j}\cd
+\frac{\pd net_j}{\pd b_j}=\delta_j\end{aligned}\end{align} \]</div>
+<p>which follows from</p>
+<div class="math notranslate nohighlight">
+\[\frac{\pd net_j}{\pd w_{ij}}=\frac{\pd}{\pd w_{ij}}\bigg\{b_j+\sum_{k=1}^m
+w_{kj}\cd x_k\bigg\}=x_i\quad\quad\frac{\pd net_j}{\pd b_j}=\frac{\pd}
+{\pd b_j}\bigg\{b_j+\sum_{k=1}^mw_{kj}\cd x_k\bigg\}=1\]</div>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\delta_j&amp;=\frac{\pd\cl{E}_\x}{\pd net_j}=\sum_{k=1}^p\frac{\pd\cl{E}_\x}
+{\pd net_k}\cd\frac{\pd net_k}{\pd z_j}\cd\frac{\pd z_j}{\pd net_j}=
+\frac{\pd z_j}{\pd net_j}\cd\sum_{k=1}^p\frac{\pd\cl{E}_\x}{\pd net_k}\cd
+\frac{\pd net_k}{\pd z_j}\\&amp;=z_j\cd(1-z_j)\cd\sum_{k=1}^p\delta_k\cd w_{jk}\end{aligned}\end{align} \]</div>
+<p>where <span class="math notranslate nohighlight">\(\frac{\pd z_j}{\pd net_j}=z_j\cd(1-z_j)\)</span>, since we assume a sigmoid
+activation function for the hidden neurons.</p>
+<p>Let <span class="math notranslate nohighlight">\(\bs\delta_o=(\delta_1,\delta_2,\cds,\delta_p)^T\)</span> denote the vector of
+net gradients at the output nerurons, and
+<span class="math notranslate nohighlight">\(\bs\delta_h=(\delta_1,\delta_2,\cds,\delta_m)^T\)</span> the net gradients at the
+hidden layer neurons.
+We can write <span class="math notranslate nohighlight">\(\bs\delta_h\)</span> compactly as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\bs\delta_h=\z\od(\1-\z)\od(\W_o\cd\bs\delta_o)\)</span></p>
+</div>
+<p>Furthermore, <span class="math notranslate nohighlight">\(\W_o\cd\bs\delta_o\in\R^m\)</span> is the vector of weighted gradients at each hidden neuron, since</p>
+<div class="math notranslate nohighlight">
+\[\W_o\cd\bs\delta_o=\bigg(\sum_{k=1}^p\delta_k\cd w_{1k},\sum_{k=1}^p\delta_k
+\cd w_{2k},\cds,\sum_{k=1}^p\delta_k\cd w_{mk}\bigg)^T\]</div>
+<p>Let <span class="math notranslate nohighlight">\(\x=(x_1,x_2,\cds,x_d)^T\)</span> denote the input vector, we can compute the
+gradients <span class="math notranslate nohighlight">\(\nabla_{w_{ij}}\)</span> for all input to hidden layer connections via
+the outer product:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\bs\nabla_{\W_h}=\bp\delta_{w_{11}}&amp;\delta_{w_{12}}&amp;\cds&amp;\delta_{w_{1m}}\\\delta_{w_{21}}&amp;\delta_{w_{22}}&amp;\cds&amp;\delta_{w_{2m}}\\\vds&amp;\vds&amp;\dds&amp;\vds\\\delta_{w_{d1}}&amp;\delta_{w_{d2}}&amp;\cds&amp;\delta_{w_{dm}}\ep=\x\cd\bs\delta_h^T\)</span></p>
+</div>
+<p>The vector of bias gradients is given as:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\nabla_{\b_j}=(\nabla_{b1},\nabla_{b2},\cds,\nabla_{bm})^T=\bs\delta_h\)</span></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\W_h=\W_h-\eta\cd\bs\nabla_{\W_h}\)</span></p>
+<p><span class="math notranslate nohighlight">\(\b_h=\b_h-\eta\cd\nabla_{\b_h}\)</span></p>
+</div>
+</div>
+<div class="section" id="mlp-training">
+<h3>25.3.3 MLP Training<a class="headerlink" href="#mlp-training" title="Permalink to this headline">¶</a></h3>
+<img alt="../_images/Algo25.1.png" src="../_images/Algo25.1.png" />
+<p>The total training time per iteration is <span class="math notranslate nohighlight">\(O(dm+mp)\)</span>.</p>
 </div>
 </div>
 </div>
