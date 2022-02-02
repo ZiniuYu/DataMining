@@ -583,3 +583,95 @@ The vector of bias gradients is given as:
 .. image:: ../_static/Algo25.1.png
 
 The total training time per iteration is :math:`O(dm+mp)`.
+
+25.4 Deep Multilayer Perceptrons
+--------------------------------
+
+Consider an MLP with :math:`h` hidden layers.
+We assume that the input to the MLP comprises :math:`n` points 
+:math:`\x_i\in\R^d` with the corresponding true response vector 
+:math:`\y_i\in\R^p`.
+We denote the input neurons as layer :math:`l=0`, the first hidden layer as 
+:math:`l=1`, the last hidden layer as :math:`l=h`, and the output layer as layer
+:math:`l=h+1`.
+We use :math:`n_l` to denote the number of neurons in layer :math:`l`.
+We have :math:`n_0=d`, and :math:`n_{h+1}=p`.
+The vector of neuron values for layer :math:`l` (for :math:`l=0,\cds,h+1`) is denoted as
+
+.. math::
+
+    \z^l=(z_1^l,\cds,z_{n_l}^l)^T
+
+Each layer except the output layer has one extra bias neuron, which is the neuron at index 0.
+Thus, the bias neuron for layer :math:`l` is denoted :math:`z_0^l` and its value is fixed at :math:`z_0^l=1`.
+
+The vector of input neuron values is also written as
+
+.. math::
+
+    \x=(x_1,x_2,\cds,x_d)^T=(z_1^0,z_2^0,\cds,z_d^0)^T=\z^0
+
+and the vector of output neuron values is also denoted as
+
+.. math::
+
+    \o=(o_1,o_2,\cds,o_p)^T=(z_1^{h+1},z_2^{h+1},\cds,z_p^{h+1})^T=\z^{h+1}
+
+The weight matrix between layer :math:`l` and layer :math:`l+1` neurons is 
+denoted :math:`\W_l\in\R^{n_l\times n_{l+1}}`, and the vector of bias terms from
+the bias neuron :math:`z_0^l` to neurons in layer :math:`l+1` is denoted 
+:math:`\b_l\in\R^{n_{l+1}}`, for :math:`l=0,1,\cds,h`.
+
+Define :math:`\delta_i^l` as the net gradient, i.e., the partial derivative of 
+the error function with respect to the net value at :math:`z_i^l`
+
+.. math::
+
+    \delta_i^l=\frac{\pd\cl{E}_\x}{\pd net_i}
+
+and let :math:`\bs\delta^l` denote the net gradient vector at layer :math:`l`, for :math:`l=1,2,\cds,h+1`
+
+.. math::
+
+    \bs\delta^l=(\delta_1^l,\cds,\delta_{n_l}^l)^t
+
+Let :math:`f^l` denote the activation function for layer :math:`l`, for
+:math:`l=0,1,\cds,h+1`, and futher let :math:`\pd\f^l` denote the vector of the
+derivatives of the activation function with respect to :math:`net_i` for all
+neurons :math:`z_i^l` in layer :math:`l`:
+
+.. math::
+
+    \pd\f^l=\bigg(\frac{\pd f^l(net_1)}{\pd net_1},\cds,\frac{\pd f^l(net_{n_l})}{\pd net_{n_l}}\bigg)^T
+
+Finally, let :math:`\pd\cl{E}_\x` denote the vector of partial derivatives of 
+the error function with respect to the values :math:`o_i`for all output neurons:
+
+.. math::
+
+    \pd\bs{\cl{E}}_\x=\bigg(\frac{\pd\cl{E}_\x}{\pd o_1},
+    \frac{\pd\cl{E}_\x}{\pd o_2},\cds,\frac{\pd\cl{E}_\x}{\pd o_p}\bigg)^T
+
+25.4.1 Feed-forward Phase
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+We assume a fixed activation function :math:`f^l` for all neurons in a given layer.
+For a given input pair :math:`(\x,\y)\in\D`, the deep MLP computes the output vector via the feed-forward process:
+
+.. math::
+
+    \o&=f^{h+1}(\b_h+\W_h^T\cd\z^h)
+
+    &=f^{h+1}(\b_h+\W_h^T\cd f^h(\b_{h-1}+\W_{h-1}^T\cd\z^{h-1}))
+    
+    &=\vds
+
+    &=f^{h+1}(\b_h+\W_h^T\cd f^h(\b_{h-1}+\W_{h-1}^T\cd f^{h-1}(\cds f^2(\b_1+\W_1^T\cd f^1(\b_0+\W_0^T\cd\x)))))
+
+Note that each :math:`f^l` distributes over its argument.
+That is
+
+.. math::
+
+    f^l(\b_{l-1}+\W_{l-1}^T\cd\x)=(f^l(net_1),f^l(net_2),\cds,f^l(net_{n_l}))^T
+

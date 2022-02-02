@@ -113,6 +113,10 @@
 <li class="toctree-l4"><a class="reference internal" href="#mlp-training">25.3.3 MLP Training</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="#deep-multilayer-perceptrons">25.4 Deep Multilayer Perceptrons</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id3">25.4.1 Feed-forward Phase</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="chap26.html">Chapter 26 Deep Learning</a></li>
@@ -686,6 +690,62 @@ the outer product:</p>
 <h3>25.3.3 MLP Training<a class="headerlink" href="#mlp-training" title="Permalink to this headline">¶</a></h3>
 <img alt="../_images/Algo25.1.png" src="../_images/Algo25.1.png" />
 <p>The total training time per iteration is <span class="math notranslate nohighlight">\(O(dm+mp)\)</span>.</p>
+</div>
+</div>
+<div class="section" id="deep-multilayer-perceptrons">
+<h2>25.4 Deep Multilayer Perceptrons<a class="headerlink" href="#deep-multilayer-perceptrons" title="Permalink to this headline">¶</a></h2>
+<p>Consider an MLP with <span class="math notranslate nohighlight">\(h\)</span> hidden layers.
+We assume that the input to the MLP comprises <span class="math notranslate nohighlight">\(n\)</span> points
+<span class="math notranslate nohighlight">\(\x_i\in\R^d\)</span> with the corresponding true response vector
+<span class="math notranslate nohighlight">\(\y_i\in\R^p\)</span>.
+We denote the input neurons as layer <span class="math notranslate nohighlight">\(l=0\)</span>, the first hidden layer as
+<span class="math notranslate nohighlight">\(l=1\)</span>, the last hidden layer as <span class="math notranslate nohighlight">\(l=h\)</span>, and the output layer as layer
+<span class="math notranslate nohighlight">\(l=h+1\)</span>.
+We use <span class="math notranslate nohighlight">\(n_l\)</span> to denote the number of neurons in layer <span class="math notranslate nohighlight">\(l\)</span>.
+We have <span class="math notranslate nohighlight">\(n_0=d\)</span>, and <span class="math notranslate nohighlight">\(n_{h+1}=p\)</span>.
+The vector of neuron values for layer <span class="math notranslate nohighlight">\(l\)</span> (for <span class="math notranslate nohighlight">\(l=0,\cds,h+1\)</span>) is denoted as</p>
+<div class="math notranslate nohighlight">
+\[\z^l=(z_1^l,\cds,z_{n_l}^l)^T\]</div>
+<p>Each layer except the output layer has one extra bias neuron, which is the neuron at index 0.
+Thus, the bias neuron for layer <span class="math notranslate nohighlight">\(l\)</span> is denoted <span class="math notranslate nohighlight">\(z_0^l\)</span> and its value is fixed at <span class="math notranslate nohighlight">\(z_0^l=1\)</span>.</p>
+<p>The vector of input neuron values is also written as</p>
+<div class="math notranslate nohighlight">
+\[\x=(x_1,x_2,\cds,x_d)^T=(z_1^0,z_2^0,\cds,z_d^0)^T=\z^0\]</div>
+<p>and the vector of output neuron values is also denoted as</p>
+<div class="math notranslate nohighlight">
+\[\o=(o_1,o_2,\cds,o_p)^T=(z_1^{h+1},z_2^{h+1},\cds,z_p^{h+1})^T=\z^{h+1}\]</div>
+<p>The weight matrix between layer <span class="math notranslate nohighlight">\(l\)</span> and layer <span class="math notranslate nohighlight">\(l+1\)</span> neurons is
+denoted <span class="math notranslate nohighlight">\(\W_l\in\R^{n_l\times n_{l+1}}\)</span>, and the vector of bias terms from
+the bias neuron <span class="math notranslate nohighlight">\(z_0^l\)</span> to neurons in layer <span class="math notranslate nohighlight">\(l+1\)</span> is denoted
+<span class="math notranslate nohighlight">\(\b_l\in\R^{n_{l+1}}\)</span>, for <span class="math notranslate nohighlight">\(l=0,1,\cds,h\)</span>.</p>
+<p>Define <span class="math notranslate nohighlight">\(\delta_i^l\)</span> as the net gradient, i.e., the partial derivative of
+the error function with respect to the net value at <span class="math notranslate nohighlight">\(z_i^l\)</span></p>
+<div class="math notranslate nohighlight">
+\[\delta_i^l=\frac{\pd\cl{E}_\x}{\pd net_i}\]</div>
+<p>and let <span class="math notranslate nohighlight">\(\bs\delta^l\)</span> denote the net gradient vector at layer <span class="math notranslate nohighlight">\(l\)</span>, for <span class="math notranslate nohighlight">\(l=1,2,\cds,h+1\)</span></p>
+<div class="math notranslate nohighlight">
+\[\bs\delta^l=(\delta_1^l,\cds,\delta_{n_l}^l)^t\]</div>
+<p>Let <span class="math notranslate nohighlight">\(f^l\)</span> denote the activation function for layer <span class="math notranslate nohighlight">\(l\)</span>, for
+<span class="math notranslate nohighlight">\(l=0,1,\cds,h+1\)</span>, and futher let <span class="math notranslate nohighlight">\(\pd\f^l\)</span> denote the vector of the
+derivatives of the activation function with respect to <span class="math notranslate nohighlight">\(net_i\)</span> for all
+neurons <span class="math notranslate nohighlight">\(z_i^l\)</span> in layer <span class="math notranslate nohighlight">\(l\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\pd\f^l=\bigg(\frac{\pd f^l(net_1)}{\pd net_1},\cds,\frac{\pd f^l(net_{n_l})}{\pd net_{n_l}}\bigg)^T\]</div>
+<p>Finally, let <span class="math notranslate nohighlight">\(\pd\cl{E}_\x\)</span> denote the vector of partial derivatives of
+the error function with respect to the values :math:<a href="#id1"><span class="problematic" id="id2">`</span></a>o_i`for all output neurons:</p>
+<div class="math notranslate nohighlight">
+\[\pd\bs{\cl{E}}_\x=\bigg(\frac{\pd\cl{E}_\x}{\pd o_1},
+\frac{\pd\cl{E}_\x}{\pd o_2},\cds,\frac{\pd\cl{E}_\x}{\pd o_p}\bigg)^T\]</div>
+<div class="section" id="id3">
+<h3>25.4.1 Feed-forward Phase<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<p>We assume a fixed activation function <span class="math notranslate nohighlight">\(f^l\)</span> for all neurons in a given layer.
+For a given input pair <span class="math notranslate nohighlight">\((\x,\y)\in\D\)</span>, the deep MLP computes the output vector via the feed-forward process:</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\o&amp;=f^{h+1}(\b_h+\W_h^T\cd\z^h)\\&amp;=f^{h+1}(\b_h+\W_h^T\cd f^h(\b_{h-1}+\W_{h-1}^T\cd\z^{h-1}))\\&amp;=\vds\\&amp;=f^{h+1}(\b_h+\W_h^T\cd f^h(\b_{h-1}+\W_{h-1}^T\cd f^{h-1}(\cds f^2(\b_1+\W_1^T\cd f^1(\b_0+\W_0^T\cd\x)))))\end{aligned}\end{align} \]</div>
+<p>Note that each <span class="math notranslate nohighlight">\(f^l\)</span> distributes over its argument.
+That is</p>
+<div class="math notranslate nohighlight">
+\[f^l(\b_{l-1}+\W_{l-1}^T\cd\x)=(f^l(net_1),f^l(net_2),\cds,f^l(net_{n_l}))^T\]</div>
 </div>
 </div>
 </div>
