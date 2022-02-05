@@ -675,3 +675,245 @@ That is
 
     f^l(\b_{l-1}+\W_{l-1}^T\cd\x)=(f^l(net_1),f^l(net_2),\cds,f^l(net_{n_l}))^T
 
+25.4.2 Backpropagation Phase
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Let :math:`z_i^l` be a neuron in layer :math:`l`, and :math:`z_j^{l+1}` a neuron in the next layer :math:`l+1`.
+Let :math:`w_{ij}^l` be the weight between :math:`z_i^l` and :math:`z_j^{l+1}`,
+and let :math:`b_j^l` denote the bias term between :math:`z_0^l` and 
+:math:`z_j^{l+1}`.
+The weight and bias are updated using the gradient descent approach
+
+.. math::
+
+    w_{ij}^l=w_{ij}^l-\eta\cd\nabla_{w_{ij}^l}\quad\quad b_j^l=b_j^l-\eta\cd\nabla_{b_j^l}
+
+.. math::
+
+    \nabla_{w_{ij}^l}=\frac{\pd\cl{E}_\x}{\pd w_{ij}^l}=
+    \frac{\pd\cl{E}_\x}{\pd net_j}\cd\frac{\pd net_j}{\pd w_{ij}^l}=
+    \delta_j^{l+1}\cd z_i^l=z_i^l\cd\delta_j^{l+1}
+
+.. math::
+
+    \nabla_{b_j^l}=\frac{\pd\cl{E}_\x}{\pd b_j^l}=\frac{\pd\cl{E}_\x}{\pd net_j}
+    \cd\frac{\pd net_j}{\pd b_j^l}=\delta_j^{l+1}
+
+.. math::
+
+    \frac{\pd net_j}{\pd w_{ij}^l}=\frac{\pd}{\pd w_{ij}^l}\bigg\{b_j^l+
+    \sum_{k=0}^{n_l}w_{kj}^l\cd z_k^l\bigg\}=z_i^l\quad\quad
+    \frac{\pd net_j}{\pd b_j^l}=\frac{\pd}{\pd b_j^l}\bigg\{b_j^l+
+    \sum_{k=0}^{n_l}w_{kj}^l\cd z_k^l\bigg\}=1
+
+Given the vector of neuron values at layer :math:`l`, namely 
+:math:`\z^l=(z_1^l,\cds,z_{n_l}^l)^T`, we can compute the entire weight gradient
+matrix via an outer product operation
+
+.. note::
+
+    :math:`\nabla_{w_l}=\z^l\cd(\bs\delta^{l+1})^T`
+
+and the bias gradient vector as:
+
+.. note::
+
+    :math:`\nabla_{\b_l}=\bs\delta^{l+1}`
+
+with :math:`l=0,1,\cds,h`.
+
+.. note::
+
+    :math:`\W_l=\W_l-\eta\cd\nabla_{\w_l}`
+
+    :math:`\b_l=\b_l-\eta\cd\nabla_{\b_l}`
+
+We observe that to compute the weight and bias gradients for layer :math:`l` we 
+need to compute the net gradients :math:`\bs\delta^{l+1}` at layer :math:`l+1`.
+
+25.4.3 Net Gradients at Output Layer
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+If all of the output neurons are independent, the net gradient is obtained by
+differentiating the error function with respect to the net signal at the output 
+neuron.
+
+.. math::
+
+    \delta_j^{h+1}=\frac{\pd\cl{E}_\x}{\pd net_j}=\frac{\pd\cl{E}_\x}
+    {\pd f^{h+1}(net_j)}\cd\frac{\pd f^{h+1}(net_j)}{\pd net_j}=
+    \frac{\pd\cl{E}_\x}{\pd o_j}\cd\frac{\pd f^{h+1}(net_j)}{\pd net_j}
+
+.. note::
+
+    :math:`\bs\delta^{h+1}=\pd\f^{h+1}\od\pd\cl{\bs{E}}_\x`
+
+If the output neurons are not independent, then we have to modify the 
+computation of thg net gradient at each output neuron as follows:
+
+.. math::
+
+    \delta_j^{h+1}=\frac{\pd\cl{E}_\x}{\pd net_j}=\sum_{i=1}^p\frac{\pd
+    \cl{E}_\x}{\pd f^{h+1}(net_i)}\cd\frac{\pd f^{h+1}(net_i)}{\pd net_j}
+
+.. note::
+
+    :math:`\bs\delta^{h+1}=\pd\bs{\rm{F}}^{h+1}\cd\pd\cl{\bs{E}}_\x`
+
+where :math:`\pd\bs{\rm{F}}^{h+1}` is the matrix of derivatives of 
+:math:`o_i=f^{h+1}(net_i)` with respect to :math:`net_j` for all 
+:math:`i,j=1,2,\cds,p`, given as
+
+.. math::
+
+    \pd\bs{\rm{F}}^{h+1}=\bp\frac{\pd o_1}{\pd net_1}&\frac{\pd o_1}{\pd net_2}&
+    \cds&\frac{\pd o_1}{\pd net_p}\\\frac{\pd o_2}{\pd net_1}&\frac{\pd o_2}
+    {\pd net_2}&\cds&\frac{\pd o_2}{\pd net_p}\\\vds&\vds&\dds&\vds\\
+    \frac{\pd o_p}{\pd net_1}&\frac{\pd o_p}{\pd net_2}&\cds&\frac{\pd o_p}
+    {\pd net_p}\ep
+
+**Squared Error:**
+
+    The error gradient is given as
+
+    .. math::
+
+        \pd\cl{\bs{E}}_\x=\frac{\pd\cl{\bs{E}}_\x}{\pd\o}=\o-\y
+
+    The net gradient at the output layer is given as 
+
+    .. math::
+
+        \bs\delta^{h+1}=\pd\f^{h+1}\od\pd\cl{\bs{E}}_\x
+
+    Typically, for regression tasks, we use a linear activation at the output neurons.
+    In that case, we have :math:`\pd\f^{h+1}=\1`.
+
+**Cross-Entropy Error (binary output, sigmoid activation):**
+
+    The binary cross-entropy error is given as
+
+    .. math::
+
+        \cl{E}_\x=-(y\cd\ln(o)+(1-y)\cd\ln(1-o))
+
+    .. math::
+
+        \pd\cl{\bs{E}}_\x=\frac{\pd\cl{E}_\x}{\pd o}=\frac{o-y}{o\cd(1-o)}
+
+    For sigmoid activaton, we have
+
+    .. math::
+
+        \pd\f^{h+1}=\frac{\pd f(net_o)}{\pd net_o}=o\cd(1-o)
+
+    Therefore, the net gradient at the output neuron is
+
+    .. math::
+
+        \delta^{h+1}=\pd\cl{\bs{E}}_\x\cd\pd\f^{h+1}=\frac{o-y}{o\cd(1-o)}\cd o(1-o)=o-y
+
+**Cross-Entropy Error (**\ :math:`K` **outputs, softmax activation):**
+
+    The cross-entropy error function is given as
+
+    .. math::
+
+        \cl{E}_\x=-\sum_{i=1}^K y_i\cd\ln(o_i)=-(y_1\cd\ln(o_1)+\cds+y_K\cd\ln(o_K))
+
+    .. math::
+
+        \pd\cl{\bs{E}}_\x=\bigg(\frac{\pd\cl{E}_\x}{\pd o_1},\frac{\pd\cl{E}_\x}
+        {\pd o_2},\cds,\frac{\pd\cl{E}_x}{\pd o_K}\bigg)^T=\bigg(
+        -\frac{y_1}{o_1},-\frac{y_2}{o_2},\cds,-\frac{y_K}{o_K}\bigg)^t
+
+    Cross-entropy error is typically used with the softmax activation so that we 
+    get a (normalized) probability value for each class.
+    That is,
+
+    .. math::
+
+        o_j=\rm{softmax}(net_j)=\frac{\exp\{net_j\}}{\sum_{i=1}^K\exp\{net_i\}}
+
+    so that the output neuron values sum to one, :math:`\sum_{j=1}^Ko_j=1`.
+
+    .. math::
+
+        \pd\bs{\rm{F}}^{h+1}=\bp\frac{\pd o_1}{\pd net_1}&\frac{\pd o_1}
+        {\pd net_2}&\cds&\frac{\pd o_1}{\pd net_K}\\\frac{\pd o_2}{\pd net_1}&
+        \frac{\pd o_2}{\pd net_2}&\cds&\frac{\pd o_2}{\pd net_K}\\\vds&\vds&\dds
+        &\vds\\\frac{\pd o_K}{\pd net_1}&\frac{\pd o_K}{\pd net_2}&\cds&
+        \frac{\pd o_K}{\pd net_K}\ep
+        
+        =\bp o_1\cd(1-o_1)&-o_1\cd o_2&\cds&-o_1\cd o_K\\-o_1\cd o_2&o_2
+        \cd(1-o_2)&\cds&-o_2\cd o_K\\\vds&\vds&\dds&\vds\\-o_1\cd o_K&-o_2
+        \cd o_K&\cds&o_K\cd(1-o_K)\ep
+
+    Therefore, the net gradient vecgtor at the output layer is
+
+    .. math::
+
+        \bs\delta^{h+1}=\pd\bs{\rm{F}}^{h+1}\cd\pd\cl{\bs{E}}_\x=\o-\y
+
+25.4.4 Net Gradients at Hidden Layers
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. math::
+
+    \delta_j^l=\frac{\pd\cl{E}_\x}{\pd net_j}&=\sum_{k=1}^{n_l+1}
+    \frac{\pd\cl{E}_\x}{\pd net_k}\cd\frac{\pd net_k}{\pd f^l(net_j)}\cd
+    \frac{\pd f^l(net_j)}{\pd net_j}
+
+    &=\frac{\pd f^l(net_j)}{\pd net_j}\cd\sum_{k=1}^{n_l+1}\delta_k^{l+1}\cd w_{jk}^l
+
+.. note::
+
+    :math:`\bs\delta^l=\pd\f^l\od(\W_l\cd\bs\delta^{l+1})`
+
+.. math::
+
+    \pd\f^l=\left\{\begin{array}{lr}\1\quad\quad\quad\quad\quad\;\;\,
+    \rm{for\ linear}\\\z^l(\1-\z^l)\quad\quad\,\rm{for\ sigmoid}\\
+    (\1-\z^l\od\z^l)\quad\rm{for\ tanh}\end{array}\right.
+
+.. math::
+
+    \bs\delta^h&=\pd\g^h\od(\W_h\cd\bs\delta^{h+1})
+
+    \bs\delta^{h-1}&=\pd\f^{h-1}\od(\W_{h-1}\cd\bs\delta^h)=\pd\f^{h-1}\od
+    (\W_{h-1}\cd(\pd\f^h\od(\W_h\cd\bs\delta^{h+1})))
+
+    &\vds
+
+    \bs\delta^1&=\pd\f^1\od(\W_1\cd(\pd\f^2\od(\W_2\cds(\pd\f^h\od(\W_h\cd\bs\delta^{h+1})))))
+
+25.4.5 Training Deep MLPs
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+In practice, it is commonto update the gradients by considering a fixed sized 
+subset of the training points called a *minibatch* instead of using single 
+points.
+That is, the training data is divided into minibatches using an additional
+parameter called *batch size*, and a gradient descent step is performed after
+computing the bias and weight gradient from each minibatch.
+This helps better estimate the gradients, and also allows vectorized matrix 
+operations over the minibatch of points, which can lead to faster convergence 
+and substantial speedups in the learning.
+
+One caveat while training very deep MLPs is the problem of vanishing and exploding gradients. 
+In the *vanishing gradient* problem, the norm of the net gradient can decay 
+exponentially with the distance from the output layer, that is, as we 
+backpropagate the gradients from the output layer to the input layer.
+In this case the network will learn extremely slowly, if at all, since the 
+gradient descent method will make minuscule changes to the weights and biases. 
+On the other hand, in the *exploding gradient* problem, the norm of the net 
+gradient can grow exponentially with the distance from the output layer.
+In this case, the weights and biases will become exponentially large, resulting in a failure to learn. 
+The gradient explosion problem can be mitigated to some extent by 
+*gradient thresholding*, that is, by resetting the value if itexceeds an upper 
+bound. 
+The vanishing gradients problem is more difﬁcult to address.
+Typically sigmoid activations are more susceptible to this problem, and one 
+solution is to use a lternative activation functions such as ReLU. 
+In general, recurrent neural networks, which are deep neural networks with 
+*feedback* connections, are more prone to vanishing and exploding gradients.
