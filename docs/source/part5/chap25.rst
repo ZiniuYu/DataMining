@@ -890,6 +890,8 @@ where :math:`\pd\bs{\rm{F}}^{h+1}` is the matrix of derivatives of
 25.4.5 Training Deep MLPs
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
+.. image:: ../_static/Algo25.2.png
+
 In practice, it is commonto update the gradients by considering a fixed sized 
 subset of the training points called a *minibatch* instead of using single 
 points.
