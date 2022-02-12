@@ -65,10 +65,12 @@ rst_prolog = r'''
     \newcommand{\cd}{\cdot}
     \newcommand{\cds}{\cdots}
     \newcommand{\dds}{\ddots}
+    \newcommand{\lag}{\langle}
     \newcommand{\lv}{\lVert}
     \newcommand{\ol}{\overline}
     \newcommand{\od}{\odot}
     \newcommand{\ra}{\rightarrow}
+    \newcommand{\rag}{\rangle}
     \newcommand{\rv}{\rVert}
     \newcommand{\seq}{\subseteq}
     \newcommand{\td}{\tilde}
@@ -84,6 +86,7 @@ rst_prolog = r'''
     \newcommand{\e}{\boldsymbol{\mathrm{e}}}
     \newcommand{\f}{\boldsymbol{\mathrm{f}}}
     \newcommand{\g}{\boldsymbol{\mathrm{g}}}
+    \newcommand{\h}{\boldsymbol{\mathrm{h}}}
     \newcommand{\i}{\boldsymbol{\mathrm{i}}}
     \newcommand{\j}{\boldsymbol{j}}
     \newcommand{\m}{\boldsymbol{\mathrm{m}}}
@@ -116,6 +119,9 @@ rst_prolog = r'''
     \newcommand{\Y}{\boldsymbol{\mathrm{Y}}}
 
     \newcommand{\R}{\mathbb{R}}
+
+    \newcommand{\cX}{\mathcal{X}}
+    \newcommand{\cY}{\mathcal{Y}}
 
     \newcommand{\ld}{\lambda}
     \newcommand{\Ld}{\boldsymbol{\mathrm{\Lambda}}}

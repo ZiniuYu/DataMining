@@ -97,7 +97,10 @@
 <li class="toctree-l2"><a class="reference internal" href="chap23.html">Chapter 23 Linear Regression</a></li>
 <li class="toctree-l2"><a class="reference internal" href="chap24.html">Chapter 24 Logistic Regression</a></li>
 <li class="toctree-l2"><a class="reference internal" href="chap25.html">Chapter 25 Neural Networks</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Chapter 26 Deep Learning</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Chapter 26 Deep Learning</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#recurrent-neural-networks">26.1 Recurrent Neural Networks</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="chap27.html">Chapter 27 Regression Evaluation</a></li>
 </ul>
 </li>
@@ -178,10 +181,12 @@
 \newcommand{\pd}{\partial}\\\newcommand{\cd}{\cdot}
 \newcommand{\cds}{\cdots}
 \newcommand{\dds}{\ddots}
+\newcommand{\lag}{\langle}
 \newcommand{\lv}{\lVert}
 \newcommand{\ol}{\overline}
 \newcommand{\od}{\odot}
 \newcommand{\ra}{\rightarrow}
+\newcommand{\rag}{\rangle}
 \newcommand{\rv}{\rVert}
 \newcommand{\seq}{\subseteq}
 \newcommand{\td}{\tilde}
@@ -195,6 +200,7 @@
 \newcommand{\e}{\boldsymbol{\mathrm{e}}}
 \newcommand{\f}{\boldsymbol{\mathrm{f}}}
 \newcommand{\g}{\boldsymbol{\mathrm{g}}}
+\newcommand{\h}{\boldsymbol{\mathrm{h}}}
 \newcommand{\i}{\boldsymbol{\mathrm{i}}}
 \newcommand{\j}{\boldsymbol{j}}
 \newcommand{\m}{\boldsymbol{\mathrm{m}}}
@@ -222,7 +228,8 @@
 \newcommand{\U}{\boldsymbol{\mathrm{U}}}
 \newcommand{\W}{\boldsymbol{\mathrm{W}}}
 \newcommand{\X}{\boldsymbol{\mathrm{X}}}
-\newcommand{\Y}{\boldsymbol{\mathrm{Y}}}\\\newcommand{\R}{\mathbb{R}}\\\newcommand{\ld}{\lambda}
+\newcommand{\Y}{\boldsymbol{\mathrm{Y}}}\\\newcommand{\R}{\mathbb{R}}\\\newcommand{\cX}{\mathcal{X}}
+\newcommand{\cY}{\mathcal{Y}}\\\newcommand{\ld}{\lambda}
 \newcommand{\Ld}{\boldsymbol{\mathrm{\Lambda}}}
 \newcommand{\sg}{\sigma}
 \newcommand{\Sg}{\boldsymbol{\mathrm{\Sigma}}}
@@ -241,6 +248,84 @@
 \newcommand{\ppr}{^{\prime\prime}}\end{aligned}\end{align} \]</div>
 <div class="section" id="chapter-26-deep-learning">
 <h1>Chapter 26 Deep Learning<a class="headerlink" href="#chapter-26-deep-learning" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="recurrent-neural-networks">
+<h2>26.1 Recurrent Neural Networks<a class="headerlink" href="#recurrent-neural-networks" title="Permalink to this headline">¶</a></h2>
+<p>Multilayer perceptrons are feed-forward networks in which the information flows
+in only one direction, namely from the input layer to the output layer via the
+hidden layers.
+In constrast, recurrent neural networks (RNNs) are dynamically driven, with a
+<em>feedback</em> loop between two (or more) layers, which makes such networks ideal
+for learning from sequence data.</p>
+<p>Let <span class="math notranslate nohighlight">\(\cX=\lag\x_1,\x_2,\cds,\x_\tau\rag\)</span> denote a sequence of vectors,
+where <span class="math notranslate nohighlight">\(\x_t\in\R^d\)</span> is a <span class="math notranslate nohighlight">\(d\)</span>-dimensional vector
+<span class="math notranslate nohighlight">\((t=1,2\,\cds,\tau)\)</span>.
+Thus, <span class="math notranslate nohighlight">\(\cX\)</span> is an input sequence of length <span class="math notranslate nohighlight">\(\tau\)</span>, with
+<span class="math notranslate nohighlight">\(\x_t\)</span> denoting the input at time step <span class="math notranslate nohighlight">\(t\)</span>.
+Let <span class="math notranslate nohighlight">\(\cY=\lag\y_1,\y_2,\cds,\y_\tau\rag\)</span> denote a sequence of vectors,
+with <span class="math notranslate nohighlight">\(\y_t\in\R^p\)</span> a <span class="math notranslate nohighlight">\(p\)</span>-dimensional vector.
+Here <span class="math notranslate nohighlight">\(\cY\)</span> is the desired target or response sequence, with
+<span class="math notranslate nohighlight">\(\y_t\)</span> denoting the response vector at time <span class="math notranslate nohighlight">\(t\)</span>.
+Finally, let <span class="math notranslate nohighlight">\(\cl{O}=\lag\o_1,\o_2,\cds,\o_\tau\rag\)</span> denote the predicted
+or output sequence from the RNN.
+Here <span class="math notranslate nohighlight">\(\o_t\in\R^p\)</span> is also a <span class="math notranslate nohighlight">\(p\)</span>-dimensional vector to match the corresponding true response <span class="math notranslate nohighlight">\(\y_t\)</span>.
+The task of an RNN is to learn a function that predicts the target sequence
+<span class="math notranslate nohighlight">\(\cY\)</span> given the input sequence <span class="math notranslate nohighlight">\(\cX\)</span>.
+That is, the predicted output <span class="math notranslate nohighlight">\(\o_t\)</span> on input <span class="math notranslate nohighlight">\(\x_t\)</span> should be
+similar or close to the target response <span class="math notranslate nohighlight">\(\y_t\)</span>, for each time point
+<span class="math notranslate nohighlight">\(t\)</span>.</p>
+<p>To learn dependencies between elements of the input sequence, an RNN maintains a
+sequence of <span class="math notranslate nohighlight">\(m\)</span>-dimensional hidden state vectors <span class="math notranslate nohighlight">\(\h_t\in\R^m\)</span>,
+where <span class="math notranslate nohighlight">\(\h_t\)</span> captures the essential features of the input sequences up to
+time <span class="math notranslate nohighlight">\(t\)</span>.
+The hidden vector <span class="math notranslate nohighlight">\(\h_t\)</span> at time <span class="math notranslate nohighlight">\(t\)</span> depends on the input vector
+<span class="math notranslate nohighlight">\(\x_t\)</span> at time <span class="math notranslate nohighlight">\(t\)</span> and the previous hidden state vector
+<span class="math notranslate nohighlight">\(\h_{t-1}\)</span> from time <span class="math notranslate nohighlight">\(t-1\)</span>, and it is computed as follows:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\h_t=f^h(\W_i^T\x_t+\W_h^T\h_{t-1}+\b_h)\)</span></p>
+</div>
+<p>Here, <span class="math notranslate nohighlight">\(f^h\)</span> is the hidden state activation function, typically tanh or ReLU.
+Also, we need an initial hidden state vector <span class="math notranslate nohighlight">\(\h_0\)</span> that serves as the prior state to compute <span class="math notranslate nohighlight">\(\h_1\)</span>.
+This is uaually set to the zero vector, or seeded from a prior RNN prediction step.
+The matrix <span class="math notranslate nohighlight">\(\W_i\in\R^{d\times m}\)</span> specifies the weights between the input vectors and the hidden state vectors.
+The matrix <span class="math notranslate nohighlight">\(\W_h\in\R^{m\times m}\)</span> specifies the weight matrix between the
+hidden state vectors at time <span class="math notranslate nohighlight">\(t-1\)</span> and <span class="math notranslate nohighlight">\(t\)</span>, with <span class="math notranslate nohighlight">\(\b_h\in\R^m\)</span>
+specifying the bias terms associated with the hidden states.
+Note that we need only one bias vector <span class="math notranslate nohighlight">\(\b_h\)</span> associated with the hidden
+state neurons; we do not need a separate bias vector between the input and
+hidden neurons.</p>
+<p>Given the hidden state vector at time <span class="math notranslate nohighlight">\(t\)</span>, the output vector <span class="math notranslate nohighlight">\(\o_t\)</span>
+at time <span class="math notranslate nohighlight">\(t\)</span> is computed as follows:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\o_y=f^o(\W_o^T\h_t+\b_o)\)</span></p>
+</div>
+<p>Here, <span class="math notranslate nohighlight">\(\W_o\in\R^{m\times \p}\)</span> specifies the weights between the hidden
+state and output vectors, with bias vector <span class="math notranslate nohighlight">\(\b_o\)</span>.
+The output activation function <span class="math notranslate nohighlight">\(f^o\)</span> typically uses linear or identity
+activation, or a softmax activation for one-hot encoded categorical output
+values.</p>
+<p>It is important to note that all the weight matrices and bias vectors are <em>independent</em> of the time <span class="math notranslate nohighlight">\(t\)</span>.
+For example, for the hidden layer, the same weight matrix <span class="math notranslate nohighlight">\(\W_h\)</span> and bias
+vector <span class="math notranslate nohighlight">\(\b_h\)</span> is used and updated while training the model, over all time
+steps <span class="math notranslate nohighlight">\(t\)</span>.
+This is an exmaple of <em>parameter sharing</em> or <em>weight tying</em> between different layers or components of a neural network.
+Likewise, the input weight matrix <span class="math notranslate nohighlight">\(\W_i\)</span>, the output weight matrix
+<span class="math notranslate nohighlight">\(\W_o\)</span> and the bias vector <span class="math notranslate nohighlight">\(\b_o\)</span> are all shared across time.
+This greatly reduces the number of parameters that need to be learned by the
+RNN, but it also relies on the assumption that all relevant sequential features
+can be captured by the shared parameters.</p>
+<p>The training data for the RNN is given as <span class="math notranslate nohighlight">\(\D=\{\cX_i,\cY_y\}_{i=1}^n\)</span>,
+comprising <span class="math notranslate nohighlight">\(n\)</span> input sequences <span class="math notranslate nohighlight">\(\cX_i\)</span> and the corresponding target
+response sequences <span class="math notranslate nohighlight">\(\cY_i\)</span>, with sequence length <span class="math notranslate nohighlight">\(\tau_i\)</span>.
+Given each pair <span class="math notranslate nohighlight">\((\cX,\cY)\in\D\)</span>, with
+<span class="math notranslate nohighlight">\(\cX=\lag\x_1,\x_2,\cds,\x_\tau\rag\)</span> and
+<span class="math notranslate nohighlight">\(\cY=\lag\y_1,\y_2,\cds,\y_\tau\rag\)</span>, the RNN has to update the model
+parameters <span class="math notranslate nohighlight">\(\W_i,\W_h,\b_h,\W_o,\b_o\)</span> for the input, hidden and output
+layers, to learn the corresponding output sequence
+<span class="math notranslate nohighlight">\(\cl{O}=\lag\o_1,\o_2,\cds,\o_\tau\rag\)</span>.
+For training the network, we compute the error or <em>loss</em> between the predicted and response vectors over all time steps.</p>
+</div>
 </div>
 
 
