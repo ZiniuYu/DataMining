@@ -645,7 +645,8 @@ neurons :math:`z_i^l` in layer :math:`l`:
     \pd\f^l=\bigg(\frac{\pd f^l(net_1)}{\pd net_1},\cds,\frac{\pd f^l(net_{n_l})}{\pd net_{n_l}}\bigg)^T
 
 Finally, let :math:`\pd\cl{E}_\x` denote the vector of partial derivatives of 
-the error function with respect to the values :math:`o_i`for all output neurons:
+the error function with respect to the values :math:`o_i` for all output 
+neurons:
 
 .. math::
 

@@ -268,5 +268,39 @@ hidden layer :math:`\h_t`, are obtained as follows:
 
 .. image:: ../_static/Algo26.1.png
 
+Note that Line 15 shows the case where the output layer neurons are independent;
+if they are not independent we can replace it by 
+:math:`\pd\bs{\rm{F}}^o\cd\pd\bs\cE_{\x_t}`.
+
+In practice, RNNs are trained using subsets or *minibatches* of input sequences instead of single sequences.
+This helps to speed up the computation and convergence of gradient descent, 
+since minibatches provide better estimates of the bias and weight gradients and
+allow the use of vectorized operations.
+
 26.1.4 Bidirectional RNNs
 ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+A bidirectional RNN (BRNN) extends the RNN model to also include information from the future.
+In particular, a BRNN maintains a backward hidden state vector 
+:math:`\b_t\in\R^m` that depends on the next backward hidden state 
+:math:`\b_{t+1}` and the current input :math:`\x_t`.
+The output at time :math:`t` is a function of both :math:`\h_t` and :math:`\b_t`.
+
+.. note::
+
+    :math:`\h_t=f^h(\W_{ih}^T\x_t+\W_h^T\h_{t-1}+\b_h)`
+
+    :math:`\b_t=f^b(\W_{ib}^T\x_t+\W_b^T\b_{t+1}+\b_b)`
+
+Also, a BRNN needs two initial state vectors :math:`\h_0` and 
+:math:`\b_{\tau+1}` to compute :math:`\b_1` and :math:`\b_\tau`, respectively.
+These are usually set to :math:`\0\in\R^m`.
+The forward and backward hidden states are computed independently, with the
+forward hidden states omputed by considering the input sequence in the forward
+direction, and with the backward hidden states computed by considering the 
+sequence in reverse order.
+The output at time :math:`t` is computed only when both :math:`\h_t` and :math:`\b_t` are available, and is given as
+
+.. math::
+
+    \o_t=f^o(\W_{ho}^T\h_t+\W_{bo}^T\b_t+\b_o)

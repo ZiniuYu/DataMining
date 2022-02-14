@@ -455,9 +455,36 @@ hidden layer <span class="math notranslate nohighlight">\(\h_t\)</span>, are obt
 <div class="section" id="training-rnns">
 <h3>26.1.3 Training RNNs<a class="headerlink" href="#training-rnns" title="Permalink to this headline">¶</a></h3>
 <img alt="../_images/Algo26.1.png" src="../_images/Algo26.1.png" />
+<p>Note that Line 15 shows the case where the output layer neurons are independent;
+if they are not independent we can replace it by
+<span class="math notranslate nohighlight">\(\pd\bs{\rm{F}}^o\cd\pd\bs\cE_{\x_t}\)</span>.</p>
+<p>In practice, RNNs are trained using subsets or <em>minibatches</em> of input sequences instead of single sequences.
+This helps to speed up the computation and convergence of gradient descent,
+since minibatches provide better estimates of the bias and weight gradients and
+allow the use of vectorized operations.</p>
 </div>
 <div class="section" id="bidirectional-rnns">
 <h3>26.1.4 Bidirectional RNNs<a class="headerlink" href="#bidirectional-rnns" title="Permalink to this headline">¶</a></h3>
+<p>A bidirectional RNN (BRNN) extends the RNN model to also include information from the future.
+In particular, a BRNN maintains a backward hidden state vector
+<span class="math notranslate nohighlight">\(\b_t\in\R^m\)</span> that depends on the next backward hidden state
+<span class="math notranslate nohighlight">\(\b_{t+1}\)</span> and the current input <span class="math notranslate nohighlight">\(\x_t\)</span>.
+The output at time <span class="math notranslate nohighlight">\(t\)</span> is a function of both <span class="math notranslate nohighlight">\(\h_t\)</span> and <span class="math notranslate nohighlight">\(\b_t\)</span>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\h_t=f^h(\W_{ih}^T\x_t+\W_h^T\h_{t-1}+\b_h)\)</span></p>
+<p><span class="math notranslate nohighlight">\(\b_t=f^b(\W_{ib}^T\x_t+\W_b^T\b_{t+1}+\b_b)\)</span></p>
+</div>
+<p>Also, a BRNN needs two initial state vectors <span class="math notranslate nohighlight">\(\h_0\)</span> and
+<span class="math notranslate nohighlight">\(\b_{\tau+1}\)</span> to compute <span class="math notranslate nohighlight">\(\b_1\)</span> and <span class="math notranslate nohighlight">\(\b_\tau\)</span>, respectively.
+These are usually set to <span class="math notranslate nohighlight">\(\0\in\R^m\)</span>.
+The forward and backward hidden states are computed independently, with the
+forward hidden states omputed by considering the input sequence in the forward
+direction, and with the backward hidden states computed by considering the
+sequence in reverse order.
+The output at time <span class="math notranslate nohighlight">\(t\)</span> is computed only when both <span class="math notranslate nohighlight">\(\h_t\)</span> and <span class="math notranslate nohighlight">\(\b_t\)</span> are available, and is given as</p>
+<div class="math notranslate nohighlight">
+\[\o_t=f^o(\W_{ho}^T\h_t+\W_{bo}^T\b_t+\b_o)\]</div>
 </div>
 </div>
 </div>

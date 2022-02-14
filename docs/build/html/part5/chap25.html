@@ -114,8 +114,8 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#deep-multilayer-perceptrons">25.4 Deep Multilayer Perceptrons</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#id3">25.4.1 Feed-forward Phase</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id4">25.4.2 Backpropagation Phase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id1">25.4.1 Feed-forward Phase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id2">25.4.2 Backpropagation Phase</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#net-gradients-at-output-layer">25.4.3 Net Gradients at Output Layer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#net-gradients-at-hidden-layers">25.4.4 Net Gradients at Hidden Layers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#training-deep-mlps">25.4.5 Training Deep MLPs</a></li>
@@ -741,12 +741,13 @@ neurons <span class="math notranslate nohighlight">\(z_i^l\)</span> in layer <sp
 <div class="math notranslate nohighlight">
 \[\pd\f^l=\bigg(\frac{\pd f^l(net_1)}{\pd net_1},\cds,\frac{\pd f^l(net_{n_l})}{\pd net_{n_l}}\bigg)^T\]</div>
 <p>Finally, let <span class="math notranslate nohighlight">\(\pd\cl{E}_\x\)</span> denote the vector of partial derivatives of
-the error function with respect to the values :math:<a href="#id1"><span class="problematic" id="id2">`</span></a>o_i`for all output neurons:</p>
+the error function with respect to the values <span class="math notranslate nohighlight">\(o_i\)</span> for all output
+neurons:</p>
 <div class="math notranslate nohighlight">
 \[\pd\bs{\cl{E}}_\x=\bigg(\frac{\pd\cl{E}_\x}{\pd o_1},
 \frac{\pd\cl{E}_\x}{\pd o_2},\cds,\frac{\pd\cl{E}_\x}{\pd o_p}\bigg)^T\]</div>
-<div class="section" id="id3">
-<h3>25.4.1 Feed-forward Phase<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id1">
+<h3>25.4.1 Feed-forward Phase<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
 <p>We assume a fixed activation function <span class="math notranslate nohighlight">\(f^l\)</span> for all neurons in a given layer.
 For a given input pair <span class="math notranslate nohighlight">\((\x,\y)\in\D\)</span>, the deep MLP computes the output vector via the feed-forward process:</p>
 <div class="math notranslate nohighlight">
@@ -756,8 +757,8 @@ That is</p>
 <div class="math notranslate nohighlight">
 \[f^l(\b_{l-1}+\W_{l-1}^T\cd\x)=(f^l(net_1),f^l(net_2),\cds,f^l(net_{n_l}))^T\]</div>
 </div>
-<div class="section" id="id4">
-<h3>25.4.2 Backpropagation Phase<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id2">
+<h3>25.4.2 Backpropagation Phase<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
 <p>Let <span class="math notranslate nohighlight">\(z_i^l\)</span> be a neuron in layer <span class="math notranslate nohighlight">\(l\)</span>, and <span class="math notranslate nohighlight">\(z_j^{l+1}\)</span> a neuron in the next layer <span class="math notranslate nohighlight">\(l+1\)</span>.
 Let <span class="math notranslate nohighlight">\(w_{ij}^l\)</span> be the weight between <span class="math notranslate nohighlight">\(z_i^l\)</span> and <span class="math notranslate nohighlight">\(z_j^{l+1}\)</span>,
 and let <span class="math notranslate nohighlight">\(b_j^l\)</span> denote the bias term between <span class="math notranslate nohighlight">\(z_0^l\)</span> and
