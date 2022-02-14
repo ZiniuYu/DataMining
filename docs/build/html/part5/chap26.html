@@ -98,7 +98,13 @@
 <li class="toctree-l2"><a class="reference internal" href="chap24.html">Chapter 24 Logistic Regression</a></li>
 <li class="toctree-l2"><a class="reference internal" href="chap25.html">Chapter 25 Neural Networks</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Chapter 26 Deep Learning</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#recurrent-neural-networks">26.1 Recurrent Neural Networks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#recurrent-neural-networks">26.1 Recurrent Neural Networks</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#feed-forward-in-time">26.1.1 Feed-forward in Time</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#backpropagation-in-time">26.1.2 backpropagation in Time</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#training-rnns">26.1.3 Training RNNs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#bidirectional-rnns">26.1.4 Bidirectional RNNs</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="chap27.html">Chapter 27 Regression Evaluation</a></li>
@@ -228,7 +234,8 @@
 \newcommand{\U}{\boldsymbol{\mathrm{U}}}
 \newcommand{\W}{\boldsymbol{\mathrm{W}}}
 \newcommand{\X}{\boldsymbol{\mathrm{X}}}
-\newcommand{\Y}{\boldsymbol{\mathrm{Y}}}\\\newcommand{\R}{\mathbb{R}}\\\newcommand{\cX}{\mathcal{X}}
+\newcommand{\Y}{\boldsymbol{\mathrm{Y}}}\\\newcommand{\R}{\mathbb{R}}\\\newcommand{\cE}{\mathcal{E}}
+\newcommand{\cX}{\mathcal{X}}
 \newcommand{\cY}{\mathcal{Y}}\\\newcommand{\ld}{\lambda}
 \newcommand{\Ld}{\boldsymbol{\mathrm{\Lambda}}}
 \newcommand{\sg}{\sigma}
@@ -324,7 +331,134 @@ Given each pair <span class="math notranslate nohighlight">\((\cX,\cY)\in\D\)</s
 parameters <span class="math notranslate nohighlight">\(\W_i,\W_h,\b_h,\W_o,\b_o\)</span> for the input, hidden and output
 layers, to learn the corresponding output sequence
 <span class="math notranslate nohighlight">\(\cl{O}=\lag\o_1,\o_2,\cds,\o_\tau\rag\)</span>.
-For training the network, we compute the error or <em>loss</em> between the predicted and response vectors over all time steps.</p>
+For training the network, we compute the error or <em>loss</em> between the predicted and response vectors over all time steps.
+The squared error loss is given as</p>
+<div class="math notranslate nohighlight">
+\[\cE_\cX=\sum_{t=1}^\tau\cE_{\x_t}=\frac{1}{2}\cd\sum_{t=1}^\tau\lv\y_t-\o_t\rv^2\]</div>
+<p>If we use a softmax activation at the output layer, then we use the cross-entropy loss, given as</p>
+<div class="math notranslate nohighlight">
+\[\cE_\cX=\sum_{t=1}^\tau\cE_{\x_t}=-\sum_{t=1}^\tau\sum_{i=1}^py_{ti}\cd\ln(o_{ti})\]</div>
+<p>where <span class="math notranslate nohighlight">\(\y_t=(y_{t1},y_{t2},\cds,y_{tp})^T\in\R^p\)</span> and <span class="math notranslate nohighlight">\(\o_t=(o_{t1},o_{t2},\cds,o_{tp})^T\in\R^p\)</span>.
+On training input of length <span class="math notranslate nohighlight">\(\tau\)</span> we first unfold the RNN for
+<span class="math notranslate nohighlight">\(\tau\)</span> steps, following which the parameters can be learned via the
+standard feed-forward and backpropagation steps, keeping in mind the connections
+between the layers.</p>
+<div class="section" id="feed-forward-in-time">
+<h3>26.1.1 Feed-forward in Time<a class="headerlink" href="#feed-forward-in-time" title="Permalink to this headline">¶</a></h3>
+<p>The feed-forward process starts at time <span class="math notranslate nohighlight">\(t=0\)</span>, taking as input the initial
+hidden state vector <span class="math notranslate nohighlight">\(\h_0\)</span>, which us usually set to <span class="math notranslate nohighlight">\(\0\)</span> or it can
+be user-specified, say from a previous prediction step.</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\o_t&amp;=f^o(\W_o^T\h_t+\b_o)\\&amp;=f^o(\W_o^Tf^h(\W_i^T\x_t+\W_h^T\h_{t-1}+\b_h)+\b_o)\\&amp;=\vds\\&amp;=f^o(\W_o^Tf^h(\W_i^T\x_t+\W_h^Tf^h(\cds f^h(\W_i^T\x_1+\W_h^T\h_0+\b_h)+\cds)+\b_h)+\b_o)\end{aligned}\end{align} \]</div>
+<p>We can observe that the RNN implicitly makes a prediction for every prefix of
+the input sequence, since <span class="math notranslate nohighlight">\(\o_t\)</span> depends on all the previous input vectors
+<span class="math notranslate nohighlight">\(\x_1,\x_2,\cds,\x_t\)</span> but not on any future inputs
+<span class="math notranslate nohighlight">\(\x_{t+1},\cds,\x_\tau\)</span>.</p>
+</div>
+<div class="section" id="backpropagation-in-time">
+<h3>26.1.2 backpropagation in Time<a class="headerlink" href="#backpropagation-in-time" title="Permalink to this headline">¶</a></h3>
+<p>For the backpropagation step it is easier to view the RNN in terms of the
+distinct layers based on the dependencies, as opposed to unfolding in time.</p>
+<p>Let <span class="math notranslate nohighlight">\(\cE_{\x_t}\)</span> denote the loss on input vector <span class="math notranslate nohighlight">\(\x_t\)</span> from the
+input sequence <span class="math notranslate nohighlight">\(\cX=\lag\x_1,\x_2,\cds,\x_\tau\rag\)</span>.
+The unfolded feed-forward RNN for <span class="math notranslate nohighlight">\(\cX\)</span> has <span class="math notranslate nohighlight">\(l=\tau+1\)</span> layers.
+Define <span class="math notranslate nohighlight">\(\bs\delta_t^o\)</span> as the net gradient vector for the output vector
+<span class="math notranslate nohighlight">\(\o_t\)</span>, i.e., the derivative of the error function <span class="math notranslate nohighlight">\(\cE_{\x_t}\)</span> with
+respect to the net value at each neuron in <span class="math notranslate nohighlight">\(\o_t\)</span>, given as</p>
+<div class="math notranslate nohighlight">
+\[\bs\delta_t^o=\bigg(\frac{\pd\cE_{\x_t}}{\pd net_{t1}^o},
+\frac{\pd\cE_{\x_t}}{\pd net_{t2}^o},\cds,
+\frac{\pd\cE_{\x_t}}{\pd net_{tp}^o}\bigg)^T\]</div>
+<p>where <span class="math notranslate nohighlight">\(\o_t=(o_{t1},o_{t2},\cds,o_{tp})^T\in\R^p\)</span> is the <span class="math notranslate nohighlight">\(p\)</span>-dimensional output vector at time <span class="math notranslate nohighlight">\(t\)</span>, and <span class="math notranslate nohighlight">\(net_{ti}^o\)</span> is the net
+value at output neuron <span class="math notranslate nohighlight">\(o_{ti}\)</span> at time <span class="math notranslate nohighlight">\(t\)</span>.
+Likewise, let <span class="math notranslate nohighlight">\(\bs\delta_t^h\)</span> denote the net gradient vector for the
+hidden state neurons <span class="math notranslate nohighlight">\(\h_t\)</span> at time <span class="math notranslate nohighlight">\(t\)</span></p>
+<div class="math notranslate nohighlight">
+\[\bs\delta_t^h=\bigg(\frac{\pd\cE_{\x_t}}{\pd net_{t1}^h},
+\frac{\pd\cE_{\x_t}}{\pd net_{t2}^h},\cds,
+\frac{\pd\cE_{\x_t}}{\pd net_{tm}^h}\bigg)^T\]</div>
+<p>where <span class="math notranslate nohighlight">\(\h_t=(h_{t1},h_{t2},\cds,h_{tm})^T\in\R^m\)</span> is the <span class="math notranslate nohighlight">\(m\)</span>-dimensional hidden state vector at time <span class="math notranslate nohighlight">\(t\)</span>, and <span class="math notranslate nohighlight">\(net_{ti}^h\)</span> is the
+net value at hidden neuron <span class="math notranslate nohighlight">\(h_{ti}\)</span> at time <span class="math notranslate nohighlight">\(t\)</span>.
+Let <span class="math notranslate nohighlight">\(f^h\)</span> and <span class="math notranslate nohighlight">\(f^o\)</span> denote the activation functions for the hidden
+state and output neurons, and let <span class="math notranslate nohighlight">\(\pd\f_t^h\)</span> and <span class="math notranslate nohighlight">\(\pd\f_t^o\)</span> denote
+the vector of the derivatives of the activation function with respect to the net
+signal for the hidden and output neurons at time <span class="math notranslate nohighlight">\(t\)</span>, given as</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\pd\f_t^h\bigg(\frac{\pd f^h(net_{t1}^h)}{\pd net_{t1}^h},
+\frac{\pd f^h(net_{t2}^h)}{\pd net_{t2}^h},\cds,
+\frac{\pd f^h(net_{tm}^h)}{\pd net_{tm}^h}\bigg)^T\\\pd\f_t^o\bigg(\frac{\pd f^o(net_{t1}^o)}{\pd net_{t1}^o},
+\frac{\pd f^o(net_{t2}^o)}{\pd net_{t2}^o},\cds,
+\frac{\pd f^o(net_{tp}^o)}{\pd net_{tp}^o}\bigg)^T\end{aligned}\end{align} \]</div>
+<p>Finally, let <span class="math notranslate nohighlight">\(\pd\bs\cE_{\x_t}\)</span> denote the vector of partial derivatives
+of the error function with respect to <span class="math notranslate nohighlight">\(\o_t\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\pd\bs\cE_{\x_t}=\bigg(\frac{\pd\cE_{\x_t}}{\pd o_{t1}},\frac{\pd\cE_{\x_t}}
+{\pd o_{t2}},\cds,\frac{\pd\cE_{\x_t}}{\pd o_{tp}}\bigg)^T\]</div>
+<p><strong>Computing Net Gradients</strong></p>
+<p>The net gradient vector at the output <span class="math notranslate nohighlight">\(\o_t\)</span> can be computed as follows:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\bs\delta_t^o=\pd\f_t^o\od\pd\bs\cE_{\x_t}\)</span></p>
+</div>
+<p>For example, if <span class="math notranslate nohighlight">\(\cE_{\x_t}\)</span> is the squared error function, and the output
+layer uses the identity funciton, then we have</p>
+<div class="math notranslate nohighlight">
+\[\bs\delta_t^o=\1\od(\o_t-\y_t)\]</div>
+<p>On the other hand, the net gradients at each of the hidden layers need to
+account for the incoming net gradients from <span class="math notranslate nohighlight">\(\o_t\)</span> and from
+<span class="math notranslate nohighlight">\(\h_{t+1}\)</span>.
+The net gradient vector for <span class="math notranslate nohighlight">\(\h_t(\rm{for\ }t=1,2,\cds,\tau-1)\)</span> is given as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\bs\delta_t^h=\pd\f_t^h\od((\W_o\cd\bs\delta_t^o)+(\W_h\cd\bs\delta_{t+1}^h))\)</span></p>
+</div>
+<p>Note that for <span class="math notranslate nohighlight">\(\h_\tau\)</span>, it depends only on <span class="math notranslate nohighlight">\(\o_\tau\)</span>, therefore</p>
+<div class="math notranslate nohighlight">
+\[\bs\delta_\tau^h=\pd\f_\tau^h\od(\W_o\cd\bs\delta_\tau^o)\]</div>
+<p>For the tanh activation, which is commonly used in RNNs, the derivative of the
+activation function with respect to the net values at <span class="math notranslate nohighlight">\(\h_t\)</span> is given as</p>
+<div class="math notranslate nohighlight">
+\[\pd\f_t^h=(\1-\h_t\od\h_t)\]</div>
+<p>Finally, note that the net gradients do not have to be computed for <span class="math notranslate nohighlight">\(\h_0\)</span>
+or for any of the input neurons <span class="math notranslate nohighlight">\(\x_t\)</span>, since these are leaf nodes in the
+backpropagation graph, and thus do not backpropagate the gradients beyond those
+neurons.</p>
+<p><strong>Stochastic Gradient Descent</strong></p>
+<p>The net gradients for the output <span class="math notranslate nohighlight">\(\bs\delta_t^o\)</span> and hidden
+<span class="math notranslate nohighlight">\(\bs\delta_t^h\)</span> at time <span class="math notranslate nohighlight">\(t\)</span> can be used to compute the gradients for
+the weight matrices and bias vectors at each time point.
+However, since an RNN uses parameter sharing across time, the gradients are
+obtained by summing up all of the contributions from each time step <span class="math notranslate nohighlight">\(t\)</span>.
+Define <span class="math notranslate nohighlight">\(\nabla_{\w_o}^t\)</span> and <span class="math notranslate nohighlight">\(\nabla_{\b_o}^t\)</span> as the gradients of
+the weights and biases between the hidden neurons <span class="math notranslate nohighlight">\(\h_t\)</span> and output
+neurons <span class="math notranslate nohighlight">\(\o_t\)</span> for time <span class="math notranslate nohighlight">\(t\)</span>.
+Using the backpropagation equations, for deep multilayer perceptrons, these
+gradients are computed as follows:</p>
+<div class="math notranslate nohighlight">
+\[\nabla_{\b_o}=\sum_{t=1}^\tau\nabla_{\b_o}^t=\sum_{t=1}^\tau\bs\delta_t^o
+\quad\quad\nabla_{\w_o}=\sum_{t=1}^\tau\nabla_{\w_o}^t=\sum_{t=1}^\tau\h_t
+\cd(\bs\delta_t^o)^T\]</div>
+<p>Likewise, the gradients of the other shared parameters between hidden layers
+<span class="math notranslate nohighlight">\(\h_{t-1}\)</span> and <span class="math notranslate nohighlight">\(\h_t\)</span>, and between the input layer <span class="math notranslate nohighlight">\(\x_t\)</span> and
+hidden layer <span class="math notranslate nohighlight">\(\h_t\)</span>, are obtained as follows:</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\nabla_{\b_h}&amp;=\sum_{t=1}^\tau\nabla_{\b_h}^t=\sum_{t=1}^\tau\bs\delta_t^h
+\quad\quad\nabla_{\w_h}=\sum_{t=1}^\tau\nabla_{\W_h}^t=\sum_{t=1}^\tau
+\h_{t-1}\cd(\bs\delta_t^h)^T\\\nabla_{\w_i}&amp;=\sum_{t=1}^\tau\nabla_{\w_i}^t=\sum_{t=1}^\tau\x_t\cd(\bs
+\delta_t^h)^T\end{aligned}\end{align} \]</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\W_i=\W_i-\eta\cd\nabla_{\w_i}\quad\W_h=\W_h-\eta\cd\nabla_{\w_h}\quad\b_h=\b_h-\eta\cd\nabla_{\b_h}\)</span></p>
+<p><span class="math notranslate nohighlight">\(\W_o=\W_o-\eta\cd\nabla_{\w_o}\quad\b_o=\b_o-\eta\cd\nabla_{\b_o}\)</span></p>
+</div>
+</div>
+<div class="section" id="training-rnns">
+<h3>26.1.3 Training RNNs<a class="headerlink" href="#training-rnns" title="Permalink to this headline">¶</a></h3>
+<img alt="../_images/Algo26.1.png" src="../_images/Algo26.1.png" />
+</div>
+<div class="section" id="bidirectional-rnns">
+<h3>26.1.4 Bidirectional RNNs<a class="headerlink" href="#bidirectional-rnns" title="Permalink to this headline">¶</a></h3>
+</div>
 </div>
 </div>
 

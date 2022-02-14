@@ -120,6 +120,7 @@ rst_prolog = r'''
 
     \newcommand{\R}{\mathbb{R}}
 
+    \newcommand{\cE}{\mathcal{E}}
     \newcommand{\cX}{\mathcal{X}}
     \newcommand{\cY}{\mathcal{Y}}
 
