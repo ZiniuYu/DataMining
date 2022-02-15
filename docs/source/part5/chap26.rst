@@ -304,3 +304,167 @@ The output at time :math:`t` is computed only when both :math:`\h_t` and :math:`
 .. math::
 
     \o_t=f^o(\W_{ho}^T\h_t+\W_{bo}^T\b_t+\b_o)
+
+26.2 Gated RNNs: Long Short-Term Memory Networks
+------------------------------------------------
+
+One of the problems in training RNNs is their susceptibility to either the 
+*vanishing gradient* or *exploding gradient* problem.
+For example, consider the task of computing the net gradient vector 
+:math:`\bs\delta_t^h` for the hidden layer at time :math:`t`, given as
+
+.. math::
+
+    \bs\delta_t^h=\pd\f_t^h\od((\W_o\cd\bs\delta_t^o)+(\W_h\cd\bs\delta_{t+1}^h))
+
+Assume for simplicity that we use a linear activation function, i.e.,
+:math:`\pd\f_t^h=\1`, and let us ignore the net gradient vector for the output
+layer, focusing only on the dependence on the hidden layers.
+Then for an input sequence of length :math:`\tau`, we have
+
+.. math::
+
+    \bs\delta_t^h=\W_h\cd\bs\delta_{t+1}^h=\W_h(\W_h\cd\bs\delta_{t+2}^h)=
+    \W_h^2\cd\bs\delta_{t+2}^h=\cds=\W_h^{\tau-t}\cd\bs\delta_\tau^h
+
+We can observe that the net gradient from time :math:`\tau` affects the net
+gradient vector at time :math:`t` as a function of :math:`\W_h^{\tau-t}`, i.e.,
+as powers of the hidden weight matrix :math:`\W_h`.
+Let the *spectral radius* of :math:`\W_h`, defined as the absolute value of its 
+largest eigenvalue, be given as :math:`|\ld_1|`.
+It turns out that if :math:`|\ld_1|<1`, then :math:`\lv\W_h^k\rv\ra 0` as 
+:math:`k\ra\infty`, that is, the gradients vanish as we train on long sequences.
+On the other hand, if :math:`|\ld_1|>1`, the nat least one element of 
+:math:`\W_h^k` becomes unbounded and thus :math:`\lv\W_h^k\rv\ra\infty` as
+:math:`k\ra\infty`, that is, the gradients explode as we train on long 
+sequences.
+Therefore, for the error to neither vanish nor explode, the spectral radius of 
+:math:`\W_h` should remian 1 or very close to it.
+
+Long short-term memory (LSTM) networks alleviate the vanishing gradients problem
+by using *gate neurons* to control access to the hidden states.
+Consider the :math:`m`-dimensional hidden state vector :math:`\h_t\in\R^m` at time :math:`t`.
+In a regular RNN, we update the hidden state as follows:
+
+.. math::
+
+    \h_t=f^h(\W_i^T\x_t+\W_h^T\h_{t-1}+\b_h)
+
+Let :math:`\g\in\{0,1\}^m` be a binary vector.
+If we take the element-wise product of :math:`\g` and :math:`\h_t`, namely, 
+:math:`\g\od\h_t`, then elements of :math:`\g` act as gates that either allow 
+the corresponding element of :math:`\h_t` to be retained or set to zero.
+The vector :math:`\g` thus acts as logical gate that allows selected elements of 
+:math:`\h_t` to be remembered or fogotten.
+However, for backpropagation we need *differentiable gates*, for which we use 
+sigmoid activation on the gate neurons so that their value lies in the range 
+:math:`[0,1]`.
+Like a logical gate, such neurons allow the inputs to be completely remembered
+if the value is 1, or forgotten if the value is 0.
+In addition, they allow a weighted memory, allowing partial remembrance of the 
+elements of :math:`\h_t`, for values between 0 and 1.
+
+26.2.1 Forget Gate
+^^^^^^^^^^^^^^^^^^
+
+We consider an RNN with a *forget gate*.
+Let :math:`\h_t\in\R^m` be the hidden state vector, and let :math:`\bs\phi_t\in\R^m` be a forget gate vector.
+Both these vectors have the same number of neurons, :math:`m`.
+
+In a regular RNN, assuming tanh activation, the hidden state vector is updated unconditionally, as follows:
+
+.. math::
+
+    \h_t=\tanh(\W_i^T\x_t+\W_h^T\h_{t-1}+\b_h)
+
+Instead of directly updating :math:`\h_t`, we will employ the forget gate 
+neurons to control how much of the prvious hidden state vector to forget when 
+computing its new value, and also to control how to update it in light of the
+new input :math:`\x_t`.
+
+Given input :math:`\x_t` and previous hidden state :math:`\h_{t-1}`, we first 
+compute a candidate update vector :math:`\u_t`, as follows:
+
+.. note::
+
+    :math:`\u_t=\tanh(\W_u^T\x_t+\W_{hu}^T\h_{t-1}+\b_u)`
+
+The candidate update vector :math:`\u_t` is essentially the unmodified hidden state vector, as in a regular RNN.
+
+Using the forget gate, we can compute the new hidden state vector as follows:
+
+.. note::
+
+    :math:`\h_t=\bs\phi_t\od\h_{t-1}+(1-\bs\phi_t)\od\u_t`
+
+We can see that the new hidden state vector retains a fraction of the previous 
+hidden state values, and a (complementary) fraction of the candidate update 
+values.
+Observe that if :math:`\bs\phi_t=\0`, i.e., if we want to entirely forget the
+previous hidden state, then :math:`\1-\bs\phi_t=\1`, which means that the hidden
+state will be updated completely at each time step just like in a regular RNN.
+Finally, given the hidden state :math:`\h_t`, we can compute the output vector :math:`\o_t` as follows
+
+.. math::
+
+    \o_t=f^o(\W_o^T\h_t+\b_o)
+
+.. note::
+
+    :math:`\bs\phi_t=\sg(\W_\phi^T\x_t+\W_{h\phi}^T\h_{t-1}+\b_\phi)`
+
+where we use a sigmoid activation function, denoted :math:`\sg`, to ensure that 
+all the neuron values are in the range :math:`[0,1]`, denoting the extent to 
+which the corresponding previous hidden state values should be forgotten.
+
+A forget gate vector :math:`\bs\phi_t` is a layer that depends on the previous
+hidden state layer :math:`\h_{t-1}` and the current input layer :math:`\x_t`;
+these connections are fully connected, and are specified by the corresponding 
+weight matrices :math:`\W_{h\phi}` and :math:`\W_{\phi}`, and the bias vector 
+:math:`\b_\phi`.
+On the other hand, the output of the forget gate layer :math:`\bs\phi_t` needs 
+to modify the previous hidden state layer :math:`\h_{t-1}`, and therefore, both
+:math:`\bs\phi_t` and :math:`\h_{t-1}` feed into what is essentially a new 
+*element-wise* product layer.
+Finally, the output of this element-wise product layer is used as input to the 
+new hidden layer :math:`\h_t` that also takes input from another element-wise 
+gate that computes the output from the candidate update vector :math:`\u_t` and
+the complemented forget gate, :math:`\1-\bs\phi_t`.
+Thus, unlike regular layers that are fully connected and have a weight matrix 
+and bias vector between the layers, the connections between :math:`\bs\phi_t`
+and :math:`\h_t` via the element-wise layer are all one-to-one, and the weights
+are fixed at the value 1 with bias 0.
+Likewise the connections between :math:`\u_t` and :math:`\h_t` via the other
+element-wise layer are also one-to-one, with weights fixed at 1 and bias at 0.
+
+Computing Net Gradients
+^^^^^^^^^^^^^^^^^^^^^^^
+
+An RNN with a forget gate has the following parameters it needs to learn, namely
+the weight matrices :math:`\W_u,\W_{hu},\W_\phi,\W_{h\phi},\W_o`, and the bias
+vectors :math:`\b_u,\b_\phi,\b_o`.
+
+Let :math:`\bs\delta_t^o, \bs\delta_t^h, \bs\delta_t^\phi, \bs\delta_t^u` denote
+the net gradient vectors at the output, hidden, forget gate, and candidate 
+update layers, respectively.
+During backpropagation, we need to compute the net gradients at each layer.
+The net gradients at the outputs are computed by considering the partial 
+derivatives of the activation function :math:`\pd\f_t^o` and the error function
+:math:`\pd\bs\cE_{\x_t}`:
+
+.. math::
+
+    \bs\delta_t^o=\pd\f_t^o\od\pd\bs\cE_{\x_t}
+
+For the other layers, we can reverse all the arrows to determine the dependencies between the layers.
+Therefore, to compute the net gradient for the update layer 
+:math:`\bs\delta_t^u`, notice that in backpropagation it has only one incoming 
+edge from :math:`\h_t` via the element-wise product 
+:math:`(\1-\bs\phi_t)\od\u_t`.
+The net gradient :math:`\delta_{ti}^u` at update layer neuron :math:`i` at time :math:`t` is given as
+
+.. math::
+
+    \delta_{ti}^u=\frac{\pd\cE_\x}{\pd net_{ti}^u}=\frac{\pd\cE_\x}
+    {\pd net_{ti}h}\cd\frac{\pd net_{ti}^h}{\pd u_{ti}}\cd\frac{\pd u_{ti}}
+    {\pd net_{ti}^u}=\delta_{ti}^h\cd(1-\phi_{ti})\cd(1-u_{ti}^2)
