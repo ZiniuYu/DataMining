@@ -468,3 +468,266 @@ The net gradient :math:`\delta_{ti}^u` at update layer neuron :math:`i` at time 
     \delta_{ti}^u=\frac{\pd\cE_\x}{\pd net_{ti}^u}=\frac{\pd\cE_\x}
     {\pd net_{ti}h}\cd\frac{\pd net_{ti}^h}{\pd u_{ti}}\cd\frac{\pd u_{ti}}
     {\pd net_{ti}^u}=\delta_{ti}^h\cd(1-\phi_{ti})\cd(1-u_{ti}^2)
+
+where :math:`\frac{\pd net_{ti}^h}{\pd u_{ti}}=\frac{\pd}{\pd u_{ti}}`
+:math:`\{\phi_{ti}\cd h_{t-1,i}+(1-\phi_{ti})\cd u_{ti}\}=1-\phi_{ti}`, and we
+use the fact that the update layer uses a tanh activation function.
+Across all neurons, we obtain the net gradient at :math:`\u_t` as follows:
+
+.. math::
+
+    \bs\delta_t^u=\bs\delta_t^h\od(\1-\bs\phi_t)\od(\1-\u_t\od\u_t)
+
+To compute the net gradient vector for the forget gate, we observe that there 
+are two incoming flows into :math:`\bs\phi_t` during backpropagation-one from
+:math:`\h_t` via the element-wise product :math:`\bs\phi_t\od\h_{t-1}`, and the 
+other also from :math:`\bs\h_t` via the element-wise product 
+:math:`(\1-\bs\phi_t)\od\u_t`.
+Therefore, the net gradient :math:`\delta_{ti}^\phi` at forget gate neuron :math:`i` at time :math:`t` is given as
+
+.. math::
+
+    \delta_{ti}^\phi=\frac{\pd\cE_\x}{\pd net_{ti}^\phi}=\frac{\pd\cE_\x}
+    {\pd net_{ti}^h}\cd\frac{\pd net_{ti}^h}{\pd\phi_{ti}}\cd\frac{\pd\phi_{ti}}
+    {\pd net_{ti}^\phi}=\delta_{ti}^h\cd(h_{t-1,i}-u_{ti})\cd\phi_{ti}
+    (1-\phi_{ti})
+
+where :math:`\frac{\pd net_{ti}^h}{\pd\phi_{ti}}=\frac{\pd}{\pd\phi_{ti}}`
+:math:`\{\phi_{ti}\cd h_{t-1,i}+(1-\phi_{ti})\cd u_{ti}\}=h_{t-1,i}-u_{ti}`, and
+we use the fact that the forget gate uses a sigmoid activation function.
+Across all neurons, we obtain the net gradient at :math:`\bs\phi_t` as follows:
+
+.. math::
+
+    \bs\delta_t^\phi=\bs\delta_t^h\od(\h_{t-1}-\u_t)\od\bs\phi_t\od(\1-\bs\phi_t)
+
+We can observe that if we reverse the arrows, :math:`\bs\delta_t^h` depends on
+the gradients at the output layer :math:`\o_t`, the forget gate layer 
+:math:`\bs\phi_{t+1}`, the update layer :math:`\u_{t+1}`, and on the hidden
+layer :math:`\h_{t+1}` via the element-wise product 
+:math:`\h_{t+1}\od\bs\phi_{t+1}`.
+The output, forget and update layers are treated as in a regular RNN.
+However, due to the element-wise layer, the flow from :math:`\h_{t+1}` is handled as follows:
+
+.. math::
+
+    \frac{\pd\cE_{\x_t}}{\pd net_{t+1,i}^h}\cd\frac{\pd net_{t+1,i}^h}
+    {\pd h_{ti}}\cd\frac{\pd h_{ti}}{\pd net_{ti}^h}=\delta_{t+1,i}^h\cd
+    \phi_{t+1,i}\cd 1=\delta_{t+1,i}^h\cd\phi_{t+1,i}
+
+where :math:`\frac{\pd net_{t+1,i}^h}{\pd h_{ti}}=\frac{\pd}{\pd h_{ti}}`
+:math:`\{\phi_{t+1,i}\cd h_{ti}+(1-\phi_{t+1,i})\cd u_{t+1,i}\}=\phi_{t+1,i}`,
+and we used the fact that :math:`\h_t` implicitly uses an identity activation 
+function.
+Across all the hidden neurons at time :math:`t`, the net gradient vector 
+component from :math:`\h_{t+1}` is given as 
+:math:`\bs\delta_{t+1}^h\od\bs\phi_{t+1}`.
+Considering all the layers, including the output, forget, update and element-\
+wise layers, the complete net gradient vector at the hidden layer at time 
+:math:`t` is given as:
+
+.. math::
+
+    \bs\delta_t^h=\W_o\bs\delta_t^o+\W_{h\phi}\bs\delta_{t+1}^\phi+\W_{hu}\bs
+    \delta_{t+1}^u+(\bs\delta_{t+1}^h\od\bs\phi_{t+1})
+
+26.2.2 Long Short-Term Memory (LSTM) Networks
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+LSTMs use differentiable gate vectors to control the hidden state vector 
+:math:`\h_t`, as well as another vector :math:`\c_t\in\R^m` called the 
+*internal memory* vector.
+In particular, LSTMs utilize three *gate vectors*: an input gate vector
+:math:`\bs\kappa_t\in\R^m`, a forget gate vector :math:`\bs\phi_t\in\R^m`, and
+an output get vector :math:`\bs\omega_t\in\R^m`.
+Like a regular RNN, an  LSTM also maintains a hidden state vecftor for each time step.
+However, the content of the hidden vector is selectively copied from the 
+internal memory vector via the output gate, with the internal memory being
+updated via the input gate and parts of it forgotten via the forget gate.
+
+Let :math:`\cX=\lag\x_1,\x_2,\cds,\x_\tau\rag` denote a sequence of :math:`d`-\
+dimensional input vectors of length :math:`\tau`, 
+:math:`\cY=\lag\y_1,\y_2,\cds,\y_\tau\rag` the sequence of :math:`p`-dimensional
+response vectors, and :math:`\cl{O}=\lag\o_1,\o_2,\cds,\o_\tau\rag` the 
+:math:`p`-dimensional output sequence from an LSTM.
+At each time step :math:`t`, the three gate vectors are updated as follows:
+
+.. note::
+
+    :math:`\bs\kappa_t=\sigma(\W_\kappa^T\x_t+\W_{h\kappa}^T\h_{t-1}+\b_\kappa)`
+
+    :math:`\bs\phi_t=\sigma(\W_\phi^T\x_t+\W_{h\phi}^T\h_{t-1}+\b_\phi)`
+
+    :math:`\bs\omega_t=\sigma(\W_\omega^T\x_t+\W_{h\omega}^T\h_{t-1}+\b_\omega)`
+
+Here :math:`\sigma(\cd)` denotes the sigmoid activation function.
+The input gate vector :math:`\bs\kappa_t` controls how much of the input vector,
+via the candidate update vector :math:`\u_t`, is allowed to influence the memory
+vector :math:`\c_t`.
+The forget gate vector :math:`\bs\phi_t` controls how much of the previous
+memory vector to feget, and finally the output gate vector :math:`\bs\omega_t`
+controls how much of the memory state is retained for the hidden state.
+
+Given the current input :math:`\x_t` and the previous hidden state 
+:math:`\h_{t-1}`, an LSTM first computes a candidate update vector :math:`\u_t`
+after applying the tanh activation:
+
+.. note::
+
+    :math:`\u_t=\tanh(\W_u^T\x_t+\W_{hu}^T\h_{t-1}+\b_u)`
+
+It then applies the different gates to compute the internal memory and hidden state vectors:
+
+.. note::
+
+    :math:`\c_t=\bs\kappa_t\od\u_t+\bs\phi_t\od\c_{t-1}`
+
+    :math:`\h_t=\bs\omega_t\od\tanh(\c_t)`
+
+Finally, the output of the network :math:`\o_t` is obtained by applying the 
+output activaton function :math:`f^o` to an affine combination of the hidden 
+state neuron values:
+
+.. math::
+
+    \o_t=f^o(\W_o^T\h_t+\b_o)
+
+LSTMs can typically handle long sequences since the net gradients for the 
+internal memory states do not vanish over long time steps.
+This is because, by design, the memory state :math:`\c_{t-1}` at time 
+:math:`t-1` is linked to the memory state :math:`\c_t` at time :math:`t` via
+implicit weights fixed at 1 and biases fixed at 0, with linear activation.
+This allows the error to flow across time steps without vanishing or exploding.
+
+26.2.3 Training LSTMs
+^^^^^^^^^^^^^^^^^^^^^
+
+During backpropagation the net gradient vector at the output layer at time
+:math:`t` is computed by considering the partial derivatives of the activation 
+funciton, :math:`\pd\f_t^o` and the error function, :math:`\pd\bs\cE_{\x_t}` as
+follows:
+
+.. math::
+
+    \bs\delta_t^o=\pd\f_t^o\od\pd\bs\cE_{\x_t}
+
+where we assume that the output neurons are independent.
+
+In backpropagation there are two incoming connections to the internal memory
+vector :math:`\c_t`, one from :math:`\h_t` and the other from :math:`\c_{t+1}`.
+Therefore, the net gradient :math:`\delta_{ti}^c` at the internal memory neuron
+:math:`i` at time :math:`t` is given as
+
+.. math::
+
+    \delta_{ti}^c=\frac{\pd\cE_\x}{\pd net_{ti}^c}&=\frac{\pd\cE_\x}
+    {\pd net_{ti}^h}\cd\frac{\pd net_{ti}^h}{\pd c_{ti}}\cd\frac{\pd c_{ti}}
+    {\pd net_{ti}^c}+\frac{\pd\cE_\x}{\pd net_{t+1,i}^c}\cd
+    \frac{\pd net_{t+1,i}^c}{\pd c_{ti}}\cd\frac{\pd c_{ti}}{\pd net_{ti}^c}
+    
+    &=\delta_{ti}^h\cd\omega_{ti}(1-c_{ti}^2)+\delta_{t+1,i}^c\cd\phi_{t+1,i}
+
+where we use the fact that the internal memory vector implicitly uses an identity activation function, and furthermore
+
+.. math::
+
+    \frac{\pd net_{ti}^h}{\pd c_{ti}}&=\frac{\pd}{\pd c_{ti}}\{\omega_{ti}\cd\tanh(c_{ti})\}=\omega_{ti}(1-c_{ti}^2)
+
+    \frac{\pd net_{t+1,i}^c}{\pd c_{ti}}&=\frac{\pd}{\pd c_{ti}}\{\kappa_{t+1,i}
+    \cd u_{t+1,i}+\phi_{t+1,i}\cd c_{ti}\}=\phi_{t+1,i}
+
+The net gradient vector :math:`\bs\delta_t^c` at :math:`\bs\c_t` is therefore given as:
+
+.. math::
+
+    \bs\delta_t^c=\bs\delta_t^h\od\omega_t\od(\1-\c_t\od\c_t)+\bs\delta_{t+1}^c\od\bs\phi_{t+1}
+
+The forget gate has only one incoming edge in backpropagation, from 
+:math:`\c_t`, via the element-wise multiplication :math:`\bs\phi_t\od\c_{t-1}`,
+with sigmoid activation, therefore the net gradient is:
+
+.. math::
+
+    \delta_{ti}^\phi=\frac{\pd\cE_\x}{\pd net_{ti}^\phi}=\frac{\pd\cE_\x}
+    {\pd net_{ti}^c}\cd\frac{\pd net_{ti}^c}{\pd\phi_{ti}}\cd\frac{\pd\phi_{ti}}
+    {\pd net_{ti}^\phi}=\delta_{ti}^c\cd c_{t-1,i}\cd\phi_{ti}(1-\phi_{ti})
+
+where we used the fact that the forget gate uses sigmoid activation and
+
+.. math::
+
+    \frac{\pd net_{ti}^c}{\pd\phi_{ti}}=\frac{\pd}{\pd\phi_{ti}}\{\kappa_{ti}\cd 
+    u_{ti}+\phi_{ti}\cd c_{t-1,i}\}=c_{t-1,i}
+
+Across all forget gate neurons, the net gradient vector is therefore given as
+
+.. math::
+
+    \bs\delta_t^phi=\bs\delta_t^c\od\c_{t-1}\od(\1-\bs\phi_t)\od\bs\phi_t
+
+The input gate also has only one incoming edge in backpropagation, from 
+:math:`\c_t`, via the element-wise multiplication :math:`\bs\kappa_t\od\u_t`,
+with sigmoid activation.
+In a similar manner, as outlined above for :math:`\bs\delta_t^\phi`, the net
+gradient :math:`\bs\delta_t^\kappa` at the input gate :math:`\bs\kappa_t` is
+given as:
+
+.. math::
+
+    \bs\delta_t^\kappa=\bs\delta_t^c\od\u_t\od(\1-\bs\kappa_t)\od\bs\kappa_t
+
+The same reasoning applies to the update candidate :math:`\u_t`, which also has
+an incoming edge from :math:`\c_t` via :math:`\bs\kappa_t\od\u_t` and tanh
+activation, so the net gradient vector :math:`\bs\delta_t^u` at the update layer
+is
+
+.. math::
+
+    \bs\delta_t^u=\bs\delta_t^c\od\bs\kappa_t\od(\1-\u_t\od\u_t)
+
+Likewise, in backpropagation, there is one incoming connection to the output 
+gate from :math:`\h_t` via :math:`\bs\omega_t\od\tanh(\c)` with sigmoid 
+activation, therefore
+
+.. math::
+
+    \bs\delta_t^\omega=\bs\delta_t^h\od\tanh(\c_t)\od(\1-\omega_t)\od\omega_t
+
+Finally, to compute the net gradients at the hidden layer, note that gradients
+flow back to :math:`\h_t` from the following layers: 
+:math:`\bs\u_{t+1},\bs\kappa_{t+1},\bs\phi_{t+1},\bs\omega_{t+1},\o_t`.
+Therefore, the net gradient vector at the hidden state vector :math:`\bs\delta_t^h` is given as
+
+.. math::
+
+    \bs\delta_t^h=\W_o\bs\delta_t^o+\W_{h\kappa}\delta_{t+1}^\kappa+\W_{h\phi}
+    \bs\delta_{t+1}^\phi+\W_{h\omega}\bs\delta_{t+1}^\omega+\W_{hu}\bs
+    \delta_{t+1}^u
+
+The gradients for the weight matrix and bias vector at the output layer are given as:
+
+.. math::
+
+    \nabla_{\b_o}=\sum_{t=1}^\tau\bs\delta_t^o\quad\quad\nabla_{\w_o}=\sum_{t=1}^\tau\h_t\cd(\bs\delta_t^o)^T
+
+Likewise, the gradients for the weight matrices and bias vectors for the other layers are given as follows:
+
+.. math::
+
+    \nabla_{\b_\kappa}=\sum_{t=1}^\tau\bs\delta_t^\kappa\quad\quad
+    \nabla_{\W_\kappa}=\sum_{t=1}^\tau\x_t\cd(\bs\delta_t^\kappa)^T\quad\quad
+    \nabla_{\W_{h\kappa}}=\sum_{t=1}^\tau\h_{t-1}\cd(\bs\delta_t^\kappa)^T
+
+    \nabla_{\b_\phi}=\sum_{t=1}^\tau\bs\delta_t^\phi\quad\quad
+    \nabla_{\W_\phi}=\sum_{t=1}^\tau\x_t\cd(\bs\delta_t^\phi)^T\quad\quad
+    \nabla_{\W_{h\phi}}=\sum_{t=1}^\tau\h_{t-1}\cd(\bs\delta_t^\phi)^T
+
+    \nabla_{\b_\omega}=\sum_{t=1}^\tau\bs\delta_t^\omega\quad\quad
+    \nabla_{\W_\omega}=\sum_{t=1}^\tau\x_t\cd(\bs\delta_t^\omega)^T\quad\quad
+    \nabla_{\W_{h\omega}}=\sum_{t=1}^\tau\h_{t-1}\cd(\bs\delta_t^\omega)^T
+
+    \nabla_{\b_u}=\sum_{t=1}^\tau\bs\delta_t^u\quad\quad
+    \nabla_{\W_u}=\sum_{t=1}^\tau\x_t\cd(\bs\delta_t^u)^T\quad\quad
+    \nabla_{\W_{hu}}=\sum_{t=1}^\tau\h_{t-1}\cd(\bs\delta_t^u)^T
+
+Given these gradients, we can use the stochastic gradient descent approach to train the network.
