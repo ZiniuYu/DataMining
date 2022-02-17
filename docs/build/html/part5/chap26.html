@@ -117,6 +117,8 @@
 <li class="toctree-l4"><a class="reference internal" href="#bias-and-activation-functions">26.3.2 Bias and Activation Functions</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#padding-and-striding">26.3.3 Padding and Striding</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#generalized-aggregation-functions-pooling">26.3.4 Generalized Aggregation Functions: Pooling</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#deep-cnns">26.3.5 Deep CNNs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#training-cnns">26.3.6 Training CNNs</a></li>
 </ul>
 </li>
 </ul>
@@ -920,7 +922,7 @@ The <em>3D convolution</em> of <span class="math notranslate nohighlight">\(\X\)
 \rm{sum}(\X_k(2,1,m-r+1)\od\W)&amp;\cds&amp;\rm{sum}(\X_k(2,n-k+1,m-r+1)\od\W)\\
 \vds&amp;\dds&amp;\vds\\
 \rm{sum}(\X_k(n-k+1,1,m-r+1)\od\W)&amp;\cds&amp;\rm{sum}(\X_k(n-k+1,n-k+1,m-r+1)
-\od\W)\\\hline
+\od\W)\\
 \end{array}\right)\end{split}\]</div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -1047,7 +1049,99 @@ matrix.</p>
 <p>If we replace the summation with the average value over the element-wise product
 of <span class="math notranslate nohighlight">\(\Z_k^l(i,j,q)\)</span> and <span class="math notranslate nohighlight">\(\W\)</span>, we get</p>
 <div class="math notranslate nohighlight">
-\[\avg(\Z_k^l(i,j,q)\od\W)=\avg\{\]</div>
+\[ \begin{align}\begin{aligned}\rm{avg}(\Z_k^l(i,j,q)\od\W)&amp;=\underset{a=1,2,\cds,k;b=1,2,\cds,k;c=1,2,\cds,
+r}{\rm{avg}}\{z_{i+a-1,j+b-1,q+c-1}^l\cd w_{a,b,c}\}\\&amp;=\frac{1}{k^2\cd r}\cd\rm{sum}(\Z_k^l(i,j,q)\od\W)\end{aligned}\end{align} \]</div>
+<p><strong>Max-Pooling</strong></p>
+<p>If we replace the summation with the maximum value over the element-wise product
+of <span class="math notranslate nohighlight">\(\Z_k^l(i,j,q)\)</span> and <span class="math notranslate nohighlight">\(\W\)</span>, we get</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\max(\Z_k^l(i,j,q)\od\W)=\underset{a=1,2,\cds,k;b=1,2,\cds,k;c=1,2,\cds,r}{\max}\)</span>
+<span class="math notranslate nohighlight">\(\{z_{i+a-1,j+b-1,q+c-1}^l\cd w_{a,b,c}\}\)</span></p>
+</div>
+<p>The 3D convolution of <span class="math notranslate nohighlight">\(\Z^l\in\R^{n_l\times n_l\times m_l}\)</span> with filter
+<span class="math notranslate nohighlight">\(\W\in\R^{k\times k\times r}\)</span> using max-pooling, denoted
+<span class="math notranslate nohighlight">\(\Z^l*_\max\W\)</span>, results in a
+<span class="math notranslate nohighlight">\((n_l-k+1)\times(n_l-k+1)\times(m_l-r+1)\)</span>, given as:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\scriptsize
+\Z^l*_\max\W=\left(\begin{array}{ccc}
+\max(\X_k(1,1,1)\od\W)&amp;\cds&amp;\max(\X_k(1,n-k+1,1)\od\W)\\
+\max(\X_k(2,1,1)\od\W)&amp;\cds&amp;\max(\X_k(2,n-k+1,1)\od\W)\\
+\vds&amp;\dds&amp;\vds\\
+\max(\X_k(n-k+1,1,1)\od\W)&amp;\cds&amp;\max(\X_k(n-k+1,n-k+1,1)\od\W)\\
+\hline
+\max(\X_k(1,1,2)\od\W)&amp;\cds&amp;\max(\X_k(1,n-k+1,2)\od\W)\\
+\max(\X_k(2,1,2)\od\W)&amp;\cds&amp;\max(\X_k(2,n-k+1,2)\od\W)\\
+\vds&amp;\dds&amp;\vds\\
+\max(\X_k(n-k+1,1,2)\od\W)&amp;\cds&amp;\max(\X_k(n-k+1,n-k+1,2)\od\W)\\
+\hline
+\vds&amp;\vds&amp;\vds\\\hline
+\max(\X_k(1,1,m-r+1)\od\W)&amp;\cds&amp;\max(\X_k(1,n-k+1,m-r+1)\od\W)\\
+\max(\X_k(2,1,m-r+1)\od\W)&amp;\cds&amp;\max(\X_k(2,n-k+1,m-r+1)\od\W)\\
+\vds&amp;\dds&amp;\vds\\
+\max(\X_k(n-k+1,1,m-r+1)\od\W)&amp;\cds&amp;\max(\X_k(n-k+1,n-k+1,m-r+1)
+\od\W)
+\end{array}\right)\end{split}\]</div>
+<p><strong>Max-pooling in CNNs</strong></p>
+<p>Typically, max-pooling is used more often than avg-pooling.
+Also, for pooling it is very common to set the stride equal to the filter size
+<span class="math notranslate nohighlight">\((s=k)\)</span>, so that the aggregation function is applied over disjoint
+<span class="math notranslate nohighlight">\(k\times k\)</span> windows in each channel in <span class="math notranslate nohighlight">\(\Z^l\)</span>.
+More importantly, in pooling, the filter <span class="math notranslate nohighlight">\(\W\)</span> is by default taken to be a
+<span class="math notranslate nohighlight">\(k\times k\times 1\)</span> tensor all of whose weights are fixed as 1, so that
+<span class="math notranslate nohighlight">\(\W=\1_{k\times k\times 1}\)</span>.
+In other words, the filter weights are fixed at 1 and are not updated during backpropagation.
+Further, the filter uses a fixed zero bias (that is, <span class="math notranslate nohighlight">\(b=0\)</span>).
+Finally, note that pooling implicitly uses an identity activation function.
+As such, the convolution of <span class="math notranslate nohighlight">\(\Z^lom\R^{n_l\times n_l\times m_l}\)</span> with
+<span class="math notranslate nohighlight">\(\W\in\R^{k\times k\times 1}\)</span>, using stride <span class="math notranslate nohighlight">\(s=k\)</span>, results in a
+tensor <span class="math notranslate nohighlight">\(\Z^{l+1}\)</span> of size
+<span class="math notranslate nohighlight">\(\lfloor\frac{n_l}{s}\rfloor\times\lfloor\frac{n_l}{s}\rfloor\times m_l\)</span>.</p>
+</div>
+<div class="section" id="deep-cnns">
+<h3>26.3.5 Deep CNNs<a class="headerlink" href="#deep-cnns" title="Permalink to this headline">¶</a></h3>
+<p>Starting from the input layer, a deep CNN is comprised of multiple, typically
+alternating, convolution and pooling layers, followed by one or more fully
+connected layers, and then the final output layer.
+For each convolution and pooling layer we need to choose the window size
+<span class="math notranslate nohighlight">\(k\)</span> as well as the stride value <span class="math notranslate nohighlight">\(s\)</span>, and whether to use padding
+<span class="math notranslate nohighlight">\(p\)</span> or not.
+We also have to choose the non-linear activation functions for the convolution
+layers, and also the number of layers to consider.</p>
+</div>
+<div class="section" id="training-cnns">
+<h3>26.3.6 Training CNNs<a class="headerlink" href="#training-cnns" title="Permalink to this headline">¶</a></h3>
+<p>Consider a network with a single convolution layer and a max-pooling layer, followed by a fully connected layer.
+For simplicity, we assume that there is only one channel for the input <span class="math notranslate nohighlight">\(\X\)</span>, and further, we use only one filter.</p>
+<p><strong>Feed-forward Phase</strong></p>
+<p>Let <span class="math notranslate nohighlight">\(\D=\{\X_i,\y_i\}_{i=1}^n\)</span> denote the training data, comprising
+<span class="math notranslate nohighlight">\(n\)</span> tensors <span class="math notranslate nohighlight">\(\X_i\in\R^{n_0\times n_0\times m_0}\)</span> (<span class="math notranslate nohighlight">\(m_0=1\)</span>)
+and the corresponding response vector <span class="math notranslate nohighlight">\(\y_i\in\R^p\)</span>.
+Given a training pair <span class="math notranslate nohighlight">\((\X,\y)\in\D\)</span>, in the feed-forward phase, the
+predicted output <span class="math notranslate nohighlight">\(\o\)</span> is given via the following equations:</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\Z^1&amp;=f^1((\X*\W_0)+b_0)\\\Z^2&amp;=\Z^1*_{s_2,\max}\1_{k_2\times k_2}\\\z^3&amp;=f^3(\W_2^T\z^2+\b_2)\\\o&amp;=f^o(\W_o^T\z^3+\b_o)\end{aligned}\end{align} \]</div>
+<p>where <span class="math notranslate nohighlight">\(*_{s_2,\max}\)</span> denotes max-pooling with stride <span class="math notranslate nohighlight">\(s_2\)</span>.</p>
+<p><strong>backpropagation Phase</strong></p>
+<p>Given the true response <span class="math notranslate nohighlight">\(\y\)</span> and predicted output <span class="math notranslate nohighlight">\(\o\)</span>, we can use
+any loss function <span class="math notranslate nohighlight">\(\cE_\X\)</span> to evaluate the discrepancy between them.
+Let <span class="math notranslate nohighlight">\(\bs\delta^1, \bs\delta^2, \bs\delta^3\)</span> denote the net gradient
+vectors at layers <span class="math notranslate nohighlight">\(l=1,2,3\)</span>, respectively, and let <span class="math notranslate nohighlight">\(\bs\delta^o\)</span>
+denote the net gradient vector at the output layer.
+The output net gradient vector is obtained in the regular manner by computing
+the partial derivatives of the loss function (<span class="math notranslate nohighlight">\(\pd\bs\cE_\X\)</span>) and the
+activation function (<span class="math notranslate nohighlight">\(\pd\f^o\)</span>):</p>
+<div class="math notranslate nohighlight">
+\[\bs\delta^o=\pd\f^o\od\pd\bs\cE_\x\]</div>
+<p>assuming that the output neurons are independent.</p>
+<p>Since layer <span class="math notranslate nohighlight">\(l=3\)</span> is fully connected to the output layer, and likewise the
+max-pooling layer <span class="math notranslate nohighlight">\(l=2\)</span> is fully connected to <span class="math notranslate nohighlight">\(\Z^3\)</span>, the net
+gradients at these layers are computed as in a regular MLP</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\bs\delta^3&amp;=\pd\f^3\od(\W_o\cd\bs\delta^o)\\\bs\delta^2&amp;=\pd\f^2\od(\W_2\cd\bs\delta^3)=\W_2\cd\bs\delta^3\end{aligned}\end{align} \]</div>
+<p>The last step follows from the fact that <span class="math notranslate nohighlight">\(\pd\f^2=\1\)</span>, since max-pooling
+implicitly uses an identity activation function.</p>
 </div>
 </div>
 </div>
