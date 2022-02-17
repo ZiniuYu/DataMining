@@ -731,3 +731,308 @@ Likewise, the gradients for the weight matrices and bias vectors for the other l
     \nabla_{\W_{hu}}=\sum_{t=1}^\tau\h_{t-1}\cd(\bs\delta_t^u)^T
 
 Given these gradients, we can use the stochastic gradient descent approach to train the network.
+
+26.3 Convolutional Neural Networks
+----------------------------------
+
+A convolutional neural network (CNN) is essentially a *localized* and sparse 
+feedforward MLP that is designed to exploit spatial and/or temporal structure in 
+the input data. 
+In a regular MLP all of the neurons in layer :math:`l` are connected to all of the neurons in layer :math:`l+1`. 
+In contrast, a CNN connects a contiguous or adjacent subset of neurons in layer 
+:math:`l` to a single neuron in the next layer :math:`l+1`. 
+Different sliding windows comprising contiguous subsets of neurons in layer 
+:math:`l` connect to different neurons in layer :math:`l+1`.
+Furthermore, all of these sliding windows use *parameter sharing*, that is, the 
+same set of weights, called a *ﬁlter*, is used for all sliding windows. 
+Finally, different ﬁlters are used to automatically extract features from layer :math:`l` for use by layer :math:`l+1`.
+
+26.3.1 Convolutions
+^^^^^^^^^^^^^^^^^^^
+
+**1D Convolution**
+
+Let :math:`\x=(x_1,x_2,\cds,x_n)^T` be an input vector (a one-way or 1D input) with :math:`n` points.
+It is assumed that the input points :math:`x_i` are not independent, but rather, 
+there are dependencies between successive points.
+Let :math:`\w=(w_1,w_2,\cds,w_k)^T` be a vector of weights, called a *1D filter*, with :math:`k\leq n`.
+Here :math:`k` is also called the *window size*. 
+Let :math:`\x_k(i)` denote the window of :math:`\x` of length :math:`k` starting at position :math:`i`, given as
+
+.. math::
+
+    \x_k(i)=(x_i,x_{i+1},x_{i+2},\cds,x_{i+k-1})^T
+
+with :math:`1\leq i\leq n-k+1`.
+Given a vector :math:`\a\in\R^k`, define the summation operator as one that adds all the elements of the vector.
+That is,
+
+.. math::
+
+    \rm{sum}(\a)=\sum_{i=1}^ka_i
+
+A *1D convolution* between :math:`\x` and :math:`\w`, denoted by the asterisk symbol :math:`*`, is defined as
+
+.. math::
+
+    \x*\w=\bp\rm{sum}(\x_k(1)\od\w)&\cds&\rm{sum}(\x_k(n-k+1)\od\w)\ep^T
+
+.. note::
+
+    :math:`\dp\sum(\x_k(i)\od\w)=\sum_{j=1}^kx_{i+j-1}\cd w_j`
+
+for :math:`i=1,2,\cds,n-k+1`.
+We can see that the convolution of :math:`\x\in\R^n` and :math:`\w\in\R^k` results in a vector of length :math:`n-k+1`.
+
+**2D Convolution**
+
+Let :math:`\X` be an :math:`n\times n` input matrix, and let :math:`\W` be a 
+:math:`k\times k` matrix of weights, called a *2D filter*, with :math:`k\leq n`.
+Here :math:`k` is called the window size.
+Let :math:`\X_k(i,j)` denote the :math:`k\times k` submatrix of :math:`\X` 
+starting at row :math:`i` and column :math:`j`, defined as follows:
+
+.. math::
+
+    \X_k(i,j)=\bp x_{i,j}&x_{i,j+1}&\cds&x_{i,j+k-1}\\x_{i+1,j}&x_{i+1,j+1}&\cds
+    &x_{i+1,j+k-1}\\\vds&\vds&\dds&\vds\\x_{i+k-1,j}&x_{i+k-1,j+1}&\cds&
+    x_{i+k-1,j+k-1}\ep
+
+with :math:`1\leq i,j\leq n-k+1`.
+Given a :math:`k\times k` matrix :math:`\A\in\R^{k\times k}`, define the 
+summation operator as one that adds all the elements of the matrix.
+
+.. math::
+
+    \rm{sum}(\A)=\sum_{i=1}^k\sum_{j=1}^ka_{i,j}
+
+where :math:`a_{i,j}` is the element of :math:`\A` at row :math:`i` and column :math:`j`.
+The *2D convolution* of :math:`\X` and :math:`\W`, denoted :math:`\X*\W`, is defined as
+
+.. math::
+
+    \X*\W=\bp\rm{sum}(\X_k(1,1)\od\W)&\cds&\rm{sum}(\X_k(1,n-k+1)\od\W)\\
+    \rm{sum}(\X_k(2,1)\od\W)&\cds&\rm{sum}(\X_k(2,n-k+1)\od\W)\\\vds&\dds&\vds\\
+    \rm{sum}(\X_k(n-k+1,1)\od\W)&\cds&\rm{sum}(\X_k(n-k+1,n-k+1)\od\W)\ep
+
+.. note::
+
+    :math:`\dp\rm{\sum}(\X_k(i,j)\od\W)=\sum_{a=1}^k\sum_{b=1}^kx_{i+a-1,j+b-1}\cd w_{a,b}`
+
+for :math:`i,j=1,2,\cds,n-k+1`.
+The convolution of :math:`\X\in\R^{n\times n}` and :math:`\W\in\R^{k\times k}` 
+results in a :math:`(n-k+1)\times(n-k+1)` matrix.
+
+**3D Convolution**
+
+The three-dimensional matrix is also called a *3D tensor*.
+The first dimension comprises the rows, the second the columns, and the third the *channels*.
+Let :math:`\X` be an :math:`n\times n\times m` tensor, with :math:`n` rows, :math:`n` columns and :math:`m` channels.
+The assumption is that the input :math:`\X` is a collection of :math:`n\times n` 
+matrices obtained by applying :math:`m` *filters*, which specify the :math:`m` 
+channels.
+
+Let :math:`\W` be a :math:`k\times k\times r` tensor of weights, called a 
+*3D filter*, with :math:`k\leq n` and :math:`r\leq m`.
+Let :math:`\X_k(i,j,q)` denote the :math:`k\times k\times r` subtensor of 
+:math:`\X` starting at row :math:`i`, column :math:`j` and channel :math:`q`,
+with :math:`1\leq i,j\leq n-k+1` and :math:`1\leq q\leq m-r+1`.
+
+Given a :math:`k\times k\times r` tensor :math:`\A\in\R^{k\times k\times r}`,
+define the summation operator as one that adds all the elements of the tensor.
+
+.. math::
+
+    \rm{sum}(\A)=\sum_{i=1}^k\sum_{j=1}^k\sum_{q=1}^ra_{i,j,q}
+
+where :math:`a_{i,j,q}` is the element of :math:`\A` at row :math:`i`, column :math:`j` and channel :math:`q`.
+The *3D convolution* of :math:`\X` and :math:`\W`, denoted :math:`\X*\W`, is defined as:
+
+.. math::
+    \scriptsize
+    \X*\W=\left(\begin{array}{ccc}
+    \rm{sum}(\X_k(1,1,1)\od\W)&\cds&\rm{sum}(\X_k(1,n-k+1,1)\od\W)\\
+    \rm{sum}(\X_k(2,1,1)\od\W)&\cds&\rm{sum}(\X_k(2,n-k+1,1)\od\W)\\
+    \vds&\dds&\vds\\
+    \rm{sum}(\X_k(n-k+1,1,1)\od\W)&\cds&\rm{sum}(\X_k(n-k+1,n-k+1,1)\od\W)\\
+    \hline
+    \rm{sum}(\X_k(1,1,2)\od\W)&\cds&\rm{sum}(\X_k(1,n-k+1,2)\od\W)\\
+    \rm{sum}(\X_k(2,1,2)\od\W)&\cds&\rm{sum}(\X_k(2,n-k+1,2)\od\W)\\
+    \vds&\dds&\vds\\
+    \rm{sum}(\X_k(n-k+1,1,2)\od\W)&\cds&\rm{sum}(\X_k(n-k+1,n-k+1,2)\od\W)\\
+    \hline
+    \vds&\vds&\vds\\\hline
+    \rm{sum}(\X_k(1,1,m-r+1)\od\W)&\cds&\rm{sum}(\X_k(1,n-k+1,m-r+1)\od\W)\\
+    \rm{sum}(\X_k(2,1,m-r+1)\od\W)&\cds&\rm{sum}(\X_k(2,n-k+1,m-r+1)\od\W)\\
+    \vds&\dds&\vds\\
+    \rm{sum}(\X_k(n-k+1,1,m-r+1)\od\W)&\cds&\rm{sum}(\X_k(n-k+1,n-k+1,m-r+1)
+    \od\W)\\\hline
+    \end{array}\right)
+
+.. note::
+
+    :math:`\dp\rm{\sum}(\X_k(i,j,q)\od\W)=\sum_{a=1}^k\sum_{b=1}^k\sum_{c=1}^rx_{i+a-1,j+b-1,q+c-1}\cd w_{a,b,c}`
+
+for :math:`i,j=1,2,\cds,n-k+1` and :math:`q=1,2,\cds,m-r+1`.
+We can see that the convolution of :math:`\X\in\R^{n\times n\times m}` and
+:math:`\W\in\R^{k\times k\times r}` results in a 
+:math:`(n-k+1)\times(n-k+1)\times(m-r+1)` tensor.
+
+**3D Convolutions in CNNs**
+
+Typically in CNNs, we use a 3D filter :math:`\W` of size 
+:math:`k\times k\times m`, with the number of channels :math:`r=m`, the same as
+the number of channels in :math:`\X\in\R^{n\times n\times m}`.
+Let :math:`\X_k(i,j)` be the :math:`k\times k\times m` subtensor of :math:`\X`
+starting at row :math:`i` and column :math:`j`.
+Then the 3D convolution of :math:`\X` and :math:`\W` is given as:
+
+.. math::
+
+    \X*\W=\bp\rm{sum}(\X_k(1,1)\od\W)&\cds&\rm{sum}(\X_k(1,n-k+1)\od\W)\\
+    \rm{sum}(\X_k(2,1)\od\W)&\cds&\rm{sum}(\X_k(2,n-k+1)\od\W)\\\vds&\dds&\vds\\
+    \rm{sum}(\X_k(n-k+1,1)\od\W)&\cds&\rm{sum}(\X_k(n-k+1,n-k+1)\od\W)\ep
+
+We can see that when :math:`\W\in\R^{k\times k\times m`, its 3D convolution with
+:math:`\X\in\R^{n\times n\times m}` results in a :math:`(n-k+1)\times(n-k+1)`
+matrix, since there is no freedom to move in the third dimension.
+Henceforth, we will always assume that a 3D filter 
+:math:`\W\in\R^{k\times k\times m}` has the same number of channels as the 
+tensor :math:`\X` on which it is applied.
+Since the number of channels is fixed based on :math:`\X`, the only parameter 
+needed to fully specify :math:`\W` is the window size :math:`k`.
+
+26.3.2 Bias and Activation Functions
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Let :math:`\Z^l` be an :math:`n_l\times n_l\times m_l` tensor of neurons at 
+layer :math:`l` so that :math:`z_{i,j,q}^l` denotes the value of the neuron at 
+row :math:`i`, column :math:`j` and channel :math:`q` for layer :math:`l`, with 
+:math:`1\leq i,j\leq n_l` and :math:`1\leq q\leq m_l`.
+
+**Filter Bias**
+
+Let :math:`\W` be a :math:`k\times k\times m_l` 3D filter.
+Let :math:`b\in\R` be a scalar bias value for :math:`\W`, and let 
+:math:`\Z_k^l(i,j)` denote the :math:`k\times k\times m_l` subtensor of 
+:math:`\Z^l` at position :math:`(i,j)`.
+Then, the net signal at neuron :math:`z_{i,j}^{l+1}` in layer :math:`l+1` is given as
+
+.. math::
+
+    net_{i,j}^{l+1}=\rm{sum}(\Z_k^l(i,j)\od\W+b)
+
+and the value of the neuron :math:`\z_{i,j}^{l+1}` is obtained by applying some
+activation function :math:`f` to the net signal
+
+.. math::
+
+    z_{i,j}^{l+1}=f(\rm{sum}(\Z_k^l(i,j)\od\W+b))
+
+The activation function can be any of the ones typically used in neural networks.
+In the language of convolutions, the values of the neurons in layer :math:`l+1` is given as follows:
+
+.. math::
+
+    \Z^{l+1}=f((\Z^l*\W)\oplus b)
+
+**Multiple 3D Filters**
+
+We can observe that one 3D filter :math:`\W` with a corresponding bias term 
+:math:`b` results in a :math:`(n_l-k+1)\times(n_l-k+1)` matrix of neurons in 
+layer :math:`l+1`.
+Therefore, if we desire :math:`m_{k+1}` channels in layer :math:`l+1`, then we
+need :math:`m_{l+1}` different :math:`k\times k\times m_l` filters :math:`\W_q`
+with a corresponding bias term :math:`b_q`, to obtain the 
+:math:`(n_l-k+1)\times(n_l-k+1)\times m_{l+1}` tensor of neuron values at layer
+:math:`l+1`, given as
+
+.. math::
+
+    \Z^{l+1}=\{z_{i,j,q}^{l+1}=f(\rm{sum}(\Z_k^l(i,j)\od\W_q)+b_q)\}_{i,j=1,2,
+    \cds,n_l-k+1\rm{\ and\ }q=1,2,\cds,m_{l+1}}
+
+which can be written more compactly as
+
+.. math::
+
+    \Z^{l+1}=f((\Z^l*\W_1)\oplus b_1,(\Z^l*\W_2)\oplus b_2,\cds,(\Z^l*\W_{m_{l+1}})\oplus b_{m_{l+1}})
+
+where the activation function :math:`f` distributes over all of its arguments.
+
+In summary, a convolution layer takes as input the 
+:math:`n_l\times n_l\times m_l` tensor :math:`\Z^l` of neurons from layer 
+:math:`l`, and then computes the :math:`n_{l+1}\times n_{l+1}\times m_{l+1}` 
+tensor :math:`\Z^{l+1}` of neurons for the next layer :math:`l+1` via the
+convolution of :math:`\Z^l` with a set of :math:`m_{l+1}` different 3D filters
+of size :math:`k\times k\times m_l`, followed by adding the bias and applying 
+some non-linear activation function :math:`f`.
+Note that each 3D filter applied to :math:`\Z^l` results in a new channel in layer :math:`l+1`.
+Therefore, :math:`m_{l+1}` filters are used to yield :math:`m_{l+1}` channels at layer :math:`l+1`.
+
+26.3.3 Padding and Striding
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+One of the issues with the convolution operation is that the size of the tensors 
+will necessarily decrease in each successive CNN layer.
+If layer :math:`l` has size :math:`n_l\times n_l\times m_l`, and we use filters
+of size :math:`k\times k\times m_l`, then each channel in layer :math:`l+1` will
+have size :math:`(n_l-k+1)\times(n_l-k+1)`.
+That is the number of rows and columns for each successive tensor will shrink by
+:math:`k-1` and that will limit the number of layers the CNN can have.
+
+**Padding**
+
+To get around this limitation, a simple solution is to pad each tensor along 
+both the rows and columns in each channel by some default value, typically zero.
+Assume that we add :math:`p` rows both on top and bottom, and :math:`p` columns both on the left and right.
+With padding :math:`p`, the implicit size of layer :math:`l` tensor is then :math:`(n_l+2p)\times(n_l+2p)\times m_l`.
+Assume that each filter is of size :math:`k\times k\times m_l`, and assume there 
+are :math:`m_{l+1}` filters, then the size of the layer :math:`l+1` tensor will
+be :math:`(n_l+2p-k+1)\times(n_l+2p-k+1)\times m_{l+1}`.
+Since we want to preserve the size of the resulting tensor, we need to have
+
+.. math::
+
+    n_l+2p-k+1\geq n_l\Rightarrow p=\lceil\frac{k-1}{2}\rceil
+
+With padding, we can have arbitrarily deep convolutional layers in a CNN.
+
+**Striding**
+
+Striding is often used to sparsify the number of sliding windows used in the convolutions.
+That is, instead of considering all possible windows we increment the index 
+along both rows and columns by an integer value :math:`s\geq 1` called the 
+*stride*.
+A 3D convolution of :math:`\Z_l` of size :math:`n_l\times n_l\times m_l` with a 
+filter :math:`\W` of size :math:`k\times k\times m_l`, using stride :math:`s`,
+is given as:
+
+.. math::
+
+    \scriptsize
+    \Z^l*\W=\bp\rm{sum}(\Z_k^l(1,1)\od\W)&\rm{sum}(\Z_k^l(1,1+s)\od\W)&\cds&
+    \rm{sum}(\Z_k^l(1,1+t\cd s)\od\W)\\\rm{sum}(\Z_k^l(1+s,1)\od\W)&\rm{sum}
+    (\Z_k^l(1+s,1+s)\od\W)&\cds&\rm{sum}(\Z_k^l(1+s,1+t\cd s)\od\W)\\
+    \vds&\vds&\dds&\vds\\\rm{sum}(\Z_k^l(1+t\cd s,1)\od\W)&\rm{sum}
+    (\Z_k^l(1+t\cd s,1+s)\od\W)&\cds&\rm{sum}(\Z_k^l(1+t\cd s,1+t\cd s)\od\W)\ep
+
+where :math:`t=\lfloor\frac{n_l-k}{s}\rfloor`.
+We can observe that using stride :math:`s`, the convolution of 
+:math:`\Z_l\in\R^{n_l\times n_l\times m_l}` with 
+:math:`\W\in\R^{k\times k\times m_l}` results in a :math:`(t+1)\times(t+1)` 
+matrix.
+
+26.3.4 Generalized Aggregation Functions: Pooling
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Let :math:`\Z^l` be a :math:`n_l\times n_l\times m_l` tensor at layer :math:`l`.
+
+**Avg-Pooling**
+
+If we replace the summation with the average value over the element-wise product 
+of :math:`\Z_k^l(i,j,q)` and :math:`\W`, we get
+
+.. math::
+
+    \avg(\Z_k^l(i,j,q)\od\W)=\avg\{

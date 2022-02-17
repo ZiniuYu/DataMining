@@ -112,6 +112,13 @@
 <li class="toctree-l4"><a class="reference internal" href="#training-lstms">26.2.3 Training LSTMs</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="#convolutional-neural-networks">26.3 Convolutional Neural Networks</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#convolutions">26.3.1 Convolutions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#bias-and-activation-functions">26.3.2 Bias and Activation Functions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#padding-and-striding">26.3.3 Padding and Striding</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#generalized-aggregation-functions-pooling">26.3.4 Generalized Aggregation Functions: Pooling</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="chap27.html">Chapter 27 Regression Evaluation</a></li>
@@ -241,7 +248,8 @@
 \newcommand{\U}{\boldsymbol{\mathrm{U}}}
 \newcommand{\W}{\boldsymbol{\mathrm{W}}}
 \newcommand{\X}{\boldsymbol{\mathrm{X}}}
-\newcommand{\Y}{\boldsymbol{\mathrm{Y}}}\\\newcommand{\R}{\mathbb{R}}\\\newcommand{\cE}{\mathcal{E}}
+\newcommand{\Y}{\boldsymbol{\mathrm{Y}}}
+\newcommand{\Z}{\boldsymbol{\mathrm{Z}}}\\\newcommand{\R}{\mathbb{R}}\\\newcommand{\cE}{\mathcal{E}}
 \newcommand{\cX}{\mathcal{X}}
 \newcommand{\cY}{\mathcal{Y}}\\\newcommand{\ld}{\lambda}
 \newcommand{\Ld}{\boldsymbol{\mathrm{\Lambda}}}
@@ -808,6 +816,238 @@ Therefore, the net gradient vector at the hidden state vector <span class="math 
 \nabla_{\W_u}=\sum_{t=1}^\tau\x_t\cd(\bs\delta_t^u)^T\quad\quad
 \nabla_{\W_{hu}}=\sum_{t=1}^\tau\h_{t-1}\cd(\bs\delta_t^u)^T\end{aligned}\end{align} \]</div>
 <p>Given these gradients, we can use the stochastic gradient descent approach to train the network.</p>
+</div>
+</div>
+<div class="section" id="convolutional-neural-networks">
+<h2>26.3 Convolutional Neural Networks<a class="headerlink" href="#convolutional-neural-networks" title="Permalink to this headline">¶</a></h2>
+<p>A convolutional neural network (CNN) is essentially a <em>localized</em> and sparse
+feedforward MLP that is designed to exploit spatial and/or temporal structure in
+the input data.
+In a regular MLP all of the neurons in layer <span class="math notranslate nohighlight">\(l\)</span> are connected to all of the neurons in layer <span class="math notranslate nohighlight">\(l+1\)</span>.
+In contrast, a CNN connects a contiguous or adjacent subset of neurons in layer
+<span class="math notranslate nohighlight">\(l\)</span> to a single neuron in the next layer <span class="math notranslate nohighlight">\(l+1\)</span>.
+Different sliding windows comprising contiguous subsets of neurons in layer
+<span class="math notranslate nohighlight">\(l\)</span> connect to different neurons in layer <span class="math notranslate nohighlight">\(l+1\)</span>.
+Furthermore, all of these sliding windows use <em>parameter sharing</em>, that is, the
+same set of weights, called a <em>ﬁlter</em>, is used for all sliding windows.
+Finally, different ﬁlters are used to automatically extract features from layer <span class="math notranslate nohighlight">\(l\)</span> for use by layer <span class="math notranslate nohighlight">\(l+1\)</span>.</p>
+<div class="section" id="convolutions">
+<h3>26.3.1 Convolutions<a class="headerlink" href="#convolutions" title="Permalink to this headline">¶</a></h3>
+<p><strong>1D Convolution</strong></p>
+<p>Let <span class="math notranslate nohighlight">\(\x=(x_1,x_2,\cds,x_n)^T\)</span> be an input vector (a one-way or 1D input) with <span class="math notranslate nohighlight">\(n\)</span> points.
+It is assumed that the input points <span class="math notranslate nohighlight">\(x_i\)</span> are not independent, but rather,
+there are dependencies between successive points.
+Let <span class="math notranslate nohighlight">\(\w=(w_1,w_2,\cds,w_k)^T\)</span> be a vector of weights, called a <em>1D filter</em>, with <span class="math notranslate nohighlight">\(k\leq n\)</span>.
+Here <span class="math notranslate nohighlight">\(k\)</span> is also called the <em>window size</em>.
+Let <span class="math notranslate nohighlight">\(\x_k(i)\)</span> denote the window of <span class="math notranslate nohighlight">\(\x\)</span> of length <span class="math notranslate nohighlight">\(k\)</span> starting at position <span class="math notranslate nohighlight">\(i\)</span>, given as</p>
+<div class="math notranslate nohighlight">
+\[\x_k(i)=(x_i,x_{i+1},x_{i+2},\cds,x_{i+k-1})^T\]</div>
+<p>with <span class="math notranslate nohighlight">\(1\leq i\leq n-k+1\)</span>.
+Given a vector <span class="math notranslate nohighlight">\(\a\in\R^k\)</span>, define the summation operator as one that adds all the elements of the vector.
+That is,</p>
+<div class="math notranslate nohighlight">
+\[\rm{sum}(\a)=\sum_{i=1}^ka_i\]</div>
+<p>A <em>1D convolution</em> between <span class="math notranslate nohighlight">\(\x\)</span> and <span class="math notranslate nohighlight">\(\w\)</span>, denoted by the asterisk symbol <span class="math notranslate nohighlight">\(*\)</span>, is defined as</p>
+<div class="math notranslate nohighlight">
+\[\x*\w=\bp\rm{sum}(\x_k(1)\od\w)&amp;\cds&amp;\rm{sum}(\x_k(n-k+1)\od\w)\ep^T\]</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\sum(\x_k(i)\od\w)=\sum_{j=1}^kx_{i+j-1}\cd w_j\)</span></p>
+</div>
+<p>for <span class="math notranslate nohighlight">\(i=1,2,\cds,n-k+1\)</span>.
+We can see that the convolution of <span class="math notranslate nohighlight">\(\x\in\R^n\)</span> and <span class="math notranslate nohighlight">\(\w\in\R^k\)</span> results in a vector of length <span class="math notranslate nohighlight">\(n-k+1\)</span>.</p>
+<p><strong>2D Convolution</strong></p>
+<p>Let <span class="math notranslate nohighlight">\(\X\)</span> be an <span class="math notranslate nohighlight">\(n\times n\)</span> input matrix, and let <span class="math notranslate nohighlight">\(\W\)</span> be a
+<span class="math notranslate nohighlight">\(k\times k\)</span> matrix of weights, called a <em>2D filter</em>, with <span class="math notranslate nohighlight">\(k\leq n\)</span>.
+Here <span class="math notranslate nohighlight">\(k\)</span> is called the window size.
+Let <span class="math notranslate nohighlight">\(\X_k(i,j)\)</span> denote the <span class="math notranslate nohighlight">\(k\times k\)</span> submatrix of <span class="math notranslate nohighlight">\(\X\)</span>
+starting at row <span class="math notranslate nohighlight">\(i\)</span> and column <span class="math notranslate nohighlight">\(j\)</span>, defined as follows:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\X_k(i,j)=\bp x_{i,j}&amp;x_{i,j+1}&amp;\cds&amp;x_{i,j+k-1}\\x_{i+1,j}&amp;x_{i+1,j+1}&amp;\cds
+&amp;x_{i+1,j+k-1}\\\vds&amp;\vds&amp;\dds&amp;\vds\\x_{i+k-1,j}&amp;x_{i+k-1,j+1}&amp;\cds&amp;
+x_{i+k-1,j+k-1}\ep\end{split}\]</div>
+<p>with <span class="math notranslate nohighlight">\(1\leq i,j\leq n-k+1\)</span>.
+Given a <span class="math notranslate nohighlight">\(k\times k\)</span> matrix <span class="math notranslate nohighlight">\(\A\in\R^{k\times k}\)</span>, define the
+summation operator as one that adds all the elements of the matrix.</p>
+<div class="math notranslate nohighlight">
+\[\rm{sum}(\A)=\sum_{i=1}^k\sum_{j=1}^ka_{i,j}\]</div>
+<p>where <span class="math notranslate nohighlight">\(a_{i,j}\)</span> is the element of <span class="math notranslate nohighlight">\(\A\)</span> at row <span class="math notranslate nohighlight">\(i\)</span> and column <span class="math notranslate nohighlight">\(j\)</span>.
+The <em>2D convolution</em> of <span class="math notranslate nohighlight">\(\X\)</span> and <span class="math notranslate nohighlight">\(\W\)</span>, denoted <span class="math notranslate nohighlight">\(\X*\W\)</span>, is defined as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\X*\W=\bp\rm{sum}(\X_k(1,1)\od\W)&amp;\cds&amp;\rm{sum}(\X_k(1,n-k+1)\od\W)\\
+\rm{sum}(\X_k(2,1)\od\W)&amp;\cds&amp;\rm{sum}(\X_k(2,n-k+1)\od\W)\\\vds&amp;\dds&amp;\vds\\
+\rm{sum}(\X_k(n-k+1,1)\od\W)&amp;\cds&amp;\rm{sum}(\X_k(n-k+1,n-k+1)\od\W)\ep\end{split}\]</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\rm{\sum}(\X_k(i,j)\od\W)=\sum_{a=1}^k\sum_{b=1}^kx_{i+a-1,j+b-1}\cd w_{a,b}\)</span></p>
+</div>
+<p>for <span class="math notranslate nohighlight">\(i,j=1,2,\cds,n-k+1\)</span>.
+The convolution of <span class="math notranslate nohighlight">\(\X\in\R^{n\times n}\)</span> and <span class="math notranslate nohighlight">\(\W\in\R^{k\times k}\)</span>
+results in a <span class="math notranslate nohighlight">\((n-k+1)\times(n-k+1)\)</span> matrix.</p>
+<p><strong>3D Convolution</strong></p>
+<p>The three-dimensional matrix is also called a <em>3D tensor</em>.
+The first dimension comprises the rows, the second the columns, and the third the <em>channels</em>.
+Let <span class="math notranslate nohighlight">\(\X\)</span> be an <span class="math notranslate nohighlight">\(n\times n\times m\)</span> tensor, with <span class="math notranslate nohighlight">\(n\)</span> rows, <span class="math notranslate nohighlight">\(n\)</span> columns and <span class="math notranslate nohighlight">\(m\)</span> channels.
+The assumption is that the input <span class="math notranslate nohighlight">\(\X\)</span> is a collection of <span class="math notranslate nohighlight">\(n\times n\)</span>
+matrices obtained by applying <span class="math notranslate nohighlight">\(m\)</span> <em>filters</em>, which specify the <span class="math notranslate nohighlight">\(m\)</span>
+channels.</p>
+<p>Let <span class="math notranslate nohighlight">\(\W\)</span> be a <span class="math notranslate nohighlight">\(k\times k\times r\)</span> tensor of weights, called a
+<em>3D filter</em>, with <span class="math notranslate nohighlight">\(k\leq n\)</span> and <span class="math notranslate nohighlight">\(r\leq m\)</span>.
+Let <span class="math notranslate nohighlight">\(\X_k(i,j,q)\)</span> denote the <span class="math notranslate nohighlight">\(k\times k\times r\)</span> subtensor of
+<span class="math notranslate nohighlight">\(\X\)</span> starting at row <span class="math notranslate nohighlight">\(i\)</span>, column <span class="math notranslate nohighlight">\(j\)</span> and channel <span class="math notranslate nohighlight">\(q\)</span>,
+with <span class="math notranslate nohighlight">\(1\leq i,j\leq n-k+1\)</span> and <span class="math notranslate nohighlight">\(1\leq q\leq m-r+1\)</span>.</p>
+<p>Given a <span class="math notranslate nohighlight">\(k\times k\times r\)</span> tensor <span class="math notranslate nohighlight">\(\A\in\R^{k\times k\times r}\)</span>,
+define the summation operator as one that adds all the elements of the tensor.</p>
+<div class="math notranslate nohighlight">
+\[\rm{sum}(\A)=\sum_{i=1}^k\sum_{j=1}^k\sum_{q=1}^ra_{i,j,q}\]</div>
+<p>where <span class="math notranslate nohighlight">\(a_{i,j,q}\)</span> is the element of <span class="math notranslate nohighlight">\(\A\)</span> at row <span class="math notranslate nohighlight">\(i\)</span>, column <span class="math notranslate nohighlight">\(j\)</span> and channel <span class="math notranslate nohighlight">\(q\)</span>.
+The <em>3D convolution</em> of <span class="math notranslate nohighlight">\(\X\)</span> and <span class="math notranslate nohighlight">\(\W\)</span>, denoted <span class="math notranslate nohighlight">\(\X*\W\)</span>, is defined as:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\scriptsize
+\X*\W=\left(\begin{array}{ccc}
+\rm{sum}(\X_k(1,1,1)\od\W)&amp;\cds&amp;\rm{sum}(\X_k(1,n-k+1,1)\od\W)\\
+\rm{sum}(\X_k(2,1,1)\od\W)&amp;\cds&amp;\rm{sum}(\X_k(2,n-k+1,1)\od\W)\\
+\vds&amp;\dds&amp;\vds\\
+\rm{sum}(\X_k(n-k+1,1,1)\od\W)&amp;\cds&amp;\rm{sum}(\X_k(n-k+1,n-k+1,1)\od\W)\\
+\hline
+\rm{sum}(\X_k(1,1,2)\od\W)&amp;\cds&amp;\rm{sum}(\X_k(1,n-k+1,2)\od\W)\\
+\rm{sum}(\X_k(2,1,2)\od\W)&amp;\cds&amp;\rm{sum}(\X_k(2,n-k+1,2)\od\W)\\
+\vds&amp;\dds&amp;\vds\\
+\rm{sum}(\X_k(n-k+1,1,2)\od\W)&amp;\cds&amp;\rm{sum}(\X_k(n-k+1,n-k+1,2)\od\W)\\
+\hline
+\vds&amp;\vds&amp;\vds\\\hline
+\rm{sum}(\X_k(1,1,m-r+1)\od\W)&amp;\cds&amp;\rm{sum}(\X_k(1,n-k+1,m-r+1)\od\W)\\
+\rm{sum}(\X_k(2,1,m-r+1)\od\W)&amp;\cds&amp;\rm{sum}(\X_k(2,n-k+1,m-r+1)\od\W)\\
+\vds&amp;\dds&amp;\vds\\
+\rm{sum}(\X_k(n-k+1,1,m-r+1)\od\W)&amp;\cds&amp;\rm{sum}(\X_k(n-k+1,n-k+1,m-r+1)
+\od\W)\\\hline
+\end{array}\right)\end{split}\]</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\rm{\sum}(\X_k(i,j,q)\od\W)=\sum_{a=1}^k\sum_{b=1}^k\sum_{c=1}^rx_{i+a-1,j+b-1,q+c-1}\cd w_{a,b,c}\)</span></p>
+</div>
+<p>for <span class="math notranslate nohighlight">\(i,j=1,2,\cds,n-k+1\)</span> and <span class="math notranslate nohighlight">\(q=1,2,\cds,m-r+1\)</span>.
+We can see that the convolution of <span class="math notranslate nohighlight">\(\X\in\R^{n\times n\times m}\)</span> and
+<span class="math notranslate nohighlight">\(\W\in\R^{k\times k\times r}\)</span> results in a
+<span class="math notranslate nohighlight">\((n-k+1)\times(n-k+1)\times(m-r+1)\)</span> tensor.</p>
+<p><strong>3D Convolutions in CNNs</strong></p>
+<p>Typically in CNNs, we use a 3D filter <span class="math notranslate nohighlight">\(\W\)</span> of size
+<span class="math notranslate nohighlight">\(k\times k\times m\)</span>, with the number of channels <span class="math notranslate nohighlight">\(r=m\)</span>, the same as
+the number of channels in <span class="math notranslate nohighlight">\(\X\in\R^{n\times n\times m}\)</span>.
+Let <span class="math notranslate nohighlight">\(\X_k(i,j)\)</span> be the <span class="math notranslate nohighlight">\(k\times k\times m\)</span> subtensor of <span class="math notranslate nohighlight">\(\X\)</span>
+starting at row <span class="math notranslate nohighlight">\(i\)</span> and column <span class="math notranslate nohighlight">\(j\)</span>.
+Then the 3D convolution of <span class="math notranslate nohighlight">\(\X\)</span> and <span class="math notranslate nohighlight">\(\W\)</span> is given as:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\X*\W=\bp\rm{sum}(\X_k(1,1)\od\W)&amp;\cds&amp;\rm{sum}(\X_k(1,n-k+1)\od\W)\\
+\rm{sum}(\X_k(2,1)\od\W)&amp;\cds&amp;\rm{sum}(\X_k(2,n-k+1)\od\W)\\\vds&amp;\dds&amp;\vds\\
+\rm{sum}(\X_k(n-k+1,1)\od\W)&amp;\cds&amp;\rm{sum}(\X_k(n-k+1,n-k+1)\od\W)\ep\end{split}\]</div>
+<p>We can see that when <span class="math notranslate nohighlight">\(\W\in\R^{k\times k\times m\)</span>, its 3D convolution with
+<span class="math notranslate nohighlight">\(\X\in\R^{n\times n\times m}\)</span> results in a <span class="math notranslate nohighlight">\((n-k+1)\times(n-k+1)\)</span>
+matrix, since there is no freedom to move in the third dimension.
+Henceforth, we will always assume that a 3D filter
+<span class="math notranslate nohighlight">\(\W\in\R^{k\times k\times m}\)</span> has the same number of channels as the
+tensor <span class="math notranslate nohighlight">\(\X\)</span> on which it is applied.
+Since the number of channels is fixed based on <span class="math notranslate nohighlight">\(\X\)</span>, the only parameter
+needed to fully specify <span class="math notranslate nohighlight">\(\W\)</span> is the window size <span class="math notranslate nohighlight">\(k\)</span>.</p>
+</div>
+<div class="section" id="bias-and-activation-functions">
+<h3>26.3.2 Bias and Activation Functions<a class="headerlink" href="#bias-and-activation-functions" title="Permalink to this headline">¶</a></h3>
+<p>Let <span class="math notranslate nohighlight">\(\Z^l\)</span> be an <span class="math notranslate nohighlight">\(n_l\times n_l\times m_l\)</span> tensor of neurons at
+layer <span class="math notranslate nohighlight">\(l\)</span> so that <span class="math notranslate nohighlight">\(z_{i,j,q}^l\)</span> denotes the value of the neuron at
+row <span class="math notranslate nohighlight">\(i\)</span>, column <span class="math notranslate nohighlight">\(j\)</span> and channel <span class="math notranslate nohighlight">\(q\)</span> for layer <span class="math notranslate nohighlight">\(l\)</span>, with
+<span class="math notranslate nohighlight">\(1\leq i,j\leq n_l\)</span> and <span class="math notranslate nohighlight">\(1\leq q\leq m_l\)</span>.</p>
+<p><strong>Filter Bias</strong></p>
+<p>Let <span class="math notranslate nohighlight">\(\W\)</span> be a <span class="math notranslate nohighlight">\(k\times k\times m_l\)</span> 3D filter.
+Let <span class="math notranslate nohighlight">\(b\in\R\)</span> be a scalar bias value for <span class="math notranslate nohighlight">\(\W\)</span>, and let
+<span class="math notranslate nohighlight">\(\Z_k^l(i,j)\)</span> denote the <span class="math notranslate nohighlight">\(k\times k\times m_l\)</span> subtensor of
+<span class="math notranslate nohighlight">\(\Z^l\)</span> at position <span class="math notranslate nohighlight">\((i,j)\)</span>.
+Then, the net signal at neuron <span class="math notranslate nohighlight">\(z_{i,j}^{l+1}\)</span> in layer <span class="math notranslate nohighlight">\(l+1\)</span> is given as</p>
+<div class="math notranslate nohighlight">
+\[net_{i,j}^{l+1}=\rm{sum}(\Z_k^l(i,j)\od\W+b)\]</div>
+<p>and the value of the neuron <span class="math notranslate nohighlight">\(\z_{i,j}^{l+1}\)</span> is obtained by applying some
+activation function <span class="math notranslate nohighlight">\(f\)</span> to the net signal</p>
+<div class="math notranslate nohighlight">
+\[z_{i,j}^{l+1}=f(\rm{sum}(\Z_k^l(i,j)\od\W+b))\]</div>
+<p>The activation function can be any of the ones typically used in neural networks.
+In the language of convolutions, the values of the neurons in layer <span class="math notranslate nohighlight">\(l+1\)</span> is given as follows:</p>
+<div class="math notranslate nohighlight">
+\[\Z^{l+1}=f((\Z^l*\W)\oplus b)\]</div>
+<p><strong>Multiple 3D Filters</strong></p>
+<p>We can observe that one 3D filter <span class="math notranslate nohighlight">\(\W\)</span> with a corresponding bias term
+<span class="math notranslate nohighlight">\(b\)</span> results in a <span class="math notranslate nohighlight">\((n_l-k+1)\times(n_l-k+1)\)</span> matrix of neurons in
+layer <span class="math notranslate nohighlight">\(l+1\)</span>.
+Therefore, if we desire <span class="math notranslate nohighlight">\(m_{k+1}\)</span> channels in layer <span class="math notranslate nohighlight">\(l+1\)</span>, then we
+need <span class="math notranslate nohighlight">\(m_{l+1}\)</span> different <span class="math notranslate nohighlight">\(k\times k\times m_l\)</span> filters <span class="math notranslate nohighlight">\(\W_q\)</span>
+with a corresponding bias term <span class="math notranslate nohighlight">\(b_q\)</span>, to obtain the
+<span class="math notranslate nohighlight">\((n_l-k+1)\times(n_l-k+1)\times m_{l+1}\)</span> tensor of neuron values at layer
+<span class="math notranslate nohighlight">\(l+1\)</span>, given as</p>
+<div class="math notranslate nohighlight">
+\[\Z^{l+1}=\{z_{i,j,q}^{l+1}=f(\rm{sum}(\Z_k^l(i,j)\od\W_q)+b_q)\}_{i,j=1,2,
+\cds,n_l-k+1\rm{\ and\ }q=1,2,\cds,m_{l+1}}\]</div>
+<p>which can be written more compactly as</p>
+<div class="math notranslate nohighlight">
+\[\Z^{l+1}=f((\Z^l*\W_1)\oplus b_1,(\Z^l*\W_2)\oplus b_2,\cds,(\Z^l*\W_{m_{l+1}})\oplus b_{m_{l+1}})\]</div>
+<p>where the activation function <span class="math notranslate nohighlight">\(f\)</span> distributes over all of its arguments.</p>
+<p>In summary, a convolution layer takes as input the
+<span class="math notranslate nohighlight">\(n_l\times n_l\times m_l\)</span> tensor <span class="math notranslate nohighlight">\(\Z^l\)</span> of neurons from layer
+<span class="math notranslate nohighlight">\(l\)</span>, and then computes the <span class="math notranslate nohighlight">\(n_{l+1}\times n_{l+1}\times m_{l+1}\)</span>
+tensor <span class="math notranslate nohighlight">\(\Z^{l+1}\)</span> of neurons for the next layer <span class="math notranslate nohighlight">\(l+1\)</span> via the
+convolution of <span class="math notranslate nohighlight">\(\Z^l\)</span> with a set of <span class="math notranslate nohighlight">\(m_{l+1}\)</span> different 3D filters
+of size <span class="math notranslate nohighlight">\(k\times k\times m_l\)</span>, followed by adding the bias and applying
+some non-linear activation function <span class="math notranslate nohighlight">\(f\)</span>.
+Note that each 3D filter applied to <span class="math notranslate nohighlight">\(\Z^l\)</span> results in a new channel in layer <span class="math notranslate nohighlight">\(l+1\)</span>.
+Therefore, <span class="math notranslate nohighlight">\(m_{l+1}\)</span> filters are used to yield <span class="math notranslate nohighlight">\(m_{l+1}\)</span> channels at layer <span class="math notranslate nohighlight">\(l+1\)</span>.</p>
+</div>
+<div class="section" id="padding-and-striding">
+<h3>26.3.3 Padding and Striding<a class="headerlink" href="#padding-and-striding" title="Permalink to this headline">¶</a></h3>
+<p>One of the issues with the convolution operation is that the size of the tensors
+will necessarily decrease in each successive CNN layer.
+If layer <span class="math notranslate nohighlight">\(l\)</span> has size <span class="math notranslate nohighlight">\(n_l\times n_l\times m_l\)</span>, and we use filters
+of size <span class="math notranslate nohighlight">\(k\times k\times m_l\)</span>, then each channel in layer <span class="math notranslate nohighlight">\(l+1\)</span> will
+have size <span class="math notranslate nohighlight">\((n_l-k+1)\times(n_l-k+1)\)</span>.
+That is the number of rows and columns for each successive tensor will shrink by
+<span class="math notranslate nohighlight">\(k-1\)</span> and that will limit the number of layers the CNN can have.</p>
+<p><strong>Padding</strong></p>
+<p>To get around this limitation, a simple solution is to pad each tensor along
+both the rows and columns in each channel by some default value, typically zero.
+Assume that we add <span class="math notranslate nohighlight">\(p\)</span> rows both on top and bottom, and <span class="math notranslate nohighlight">\(p\)</span> columns both on the left and right.
+With padding <span class="math notranslate nohighlight">\(p\)</span>, the implicit size of layer <span class="math notranslate nohighlight">\(l\)</span> tensor is then <span class="math notranslate nohighlight">\((n_l+2p)\times(n_l+2p)\times m_l\)</span>.
+Assume that each filter is of size <span class="math notranslate nohighlight">\(k\times k\times m_l\)</span>, and assume there
+are <span class="math notranslate nohighlight">\(m_{l+1}\)</span> filters, then the size of the layer <span class="math notranslate nohighlight">\(l+1\)</span> tensor will
+be <span class="math notranslate nohighlight">\((n_l+2p-k+1)\times(n_l+2p-k+1)\times m_{l+1}\)</span>.
+Since we want to preserve the size of the resulting tensor, we need to have</p>
+<div class="math notranslate nohighlight">
+\[n_l+2p-k+1\geq n_l\Rightarrow p=\lceil\frac{k-1}{2}\rceil\]</div>
+<p>With padding, we can have arbitrarily deep convolutional layers in a CNN.</p>
+<p><strong>Striding</strong></p>
+<p>Striding is often used to sparsify the number of sliding windows used in the convolutions.
+That is, instead of considering all possible windows we increment the index
+along both rows and columns by an integer value <span class="math notranslate nohighlight">\(s\geq 1\)</span> called the
+<em>stride</em>.
+A 3D convolution of <span class="math notranslate nohighlight">\(\Z_l\)</span> of size <span class="math notranslate nohighlight">\(n_l\times n_l\times m_l\)</span> with a
+filter <span class="math notranslate nohighlight">\(\W\)</span> of size <span class="math notranslate nohighlight">\(k\times k\times m_l\)</span>, using stride <span class="math notranslate nohighlight">\(s\)</span>,
+is given as:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\scriptsize
+\Z^l*\W=\bp\rm{sum}(\Z_k^l(1,1)\od\W)&amp;\rm{sum}(\Z_k^l(1,1+s)\od\W)&amp;\cds&amp;
+\rm{sum}(\Z_k^l(1,1+t\cd s)\od\W)\\\rm{sum}(\Z_k^l(1+s,1)\od\W)&amp;\rm{sum}
+(\Z_k^l(1+s,1+s)\od\W)&amp;\cds&amp;\rm{sum}(\Z_k^l(1+s,1+t\cd s)\od\W)\\
+\vds&amp;\vds&amp;\dds&amp;\vds\\\rm{sum}(\Z_k^l(1+t\cd s,1)\od\W)&amp;\rm{sum}
+(\Z_k^l(1+t\cd s,1+s)\od\W)&amp;\cds&amp;\rm{sum}(\Z_k^l(1+t\cd s,1+t\cd s)\od\W)\ep\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(t=\lfloor\frac{n_l-k}{s}\rfloor\)</span>.
+We can observe that using stride <span class="math notranslate nohighlight">\(s\)</span>, the convolution of
+<span class="math notranslate nohighlight">\(\Z_l\in\R^{n_l\times n_l\times m_l}\)</span> with
+<span class="math notranslate nohighlight">\(\W\in\R^{k\times k\times m_l}\)</span> results in a <span class="math notranslate nohighlight">\((t+1)\times(t+1)\)</span>
+matrix.</p>
+</div>
+<div class="section" id="generalized-aggregation-functions-pooling">
+<h3>26.3.4 Generalized Aggregation Functions: Pooling<a class="headerlink" href="#generalized-aggregation-functions-pooling" title="Permalink to this headline">¶</a></h3>
+<p>Let <span class="math notranslate nohighlight">\(\Z^l\)</span> be a <span class="math notranslate nohighlight">\(n_l\times n_l\times m_l\)</span> tensor at layer <span class="math notranslate nohighlight">\(l\)</span>.</p>
+<p><strong>Avg-Pooling</strong></p>
+<p>If we replace the summation with the average value over the element-wise product
+of <span class="math notranslate nohighlight">\(\Z_k^l(i,j,q)\)</span> and <span class="math notranslate nohighlight">\(\W\)</span>, we get</p>
+<div class="math notranslate nohighlight">
+\[\avg(\Z_k^l(i,j,q)\od\W)=\avg\{\]</div>
 </div>
 </div>
 </div>
