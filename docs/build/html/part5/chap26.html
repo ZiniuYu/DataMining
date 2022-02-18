@@ -121,6 +121,10 @@
 <li class="toctree-l4"><a class="reference internal" href="#training-cnns">26.3.6 Training CNNs</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="#regularization">26.4 Regularization</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#l-2-regularization-for-deep-learning">26.4.1 <span class="math notranslate nohighlight">\(L_2\)</span> Regularization for Deep Learning</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="chap27.html">Chapter 27 Regression Evaluation</a></li>
@@ -1019,7 +1023,7 @@ are <span class="math notranslate nohighlight">\(m_{l+1}\)</span> filters, then 
 be <span class="math notranslate nohighlight">\((n_l+2p-k+1)\times(n_l+2p-k+1)\times m_{l+1}\)</span>.
 Since we want to preserve the size of the resulting tensor, we need to have</p>
 <div class="math notranslate nohighlight">
-\[n_l+2p-k+1\geq n_l\Rightarrow p=\lceil\frac{k-1}{2}\rceil\]</div>
+\[n_l+2p-k+1\geq n_l\Rightarrow p=\bigg\lceil\frac{k-1}{2}\bigg\rceil\]</div>
 <p>With padding, we can have arbitrarily deep convolutional layers in a CNN.</p>
 <p><strong>Striding</strong></p>
 <p>Striding is often used to sparsify the number of sliding windows used in the convolutions.
@@ -1141,7 +1145,125 @@ gradients at these layers are computed as in a regular MLP</p>
 <div class="math notranslate nohighlight">
 \[ \begin{align}\begin{aligned}\bs\delta^3&amp;=\pd\f^3\od(\W_o\cd\bs\delta^o)\\\bs\delta^2&amp;=\pd\f^2\od(\W_2\cd\bs\delta^3)=\W_2\cd\bs\delta^3\end{aligned}\end{align} \]</div>
 <p>The last step follows from the fact that <span class="math notranslate nohighlight">\(\pd\f^2=\1\)</span>, since max-pooling
-implicitly uses an identity activation function.</p>
+implicitly uses an identity activation function.
+Note that we also implicitly reshape the net gradient vector
+<span class="math notranslate nohighlight">\(\bs\delta^2\)</span>, so that its size is
+<span class="math notranslate nohighlight">\(((n_2)^2\times n_3)\times(n_3\times 1)=(n_2)^2\times 1=n_2\times n_2\)</span>, as
+desired.</p>
+<p>Consider the net gradient <span class="math notranslate nohighlight">\(\delta_{ij}^1\)</span> at neuron <span class="math notranslate nohighlight">\(z_{ij}^1\)</span> in
+layer <span class="math notranslate nohighlight">\(l=1\)</span> where <span class="math notranslate nohighlight">\(i,j=1,2,\cds,n_1\)</span>.
+Since we assume that the stride <span class="math notranslate nohighlight">\(s_2\)</span> equals the filter size <span class="math notranslate nohighlight">\(k_2\)</span>
+for the max-pooling layer, each sliding window in the convolution layer
+contributes only to one neuron at the max-pooling layer.
+Given stride <span class="math notranslate nohighlight">\(s_2=k_2\)</span>, the <span class="math notranslate nohighlight">\(k_2\times k_2\)</span> sliding window that
+contains <span class="math notranslate nohighlight">\(z_{ij}^1\)</span> is given as <span class="math notranslate nohighlight">\(\Z_{k_2}^1(a,b)\)</span>, where</p>
+<div class="math notranslate nohighlight">
+\[a=\bigg\lceil\frac{i}{s_2}\bigg\rceil\quad\quad b=\bigg\lceil\frac{j}{s_2}\bigg\rceil\]</div>
+<p>Due to the max aggregation function, the maximum valued element in
+<span class="math notranslate nohighlight">\(\Z_{k_2}^1(a,b)\)</span> specifies the value of neuron <span class="math notranslate nohighlight">\(z_{ab}^2\)</span> in the
+max-pooling layer <span class="math notranslate nohighlight">\(l=2\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}z_{ab}^2&amp;=\max_{i,j=1,2,\cds,k_2}\{z_{(a-1)\cd k_2+i,(b-1)\cd k_2+j}^1\}\\i^*,j^*&amp;=\underset{i,j=1,2,\cds,k_2}{\arg\max}\{z_{(a-1)\cd k_2+i,(b-1)\cd k_2+j}^1\}\end{aligned}\end{align} \]</div>
+<p>where <span class="math notranslate nohighlight">\(i^*, j^*\)</span> is the index of the maximum valued neuron in the window <span class="math notranslate nohighlight">\(\Z_{k_2}^1(a,b)\)</span>.</p>
+<p>The net gradient <span class="math notranslate nohighlight">\(\delta_{ij}^1\)</span> at neuron <span class="math notranslate nohighlight">\(z_{ij}^1\)</span> is therefore given as</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\delta_{ij}^1=\frac{\pd\cE_\X}{\pd net_{ij}^1}&amp;=\frac{\pd\cE_\X}
+{\pd net_{ab}^2}\cd\frac{\pd net_{ab}^2}{\pd z_{ij}^1}\cd\frac{\pd z_{ij}^1}
+{\pd net_{ij}^1}\\&amp;=\delta_{ab}^2\cd\frac{\pd net_{ab}^2}{\pd z_{ij}^1}\cd\pd f_{ij}^1\end{aligned}\end{align} \]</div>
+<p>where <span class="math notranslate nohighlight">\(net_{ij}^l\)</span> denotes the net input at neuron <span class="math notranslate nohighlight">\(z_{ij}^l\)</span> in layer <span class="math notranslate nohighlight">\(l\)</span>.
+However, since <span class="math notranslate nohighlight">\(net_{ab}^2=z_{i^*,j^*}^1\)</span>, the partial derivative
+<span class="math notranslate nohighlight">\(\frac{\pd net_{ab}^2}{\pd z_{ij}^1}\)</span> is either 1 or 0, depending on
+whether <span class="math notranslate nohighlight">\(z_{ij}^1\)</span> is the maximum element in the window
+<span class="math notranslate nohighlight">\(\Z_{k_2}^1(a,b)\)</span> or not.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\delta_{ij}^1=\left\{\begin{array}{lr}\delta_{ab}^2\cd\pd f_{ij}^1\quad
+\rm{if\ }i=i^*\rm{\ and\ }j=j^*\\0\quad\quad\quad\quad\rm{otherwise}
+\end{array}\right.\end{split}\]</div>
+<p>From the net gradients, we can compute the gradeitns of the weight matrices and bias parameters.
+For the fully connected layers, that is, between <span class="math notranslate nohighlight">\(l=2\)</span> and <span class="math notranslate nohighlight">\(l=3\)</span>, and <span class="math notranslate nohighlight">\(l=3\)</span> and <span class="math notranslate nohighlight">\(l=4\)</span>, we have</p>
+<div class="math notranslate nohighlight">
+\[\nabla_{\W_3}=\Z_3\cd(\bs\delta^o)^T\quad\quad
+\nabla_{\b_3}=\bs\delta^o\quad\quad
+\nabla_{\W_2}=\Z_2\cd(\bs\delta^3)^T\quad\quad
+\nabla_{\b_2}=\bs\delta^3\]</div>
+<p>where we treat <span class="math notranslate nohighlight">\(\Z^2\)</span> as a <span class="math notranslate nohighlight">\((n_2)^2\times 1\)</span> vector.</p>
+<p>Note that the weight matrix <span class="math notranslate nohighlight">\(\W_1\)</span> is fixed at <span class="math notranslate nohighlight">\(\1_{k_2\times k_2}\)</span>
+and the bias term <span class="math notranslate nohighlight">\(b_1\)</span> is also fixed at <span class="math notranslate nohighlight">\(0\)</span>, so there are no
+parameters to learn between the convolution and max-pooling layers.
+Finally, we compute the weight and bias gradients between the input and convolution layer as follows:</p>
+<div class="math notranslate nohighlight">
+\[\nabla_{\W_0}=\sum_{i=1}^{n_1}\sum_{j=1}^{n_1}\X_{k_1}(i,j)\cd\delta_{ij}^1
+\quad\quad\nabla_{b_0}=\sum_{i=1}^{n_1}\sum_{j=1}^{n_1}\delta_{ij}^1\]</div>
+<p>where we used the fact that the stride is <span class="math notranslate nohighlight">\(s_1=1\)</span>, and that <span class="math notranslate nohighlight">\(\W_0\)</span>
+is a shared filter for all <span class="math notranslate nohighlight">\(k_1\times k_1\)</span> windows of <span class="math notranslate nohighlight">\(\X\)</span>, with the
+shared bias value <span class="math notranslate nohighlight">\(b_0\)</span> for all windows.
+There are <span class="math notranslate nohighlight">\(n_1\times n_1\)</span> such windows, where <span class="math notranslate nohighlight">\(n_1=n_0-k_1+1\)</span>,
+therefore, to compute the weight and bias gradients, we sum over all the
+windows.
+Note that if there were multiple filters (this is, if <span class="math notranslate nohighlight">\(m_1&gt;1\)</span>), then the
+bias and weight gradients for the <span class="math notranslate nohighlight">\(j\)</span>th filter would be learned from the
+corresponding channel <span class="math notranslate nohighlight">\(j\)</span> in layer <span class="math notranslate nohighlight">\(l=1\)</span>.</p>
+</div>
+</div>
+<div class="section" id="regularization">
+<h2>26.4 Regularization<a class="headerlink" href="#regularization" title="Permalink to this headline">¶</a></h2>
+<p>Consider the squared error loss function, given as</p>
+<div class="math notranslate nohighlight">
+\[L(\y,\hat\y)=(\y-\hat\y)^2\]</div>
+<p>where <span class="math notranslate nohighlight">\(\y\)</span> is the true response and <span class="math notranslate nohighlight">\(\hat\y=\o\)</span> the predicted response on a given input <span class="math notranslate nohighlight">\(\x\)</span>.
+The goal of learning is the minimize the expected loss <span class="math notranslate nohighlight">\(E[L(\y,\hat\y)]=E[(\y-\hat\y)^2]\)</span>.</p>
+<p>The expected loss can be decomposed into three terms: noise, bias, and variance, given as</p>
+<div class="math notranslate nohighlight">
+\[E[(\y-\hat\y)^2]=E[(\y-E[\y])^2]+E[(\hat\y-E[\hat\y])^2]+E[(E[\hat\y]-E[\y])^2]\]</div>
+<p>In general, there is always a trade-off between reducing bias and reducing variance.</p>
+<p>Regularization is an approach whereby we constrain the model parameters to
+reduce overfitting, by reducing the variance at the csot of increasing the bias
+slightly.</p>
+<p>In general, for any learning model <span class="math notranslate nohighlight">\(M\)</span>, if <span class="math notranslate nohighlight">\(L(\y,\hat\y)\)</span> is some
+loss function for a given input <span class="math notranslate nohighlight">\(\x\)</span>, and <span class="math notranslate nohighlight">\(\bs{\rm\Theta}\)</span> denotes
+all the model parameters, where <span class="math notranslate nohighlight">\(\hat\y=M(\x|\bs{\rm\Theta})\)</span>.
+The learning objective is to find the parameters that minimize the loss over all instances:</p>
+<div class="math notranslate nohighlight">
+\[\min_{\bs{\rm\Theta}}J(\bs{\rm\Theta})=\sum_{i=1}^nL(\y_i,\hat{\y_i})=\sum_{i=1}^nL(\y_i,M(\x_o|\bs{\rm\Theta}))\]</div>
+<p>With regularization, we add a penalty on the parameters <span class="math notranslate nohighlight">\(\bs{\rm\Theta}\)</span>, to obtain the regularized objective:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\min_{\bs{\rm\Theta}}J(\bs{\rm\Theta})=\sum_{i=1}^nL(\y_i,\hat{\y_i})+\alpha R(\bs{\rm\Theta})\)</span></p>
+</div>
+<p>where <span class="math notranslate nohighlight">\(\alpha\geq 0\)</span> is the regularization constant.</p>
+<p>Let <span class="math notranslate nohighlight">\(\th\in\bs{\rm\Theta}\)</span> be a parameter of the regression model.
+Typical regularization functions include the <span class="math notranslate nohighlight">\(L_2\)</span> norm, the <span class="math notranslate nohighlight">\(L_1\)</span>
+norm, or even a combination of these, called the elastic-net:</p>
+<div class="math notranslate nohighlight">
+\[R_{L_2}=\lv\th\rv_2^2\quad\quad R_{L_1}(\th)=\lv\th\rv_1\quad\quad
+R_{\rm{elastic}}(\th)=\ld\cd\lv\th\rv_2^2+(1-\ld)\cd\lv\th\rv_1\]</div>
+<p>with <span class="math notranslate nohighlight">\(\ld\in[0,1]\)</span>.</p>
+<div class="section" id="l-2-regularization-for-deep-learning">
+<h3>26.4.1 <span class="math notranslate nohighlight">\(L_2\)</span> Regularization for Deep Learning<a class="headerlink" href="#l-2-regularization-for-deep-learning" title="Permalink to this headline">¶</a></h3>
+<p><strong>MLP with One Hidden Layer</strong></p>
+<p>Consider regularization in the context of a feed-forward MLP with a single hidden layer.
+Let the input <span class="math notranslate nohighlight">\(\x\in\R^d\)</span>, the hidden layer <span class="math notranslate nohighlight">\(\z\in\R^m\)</span> and let <span class="math notranslate nohighlight">\(\hat\y=\o\in\R^p\)</span>.
+The set of all the parameters of the model are</p>
+<div class="math notranslate nohighlight">
+\[\bs{\rm\Theta}=\{\W_h,\b_h,\W_o,\b_o\}\]</div>
+<p>Whereas it makes sense to penalize large weights, we usually do not penalize the
+bias terms since they are just thresholds that shift the activation function and
+there is no need to force them to be small values.
+The <span class="math notranslate nohighlight">\(L_2\)</span> regularized objective is therefore given as</p>
+<div class="math notranslate nohighlight">
+\[\min_{\bs{\rm\Theta}}J(\bs{\rm\Theta})=\cE_\x+\frac{\alpha}{w}\cd R_{L_2}
+(\W_o,\W_h)=\cE_\x+\frac{\alpha}{2}\cd(\lv\W_h\rv_F^2+\lv\W_o\rv_F^2)\]</div>
+<p>Here we added the factor <span class="math notranslate nohighlight">\(1/2\)</span> to the regularization term for convenience.
+For the <span class="math notranslate nohighlight">\(L_2\)</span> norm of the weight matrices, we use the <em>Frobenius norm</em>,
+which has the usual sense of <span class="math notranslate nohighlight">\(L_2\)</span>-norm, since for <span class="math notranslate nohighlight">\(n\times m\)</span>
+matrix <span class="math notranslate nohighlight">\(\A\)</span>, it is defined as</p>
+<div class="math notranslate nohighlight">
+\[\lv\A\rv_F^2=\sum_{i=1}^n\sum_{j=1}^ma_{ij}^2\]</div>
+<p>The regularized objective tries to minimize the individual weights for pairs of
+neurons between the input and hidden, and hidden and output layers.
+This has the effect of adding some bias to the model, but possibly reducing
+variance, since small weights are more robust to changes in the input data in
+terms of the predicted output values.</p>
 </div>
 </div>
 </div>
