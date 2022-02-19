@@ -1333,3 +1333,203 @@ This has the effect of adding some bias to the model, but possibly reducing
 variance, since small weights are more robust to changes in the input data in
 terms of the predicted output values.
 
+The regularized objective has two separate terms, one for the loss and the other 
+for the :math:`L_2` norm of the weight matrices.
+Recall that we have to compute the weight gradients :math:`\nabla_{w_{ij}}` and the bias gradients 
+:math:`\nabla_{b_j}` by computing
+
+.. math::
+
+    \nabla_{w_{ij}}&=\frac{\pd J(\bs{\rm\Theta})}{\pd w_{ij}}=\frac{\pd\cE_\x}
+    {\pd w_{ij}}+\frac{\alpha}{2}\cd\frac{\pd R_{L_2}(\W_o,\W_h)}{\pd w_{ij}}=
+    \delta_j\cd z_i+\alpha\cd w_{ij}
+
+    \nabla_{b_j}&=\frac{\pd J(\bs{\rm\Theta})}{\pd b_j}=\frac{\pd\cE_\x}
+    {\pd b_j}+\frac{\alpha}{2}\cd\frac{\pd R_{L_2}(\W_o,\W_h)}{\pd b_j}=
+    \frac{\pd\cE_\x}{\pd b_j}=\delta_j
+
+where :math:`\frac{\pd\cE_\x}{\pd w_{ij}}=\delta_j\cd z_i` and 
+:math:`\frac{\pd\cE_\x}{\pd b_j}=\delta_j`, and where 
+:math:`\delta_j=\frac{\pd\cE_\x}{\pd net_j}` is the net gradient.
+Further, since the squared :math:`L_2` norm of a weight matrix is simply the sum 
+of the squared weights, only the term :math:`w_{ij}^2` matters, and all other
+elements are just constant with respect to the weight :math:`w_{ij}` between
+neurons :math:`i` and :math:`j` (in :math:`\W_h` or :math:`\W_o`).
+Across all the neuron pairs between the hidden and output layer, we can write the update rule compactly as follows:
+
+.. math::
+
+    \nabla_{\w_o}=\z\cd\bs\delta_o^T+\alpha\cd\W_o\quad\quad\nabla_{\b_o}=\bs\delta_o
+
+where :math:`\bs\delta_o` is the net gradient vector for the output neurons, and 
+:math:`\z` is the vector of hidden layer neuron values.
+The gradient update rule using the regularized weight gradient matrix is given as
+
+.. math::
+    
+    \W_o&=\W_o-\eta\cd\nabla_{\w_o}=\W_o-\eta\cd(\z\cd\bs\delta_o^T+\alpha\cd
+    \W_o)=\W_o-\eta\cd\alpha\cd\W_o-\eta\cd(\z\cd\bs\delta_o^T)
+
+    &=(1-\eta\cd\alpha)\cd\W_o-\eta\cd(\z\cd\bs\delta_o^T)
+
+:math:`L_2` regularization is also called *weight decay*, since the updated 
+weight matrix uses decayed weights from teh previous step, using the decay 
+factor :math:`1-\eta\cd\alpha`.
+
+In a similar manner we get the weight and bias gradients between the input and hidden layers:
+
+.. math::
+
+    \nabla_{\w_h}=\x\cd\bs\delta_h^T+\alpha\cd\W_h\quad\quad\nabla_{\b_h}=\bs\delta_h
+
+The update rule for weight matrix between the input and hidden layers is therefore given as
+
+.. math::
+
+    \W_h=\W_h-\eta\cd\nabla_{\w_h}=(1-\eta\cd\alpha)\cd\W_h-\eta\cd(\x\cd\bs\delta_h^T)
+
+**Deep MLPs**
+
+We denote the input neurons as layer :math:`l=0`, the first hidden layer as 
+:math:`l=1`, the last hidden layer as :math:`l=h`, and the final output layer as 
+:math:`l=h+1`.
+The vector of neuron values for layer :math:`l` (for :math:`l=0,\cds,h+1`) is denoted as
+
+.. math::
+
+    \z^l=(z_1^l,\cds,z_{n_l}^l)^T
+
+where :math:`n_l` is the number of neurons in layer :math:`l`.
+Thus :math:`\x=\z^0` and :math:`\o=\z^{h+1}`.
+The weight matrix between neurons in lyaer :math:`l` and layer :math:`l+1` is 
+denoted :math:`\W_l\in\R^{n_l\times n_{l+1}}`, and the vector of bias terms from
+the bias neuron :math:`z_0^l` to neurons in layer :math:`l+1` is denoted 
+:math:`\b_l\in\R^{n_{l+1}}`, for :math:`l=1,\cds,h+1`.
+
+Given the error function :math:`\cE_\x`, the :math:`L_2` regularized objective function is
+
+.. math::
+
+    \min_{\bs{\rm\Theta}}J(\bs{\rm\Theta})&=\cE_\x+\frac{\alpha}{2}\cd R_{L_2}(\W_0,\W_1,\cds,\W_h)
+
+    &=\cE_\x+\frac{\alpha}{2}\cd\bigg(\sum_{l=0}^h\lv\W_l\rv_F^2\bigg)
+
+where the set of all the parameters of the model is :math:`\bs{\rm\Theta}=\{\W_0,\b_0,\W_1,\b_1,\cds,\W_h,\b_h\}`.
+Based on the derivation for the one hidden layer MLP from above, teh regularized gradient is given as:
+
+.. note::
+
+    :math:`\nabla_{\w_l}=\z^l\cd(\bs\delta^{l+1})^T+\alpha\cd\W_l`
+
+and the update rule for weight matrices is
+
+.. note::
+
+    :math:`\W_l=\W_l-\eta\cd\nabla_{\w_l}=(1-\eta\cd\alpha)\cd\W_l-\eta\cd(\z^l\cd(\bs\delta^{l+1})^T)`
+
+for :math:`l=0,2,\cds,h`, where :math:`\bs\delta^l` is the net gradient vector 
+for the hidden neurons in layer :math:`l`.
+We can thus observe that incorporating :math:`L_2` regularization within deep MLPs is relatively straightforward.
+Likewise, it is easy to incorporate :math:`L_2` regularization in other models like RNNs, CNNs, and so on.
+For :math:`L_1` regularization, we can apply the subgradeint approach outlined for :math:`L_1` regression or Lasso.
+
+26.4.2 Dropout Regularization
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The idea behind dropout regularization is to randomly set a certain fraction of 
+the neuron values in a layer to zero during training time. 
+The aim is to make the network more robust and to avoid overfitting at the same time. 
+By dropping random neurons for each training point, the network is forced to not rely on any specific set of edges.
+From the perspective of a given neuron, since it cannot rely on all its incoming 
+edges to be present, it has the effect of not concentrating the weight on 
+specific input edges, but rather the weight is spread out among the incoming 
+edges.
+However, note that while :math:`L_2` regularization directly changes the 
+objective function, dropout regularization is a form of 
+*structural regularization* that does not change the objective function, but 
+instead changes the network topology in terms of which connections are currently 
+active or inactive.
+
+**MLP with One Hidden Layer**
+
+Let the input :math:`\x\in\R^d`, the hidden layer :math:`\z\in\R^m` and let :math:`\hat\y=\o\in\R^p`.
+During the training phase, for each input :math:`\x`, we create a random mask 
+vector to drop a fraction of the hidden neurons.
+Formally, let :math:`r\in[0,1]` be the probability of keeping a neuron, so that the dropout probability is :math:`1-r`.
+We create a :math:`m`-dimensional multivariate Bernoulli vector 
+:math:`\u\in\{0,1\}^m`, called the *masking vector*, each of whose entries is 0
+with dropout probability :math:`1-r`, and 1 with probability :math:`r`.
+Let :math:`\u=(u_1,u_2,\cds,u_m)^T`, where
+
+.. math::
+
+    u_i=\left\{\begin{array}{lr}0\quad\rm{with\ probability\ }1-r\\1\quad\rm{with\ probability\ }r\end{array}\right.
+
+The feed-forward step is then given as
+
+.. math::
+
+    \z&=f^h(\b_h+\W_h^T\x)
+
+    \td\z&=\u\od\z
+
+    \o&=f^o(\b_o+\W_o^T\td\z)
+
+The net effect is that the masking vector zeros out the :math:`i`\ th hidden nueron in :math:`\td\z` if :math:`u_i=0`.
+Zeroing out also has the effect that during the backpropagation phase the error 
+gradients do not flow back from the zeroed out neurons in the hidden layer. 
+The effect is that any weights on edges adjacent to zeroed out hidden neurons are not updated.
+
+**Inverted Dropout**
+
+With :math:`r` as the probability of retaining a hidden neuron, its expected output value is
+
+.. math::
+
+    E[z_i]=r\cd z_i+(1-r)\cd 0=r\cd z_i
+
+On the other hand, since there is no dropout at test time, the outputs of the 
+hidden neurons will be higher at testing time.
+So one idea is to scale the hidden neuron values by :math:`r` at testing time.
+On the other hand, there is a simpler approach called *inverted dropout* that does not need a change at testing time.
+The idea is to rescale the hidden neurons after the dropout step during the training phase, as follows:
+
+.. math::
+
+    \z&=f(\b_h+\W_h^T\x)
+
+    \td\z&=\frac{1}{z}\cd(\u\od\z)
+
+    \o&=f(\b_o+\W_o^T\td\z)
+
+with the scaling factor :math:`1/r`, the expected value of each neuron remains the same as without dropout, since
+
+.. math::
+
+    E[z_i]=\frac{1}{r}\cd(r\cd z_i+(1-r)\cd o)=z_i
+
+**Dropout in Deeop MLPs**
+
+Let :math:`r_l\in[0,1]`, for :math:`l=1,2,\cds,h` denote the probability of 
+retaining a hidden neuron for layer :math:`l`, so that :math:`1-r_l` is the 
+dropout probability.
+One can also use a single rate :math:`r` for all the layers by setting :math:`r_l=r`.
+Define the masking vector for hidden layer :math:`l`, :math:`\u^l\in\{0,1\}^{n_l}`, as follows:
+
+.. math::
+
+    u_i^l=\left\{\begin{array}{lr}0\quad\rm{with\ probability\ }1-r_l\\1\quad
+    \rm{with\ probability\ }r_l\end{array}\right.
+
+The feed-forward step between layer :math:`l` and :math:`l+1` is then given as
+
+.. note::
+
+    :math:`\z^l=f(\b_l+\W_l^T\td\z^{l-1})`
+
+    :math:`\dp\td\z^l=\frac{1}{r_l}\cd(\u^l\od\z^l)`
+
+using inverted dropout.
+Usually, no masking is done for the input and output layers, so we can set :math:`r^0=1` and :math:`r^{h+1}=1`.
+Also note that there is no dropout at testing time.
+The dropout rates are hyperparameters of the model that have to be tuned ona separate validation dataset.
