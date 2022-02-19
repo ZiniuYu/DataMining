@@ -97,7 +97,10 @@
 <li class="toctree-l2"><a class="reference internal" href="chap24.html">Chapter 24 Logistic Regression</a></li>
 <li class="toctree-l2"><a class="reference internal" href="chap25.html">Chapter 25 Neural Networks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="chap26.html">Chapter 26 Deep Learning</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Chapter 27 Regression Evaluation</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Chapter 27 Regression Evaluation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#univariate-regression">27.1 Univariate Regression</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -246,6 +249,71 @@
 \newcommand{\ppr}{^{\prime\prime}}\end{aligned}\end{align} \]</div>
 <div class="section" id="chapter-27-regression-evaluation">
 <h1>Chapter 27 Regression Evaluation<a class="headerlink" href="#chapter-27-regression-evaluation" title="Permalink to this headline">¶</a></h1>
+<p>Given a set of predictor attributes or independent variables
+<span class="math notranslate nohighlight">\(X_1,X_2,\cds,X_d\)</span>, and given the response attribute <span class="math notranslate nohighlight">\(Y\)</span>, the goal
+of regression is to learn a <span class="math notranslate nohighlight">\(f\)</span>, such that</p>
+<div class="math notranslate nohighlight">
+\[Y=f(X_1,X_2,\cds,X_d)+\ve=f(\X)+\ve\]</div>
+<p>where <span class="math notranslate nohighlight">\(\X=(X_1,X_2,\cds,X_d)^T\)</span> is the <span class="math notranslate nohighlight">\(d\)</span>-dimensional multivariate
+random variable comprised of the predictor variables.
+Here, the random variable <span class="math notranslate nohighlight">\(\ve\)</span> denotes the inferent <em>error</em> in the
+response that is not explained by the linear model.</p>
+<p>When estimating the regression function <span class="math notranslate nohighlight">\(f\)</span>, we make assumptions about the form of <span class="math notranslate nohighlight">\(f\)</span>.
+Once we have estimated the bias and coefficients, we need to formulate a
+probabilistic model of regression to evaluate the learned model in terms of
+goodness of fit, confidence intervals for the parameters, and to test for the
+regression effects, namely whether <span class="math notranslate nohighlight">\(\X\)</span> really helps in predicting
+<span class="math notranslate nohighlight">\(Y\)</span>.
+In particular, we assume that even if the value of <span class="math notranslate nohighlight">\(\X\)</span> has been fixed,
+there can still be uncertainty in the response <span class="math notranslate nohighlight">\(Y\)</span>.
+Further, we will assume that the error <span class="math notranslate nohighlight">\(\ve\)</span> is independent of <span class="math notranslate nohighlight">\(\X\)</span>
+and follows a normal (or Guassian) distribution with mean <span class="math notranslate nohighlight">\(\mu=0\)</span> and
+variance <span class="math notranslate nohighlight">\(\sg^2\)</span>, that is, we assume that the errors are independent and
+identically distributed with zero mean and fixed variance.</p>
+<p>The probabilistic regression model comprises two components-the
+<em>deterministic component</em> comprising the observed predictor attributes, and the
+<em>random error component</em> comprising the error term, which is assumed to be
+independent of the predictor attributes.</p>
+<div class="section" id="univariate-regression">
+<h2>27.1 Univariate Regression<a class="headerlink" href="#univariate-regression" title="Permalink to this headline">¶</a></h2>
+<p>We assume that the true relationship can be modeled as a linear function</p>
+<div class="math notranslate nohighlight">
+\[Y=f(X)+\ve=\beta+\omega\cd X+\ve\]</div>
+<p>where <span class="math notranslate nohighlight">\(\omega\)</span> is the slope of the best fitting line and <span class="math notranslate nohighlight">\(\beta\)</span> is
+its intercept, and <span class="math notranslate nohighlight">\(\ve\)</span> is the random error variable that follows a
+normal distribution with mean <span class="math notranslate nohighlight">\(\mu=0\)</span> and variance <span class="math notranslate nohighlight">\(\sg^2\)</span>.</p>
+<p><strong>Mean and Variance of Response Variable</strong></p>
+<p>Consider a fixed value <span class="math notranslate nohighlight">\(x\)</span> for the independent variable <span class="math notranslate nohighlight">\(X\)</span>.
+The expected value of the response variable <span class="math notranslate nohighlight">\(Y\)</span> given <span class="math notranslate nohighlight">\(x\)</span> is</p>
+<div class="math notranslate nohighlight">
+\[E[Y|X=x]=E[\beta+\omega\cd x+\ve]=\beta+\omega\cd x+E[\ve]=\beta+\omega\cd x\]</div>
+<p>The last step follows from our assumption that <span class="math notranslate nohighlight">\(E[\ve]=\mu=0\)</span>.
+Also, since <span class="math notranslate nohighlight">\(x\)</span> is assumed to be fixed, and <span class="math notranslate nohighlight">\(\beta\)</span> and
+<span class="math notranslate nohighlight">\(\omega\)</span> are constants, the expected value
+<span class="math notranslate nohighlight">\(E[\beta+\omega\cd x]=\beta+\omega\cd x\)</span>.
+Next, consider the variance of <span class="math notranslate nohighlight">\(Y\)</span> given <span class="math notranslate nohighlight">\(X=x\)</span>, we have</p>
+<div class="math notranslate nohighlight">
+\[\rm{var}(Y|X=x)=\rm{var}(\beta+\omega\cd x+\ve)=\rm{var}(\beta+\omega\cd x)+\rm{var}(\ve)=0+\sg^2=\sg^2\]</div>
+<p>Here <span class="math notranslate nohighlight">\(\rm{var}(\beta+\omega\cd x)=0\)</span>, since <span class="math notranslate nohighlight">\(\beta,\omega,x\)</span> are all constants.
+Thus, given <span class="math notranslate nohighlight">\(X=x\)</span>, the response variable <span class="math notranslate nohighlight">\(Y\)</span> follows a normal
+distribution with mean <span class="math notranslate nohighlight">\(E[Y|X=x]=\beta+\omega\cd x\)</span>, and variance
+<span class="math notranslate nohighlight">\(\rm{var}(Y|X=x)=\sg^2\)</span></p>
+<p><strong>Estimated Parameters</strong></p>
+<p>The true parameters <span class="math notranslate nohighlight">\(\beta,\omega,\sg^2\)</span> are all unknown, and have to be
+estimated from the training data <span class="math notranslate nohighlight">\(\D\)</span> comprising <span class="math notranslate nohighlight">\(n\)</span> points
+<span class="math notranslate nohighlight">\(x_i\)</span> and corresponding response values <span class="math notranslate nohighlight">\(y_i\)</span>, for
+<span class="math notranslate nohighlight">\(i=1,2,\cds,n\)</span>.
+Let <span class="math notranslate nohighlight">\(b\)</span> and <span class="math notranslate nohighlight">\(w\)</span> denote the estimated bias and weight terms; we can
+then make predictions for any given value <span class="math notranslate nohighlight">\(x_i\)</span> as follows:</p>
+<div class="math notranslate nohighlight">
+\[\hat{y_i}=b+w\cd x_i\]</div>
+<p>The estimated bias <span class="math notranslate nohighlight">\(b\)</span> and weight <span class="math notranslate nohighlight">\(w\)</span> are obtained by minimizing the sum of squared errors, given as</p>
+<div class="math notranslate nohighlight">
+\[SSE=\sum_{i=1}^n(y_i-\hat{y_i})^2=\sum_{i=1}^n(y_i-b-w\cd x_i)^2\]</div>
+<p>with the least squares estimates given as</p>
+<div class="math notranslate nohighlight">
+\[w=\frac{\sg_{XY}}{\sg_X^2}\quad\quad b=\mu_Y-w\cd\mu_X\]</div>
+</div>
 </div>
 
 
