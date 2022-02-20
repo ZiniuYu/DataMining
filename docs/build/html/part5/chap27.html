@@ -98,7 +98,11 @@
 <li class="toctree-l2"><a class="reference internal" href="chap25.html">Chapter 25 Neural Networks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="chap26.html">Chapter 26 Deep Learning</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Chapter 27 Regression Evaluation</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#univariate-regression">27.1 Univariate Regression</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#univariate-regression">27.1 Univariate Regression</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#estimating-variance-sg-2">27.1.1 Estimating Variance (<span class="math notranslate nohighlight">\(\sg^2\)</span>)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#goodness-of-fit">27.1.2 Goodness of Fit</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -313,6 +317,73 @@ then make predictions for any given value <span class="math notranslate nohighli
 <p>with the least squares estimates given as</p>
 <div class="math notranslate nohighlight">
 \[w=\frac{\sg_{XY}}{\sg_X^2}\quad\quad b=\mu_Y-w\cd\mu_X\]</div>
+<div class="section" id="estimating-variance-sg-2">
+<h3>27.1.1 Estimating Variance (<span class="math notranslate nohighlight">\(\sg^2\)</span>)<a class="headerlink" href="#estimating-variance-sg-2" title="Permalink to this headline">¶</a></h3>
+<p>According to our model, the variance in prediction is entirely due to the random error term <span class="math notranslate nohighlight">\(\ve\)</span>.
+We can estimate this variance by considering the predicted value
+<span class="math notranslate nohighlight">\(\hat{y_i}\)</span> and its deviation from the true response <span class="math notranslate nohighlight">\(y_i\)</span>, that is,
+by looking at the residual error</p>
+<div class="math notranslate nohighlight">
+\[\epsilon_i=y_i-\hat{y_i}\]</div>
+<p>One of the properties of the estimated values <span class="math notranslate nohighlight">\(b\)</span> and <span class="math notranslate nohighlight">\(w\)</span> is that the sum of residual errors is zero, since</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\sum_{i=1}^n\epsilon_i&amp;=\sum_{i=1}^n(y_i-b-w\cd x_i)\\&amp;=\sum_{i=1}^n(y_i-\mu_Y+w\cd\mu_X-w\cd x_i)\\&amp;=\bigg(\sum_{i=1}^ny_i\bigg)-n\cd\mu_Y+w\cd\bigg(n\mu_X-\sum_{i=1}^n x_i\bigg)\\&amp;=n\cd\mu_Y-n\cd\mu_Y+w\cd(n\cd\mu_X-n\cd\mu_X)=0\end{aligned}\end{align} \]</div>
+<p>Thus, the expected value of <span class="math notranslate nohighlight">\(\epsilon_i\)</span> is zero, since <span class="math notranslate nohighlight">\(E[\epsilon_i]=\frac{1}{n}\sum_{i=1}^n\epsilon_i=0\)</span>.</p>
+<p>The estimated variance <span class="math notranslate nohighlight">\(\hat\sg^2\)</span> is given as</p>
+<div class="math notranslate nohighlight">
+\[\hat\sg^2=\rm{var}(\epsilon_i)=\frac{1}{n-2}\cd\sum_{i=1}^n(\epsilon_i-
+E[\epsilon_i])^2=\frac{1}{n-2}\cd\sum_{i=1}^n\epsilon_i^2=\frac{1}{n-2}\cd
+\sum_{i=1}^n(y_i-\hat{y_i})^2\]</div>
+<p>Thus, the estimated variance is</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\hat\sg^2=\frac{SSE}{n-2}\)</span></p>
+</div>
+<p>We divide by <span class="math notranslate nohighlight">\(n-2\)</span> to get an unbiased estimate, since <span class="math notranslate nohighlight">\(n-2\)</span> is the
+number of degrees of freedom for estimating SSE.</p>
+<p>The squared root of the variance is called the <em>standard error of regression</em></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\hat\sg=\sqrt{\frac{SSE}{n-2}}\)</span></p>
+</div>
+</div>
+<div class="section" id="goodness-of-fit">
+<h3>27.1.2 Goodness of Fit<a class="headerlink" href="#goodness-of-fit" title="Permalink to this headline">¶</a></h3>
+<p>The <em>total scatter</em>, also called <em>total sum of squares</em>, for the dependent variable <span class="math notranslate nohighlight">\(Y\)</span>, is defined as</p>
+<div class="math notranslate nohighlight">
+\[TSS=\sum_{i=1}^n(y_i-\mu_Y)^2\]</div>
+<p>The total scatter can be decomposed into two components by adding and subtracting <span class="math notranslate nohighlight">\(\hat{y_i}\)</span> as follows</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}TSS&amp;=\sum_{i=1}^n(y_i-\mu_Y)^2=\sum_{i=1}^n(y_i-\hat{y_i}+\hat{y_i}-\mu_Y)^2\\&amp;=\sum_{i=1}^n(y_i-\hat{y_i})^2+\sum_{i=1}^n(\hat{y_i}-\mu_Y)^2+2\sum_{i=1}^n(y_i-\hat{y_i})\cd(\hat{y_i}-\mu_Y)\\&amp;=\sum_{i=1}^n(y_i-\hat{y_i})^2+\sum_{i=1}^n(\hat{y_1}-\mu_Y)^2=SSE+RSS\end{aligned}\end{align} \]</div>
+<p>where we use the fact that <span class="math notranslate nohighlight">\(\sum_{i=1}^n(y_i-\hat{y_i})\cd(\hat{y_i}-\mu_Y)=0\)</span>, and</p>
+<div class="math notranslate nohighlight">
+\[RSS=\sum_{i=1}^n(\hat{y_i}-\mu_Y)^2\]</div>
+<p>is a new term called <em>regression sum of squares</em> that measures the squared
+deviation of the predictions from the true mean.
+TSS can thus be decomposed into two parts: SSE, which is the amount of variation
+not explained by the model, and RSS, which is the amount of variance explained
+by the model.
+Therefore, the fraction of the variation left unexplained by the model is given by the ration <span class="math notranslate nohighlight">\(\frac{SSE}{TSS}\)</span>.
+Conversely, the fraction of the variation that is explained by the model called
+the <em>coefficient of determination</em> or simply the <span class="math notranslate nohighlight">\(R^2\)</span> <em>statistic</em>, is
+given as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp R^2=\frac{TSS-SSE}{TSS}=1-\frac{SSE}{TSS}=\frac{RSS}{TSS}\)</span></p>
+</div>
+<p>The higher the <span class="math notranslate nohighlight">\(R^2\)</span> statistic the better the estimated model, with <span class="math notranslate nohighlight">\(R^2\in[0,1]\)</span>.</p>
+<p><strong>Geometry of Goodness of Fit</strong></p>
+<p>Recall that <span class="math notranslate nohighlight">\(Y\)</span> can be decomposed into two orthogonal parts</p>
+<div class="math notranslate nohighlight">
+\[Y=\hat{Y}+\bs\epsilon\]</div>
+<p>where <span class="math notranslate nohighlight">\(\hat{Y}\)</span> is the projection of <span class="math notranslate nohighlight">\(Y\)</span> onto the subspace spanned by <span class="math notranslate nohighlight">\(\{\1,X\}\)</span>.
+Using the fact that this subspace is the same as that spanned by the orthogonal
+vectors <span class="math notranslate nohighlight">\(\{\1,\bar{X}\}\)</span>, with <span class="math notranslate nohighlight">\(\bar{X}=X-\mu_X\cd\1\)</span>, we can
+further decompose <span class="math notranslate nohighlight">\(\hat{Y}\)</span> as follows</p>
+<div class="math notranslate nohighlight">
+\[\hat{Y}=\rm{proj}_\1(Y)\cd\1+\rm{proj}_{\bar{X}}(Y)\cd\bar{X}=\mu_Y\cd\1+
+\frac{Y^T\bar{X}}{\bar{X}^T\bar{X}}\cd\bar{X}=\mu_Y\cd\1+w\cd\bar{X}\]</div>
+</div>
 </div>
 </div>
 

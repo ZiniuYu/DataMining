@@ -93,3 +93,111 @@ with the least squares estimates given as
 .. math::
 
     w=\frac{\sg_{XY}}{\sg_X^2}\quad\quad b=\mu_Y-w\cd\mu_X
+
+27.1.1 Estimating Variance (:math:`\sg^2`)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+According to our model, the variance in prediction is entirely due to the random error term :math:`\ve`.
+We can estimate this variance by considering the predicted value 
+:math:`\hat{y_i}` and its deviation from the true response :math:`y_i`, that is, 
+by looking at the residual error
+
+.. math::
+
+    \epsilon_i=y_i-\hat{y_i}
+
+One of the properties of the estimated values :math:`b` and :math:`w` is that the sum of residual errors is zero, since
+
+.. math::
+
+    \sum_{i=1}^n\epsilon_i&=\sum_{i=1}^n(y_i-b-w\cd x_i)
+
+    &=\sum_{i=1}^n(y_i-\mu_Y+w\cd\mu_X-w\cd x_i)
+
+    &=\bigg(\sum_{i=1}^ny_i\bigg)-n\cd\mu_Y+w\cd\bigg(n\mu_X-\sum_{i=1}^n x_i\bigg)
+
+    &=n\cd\mu_Y-n\cd\mu_Y+w\cd(n\cd\mu_X-n\cd\mu_X)=0
+
+Thus, the expected value of :math:`\epsilon_i` is zero, since :math:`E[\epsilon_i]=\frac{1}{n}\sum_{i=1}^n\epsilon_i=0`.
+
+The estimated variance :math:`\hat\sg^2` is given as
+
+.. math::
+
+    \hat\sg^2=\rm{var}(\epsilon_i)=\frac{1}{n-2}\cd\sum_{i=1}^n(\epsilon_i-
+    E[\epsilon_i])^2=\frac{1}{n-2}\cd\sum_{i=1}^n\epsilon_i^2=\frac{1}{n-2}\cd
+    \sum_{i=1}^n(y_i-\hat{y_i})^2
+
+Thus, the estimated variance is
+
+.. note::
+
+    :math:`\dp\hat\sg^2=\frac{SSE}{n-2}`
+
+We divide by :math:`n-2` to get an unbiased estimate, since :math:`n-2` is the 
+number of degrees of freedom for estimating SSE.
+
+The squared root of the variance is called the *standard error of regression*
+
+.. note::
+
+    :math:`\dp\hat\sg=\sqrt{\frac{SSE}{n-2}}`
+
+27.1.2 Goodness of Fit
+^^^^^^^^^^^^^^^^^^^^^^
+
+The *total scatter*, also called *total sum of squares*, for the dependent variable :math:`Y`, is defined as
+
+.. math::
+
+    TSS=\sum_{i=1}^n(y_i-\mu_Y)^2
+
+The total scatter can be decomposed into two components by adding and subtracting :math:`\hat{y_i}` as follows
+
+.. math::
+
+    TSS&=\sum_{i=1}^n(y_i-\mu_Y)^2=\sum_{i=1}^n(y_i-\hat{y_i}+\hat{y_i}-\mu_Y)^2
+
+    &=\sum_{i=1}^n(y_i-\hat{y_i})^2+\sum_{i=1}^n(\hat{y_i}-\mu_Y)^2+2\sum_{i=1}^n(y_i-\hat{y_i})\cd(\hat{y_i}-\mu_Y)
+
+    &=\sum_{i=1}^n(y_i-\hat{y_i})^2+\sum_{i=1}^n(\hat{y_1}-\mu_Y)^2=SSE+RSS
+
+where we use the fact that :math:`\sum_{i=1}^n(y_i-\hat{y_i})\cd(\hat{y_i}-\mu_Y)=0`, and
+
+.. math::
+
+    RSS=\sum_{i=1}^n(\hat{y_i}-\mu_Y)^2
+
+is a new term called *regression sum of squares* that measures the squared 
+deviation of the predictions from the true mean.
+TSS can thus be decomposed into two parts: SSE, which is the amount of variation 
+not explained by the model, and RSS, which is the amount of variance explained 
+by the model.
+Therefore, the fraction of the variation left unexplained by the model is given by the ration :math:`\frac{SSE}{TSS}`.
+Conversely, the fraction of the variation that is explained by the model called 
+the *coefficient of determination* or simply the :math:`R^2` *statistic*, is
+given as
+
+.. note::
+
+    :math:`\dp R^2=\frac{TSS-SSE}{TSS}=1-\frac{SSE}{TSS}=\frac{RSS}{TSS}`
+
+The higher the :math:`R^2` statistic the better the estimated model, with :math:`R^2\in[0,1]`.
+
+**Geometry of Goodness of Fit**
+
+Recall that :math:`Y` can be decomposed into two orthogonal parts
+
+.. math::
+
+    Y=\hat{Y}+\bs\epsilon
+
+where :math:`\hat{Y}` is the projection of :math:`Y` onto the subspace spanned by :math:`\{\1,X\}`.
+Using the fact that this subspace is the same as that spanned by the orthogonal 
+vectors :math:`\{\1,\bar{X}\}`, with :math:`\bar{X}=X-\mu_X\cd\1`, we can 
+further decompose :math:`\hat{Y}` as follows
+
+.. math::
+
+    \hat{Y}=\rm{proj}_\1(Y)\cd\1+\rm{proj}_{\bar{X}}(Y)\cd\bar{X}=\mu_Y\cd\1+
+    \frac{Y^T\bar{X}}{\bar{X}^T\bar{X}}\cd\bar{X}=\mu_Y\cd\1+w\cd\bar{X}
