@@ -101,6 +101,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#univariate-regression">27.1 Univariate Regression</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#estimating-variance-sg-2">27.1.1 Estimating Variance (<span class="math notranslate nohighlight">\(\sg^2\)</span>)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#goodness-of-fit">27.1.2 Goodness of Fit</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#inference-about-regression-coefficient-and-bias-term">27.1.3 Inference about Regression Coefficient and Bias Term</a></li>
 </ul>
 </li>
 </ul>
@@ -383,6 +384,78 @@ further decompose <span class="math notranslate nohighlight">\(\hat{Y}\)</span> 
 <div class="math notranslate nohighlight">
 \[\hat{Y}=\rm{proj}_\1(Y)\cd\1+\rm{proj}_{\bar{X}}(Y)\cd\bar{X}=\mu_Y\cd\1+
 \frac{Y^T\bar{X}}{\bar{X}^T\bar{X}}\cd\bar{X}=\mu_Y\cd\1+w\cd\bar{X}\]</div>
+<p>Likewise, the vector <span class="math notranslate nohighlight">\(Y\)</span> and <span class="math notranslate nohighlight">\(\hat{Y}\)</span> can be centered by
+subtracting their projections along the vector <span class="math notranslate nohighlight">\(\1\)</span></p>
+<div class="math notranslate nohighlight">
+\[\bar{Y}=Y-\mu_Y\cd\1\quad\quad\hat{\bar{Y}}=\hat{Y}-\mu_Y\cd\1=w\cd\bar{X}\]</div>
+<p>The centered vectors <span class="math notranslate nohighlight">\(\bar{Y},\hat{\bar{Y}},\bar{X}\)</span> all lie in the
+<span class="math notranslate nohighlight">\(n-1\)</span> dimensional subspace orthogonal to the vector <span class="math notranslate nohighlight">\(\1\)</span>.</p>
+<p>In this subspace, the centered vectors <span class="math notranslate nohighlight">\(\bar{Y}\)</span> and
+<span class="math notranslate nohighlight">\(\hat{\bar{Y}}\)</span>, and the error vector <span class="math notranslate nohighlight">\(\bs\epsilon\)</span> form a right
+triangle, since <span class="math notranslate nohighlight">\(\hat{\bar{Y}}\)</span> is the orthogonal projection of
+<span class="math notranslate nohighlight">\(\bar{Y}\)</span> onto the vector <span class="math notranslate nohighlight">\(\bar{X}\)</span>.
+Noting that <span class="math notranslate nohighlight">\(\bs\epsilon=Y-\hat{Y}=\bar{Y}-\hat{\bar{Y}}\)</span>, by the Pythagoras theorem, we have</p>
+<div class="math notranslate nohighlight">
+\[\lv\bar{Y}\rv^2=\lv\hat{\bar{Y}}\rv^2+\lv\bs\epsilon\rv^2=\lv\hat{\bar{Y}}\rv^2+\lv Y-\hat{Y}\rv^2\]</div>
+<p>This equation is equivalent to the decomposition of the total scatter, TSS, into
+sum of squared erros, SSE, and residual sum of squares, RSS.</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}TSS&amp;=\sum_{i=1}^n(y_i-\mu_Y)^2=\lv T-\mu_Y\cd\1\rv^2=\lv\bar{Y}\rv^2\\RSS&amp;=\sum_{i=1}^n(\hat{y_i}-\mu_Y)^2=\lv\hat{Y}-\mu_Y\cd\1\rv^2=\lv\hat{\bar{Y}}\rv^2\\SSE&amp;=\lv\bs\epsilon\rv^2=\lv Y-\hat{Y}\rv^2\end{aligned}\end{align} \]</div>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\lv\bar{Y}\rv^2&amp;=\lv\hat{\bar{Y}}\rv^2+\lv Y-\hat{Y}\rv^2\\\lv Y-\mu_Y\cd\1\rv^2&amp;=\lv\hat{Y}-\mu_Y\cd\1\rv^2+\lv Y-\hat{Y}\rv^2\\TSS&amp;=RSS+SSE\end{aligned}\end{align} \]</div>
+<p>Notice further that since <span class="math notranslate nohighlight">\(\bar{Y},\hat{\bar{Y}},\bs\epsilon\)</span> form a right
+triangle, the cosine of the angle between <span class="math notranslate nohighlight">\(\bar{Y}\)</span> and
+<span class="math notranslate nohighlight">\(\hat{\bar{Y}}\)</span> is given as the ratio of the base to the hypotenuse.
+On the other hand, the cosine of the angle is also the correlation between
+<span class="math notranslate nohighlight">\(Y\)</span> and <span class="math notranslate nohighlight">\(\hat{Y}\)</span> denoted <span class="math notranslate nohighlight">\(\rho_{Y\hat{Y}}\)</span>.
+Thus, we have:</p>
+<div class="math notranslate nohighlight">
+\[\rho_{Y\hat{Y}}=\cos\th=\frac{\lv\hat{\bar{Y}}\rv}{\lv\bar{Y}\rv}\]</div>
+<p>We can observe that</p>
+<div class="math notranslate nohighlight">
+\[\lv\hat{\bar{Y}}\rv=\rho_{Y\hat{Y}}\cd\lv\bar{Y}\rv\]</div>
+<p>Note that, whereas <span class="math notranslate nohighlight">\(|\rho_{Y\hat{Y}}|\leq 1\)</span>, due to the projection
+operation, the angle between <span class="math notranslate nohighlight">\(Y\)</span> and <span class="math notranslate nohighlight">\(\hat{Y}\)</span> is always less than
+or equal to <span class="math notranslate nohighlight">\(90^\circ\)</span>, which means that <span class="math notranslate nohighlight">\(\rho_{Y\hat{Y}}\in[0,1]\)</span>
+for univariate regression.
+Thus, the predicted response vector <span class="math notranslate nohighlight">\(\hat{\bar{Y}}\)</span> is smaller than the
+true response vector <span class="math notranslate nohighlight">\(\bar{Y}\)</span> by an amount equal to the correlation
+between them.
+Furthermore, the coefficient of determination is the same as the squared
+correlation between <span class="math notranslate nohighlight">\(Y\)</span> and <span class="math notranslate nohighlight">\(\hat{Y}\)</span></p>
+<div class="math notranslate nohighlight">
+\[R^2=\frac{RSS}{TSS}=\frac{\lv\hat{\bar{Y}}\rv^2}{\lv\bar{Y}\rv^2}=\rho^2_{Y\hat{Y}}\]</div>
+</div>
+<div class="section" id="inference-about-regression-coefficient-and-bias-term">
+<h3>27.1.3 Inference about Regression Coefficient and Bias Term<a class="headerlink" href="#inference-about-regression-coefficient-and-bias-term" title="Permalink to this headline">¶</a></h3>
+<p>The estimated values of the bias and regression coefficient, <span class="math notranslate nohighlight">\(b\)</span> and
+<span class="math notranslate nohighlight">\(w\)</span>, are only point estimates for the true parameters <span class="math notranslate nohighlight">\(\beta\)</span> and
+<span class="math notranslate nohighlight">\(\omega\)</span>.
+To obtain confidence intervals for these parameters, we treat each <span class="math notranslate nohighlight">\(y_i\)</span>
+as a random variable for the response given the corresponding fixed value
+<span class="math notranslate nohighlight">\(x_i\)</span>.
+These random variables are all independent and identically distributed as
+<span class="math notranslate nohighlight">\(Y\)</span>, with expected value <span class="math notranslate nohighlight">\(\beta+\omega\cd x_i\)</span> and variance
+<span class="math notranslate nohighlight">\(\sg^2\)</span>.
+On the other hand, the <span class="math notranslate nohighlight">\(x_i\)</span> values are fixed <em>a priori</em> and therefore
+<span class="math notranslate nohighlight">\(\mu_X\)</span> and <span class="math notranslate nohighlight">\(\sg_X^2\)</span> are also fixed values.</p>
+<p>We can now treat <span class="math notranslate nohighlight">\(b\)</span> and <span class="math notranslate nohighlight">\(w\)</span> as random variables, with</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}b&amp;=\mu_Y-w\cd\mu_X\\w&amp;=\frac{\sum_{i=1}^n(x_i-\mu_X)(y_i-\mu_Y)}{\sum_{i=1}^n(x_i-\mu_X)^2}=
+\frac{1}{s_X}\sum_{i=1}^n(x_i-\mu_X)\cd y_i=\sum_{i=1}^nc_i\cd y_i\end{aligned}\end{align} \]</div>
+<p>where <span class="math notranslate nohighlight">\(c_i\)</span> is a constant, given as</p>
+<div class="math notranslate nohighlight">
+\[c_i=\frac{x_i-\mu_X}{s_X}\]</div>
+<p>and <span class="math notranslate nohighlight">\(s_X=\sum_{i=1}^n(x_i-\mu_X)^2\)</span> is the total scatter for <span class="math notranslate nohighlight">\(X\)</span>,
+defined as the sum of squared deviations of <span class="math notranslate nohighlight">\(x_i\)</span> from its mean
+<span class="math notranslate nohighlight">\(\mu_X\)</span>.
+We also use the fact that</p>
+<div class="math notranslate nohighlight">
+\[\sum_{i=1}^n(x_i-\mu_X)\cd\mu_Y=\mu_Y\cd\sum_{i=1}^n(x_i-\mu_X)=0\]</div>
+<p>Note that</p>
+<div class="math notranslate nohighlight">
+\[\sum_{i=1}^nc_i=\frac{1}{s_X}\sum_{i=1}^n(x_i-\mu_X)=0\]</div>
+<p><strong>Mean and Variance of Regression Coefficient</strong></p>
 </div>
 </div>
 </div>

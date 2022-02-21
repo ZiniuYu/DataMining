@@ -201,3 +201,120 @@ further decompose :math:`\hat{Y}` as follows
 
     \hat{Y}=\rm{proj}_\1(Y)\cd\1+\rm{proj}_{\bar{X}}(Y)\cd\bar{X}=\mu_Y\cd\1+
     \frac{Y^T\bar{X}}{\bar{X}^T\bar{X}}\cd\bar{X}=\mu_Y\cd\1+w\cd\bar{X}
+
+Likewise, the vector :math:`Y` and :math:`\hat{Y}` can be centered by 
+subtracting their projections along the vector :math:`\1`
+
+.. math::
+
+    \bar{Y}=Y-\mu_Y\cd\1\quad\quad\hat{\bar{Y}}=\hat{Y}-\mu_Y\cd\1=w\cd\bar{X}
+
+The centered vectors :math:`\bar{Y},\hat{\bar{Y}},\bar{X}` all lie in the 
+:math:`n-1` dimensional subspace orthogonal to the vector :math:`\1`.
+
+In this subspace, the centered vectors :math:`\bar{Y}` and 
+:math:`\hat{\bar{Y}}`, and the error vector :math:`\bs\epsilon` form a right 
+triangle, since :math:`\hat{\bar{Y}}` is the orthogonal projection of 
+:math:`\bar{Y}` onto the vector :math:`\bar{X}`.
+Noting that :math:`\bs\epsilon=Y-\hat{Y}=\bar{Y}-\hat{\bar{Y}}`, by the Pythagoras theorem, we have
+
+.. math::
+
+    \lv\bar{Y}\rv^2=\lv\hat{\bar{Y}}\rv^2+\lv\bs\epsilon\rv^2=\lv\hat{\bar{Y}}\rv^2+\lv Y-\hat{Y}\rv^2
+
+This equation is equivalent to the decomposition of the total scatter, TSS, into 
+sum of squared erros, SSE, and residual sum of squares, RSS.
+
+.. math::
+
+    TSS&=\sum_{i=1}^n(y_i-\mu_Y)^2=\lv T-\mu_Y\cd\1\rv^2=\lv\bar{Y}\rv^2
+
+    RSS&=\sum_{i=1}^n(\hat{y_i}-\mu_Y)^2=\lv\hat{Y}-\mu_Y\cd\1\rv^2=\lv\hat{\bar{Y}}\rv^2
+
+    SSE&=\lv\bs\epsilon\rv^2=\lv Y-\hat{Y}\rv^2
+
+.. math::
+
+    \lv\bar{Y}\rv^2&=\lv\hat{\bar{Y}}\rv^2+\lv Y-\hat{Y}\rv^2
+
+    \lv Y-\mu_Y\cd\1\rv^2&=\lv\hat{Y}-\mu_Y\cd\1\rv^2+\lv Y-\hat{Y}\rv^2
+
+    TSS&=RSS+SSE
+
+Notice further that since :math:`\bar{Y},\hat{\bar{Y}},\bs\epsilon` form a right 
+triangle, the cosine of the angle between :math:`\bar{Y}` and 
+:math:`\hat{\bar{Y}}` is given as the ratio of the base to the hypotenuse.
+On the other hand, the cosine of the angle is also the correlation between 
+:math:`Y` and :math:`\hat{Y}` denoted :math:`\rho_{Y\hat{Y}}`.
+Thus, we have:
+
+.. math::
+
+    \rho_{Y\hat{Y}}=\cos\th=\frac{\lv\hat{\bar{Y}}\rv}{\lv\bar{Y}\rv}
+
+We can observe that
+
+.. math::
+
+    \lv\hat{\bar{Y}}\rv=\rho_{Y\hat{Y}}\cd\lv\bar{Y}\rv
+
+Note that, whereas :math:`|\rho_{Y\hat{Y}}|\leq 1`, due to the projection 
+operation, the angle between :math:`Y` and :math:`\hat{Y}` is always less than
+or equal to :math:`90^\circ`, which means that :math:`\rho_{Y\hat{Y}}\in[0,1]`
+for univariate regression.
+Thus, the predicted response vector :math:`\hat{\bar{Y}}` is smaller than the 
+true response vector :math:`\bar{Y}` by an amount equal to the correlation 
+between them.
+Furthermore, the coefficient of determination is the same as the squared 
+correlation between :math:`Y` and :math:`\hat{Y}`
+
+.. math::
+
+    R^2=\frac{RSS}{TSS}=\frac{\lv\hat{\bar{Y}}\rv^2}{\lv\bar{Y}\rv^2}=\rho^2_{Y\hat{Y}}
+
+27.1.3 Inference about Regression Coefficient and Bias Term
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The estimated values of the bias and regression coefficient, :math:`b` and 
+:math:`w`, are only point estimates for the true parameters :math:`\beta` and 
+:math:`\omega`.
+To obtain confidence intervals for these parameters, we treat each :math:`y_i` 
+as a random variable for the response given the corresponding fixed value 
+:math:`x_i`.
+These random variables are all independent and identically distributed as 
+:math:`Y`, with expected value :math:`\beta+\omega\cd x_i` and variance 
+:math:`\sg^2`.
+On the other hand, the :math:`x_i` values are fixed *a priori* and therefore 
+:math:`\mu_X` and :math:`\sg_X^2` are also fixed values.
+
+We can now treat :math:`b` and :math:`w` as random variables, with
+
+.. math::
+
+    b&=\mu_Y-w\cd\mu_X
+
+    w&=\frac{\sum_{i=1}^n(x_i-\mu_X)(y_i-\mu_Y)}{\sum_{i=1}^n(x_i-\mu_X)^2}=
+    \frac{1}{s_X}\sum_{i=1}^n(x_i-\mu_X)\cd y_i=\sum_{i=1}^nc_i\cd y_i
+
+where :math:`c_i` is a constant, given as
+
+.. math::
+
+    c_i=\frac{x_i-\mu_X}{s_X}
+
+and :math:`s_X=\sum_{i=1}^n(x_i-\mu_X)^2` is the total scatter for :math:`X`, 
+defined as the sum of squared deviations of :math:`x_i` from its mean 
+:math:`\mu_X`.
+We also use the fact that
+
+.. math::
+
+    \sum_{i=1}^n(x_i-\mu_X)\cd\mu_Y=\mu_Y\cd\sum_{i=1}^n(x_i-\mu_X)=0
+
+Note that
+
+.. math::
+
+    \sum_{i=1}^nc_i=\frac{1}{s_X}\sum_{i=1}^n(x_i-\mu_X)=0
+
+**Mean and Variance of Regression Coefficient**
