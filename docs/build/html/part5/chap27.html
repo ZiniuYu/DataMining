@@ -456,6 +456,41 @@ We also use the fact that</p>
 <div class="math notranslate nohighlight">
 \[\sum_{i=1}^nc_i=\frac{1}{s_X}\sum_{i=1}^n(x_i-\mu_X)=0\]</div>
 <p><strong>Mean and Variance of Regression Coefficient</strong></p>
+<p>The expected value of <span class="math notranslate nohighlight">\(w\)</span> is given as</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}E[w]&amp;=E\bigg[\sum_{i=1}^nc_iy_i\bigg]=\sum_{i=1}^nc_i\cd E[y_i]=\sum_{i=1}^nc_i(\beta+\omega\cd x_i)\\&amp;=\beta\sum_{i=1}^nc_i+\omega\cd\sum_{i=1}^nc_i\cd x_i=\frac{\omega}{s_X}\cd
+\sum_{i=1}^n(x_i-\mu_X)\cd x_i=\frac{\omega}{s_X}\cd s_X=\omega\end{aligned}\end{align} \]</div>
+<p>which follows from the observation that <span class="math notranslate nohighlight">\(\sum_{i=1}^nc_i=0\)</span>, and further</p>
+<div class="math notranslate nohighlight">
+\[s_X=\sum_{i=1}^n(x_i-\mu_X)^2=\bigg(\sum_{i=1}^nx_i^2\bigg)-n\cd\mu_X^2=\sum_{i=1}^n(x_i-\mu_X)\cd x_i\]</div>
+<p>Thus, <span class="math notranslate nohighlight">\(w\)</span> is an unbiased estimator for the true parameter <span class="math notranslate nohighlight">\(\omega\)</span>.
+Using the fact that the variables <span class="math notranslate nohighlight">\(y_i\)</span> are independent and identically
+distributed as <span class="math notranslate nohighlight">\(Y\)</span>, we can compute the variance of <span class="math notranslate nohighlight">\(w\)</span> as follows</p>
+<div class="math notranslate nohighlight">
+\[\rm{var}(w)=\rm{var}\bigg(\sum_{i=1}^nc_i\cd y_i\bigg)=\sum_{i=1}^nc_i^2\cd
+\rm{var}(y_i)=\sg^2\cd\sum_{i=1}^nc_i^2=\frac{\sg^2}{s_X}\]</div>
+<p>since <span class="math notranslate nohighlight">\(c_i\)</span> is a constant, <span class="math notranslate nohighlight">\(\rm{var}(y_i)=\sg^2\)</span>, and further</p>
+<div class="math notranslate nohighlight">
+\[\sum_{i=1}^nc_i^2=\frac{1}{s^2_X}\cd\sum_{i=1}^n(x_i-\mu_X)^2=\frac{s_X}{s^2_X}=\frac{1}{s_X}\]</div>
+<p>The standard deviation of <span class="math notranslate nohighlight">\(w\)</span>, also called the standard error of <span class="math notranslate nohighlight">\(w\)</span>, is given as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\rm{se}(w)=\sqrt{\rm{var}(w)}=\frac{\sg}{\sqrt{s_X}}\)</span></p>
+</div>
+<p><strong>Mean and Variance of Bias Term</strong></p>
+<p>The expected value of <span class="math notranslate nohighlight">\(b\)</span> is given as</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}E[b]&amp;=E[\mu_Y-w\cd\mu_X]=E\bigg[\frac{1}{n}\sum_{i=1}^ny_i-w\cd\mu_x\bigg]\\&amp;=\bigg(\frac{1}{n}\cd\sum_{i=1}^nE[y_i]\bigg)-\mu_X\cd E[w]=\bigg(
+\frac{1}{n}\sum_{i=1}^n(\beta+\omega\cd x_i)\bigg)-\omega\cd\mu_X\\&amp;=\beta+\omega\cd\mu_X-\omega\cd\mu_X=\beta\end{aligned}\end{align} \]</div>
+<p>Thus, <span class="math notranslate nohighlight">\(b\)</span> is an unbiased estimator for the true parameter <span class="math notranslate nohighlight">\(beta\)</span>.</p>
+<p>Using the observation that all <span class="math notranslate nohighlight">\(y_i\)</span> are independent, the variance of the bias term can be computed as follows</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\rm{var}(b)&amp;=\rm{var}(\mu_Y-w\cd\mu_X)\\&amp;=\rm{var}\bigg(\frac{1}{n}\sum_{i=1}^ny_i\bigg)+\rm{var}(\mu_X\cd w)\\&amp;=\frac{1}{n^2}\cd n\sg^2+\mu_X^2\cd\rm{var}(w)=\frac{1}{n}\cd\sg^2+\mu_X^2\cd\frac{\sg^2}{s_X}\\&amp;=\bigg(\frac{1}{n}+\frac{\mu_X^2}{s_X}\bigg)\cd\sg^2\end{aligned}\end{align} \]</div>
+<p>The standard deviation of <span class="math notranslate nohighlight">\(b\)</span>, also called the standard error of <span class="math notranslate nohighlight">\(b\)</span>, is given as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\rm{se}(b)=\sqrt{\rm{var}(b)}=\sg\cd\sqrt{\frac{1}{n}+\frac{\mu_X^2}{s_X}}\)</span></p>
+</div>
 </div>
 </div>
 </div>

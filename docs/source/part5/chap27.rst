@@ -318,3 +318,73 @@ Note that
     \sum_{i=1}^nc_i=\frac{1}{s_X}\sum_{i=1}^n(x_i-\mu_X)=0
 
 **Mean and Variance of Regression Coefficient**
+
+The expected value of :math:`w` is given as
+
+.. math::
+
+    E[w]&=E\bigg[\sum_{i=1}^nc_iy_i\bigg]=\sum_{i=1}^nc_i\cd E[y_i]=\sum_{i=1}^nc_i(\beta+\omega\cd x_i)
+
+    &=\beta\sum_{i=1}^nc_i+\omega\cd\sum_{i=1}^nc_i\cd x_i=\frac{\omega}{s_X}\cd
+    \sum_{i=1}^n(x_i-\mu_X)\cd x_i=\frac{\omega}{s_X}\cd s_X=\omega
+
+which follows from the observation that :math:`\sum_{i=1}^nc_i=0`, and further
+
+.. math::
+
+    s_X=\sum_{i=1}^n(x_i-\mu_X)^2=\bigg(\sum_{i=1}^nx_i^2\bigg)-n\cd\mu_X^2=\sum_{i=1}^n(x_i-\mu_X)\cd x_i
+
+Thus, :math:`w` is an unbiased estimator for the true parameter :math:`\omega`.
+Using the fact that the variables :math:`y_i` are independent and identically 
+distributed as :math:`Y`, we can compute the variance of :math:`w` as follows
+
+.. math::
+
+    \rm{var}(w)=\rm{var}\bigg(\sum_{i=1}^nc_i\cd y_i\bigg)=\sum_{i=1}^nc_i^2\cd
+    \rm{var}(y_i)=\sg^2\cd\sum_{i=1}^nc_i^2=\frac{\sg^2}{s_X}
+
+since :math:`c_i` is a constant, :math:`\rm{var}(y_i)=\sg^2`, and further
+
+.. math::
+
+    \sum_{i=1}^nc_i^2=\frac{1}{s^2_X}\cd\sum_{i=1}^n(x_i-\mu_X)^2=\frac{s_X}{s^2_X}=\frac{1}{s_X}
+
+The standard deviation of :math:`w`, also called the standard error of :math:`w`, is given as
+
+.. note::
+
+    :math:`\dp\rm{se}(w)=\sqrt{\rm{var}(w)}=\frac{\sg}{\sqrt{s_X}}`
+
+**Mean and Variance of Bias Term**
+
+The expected value of :math:`b` is given as
+
+.. math::
+
+    E[b]&=E[\mu_Y-w\cd\mu_X]=E\bigg[\frac{1}{n}\sum_{i=1}^ny_i-w\cd\mu_x\bigg]
+
+    &=\bigg(\frac{1}{n}\cd\sum_{i=1}^nE[y_i]\bigg)-\mu_X\cd E[w]=\bigg(
+    \frac{1}{n}\sum_{i=1}^n(\beta+\omega\cd x_i)\bigg)-\omega\cd\mu_X
+
+    &=\beta+\omega\cd\mu_X-\omega\cd\mu_X=\beta
+
+Thus, :math:`b` is an unbiased estimator for the true parameter :math:`beta`.
+
+Using the observation that all :math:`y_i` are independent, the variance of the bias term can be computed as follows
+
+.. math::
+
+    \rm{var}(b)&=\rm{var}(\mu_Y-w\cd\mu_X)
+
+    &=\rm{var}\bigg(\frac{1}{n}\sum_{i=1}^ny_i\bigg)+\rm{var}(\mu_X\cd w)
+
+    &=\frac{1}{n^2}\cd n\sg^2+\mu_X^2\cd\rm{var}(w)=\frac{1}{n}\cd\sg^2+\mu_X^2\cd\frac{\sg^2}{s_X}
+
+    &=\bigg(\frac{1}{n}+\frac{\mu_X^2}{s_X}\bigg)\cd\sg^2
+
+The standard deviation of :math:`b`, also called the standard error of :math:`b`, is given as
+
+.. note::
+
+    :math:`\dp\rm{se}(b)=\sqrt{\rm{var}(b)}=\sg\cd\sqrt{\frac{1}{n}+\frac{\mu_X^2}{s_X}}`
+
