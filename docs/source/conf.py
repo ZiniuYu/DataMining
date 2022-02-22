@@ -106,6 +106,7 @@ rst_prolog = r'''
     \newcommand{\B}{\boldsymbol{\mathrm{B}}}
     \newcommand{\C}{\boldsymbol{C}}
     \newcommand{\D}{\boldsymbol{\mathrm{D}}}
+    \newcommand{\H}{\boldsymbol{\mathrm{H}}}
     \newcommand{\I}{\boldsymbol{\mathrm{I}}}
     \newcommand{\K}{\boldsymbol{\mathrm{K}}}
     \newcommand{\M}{\boldsymbol{\mathrm{M}}}

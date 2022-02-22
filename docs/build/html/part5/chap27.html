@@ -102,8 +102,11 @@
 <li class="toctree-l4"><a class="reference internal" href="#estimating-variance-sg-2">27.1.1 Estimating Variance (<span class="math notranslate nohighlight">\(\sg^2\)</span>)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#goodness-of-fit">27.1.2 Goodness of Fit</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#inference-about-regression-coefficient-and-bias-term">27.1.3 Inference about Regression Coefficient and Bias Term</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#hypothesis-testing-for-regression-effects">27.1.4 Hypothesis Testing for Regression Effects</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#standardized-residuals">27.1.5 Standardized Residuals</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="#multiple-regression">27.2 Multiple Regression</a></li>
 </ul>
 </li>
 </ul>
@@ -222,6 +225,7 @@
 \newcommand{\B}{\boldsymbol{\mathrm{B}}}
 \newcommand{\C}{\boldsymbol{C}}
 \newcommand{\D}{\boldsymbol{\mathrm{D}}}
+\newcommand{\H}{\boldsymbol{\mathrm{H}}}
 \newcommand{\I}{\boldsymbol{\mathrm{I}}}
 \newcommand{\K}{\boldsymbol{\mathrm{K}}}
 \newcommand{\M}{\boldsymbol{\mathrm{M}}}
@@ -491,7 +495,212 @@ distributed as <span class="math notranslate nohighlight">\(Y\)</span>, we can c
 <p class="admonition-title">Note</p>
 <p><span class="math notranslate nohighlight">\(\dp\rm{se}(b)=\sqrt{\rm{var}(b)}=\sg\cd\sqrt{\frac{1}{n}+\frac{\mu_X^2}{s_X}}\)</span></p>
 </div>
+<p><strong>Covariance of Regression Coefficient and Bias</strong></p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\rm{cov}(w,b)&amp;=E[w\cd b]-E[w]\cd E[b]=E[(\mu_Y-w\cd\mu_X)\cd w]-\omega\cd\beta\\&amp;=\mu_Y\cd E[w]-\mu_X\cd E[w^2]-\omega\cd\beta=\mu_Y\cd\omega-\mu_X\cd(\rm{Var}(w)+E[w]^2)-\omega\cd\beta\\&amp;=\mu_Y\cd\omega-\mu_X\cd\bigg(\frac{\sg^2}{s_X}-\omega^2\bigg)-\omega\cd
+\beta=\omega\cd(\mu_Y-\omega\cd\mu_X)-\frac{\mu_X\cd\sg^2}{s_X}-\omega\cd
+\beta\\&amp;=-\frac{\mu_X\cd\sg^2}{s_X}\end{aligned}\end{align} \]</div>
+<p><strong>Confidence Intervals</strong></p>
+<p>Since the <span class="math notranslate nohighlight">\(y_i\)</span> variables are all normally distributed, their linear
+combination also follows a normal distribution.
+Thus <span class="math notranslate nohighlight">\(w\)</span> follows a normal distribution with mean <span class="math notranslate nohighlight">\(\omega\)</span> and variance <span class="math notranslate nohighlight">\(\sg^2/s_X\)</span>.
+Like wise, <span class="math notranslate nohighlight">\(b\)</span> follows a normal distribution with mean <span class="math notranslate nohighlight">\(\beta\)</span> and
+variance <span class="math notranslate nohighlight">\((1/n+\mu_X^2/s_X)\cd\sg^2\)</span>.</p>
+<p>Since the true variance <span class="math notranslate nohighlight">\(\sg^2\)</span> is unknown, we use the estimated variance
+<span class="math notranslate nohighlight">\(\hat\sg^2\)</span>, to define the standardized variables <span class="math notranslate nohighlight">\(Z_w\)</span> amd
+<span class="math notranslate nohighlight">\(Z_b\)</span> as follows</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp Z_w=\frac{w-E[w]}{\rm{se}(w)}=\frac{w-\omega}{\frac{\hat\sg}{\sqrt{s_X}}}\quad\quad\)</span>
+<span class="math notranslate nohighlight">\(\dp Z_b=\frac{b-E[b]}{\rm{se}(b)}=\frac{b-\beta}{\hat\sg\sqrt{(1/n+\mu_X^2/s_X)}}\)</span></p>
 </div>
+<p>These variables follow the Student’s <span class="math notranslate nohighlight">\(t\)</span> distribution with <span class="math notranslate nohighlight">\(n-2\)</span> degrees of freedom.
+Let <span class="math notranslate nohighlight">\(T_{n-2}\)</span> denote the cumulative <span class="math notranslate nohighlight">\(t\)</span> distribution with
+<span class="math notranslate nohighlight">\(n-2\)</span> degrees of freedom, and let <span class="math notranslate nohighlight">\(t_{\alpha/2}\)</span> denote the critical
+value of <span class="math notranslate nohighlight">\(T_{n-2}\)</span> that encompasses <span class="math notranslate nohighlight">\(\alpha/2\)</span> of the probability
+mass in the right tail.</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}P(Z\geq t_{\alpha/2})=\frac{\alpha}{2}\rm{\ or\ equivalently\ }T_{n-2}(t_{\alpha/2})=1-\frac{\alpha}{2}\\P(Z\geq-t_{\alpha/2})=1-\frac{\alpha}{2}\rm{\ or\ equivalently\ }T_{n-2}(-t_{\alpha/2})=\frac{\alpha}{2}\end{aligned}\end{align} \]</div>
+<p>Given confidence level <span class="math notranslate nohighlight">\(1-\alpha\)</span>, i.e., significance level
+<span class="math notranslate nohighlight">\(\alpha\in(0,1)\)</span>, the <span class="math notranslate nohighlight">\(100(1-\alpha)\%\)</span> confidence interval for the
+true values, <span class="math notranslate nohighlight">\(\omega\)</span> and <span class="math notranslate nohighlight">\(\beta\)</span>, are therefore as follows</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}P(w-t_{\alpha/2}\cd\rm{se}(w)\leq\omega\leq w+t_{\alpha/2}\cd\rm{se}(w))&amp;=1-\alpha\\P(b-t_{\alpha/2}\cd\rm{se}(b)\leq\beta\leq b+t_{\alpha/2}\cd\rm{se}(b))&amp;=1-\alpha\end{aligned}\end{align} \]</div>
+</div>
+<div class="section" id="hypothesis-testing-for-regression-effects">
+<h3>27.1.4 Hypothesis Testing for Regression Effects<a class="headerlink" href="#hypothesis-testing-for-regression-effects" title="Permalink to this headline">¶</a></h3>
+<p>In the regression model, <span class="math notranslate nohighlight">\(Y\)</span> depends on <span class="math notranslate nohighlight">\(X\)</span> through the parameter
+<span class="math notranslate nohighlight">\(\omega\)</span>, therefore, we can check for the regression effect by assuming
+the null hypothesis <span class="math notranslate nohighlight">\(H_0\)</span> that <span class="math notranslate nohighlight">\(\omega=0\)</span>, with the alternative
+hypothesis <span class="math notranslate nohighlight">\(H_a\)</span> being <span class="math notranslate nohighlight">\(\omega\ne 0\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[H_0:\omega=0\quad\quad H_a:\omega\ne 0\]</div>
+<p>When <span class="math notranslate nohighlight">\(\omega=0\)</span>, the response <span class="math notranslate nohighlight">\(Y\)</span> depends only on the bias <span class="math notranslate nohighlight">\(\beta\)</span> and the random error <span class="math notranslate nohighlight">\(\ve\)</span>.</p>
+<p>Under the null hypothesis we have <span class="math notranslate nohighlight">\(E[w]=\omega=0\)</span>.
+Thus,</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp Z_w=\frac{w-E[w]}{\rm{se}(w)}=\frac{w}{\hat\sg/\sqrt{s_X}}\)</span></p>
+</div>
+<p>Given significance level <span class="math notranslate nohighlight">\(\alpha\)</span>, we reject the null hypothesis if the p-value is below <span class="math notranslate nohighlight">\(\alpha\)</span>.
+In this case, we accept the alternative hypothesis that the estimated value of
+the slope parameter is significantly different from zero.</p>
+<p>We can also define the <span class="math notranslate nohighlight">\(f\)</span>-statistic, which is the ratio of the regression
+sum of squares, RSS, to the estimated variance, given as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp f=\frac{RSS}{\hat\sg^2}=\frac{\sum_{i=1}^n(\hat{y_i}-\mu_Y)^2]{\sum_{i=1}^n(y_i-\hat{y_i}^2/n-2)}\)</span></p>
+</div>
+<p>Under the null hypothesis, one can show that</p>
+<div class="math notranslate nohighlight">
+\[E[RSS]=\sg^2\]</div>
+<p>Further, it is also true that</p>
+<div class="math notranslate nohighlight">
+\[E[\hat\sg^2]=\sg^2\]</div>
+<p>Thus, under the null hypothesis the <span class="math notranslate nohighlight">\(f\)</span>-statistic has a value close to 1,
+which indicates that there is no relationship between the predictor and response
+variables.
+On the other hand, if the alternative hypothesis is true, then
+<span class="math notranslate nohighlight">\(E[RSS]\geq\sg^2\)</span>, resulting in a larger <span class="math notranslate nohighlight">\(f\)</span> value.
+In fact, the <span class="math notranslate nohighlight">\(f\)</span>-statistic follows a <span class="math notranslate nohighlight">\(F\)</span>-distribution with 1,
+<span class="math notranslate nohighlight">\((n-2)\)</span> degrees of freedom; therefore, we can reject the null hypothesis
+that <span class="math notranslate nohighlight">\(w=0\)</span> if the p-value of <span class="math notranslate nohighlight">\(f\)</span> is less than the significance level
+<span class="math notranslate nohighlight">\(\alpha\)</span>.</p>
+<p>Interestingly the <span class="math notranslate nohighlight">\(f\)</span>-test is equivalent to the <span class="math notranslate nohighlight">\(t\)</span>-test since <span class="math notranslate nohighlight">\(Z_w^2=f\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}f&amp;=\frac{1}{\hat\sg^2}\cd\sum_{i=1}^n(\hat{y_i}-\mu_Y)^2=\frac{1}{\hat\sg^2}\cd\sum_{i=1}^n(b+w\cd x_i-\mu_Y)^2\\&amp;=\frac{1}{\hat\sg^2}\cd\sum_{i=1}^n(\mu_Y-w\cd\mu_X+w\cd x_i-\mu_Y)^2=
+\frac{1}{\hat\sg^2}\cd\sum_{i=1}^n(w\cd(x_i-\mu_X))^2\\&amp;=\frac{1}{\hat\sg^2}\cd w^2\cd\sum_{i=1}^n(x_i-\mu_X)^2=\frac{w^2\cd s_X}{\hat\sg^2}\\&amp;=\frac{w^2}{\hat\sg^2/s_X}=Z_w^2\end{aligned}\end{align} \]</div>
+<p><strong>Test for Bias Term</strong></p>
+<p>Note that we can also test if the bias value is statistically significant or not
+by setting up the null hypothesis, <span class="math notranslate nohighlight">\(H_0:\beta=0\)</span>, versus the alternative
+hypothesis <span class="math notranslate nohighlight">\(H_a:\beta\neq 0\)</span>.
+We then evaluate the <span class="math notranslate nohighlight">\(Z_b\)</span> statistic under the null hypothesis:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp Z_b=\frac{b-E[b]}{\rm{se}(b)}=\frac{b}{\hat\sg\cd\sqrt{(1/n)+\mu_X^2/s_X)}}\)</span></p>
+</div>
+<p>since, under the null hypothesis <span class="math notranslate nohighlight">\(E[b]=\beta=0\)</span>.
+Using a two-tailed <span class="math notranslate nohighlight">\(t\)</span>-test with <span class="math notranslate nohighlight">\(n-2\)</span> degrees of freedom, we can compute the p-value of <span class="math notranslate nohighlight">\(Z_b\)</span>.
+We reject the null hypothesis if this value is smaller than the significance level <span class="math notranslate nohighlight">\(\alpha\)</span>.</p>
+</div>
+<div class="section" id="standardized-residuals">
+<h3>27.1.5 Standardized Residuals<a class="headerlink" href="#standardized-residuals" title="Permalink to this headline">¶</a></h3>
+<p>Our assumption about the true errors <span class="math notranslate nohighlight">\(\ve_i\)</span> is that they are normally
+distributed with mean <span class="math notranslate nohighlight">\(\mu=0\)</span> and fixed variance <span class="math notranslate nohighlight">\(\sg^2\)</span>.</p>
+<p>The mean of <span class="math notranslate nohighlight">\(\epsilon_i\)</span> is given as</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}E[\epsilon_i]&amp;=E[y_i-\hat{y_i}]=E[y_i]-E[\hat{y_i}]\\&amp;=\beta+\omega\cd x_i-E[b+w\cd x_i]=\beta+\omega\cd x_i-(\beta+\omega\cd x_i)=0\end{aligned}\end{align} \]</div>
+<p>To compute the variance of <span class="math notranslate nohighlight">\(\epsilon_i\)</span>, we will express it as a linear
+combination of the <span class="math notranslate nohighlight">\(y_i\)</span> variables, by noting that</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}w&amp;=\frac{1}{s_X}\bigg(\sum_{j=1}^nx_iy_i-n\cd\mu_X\cd\mu_Y\bigg)=
+\frac{1}{s_X}\bigg(\sum_{j=1}^nx_jy_j-\sum_{j=1}^n\mu_X\cd y_j\bigg)=
+\sum_{j=1}^n\frac{(x_j-\mu_X)}{s_X}\cd y_j\\b&amp;=\mu_Y-w\cd\mu_X=\bigg(\sum_{j=1}^n\frac{1}{n}\cd y_i\bigg)-w\cd\mu_X\end{aligned}\end{align} \]</div>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\epsilon_i=y_i-\hat{y_i}&amp;=y_i-b-w\cd x_i=y_i-\sum_{j=1}^n\frac{1}{n}y_i+w\cd\mu_X-w\cd x_i\\&amp;=y_i-\sum_{j=1}^n\frac{1}{n}y_j-(x_i-\mu_X)\cd w\\&amp;=y_i-\sum_{j=1}^n\frac{1}{n}y_j-\sum_{j=1}^n\frac{(x_i-\mu_X)\cd(x_j-\mu_X)}{s_X}\cd y_j\\&amp;=\bigg(1-\frac{1}{n}-\frac{(x_i-\mu_X)^2}{s_X}\bigg)\cd y-i-\sum_{j\neq i}
+\bigg(\frac{1}{n}+\frac{(x_i-\mu_X)\cd(x_j-\mu_X)}{s_X}\bigg)\cd y_j\end{aligned}\end{align} \]</div>
+<p>Define <span class="math notranslate nohighlight">\(a_j\)</span> as follows:</p>
+<div class="math notranslate nohighlight">
+\[a_j=\bigg(\frac{1}{n}+\frac{(x_i-\mu_x)\cd(x_j-\mu_X)}{s_X}\bigg)\]</div>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\rm{var}(\epsilon_i)&amp;=\rm{var}\bigg((1-a_i)\cd y_i-\sum_{j\neq i}a_j\cd y_j\bigg)\\&amp;=(1-a_i)^2\cd\rm{var}(y_i)+\sum_{j\neq i}a_j^2\cd\rm{var}(y_j)\\&amp;=\sg^2\cd(1-2a_i+a_i^2+\sum_{j\neq i}a_j^2)\\&amp;=\sg^2\cd(1-2a_i+\sum_{j=1}^na_j^2)\end{aligned}\end{align} \]</div>
+<p>Consider the term <span class="math notranslate nohighlight">\(\sum_{j=1}^na_j^2\)</span>, we have</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\sum_{j=1}^na_j^2&amp;=\sum_{j=1}^n\bigg(\frac{1}{n}+\frac{(x_i-\mu_X)\cd(x_j-\mu_X)}{s_X}\bigg)^2\\&amp;=\sum_{j=1}^n\bigg(\frac{1}{n^2}-\frac{2\cd(x_i-\mu_X)\cd(x_j-\mu_X)}{n\cd
+s_X}+\frac{(x_i-\mu_X)^2\cd(x_j-\mu_x)^2}{s_X^2}\bigg)\\&amp;=\frac{1}{n}-\frac{2\cd(x_i-\mu_x)}{n\cd s_X}\sum_{j=1}^n(x_j-\mu_X)+
+\frac{(x_i-\mu_X)^2}{s_X^2}\sum_{j=1}^n(x_j-\mu_X)^2\\&amp;=\frac{1}{n}+\frac{x_i-\mu_X)^2}{s_X}\end{aligned}\end{align} \]</div>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\rm{var}(\epsilon_i)&amp;=\sg^2\cd\bigg(1-\frac{2}{n}-\frac{2\cd(x_i-\mu_x)^2}
+{s_X}+\frac{1}{n}+\frac{(x_i-\mu_X)^2}{s_X}\bigg)\\&amp;=\sg^2\cd\bigg(1-\frac{1}{n}-\frac{(x_i-\mu_x)^2}{s_x}\bigg)\end{aligned}\end{align} \]</div>
+<p>We can now define the <em>standardized residual</em> <span class="math notranslate nohighlight">\(\epsilon_i^*\)</span> by dividing
+<span class="math notranslate nohighlight">\(\epsilon_i\)</span> by its standard deviation after replacing <span class="math notranslate nohighlight">\(\sg^2\)</span> by
+its estimated value <span class="math notranslate nohighlight">\(\hat\sg^2\)</span>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\epsilon_i^*=\frac{\epsilon_i}{\sqrt{\rm{var}(\epsilon_i)}}\)</span>
+<span class="math notranslate nohighlight">\(\dp=\frac{\epsilon_i}{\hat\sg\cd\sqrt{1-\frac{1}{n}-\frac{(x_i-\mu_x)^2}{s_X}}}\)</span></p>
+</div>
+<p>These standardized residuals should follow a standard normal distribution.
+We can thus plot the standardized residuals against the quantiles of a standard
+normal distribution, and check if the normality assumption holds.
+Signiﬁcant deviations would indicate that our model assumptions may not be correct.</p>
+</div>
+</div>
+<div class="section" id="multiple-regression">
+<h2>27.2 Multiple Regression<a class="headerlink" href="#multiple-regression" title="Permalink to this headline">¶</a></h2>
+<p>In multiple regression there are multiple independent attributes
+<span class="math notranslate nohighlight">\(X_1,X_2,\cds,X_d\)</span> and a single dependent or response attribute <span class="math notranslate nohighlight">\(Y\)</span>,
+and we assume that the true relationship can be modeled as a linear function</p>
+<div class="math notranslate nohighlight">
+\[Y=\beta+\omega_1\cd X_1+\omega_2\cd X_2+\cds+\omega_d X_d+\ve\]</div>
+<p>where <span class="math notranslate nohighlight">\(\beta\)</span> is the intercept or bias term and <span class="math notranslate nohighlight">\(\omega_i\)</span> is the
+regression coefficient for attribute <span class="math notranslate nohighlight">\(X_i\)</span>.
+We assume that <span class="math notranslate nohighlight">\(\ve\)</span> is a random variable that is normally distributed
+with mean <span class="math notranslate nohighlight">\(\mu=0\)</span> and variance <span class="math notranslate nohighlight">\(\sg^2\)</span>.</p>
+<p><strong>Mean and Variance of Response Variable</strong></p>
+<p>Let <span class="math notranslate nohighlight">\(\X=(X_1,X_2,\cds,X_d)^T\in\R^d\)</span> denote the multivariate random
+variable comprising the independent attributes.
+Let <span class="math notranslate nohighlight">\(\x=(x_1,x_2,\cds,x_d)^T\)</span> be some <em>fixed</em> value of <span class="math notranslate nohighlight">\(\X\)</span>, and let
+<span class="math notranslate nohighlight">\(\bs\omega=(\omega_1,\omega_2,\cds,\omega_d)^T\)</span>.
+The expected response value is then given as</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}E[Y|\X=\x]&amp;=E[\beta+\omega_1\cd x_1+\cds+\omega_d\cd x_d+\ve]=E\bigg[\beta+\sum_{i=1}^d\omega_i\cd x_i]+E[\ve]\\&amp;=\beta+\omega_1\cd x_1+\cds+\omega_d\cd x_d=\beta+\bs\omega^T\bs\x\end{aligned}\end{align} \]</div>
+<p>which follows from the assumption that <span class="math notranslate nohighlight">\(E[\ve]=0\)</span>.
+The variance of the response variable is given as</p>
+<div class="math notranslate nohighlight">
+\[\rm{var}(Y|\X=\x)=\rm{var}\bigg(\beta+\sum_{i=1}^d\omega_i\cd x_i+\ve\bigg)=
+\rm{var}\bigg(\beta+\sum_{i=1}^d\omega_i\cd x_i\bigg)+\rm{var}(\ve)=0+\sg^2=
+\sg^2\]</div>
+<p>which follows from the assumption that all <span class="math notranslate nohighlight">\(x_i\)</span> are fixed <em>a priori</em>.
+Thus, we conclude that <span class="math notranslate nohighlight">\(Y\)</span> also follows a normal distribution with mean
+<span class="math notranslate nohighlight">\(E[Y|\x]=\beta+\sum_{i=1}^d\omega_i\cd x_i=\beta+\bs\omega^T\x\)</span> and
+variance <span class="math notranslate nohighlight">\(\rm{var}(Y|\x)=\sg^2\)</span>.</p>
+<p><strong>Estimated Parameters</strong></p>
+<p>We augment the data matrix by adding a new column <span class="math notranslate nohighlight">\(X_0\)</span> with all values fixed at 1, that is, <span class="math notranslate nohighlight">\(X_0=\1\)</span>.
+Thus, the augmented data <span class="math notranslate nohighlight">\(\td\D\in\R^{n\times(d+1)}\)</span> comprises the
+<span class="math notranslate nohighlight">\((d+1)\)</span> attributes <span class="math notranslate nohighlight">\(X_0,X_1,X_2,\cds,X_d\)</span>, and each augmented point
+is given as <span class="math notranslate nohighlight">\(\td\x_i=(1,x_{i1},x_{i2},\cds,x_{id})^T\)</span>.</p>
+<p>Let <span class="math notranslate nohighlight">\(b=w_0\)</span> denote the estimated bias term, and let <span class="math notranslate nohighlight">\(w_i\)</span> denote the estimated regression weights.
+The augmented vector of estimated weights, including the bias term, is</p>
+<div class="math notranslate nohighlight">
+\[\td\w=(w_0,w_1,\cds,w_d)^T\]</div>
+<p>We then make predictions for any given point <span class="math notranslate nohighlight">\(\x_i\)</span> as follows:</p>
+<div class="math notranslate nohighlight">
+\[\hat{y_i}=b\cd 1+w_1\cd x_{i1}+\cds+w_d\cd x_{id}=\td\w^T\td{\x_i}\]</div>
+<p>Recall that these estimates are obtained by minimizing the sum of squared errors (SSE), given as</p>
+<div class="math notranslate nohighlight">
+\[SSE=\sum_{i=1}^n(y_i-\hat{y_i})^2=\sum_{i=1}^n\bigg(y_i-b-\sum_{j=1}^dw_\cd x_{ij}\bigg)^2\]</div>
+<p>with the least squares estimate given as</p>
+<div class="math notranslate nohighlight">
+\[\td\w=(\td\D^T\td\D)\im\td\D^TY\]</div>
+<p>The estimated variance <span class="math notranslate nohighlight">\(\hat\sg^2\)</span> is then given as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp\hat\sg^2=\frac{SSE}{n-(d+1)}=\frac{1}{n-d-1}\cd\sum_{i=1}^n(y_i-\hat{y_i})^2\)</span></p>
+</div>
+<p>We divide by <span class="math notranslate nohighlight">\(n-(d+1)\)</span> to get an unbiased estimate, since <span class="math notranslate nohighlight">\(n-(d+1)\)</span>
+is the number of degrees of freedom for estimating SSE.</p>
+<p><strong>Estimated Variance is Unbiased</strong></p>
+<p>Recall that</p>
+<div class="math notranslate nohighlight">
+\[\hat{Y}=\td\D\td\w=\td\D(\td\D^T\td\D)\im\td\D^TY=\H Y\]</div>
+<p>where <span class="math notranslate nohighlight">\(\H\)</span> is the <span class="math notranslate nohighlight">\(n\times n\)</span> hat matrix (assuming that <span class="math notranslate nohighlight">\((\td\D^T\td\D)\im\)</span> exists).
+Note that <span class="math notranslate nohighlight">\(\H\)</span> is an <em>orthogonal projection matrix</em>, since it is symmetric
+(<span class="math notranslate nohighlight">\(\H^T=\H\)</span>) and idempotent (<span class="math notranslate nohighlight">\(\H^2=\H\)</span>).</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\H^T&amp;=(\td\D(\td\D^T\td\D)\im\td\D^T)^T=(\td\D^T)^T((\td\D^T\td\D)^T)\im\td\D^T=\H\\\H^2&amp;=\td\D(\td\D^T\td\D)\im\td\D^T\td\D(\td\D^T\td\D)\im\td\D^T=\td\D(\td\D^T\td\D)\im\td\D^T=\H\end{aligned}\end{align} \]</div>
+<p>Furthermore, the trace of the hat matrix is given as</p>
+<div class="math notranslate nohighlight">
+\[\rm{tr}(\H)=\rm{tr}(\td\D(\td\D^T\td\D)\im\td\D^T)=\rm{tr}(\td\D^T\td\D(\td\D^T\td\D)\im)=\rm{tr}(\I_{(d+1)})=d+1\]</div>
+<p>Finally, note that the matrix <span class="math notranslate nohighlight">\(\I-\H\)</span> is also symmetric and idempotent, since</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}(\I-\H)^T&amp;=\I^T-\H^T=\I-\H\\(\I-\H)^2&amp;=(\I-\H)(\I-\H)=\I-\H-\H+\H^2=\I-\H\end{aligned}\end{align} \]</div>
+<p>Now consider the squared error; we have</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}SSE&amp;=\lv Y-\hat{Y}\rv^2=\lv Y-\H Y\rv^2=\lv(\I-\H)Y\rv^2\\&amp;=Y^T(\I-\H)(\I-\H)Y=Y^T(\I-\H)Y\end{aligned}\end{align} \]</div>
+<p>However, note that the response vector <span class="math notranslate nohighlight">\(Y\)</span> is given as</p>
+<div class="math notranslate nohighlight">
+\[Y=\td\D\td{\bs\omega}+\bs\ve\]</div>
 </div>
 </div>
 
