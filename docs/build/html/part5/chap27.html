@@ -106,7 +106,13 @@
 <li class="toctree-l4"><a class="reference internal" href="#standardized-residuals">27.1.5 Standardized Residuals</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#multiple-regression">27.2 Multiple Regression</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#multiple-regression">27.2 Multiple Regression</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id1">27.2.1 Goodness of Fit</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#inference-about-regression-coefficients">27.2.2 Inference about Regression Coefficients</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#hypothesis-testing">27.2.3 Hypothesis Testing</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#geometric-approach-to-statistical-testing">27.2.4 Geometric Approach to Statistical Testing</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -223,7 +229,7 @@
 \newcommand{\y}{\boldsymbol{\mathrm{y}}}
 \newcommand{\z}{\boldsymbol{\mathrm{z}}}\\\newcommand{\A}{\boldsymbol{\mathrm{A}}}
 \newcommand{\B}{\boldsymbol{\mathrm{B}}}
-\newcommand{\C}{\boldsymbol{C}}
+\newcommand{\C}{\boldsymbol{\mathrm{C}}}
 \newcommand{\D}{\boldsymbol{\mathrm{D}}}
 \newcommand{\H}{\boldsymbol{\mathrm{H}}}
 \newcommand{\I}{\boldsymbol{\mathrm{I}}}
@@ -701,6 +707,252 @@ Note that <span class="math notranslate nohighlight">\(\H\)</span> is an <em>ort
 <p>However, note that the response vector <span class="math notranslate nohighlight">\(Y\)</span> is given as</p>
 <div class="math notranslate nohighlight">
 \[Y=\td\D\td{\bs\omega}+\bs\ve\]</div>
+<p>where <span class="math notranslate nohighlight">\(\td{\bs\omega}=(\omega_0,\omega_1,\cds,\omega_d)^T\)</span> is the true
+(augmented) vector of parameters of the model, and
+<span class="math notranslate nohighlight">\(\bs\ve=(\ve_1,\ve_2,\cds,\ve_n)^T\)</span> is the true error vector, which is
+assumed to be normally distributed with mean <span class="math notranslate nohighlight">\(E[\bs\ve]=\0\)</span> and with fixed
+variance <span class="math notranslate nohighlight">\(\ve_i\sg^2\)</span> for each point, so that
+<span class="math notranslate nohighlight">\(\rm{cov}(\bs\ve)=\sg^2\I\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}SSE&amp;=Y^T(\I-\H)Y=(\td\D\td{\bs\omega}+\bs\ve)^T(\I-\H)(\td\D\td{\bs\omega}+\bs\ve)\\&amp;=(\td\D\td{\bs\omega}+\bs\ve)^T((\I-\H)\td\D\td{\bs\omega}+(\I-\H)\bs\ve)\\&amp;=((\I-\H)\bs\ve)^T(\td\D\td{\bs\ve}+\bs\ve)=\bs\ve^T(\I-\H)(\td\D\td{\bs\omega}+\bs\ve)\\&amp;=\bs\ve^T(\I-\H)\td\D\td{\bs\omega}+\bs\ve^T(\I-\H)\bs\ve=\bs\ve^T(\I-\H)\bs\ve\end{aligned}\end{align} \]</div>
+<p>where we use the observation that</p>
+<div class="math notranslate nohighlight">
+\[(\I-\H)\td\D\td{\bs\omega}=\td\D\td{\bs\omega}-\H\td\D\td{\bs\omega}=
+\td\D\td{\bs\omega}-(\td\D(\td\D^T\td\D)\im\td\D^T)\td\D\td{\bs\omega}=
+\td\D\td{\bs\omega}-\td\D\td{\bs\omega}=\0\]</div>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}E[SSE]&amp;=E[\bs\ve^T(\I-\H)\bs\ve]\\&amp;=E\bigg[\sum_{i=1}^n\ve_i^2-\sum_{i=1}^n\sum_{j=1}^nh_{ij}\ve_i\ve_j\bigg]=
+\sum_{i=1}^nE[\ve_i^2]-\sum_{i=1}^n\sum_{j=1}^nh_{ij}E[\ve_i\ve_j]\\&amp;=\sum_{i=1}^n(1-h_{ii})E[\ve_i^2]\\&amp;=\bigg(n-\sum_{i=1}^nh_{ii}\bigg)\sg^2=(n-\rm{tr}(\H))\sg^2=(n-d-1)\cd\sg^2\end{aligned}\end{align} \]</div>
+<p>It follows that</p>
+<div class="math notranslate nohighlight">
+\[\hat\sg^2=E\bigg[\frac{SSE}{(n-d-1)}\bigg]=\frac{1}{(n-d-1)}E[SSE]=\frac{1}{(n-d-1)}\cd(n-d-1)\cd\sg^2=\sg^2\]</div>
+<div class="section" id="id1">
+<h3>27.2.1 Goodness of Fit<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>The decomposition of the total sum of squares, TSS, into the sum of squared
+errors, SSE, and the residual sum of squares, RSS, holds true for multiple
+regression as well:</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}TSS&amp;=SSE+RSS\\\sum_{i=1}^n(y_i-\mu_Y)^2&amp;=\sum_{i=1}^n(y_i\hat{y_i})^2+\sum_{i=1}^n(\hat{y_i}-\mu_Y)^2\end{aligned}\end{align} \]</div>
+<p>The <em>coefficient of multiple determinations</em>, <span class="math notranslate nohighlight">\(R^2\)</span>, gives the goodness of
+fit, measured as the fraction of the variation explained by the linear model:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp R^2=1-\frac{SSE}{TSS}=\frac{TSS-SSE}{TSS}=\frac{RSS}{TSS}\)</span></p>
+</div>
+<p>One of the potential problems with the <span class="math notranslate nohighlight">\(R^2\)</span> measure is that it is
+susceptible to increase as the number of attributes increase, even though the
+additional attributes may be uninformative.
+To counter this, we can consider the <em>adjusted coefficient of determination</em>,
+which takes into account the degrees of freedom in both TSS and SSE</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp R_a^2=1-\frac{SSE/(n-d-1)}{TSS/(n-1)}=1-\frac{(n-1)\cd SSE}{(n-d-1)\cd TSS}\)</span></p>
+</div>
+<p>We can observe that the adjusted <span class="math notranslate nohighlight">\(R_a^2\)</span> measure is always less than
+<span class="math notranslate nohighlight">\(R^2\)</span>, since the ratio <span class="math notranslate nohighlight">\(\frac{n-1}{n-d-1}&gt;1\)</span>.
+If there is too much of a difference between <span class="math notranslate nohighlight">\(R^2\)</span> and <span class="math notranslate nohighlight">\(R_a^2\)</span>, it
+might indicate that there are potentially many, possibly irrelevant, attributes
+being used to fit the model.</p>
+<p><strong>Geometry of Goodness of Fit</strong></p>
+<div class="math notranslate nohighlight">
+\[\bar{X_i}=X_i-\mu_{X_i}\cd\1\quad\quad\bar{Y}=Y-\mu_Y\cd\1\quad\quad\hat{\bar{Y}}=\hat{Y}-\mu_Y\cd\1\]</div>
+<p>The centered vectors <span class="math notranslate nohighlight">\(\bar{Y}\)</span> and <span class="math notranslate nohighlight">\(\hat{\bar{Y}}\)</span>, and the error
+vector <span class="math notranslate nohighlight">\(\bs\epsilon\)</span> form a right triangle, and thus, by the Pythagoras
+theorem, we have</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\lv\bar{Y}\rv^2&amp;=\lv\hat{\bar{Y}}\rv^2=\lv\bs\epsilon\rv^2=\lv\hat{\bar{Y}}\rv^2+\lv Y-\hat{Y}\rv^2\\YSS&amp;=RSS+SSE\end{aligned}\end{align} \]</div>
+<p>The correlation between <span class="math notranslate nohighlight">\(Y\)</span> and <span class="math notranslate nohighlight">\(\hat{Y}\)</span> is the cosine of the angle
+between <span class="math notranslate nohighlight">\(\bar{Y}\)</span> and <span class="math notranslate nohighlight">\(\hat{\bar{Y}}\)</span>, which is also given as the
+ratio of the base to the hypotenuse</p>
+<div class="math notranslate nohighlight">
+\[\rho_{Y\hat{Y}}=\cos\th=\frac{\lv\hat{\bar{Y}}\rv}{\lv\bar{Y}\rv}\]</div>
+<p>The coefficient of multiple determination is given as</p>
+<div class="math notranslate nohighlight">
+\[R^2=\frac{RSS}{TSS}=\frac{\lv\hat{\bar{Y}}\rv^2}{\lv\bar{Y}\rv^2}=\rho_{Y\hat{Y}}^2\]</div>
+</div>
+<div class="section" id="inference-about-regression-coefficients">
+<h3>27.2.2 Inference about Regression Coefficients<a class="headerlink" href="#inference-about-regression-coefficients" title="Permalink to this headline">¶</a></h3>
+<p>Let <span class="math notranslate nohighlight">\(Y\)</span> be the response vector over all observations.
+Let <span class="math notranslate nohighlight">\(\td\w=(w_0,w_1,w_2,\cds,w_d)^T\)</span> be the estimated vector of regression coefficients, computed as</p>
+<div class="math notranslate nohighlight">
+\[\td\w=(\td\D^T\td\D)\im\td\D^TY\]</div>
+<p>The expected value of <span class="math notranslate nohighlight">\(\td\w\)</span> is given as follows:</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}E[\td\w]&amp;=E[(\td\D^T\td\D)\im\td\D^TY]=(\td\D^T\td\D)\im\td\D^T\cd E[Y]\\&amp;=(\td\D^T\td\D)\im\td\D^T\cd E[\td\D\td{\bs\omega}+\bs\ve]=(\td\D^T\td\D)
+\im(\td\D^T\td\D)\td{\bs\omega}=\td{\bs\omega}\end{aligned}\end{align} \]</div>
+<p>Thus, <span class="math notranslate nohighlight">\(\td\w\)</span> is an unbiased estimator for the true regressions coefficients vector <span class="math notranslate nohighlight">\(\td{\bs\omega}\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\rm{cov}(\td\w)&amp;=\rm{cov}((\td\D^T\td\D)\im\td\D^TY)\\&amp;=\rm{cov}(\A Y)=\A\rm{cov}(Y)\A^T\\&amp;=\A\cd(\sg^2\cd\I)\cd\A^T\\&amp;=(\td\D^T\td\D)\im\td\D^T(\sg^2\cd\I)\td\D(\td\D^T\td\D)\im\\&amp;=\sg^2\cd(\td\D^T\td\D)\im(\td\D^T\td\D)(\td\D^T\td\D)\im\\&amp;=\sg^2(\td\D^T\td\D)\im\end{aligned}\end{align} \]</div>
+<p>Here, we made use of the fact that <span class="math notranslate nohighlight">\(\A=(\td\D^T\td\D)\im\td\D^T\)</span> is a
+matrix of fixed values, and therefore <span class="math notranslate nohighlight">\(\rm{cov}(\A Y)=\A\rm{cov}(Y)\A^T\)</span>.
+Also, we have <span class="math notranslate nohighlight">\(\rm{cov}(Y)=\sg^2\cd\I\)</span>, which follows from the fact that
+the observed response <span class="math notranslate nohighlight">\(y_i\)</span>’s are all independent and have the same
+variance <span class="math notranslate nohighlight">\(\sg^2\)</span>.</p>
+<p>Note that <span class="math notranslate nohighlight">\(\td\D^T\td\D\in\R^{(d+1)\times(d+1)}\)</span> is the uncentered scatter matrix for the augmented data.
+Let <span class="math notranslate nohighlight">\(\C\)</span> denote the inverse of <span class="math notranslate nohighlight">\(\td\D^T\td\D\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[(\td\D^T\td\D)\im=\C\]</div>
+<p>Therefore, the covariance matrix for <span class="math notranslate nohighlight">\(\td\w\)</span> can be written as</p>
+<div class="math notranslate nohighlight">
+\[\rm{cov}(\td\w)=\sg^2\C\]</div>
+<p>In particular, the diagonal entries <span class="math notranslate nohighlight">\(\sg^2\cd c_{ii}\)</span> give the variance
+for each of the regression coefficient estimates, and their squared roots
+specify the standard erros.</p>
+<div class="math notranslate nohighlight">
+\[\rm{var}(w_i)=\sg^2\cd c_{ii}\quad\quad\rm{se}(w_i)=\sqrt{\rm{var}(w_i)}=\sg\cd\sqrt{c_{ii}}\]</div>
+<p>We can now define the standardized variable <span class="math notranslate nohighlight">\(Z_{w_i}\)</span> that can be used to
+derive the confidence intervals for <span class="math notranslate nohighlight">\(w_i\)</span> as follows</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp Z_{w_i}=\frac{w_i-E[w_i]}{\rm{se}(w_i)}=\frac{w_i-\omega_i}{\hat\sg\sqrt{c_{ii}}}\)</span></p>
+</div>
+<p>Each of the variables <span class="math notranslate nohighlight">\(Z_{w_i}\)</span> follows a <span class="math notranslate nohighlight">\(t\)</span>-distribution with
+<span class="math notranslate nohighlight">\(n-d-1\)</span> degrees of freedom, from which we can obtain the
+<span class="math notranslate nohighlight">\(100(1-\alpha)\%\)</span> confidence interval of the true value <span class="math notranslate nohighlight">\(\omega_i\)</span>
+as follows:</p>
+<div class="math notranslate nohighlight">
+\[P(w_i-t_{\alpha/2}\cd\rm{se}(w_i)\leq\omega_i\leq w_i+t_{\alpha/2}\cd\rm{se}(w_i))=1-\alpha\]</div>
+<p>Here, <span class="math notranslate nohighlight">\(t_{\alpha/2}\)</span> is the critical value of the <span class="math notranslate nohighlight">\(t\)</span> distribution,
+with <span class="math notranslate nohighlight">\(n-d-1\)</span> degrees of freedom, that encompasses <span class="math notranslate nohighlight">\(\alpha/2\)</span>
+fraction of the probability mass in the right tail, given as</p>
+<div class="math notranslate nohighlight">
+\[P(Z\geq t_{\alpha/2})=\frac{\alpha}{2}\rm{\ or\ equivalently\ }T_{n-d-1}(t_{\alpha/2})=1-\frac{\alpha}{2}\]</div>
+</div>
+<div class="section" id="hypothesis-testing">
+<h3>27.2.3 Hypothesis Testing<a class="headerlink" href="#hypothesis-testing" title="Permalink to this headline">¶</a></h3>
+<p>We set up the null hypothesis that all the true weights are zero, except for the bias term (<span class="math notranslate nohighlight">\(\beta=\omega_0\)</span>).
+We contrast the nul hypothesis with the alternative hypothesis that at least one of the weights is not zero</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}H_0&amp;:\omega_1=0,\omega_2=0,\cds,\omega_d=0\\H_a&amp;:\exists i,\rm{\ such\ that\ }\omega_i\neq 0\end{aligned}\end{align} \]</div>
+<p>The null hypothesis can also be written as <span class="math notranslate nohighlight">\(H_0:\bs\omega=\0\)</span>.</p>
+<p>We use the <span class="math notranslate nohighlight">\(F\)</span>-test that compares the ratio of the adjusted RSS value to
+the estimated variance <span class="math notranslate nohighlight">\(\hat\sg^2\)</span>, defined via the <span class="math notranslate nohighlight">\(f\)</span>-statistic</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp f=\frac{RSS/d}{\hat\sg^2}=\frac{RSS/d}{SEE/(n-d-1)}\)</span></p>
+</div>
+<p>Under the null hypothesis, we have</p>
+<div class="math notranslate nohighlight">
+\[E[RSS/d]=\sg^2\]</div>
+<p>To see this, consider</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\hat{Y}&amp;=b\cd\1+w_1\cd X_1+\cds+w_d\cd X_d\\\hat{Y}&amp;=(\mu_Y-w_1\mu_{X_1}-\cds-w_d\mu_{X_d})\cd\1+w_1\cd X_1+\cds+w_d\cd X_d\\\hat{Y}-\mu_Y\cd\1&amp;=w_1(X_1-\mu_{X_1}\cd\1)+\cds+w_d(X_d-\mu_{X_d}\cd\1)\\\hat{\bar{Y}}&amp;=w_1\bar{X_1}+w_2\bar{X_2}+\cds+w_d\bar{X_d}=\sum_{i=1}^dw_i\bar{X_i}\end{aligned}\end{align} \]</div>
+<p>Consider the RSS value; we have</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}RSS&amp;=\lv\hat{Y}-\mu_Y\cd\1\rv^2=\lv\hat{\bar{Y}}\rv^2=\hat{\bar{Y}}^T\hat{\bar{Y}}\\&amp;=\bigg(\sum_{i=1}^dw_i\bar{X_i}\bigg)^T\bigg(\sum_{j=1}^dw_j\bar{X_j}\bigg)
+=\sum_{i=1}^d\sum_{j=1}^dw_iw_j\bar{X_i}^T\bar{X_j}=\w^T(\bar\D^T\bar\D)\w\end{aligned}\end{align} \]</div>
+<p>The expected value of RSS is thus given as</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}E[RSS]&amp;=E[\w^T(\bar\D^T\bar\D)\w]\\&amp;=\rm{tr}(E[\w^T\bar\D^T\bar\D)\w])\\&amp;=E[\rm{tr}(\w^T(\bar\D^T\bar\D)\w)]\\&amp;=E[\rm{tr}((\bar\D^T\bar\D)\w\w^T)]\\&amp;=\rm{tr}((\bar\D^T\bar\D)\cd E[\w\w^T])\\&amp;=\rm{tr}((\bar\D^T\bar\D)\cd(\rm{cov}(\w)+E[\w]\cd E[\w]^T))\\&amp;=\rm{tr}((\bar\D^T\bar\D)\cd\rm{cov}(\w))\\&amp;=\rm{tr}((\bar\D^T\bar\D)\cd\sg^2(\bar\D^T\bar\D)\im)\\&amp;=\sg^2\rm{tr}(\I_d)=d\cd\sg^2\end{aligned}\end{align} \]</div>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}E\bigg[\frac{RSS}{d}\bigg]&amp;=\frac{1}{d}E[RSS]=\frac{1}{d}\cd d\cd\sg^2=\sg^2\\E[\hat\sg^2]&amp;=\sg^2\end{aligned}\end{align} \]</div>
+<p>Thus, under the null hypothesis the <span class="math notranslate nohighlight">\(f\)</span>-statistic has a value close to 1,
+which indicates that there is no relationship between the predictor and response
+variables.
+On the other hand, if the alternative hypothesis is true, then
+<span class="math notranslate nohighlight">\(E[RSS/d]\geq\sg^2\)</span>, resulting in a larger <span class="math notranslate nohighlight">\(f\)</span> value.</p>
+<p>The ratio <span class="math notranslate nohighlight">\(f\)</span> follows a <span class="math notranslate nohighlight">\(F\)</span>-distribution with <span class="math notranslate nohighlight">\(d\)</span>,
+<span class="math notranslate nohighlight">\((n-d-1)\)</span> degrees of freedom for the numerator and denominator,
+respectively.
+Therefore, we can reject the null hypothesis if the p-value is less than the chosen significance level.</p>
+<p>Notice that, since <span class="math notranslate nohighlight">\(R^2=1-\frac{SSE}{TSS}=\frac{RSS}{TSS}\)</span>, we have</p>
+<div class="math notranslate nohighlight">
+\[SSE=(1-R^2)\cd TSS\quad\quad RSS=R^2\cd TSS\]</div>
+<p>Therefore, we can rewrite the <span class="math notranslate nohighlight">\(f\)</span> ratio as follows</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp f=\frac{RSS/d}{SSE/(n-d-1)}=\frac{n-d-1}{d}\cd\frac{R^2}{1-R^2}\)</span></p>
+</div>
+<p>In other words, the <span class="math notranslate nohighlight">\(F\)</span>-test compares the adjusted fraction of explained variation to the unexplained variation.
+If <span class="math notranslate nohighlight">\(R^2\)</span> is high, it means the model can fit the data well, and that is
+more evidence to reject the null hypothesis.</p>
+<p><strong>Hypothesis Testing for Individual Parameters</strong></p>
+<p>For attribute <span class="math notranslate nohighlight">\(X_i\)</span>, we set up the null hypothesis <span class="math notranslate nohighlight">\(H_0:\omega_i=0\)</span>
+and contrast it with the alternative hypothesis <span class="math notranslate nohighlight">\(H_a:\omega_i\neq 0\)</span>.
+The standardized variable <span class="math notranslate nohighlight">\(Z_{w_i}\)</span> under the null hypothesis is given as</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(\dp Z_{w_i}=\frac{w_i-E[w_i]}{\rm{se}(w_i)}=\frac{w_i}{\rm{se}(w_i)}=\frac{w_i}{\hat\sg\sqrt{c_{ii}}}\)</span></p>
+</div>
+<p>Next, using a two-tailed <span class="math notranslate nohighlight">\(t\)</span>-test with <span class="math notranslate nohighlight">\(n-d-1\)</span> degrees of freedom, we compute p-value (<span class="math notranslate nohighlight">\(Z_{w_i}\)</span>).
+If this probability is smaller than the significance level <span class="math notranslate nohighlight">\(\alpha\)</span>, we can reject the null hypothesis.
+Otherwise, we accept the null hypothesis, which would imply that <span class="math notranslate nohighlight">\(X_i\)</span>
+does not add significant value in predicting the response in light of other
+attributes already used to fit the model.
+The <span class="math notranslate nohighlight">\(t\)</span>-test can also be used to test whether the bias term is significantly different from 0 or not.</p>
+</div>
+<div class="section" id="geometric-approach-to-statistical-testing">
+<h3>27.2.4 Geometric Approach to Statistical Testing<a class="headerlink" href="#geometric-approach-to-statistical-testing" title="Permalink to this headline">¶</a></h3>
+<p>Let <span class="math notranslate nohighlight">\(\bar{X_i}=X_i-\mu_{X_i}\cd\1\)</span> denote the centered attribute vector,
+and let <span class="math notranslate nohighlight">\(\bar\X=(\bar{X_1},\bar{X_2},\cds,\bar{X_d})^T\)</span> denote the
+multivariate centered vector of predictor variables.
+The <span class="math notranslate nohighlight">\(n\)</span>-dimensional space over the points is divided into three mutually
+orthogonal subspaces, namely the 1-dimensioal <em>mean space</em>
+<span class="math notranslate nohighlight">\(\cl{S}_\mu=span(\1)\)</span>, the <span class="math notranslate nohighlight">\(d\)</span> dimensional <em>centered variable space</em>
+<span class="math notranslate nohighlight">\(\cl{S}_{\bar{X}}=span(\bar\X)\)</span>, and the <span class="math notranslate nohighlight">\(n-d-1\)</span> dimensional
+<em>error space</em> <span class="math notranslate nohighlight">\(\cl{S}_\epsilon\)</span>, which contains the error vector
+<span class="math notranslate nohighlight">\(\bs\epsilon\)</span>.
+The response vector <span class="math notranslate nohighlight">\(Y\)</span> can thus be decomposed into three components</p>
+<div class="math notranslate nohighlight">
+\[Y=\mu_Y\cd\1+\hat{\bar{Y}}+\bs\epsilon\]</div>
+<p>Recall that the <em>degrees of freedom</em> of a random vector is defined as the dimensionality of its enclosing subspace.
+Since the original dimensionality of the point space is <span class="math notranslate nohighlight">\(n\)</span>, we have a total of <span class="math notranslate nohighlight">\(n\)</span> degrees of freedom.
+The mean space has dimensionality <span class="math notranslate nohighlight">\(dim(\cl{S}_\mu)=1\)</span>, the centered
+variable space has <span class="math notranslate nohighlight">\(dim(\cl{S}_{\bar{X}})=d\)</span>, and the error space has
+<span class="math notranslate nohighlight">\(dim(\cl{S}_\epsilon)=n-d-1\)</span>, so that we have</p>
+<div class="math notranslate nohighlight">
+\[dim(\cl{S}_\mu)+\dim(\cl{S}_{\bar{X}})+dim(\cl{S}_\epsilon)=1+d+(n-d-1)=n\]</div>
+<p><strong>Population Regression Model</strong></p>
+<p>For a fixed value <span class="math notranslate nohighlight">\(\x=(x_{i1},x_{i2},\cds,x_{id})^T\)</span>, the true response <span class="math notranslate nohighlight">\(y_i\)</span> is given as</p>
+<div class="math notranslate nohighlight">
+\[y_i=\beta+\omega_1\cd x_{i1}+\cds+\omega_d\cd x_{id}+\ve_i\]</div>
+<p>where the systematic part of the model
+<span class="math notranslate nohighlight">\(\beta+\sum_{j-1}^d\omega_j\cd x_{ij}\)</span> is fixed, and the error term
+<span class="math notranslate nohighlight">\(\ve_i\)</span> varies randomly, with the assumption that <span class="math notranslate nohighlight">\(\ve_i\)</span> follows a
+normal distribution with mean <span class="math notranslate nohighlight">\(\mu=0\)</span> and variance <span class="math notranslate nohighlight">\(\sg^2\)</span>.
+We also assume that the <span class="math notranslate nohighlight">\(\ve_i\)</span> values are all independent of each other.</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}y_i&amp;=\mu_Y+\omega_1\cd(x_{i1}-\mu_{X_1})+\cds+\omega_d\cd(x_{id}-\mu_{X_d})+\ve_i\\&amp;=\mu_Y+\omega_1\cd\bar{x_{i1}}+\cds+\omega_d\cd\bar{x_{id}}+\ve_i\end{aligned}\end{align} \]</div>
+<p>Across all the points, we can rewrite the above equation in vector form</p>
+<div class="math notranslate nohighlight">
+\[Y=\mu_Y\cd\1+\omega_1\bar{X_1}+\cds+\omega_d\cd\bar{X_d}+\bs\ve\]</div>
+<p>We can also center the vector <span class="math notranslate nohighlight">\(Y\)</span>, so that we obtain a regression model
+over the centered response and predictor variables</p>
+<div class="math notranslate nohighlight">
+\[\bar{Y}=Y-\mu_Y\cd\1=\omega_1\cd\bar{X_1}+\omega_2\cd\bar{X_2}+\cds+\omega_d
+\cd\bar{X_d}+\bs\ve=E[\bar{Y}|\bar{\X}]+\bs\ve\]</div>
+<p>In this equation, <span class="math notranslate nohighlight">\(\sum_{i=1}^d\omega_i\cd\bar{X_i}\)</span> is a fixed vector
+that denotes the expected value <span class="math notranslate nohighlight">\(E[\bar{Y}|\bar\X]\)</span> and <span class="math notranslate nohighlight">\(\bs\ve\)</span> is
+an <span class="math notranslate nohighlight">\(n\)</span>-dimensional random vector that is distributed according to a
+<span class="math notranslate nohighlight">\(n\)</span>-dimensional multivariate normal vector with mean <span class="math notranslate nohighlight">\(\mmu=\0\)</span>, and
+a fixed variance <span class="math notranslate nohighlight">\(\sg^2\)</span> along all dimensions, so that its covariance
+matrix is <span class="math notranslate nohighlight">\(\bs\Sg=\sg^2\cd\I\)</span>.
+The distribution of <span class="math notranslate nohighlight">\(\bs\ve\)</span> is therefore given as</p>
+<div class="math notranslate nohighlight">
+\[f(\bs\ve)=\frac{1}{(\sqrt{2\pi})^n\cd\sqrt{|\bs\Sg|}}\cd\exp\bigg\{-\frac{
+\bs\ve^T\bs\Sg\im\bs\ve}{2}\bigg\}=\frac{1}{(\sqrt{2\pi})^n\cd\sg^n}\cd\exp
+\bigg\{-\frac{\lv\bs\ve\rv^2}{2\cd\sg^2}\bigg\}\]</div>
+<p>which follows from the fact that
+<span class="math notranslate nohighlight">\(|\bs\Sg|=\det(\bs\Sg)=\det(\sg^2\I)=(\sg^2)^n\)</span> and
+<span class="math notranslate nohighlight">\(\bs\Sg\im=\frac{1}{\sg^2}\I\)</span>.</p>
+<p>The density of <span class="math notranslate nohighlight">\(\bs\ve\)</span> is thus a function of its squared length <span class="math notranslate nohighlight">\(\lv\bs\ve\rv^2\)</span>, independent of its angle.
+In other words, the vector <span class="math notranslate nohighlight">\(\bs\ve\)</span> is distributed uniformly over all
+angles and is equally likely to point in any direction.</p>
+<p><strong>Hypothesis Testing</strong></p>
+<p>Consider the population regression model</p>
+<div class="math notranslate nohighlight">
+\[Y=\mu_Y\cd\1+\omega_1\cd\bar{X_1}+\cds+\omega_d\cd\bar{X_d}+\bs\ve=\mu_Y\cd\1+E[\bar{Y}|\bs\X]+\bs\ve\]</div>
+<p>The null hypothesis is</p>
+<div class="math notranslate nohighlight">
+\[H_0:\omega_1=0,\omega_2=0,\cds,\omega_d=0\]</div>
+<p>In this case, we have</p>
+<div class="math notranslate nohighlight">
+\[Y=\mu_Y\cd\1+\bs\ve\Rightarrow Y-\mu_Y\cd\1=\bs\ve\Rightarrow\bar{Y}=\bs\ve\]</div>
+<p>Since <span class="math notranslate nohighlight">\(\bs\ve\)</span> is normally distributed with mean <span class="math notranslate nohighlight">\(\0\)</span> and covariance
+matrix <span class="math notranslate nohighlight">\(\sg^2\cd\I\)</span>, under the null hypothesis, the variation in
+<span class="math notranslate nohighlight">\(\bar{Y}\)</span> for a given value of <span class="math notranslate nohighlight">\(\x\)</span> will therefore be centered
+around the origin <span class="math notranslate nohighlight">\(\0\)</span>.</p>
+</div>
 </div>
 </div>
 
