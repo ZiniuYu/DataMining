@@ -952,6 +952,41 @@ angles and is equally likely to point in any direction.</p>
 matrix <span class="math notranslate nohighlight">\(\sg^2\cd\I\)</span>, under the null hypothesis, the variation in
 <span class="math notranslate nohighlight">\(\bar{Y}\)</span> for a given value of <span class="math notranslate nohighlight">\(\x\)</span> will therefore be centered
 around the origin <span class="math notranslate nohighlight">\(\0\)</span>.</p>
+<p>On the other hand, under the alternative hypothesis <span class="math notranslate nohighlight">\(H_a\)</span> that at least
+one of the <span class="math notranslate nohighlight">\(\omega_i\)</span> is non-zero, we have</p>
+<div class="math notranslate nohighlight">
+\[\bar{Y}=E[\bar{Y}|\bar\X]+\bs\ve\]</div>
+<p>Thus, the variation in <span class="math notranslate nohighlight">\(\bar{Y}\)</span> is shifted away from the origin
+<span class="math notranslate nohighlight">\(\0\)</span> in the direction <span class="math notranslate nohighlight">\(E[\bar{Y}|\bar\X]\)</span>.</p>
+<p>We estimate its true value by projecting the centered observation vector
+<span class="math notranslate nohighlight">\(\bar{Y}\)</span> onto the subspace <span class="math notranslate nohighlight">\(\cl{S}_{\bar{X}}\)</span> and
+<span class="math notranslate nohighlight">\(\cl{S}_\epsilon\)</span>, as follows</p>
+<div class="math notranslate nohighlight">
+\[\bar{Y}=w_1\cd\bar{X_1}+\w_2\cd\bar{X_2}+\cds+w_d\cd\bar{X_d}+\bs\epsilon=\hat{\bar{Y}}+\bs\epsilon\]</div>
+<p>Under the null hypothesis, the true centered response vector is
+<span class="math notranslate nohighlight">\(\bar{Y}=\bs\ve\)</span>, and therefore, <span class="math notranslate nohighlight">\(\hat{\bar{Y}}\)</span> and
+<span class="math notranslate nohighlight">\(\bs\epsilon\)</span> are simply the projections of the random error vector
+<span class="math notranslate nohighlight">\(\bs\ve\)</span> onto the subspaces <span class="math notranslate nohighlight">\(\cl{S}_{\bar{X}}\)</span> and
+<span class="math notranslate nohighlight">\(\cl{S}_\epsilon\)</span>.
+In this case, we also expect the length of <span class="math notranslate nohighlight">\(\bs\epsilon\)</span> and <span class="math notranslate nohighlight">\(\hat{\bar{Y}}\)</span> to be roughly comparable.
+On the other hand, under the alternative hypothesis, we have
+<span class="math notranslate nohighlight">\(\bar{Y}=E[\bar{Y}|\bar\X]+\bs\ve\)</span>, and so <span class="math notranslate nohighlight">\(\hat{\bar{Y}}\)</span> will be
+relatively much longer compared to <span class="math notranslate nohighlight">\(\bs\epsilon\)</span>.</p>
+<p>Define the mean squared length of per dimension for the two vectors
+<span class="math notranslate nohighlight">\(\hat{\bar{Y}}\)</span> and <span class="math notranslate nohighlight">\(\bs\epsilon\)</span>, as follows</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}M(\hat{\bar{Y}})&amp;=\frac{\lv\hat{\bar{Y}}\rv^2}{dim(\cl{S}_{\bar{X}})}=\frac{\lv\hat{\bar{Y}}\rv^2}{d}\\M(\bs\epsilon)&amp;=\frac{\lv\bs\epsilon\rv^2}{dim(\cl{S}_\epsilon)}=\frac{\lv\bs\epsilon\rv^2}{n-d-1}\end{aligned}\end{align} \]</div>
+<p>The geometric ratio test is identical to the F-test since</p>
+<div class="math notranslate nohighlight">
+\[\frac{M(\hat{\bar{Y}})}{M(\bs\epsilon)}=\frac{\lv\hat{\bar{Y}}\rv^2/d}
+{\lv\bs\epsilon\rv^2/(n-d-1)}=\frac{RSS/d}{SSE/(n-d-1)}=f\]</div>
+<p>The geometric approach makes it clear that if <span class="math notranslate nohighlight">\(f\simeq 1\)</span> then the null
+hypothesis holds, and we conclude that <span class="math notranslate nohighlight">\(Y\)</span> does not depend on the
+predictor variables <span class="math notranslate nohighlight">\(X_1,X_2,\cds,X_d\)</span>.
+On the other hand, if <span class="math notranslate nohighlight">\(f\)</span> is large, with a p-value less than the
+significance level, then we can reject the null hypothesis and accept the
+alternative hypothesis that <span class="math notranslate nohighlight">\(Y\)</span> depends on at least one predictor variable
+<span class="math notranslate nohighlight">\(X_i\)</span>.</p>
 </div>
 </div>
 </div>

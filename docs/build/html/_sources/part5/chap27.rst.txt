@@ -1163,3 +1163,55 @@ Since :math:`\bs\ve` is normally distributed with mean :math:`\0` and covariance
 matrix :math:`\sg^2\cd\I`, under the null hypothesis, the variation in 
 :math:`\bar{Y}` for a given value of :math:`\x` will therefore be centered 
 around the origin :math:`\0`.
+
+On the other hand, under the alternative hypothesis :math:`H_a` that at least 
+one of the :math:`\omega_i` is non-zero, we have
+
+.. math::
+
+    \bar{Y}=E[\bar{Y}|\bar\X]+\bs\ve
+
+Thus, the variation in :math:`\bar{Y}` is shifted away from the origin 
+:math:`\0` in the direction :math:`E[\bar{Y}|\bar\X]`.
+
+We estimate its true value by projecting the centered observation vector 
+:math:`\bar{Y}` onto the subspace :math:`\cl{S}_{\bar{X}}` and 
+:math:`\cl{S}_\epsilon`, as follows
+
+.. math::
+
+    \bar{Y}=w_1\cd\bar{X_1}+\w_2\cd\bar{X_2}+\cds+w_d\cd\bar{X_d}+\bs\epsilon=\hat{\bar{Y}}+\bs\epsilon
+
+Under the null hypothesis, the true centered response vector is 
+:math:`\bar{Y}=\bs\ve`, and therefore, :math:`\hat{\bar{Y}}` and 
+:math:`\bs\epsilon` are simply the projections of the random error vector
+:math:`\bs\ve` onto the subspaces :math:`\cl{S}_{\bar{X}}` and 
+:math:`\cl{S}_\epsilon`.
+In this case, we also expect the length of :math:`\bs\epsilon` and :math:`\hat{\bar{Y}}` to be roughly comparable.
+On the other hand, under the alternative hypothesis, we have 
+:math:`\bar{Y}=E[\bar{Y}|\bar\X]+\bs\ve`, and so :math:`\hat{\bar{Y}}` will be
+relatively much longer compared to :math:`\bs\epsilon`.
+
+Define the mean squared length of per dimension for the two vectors 
+:math:`\hat{\bar{Y}}` and :math:`\bs\epsilon`, as follows
+
+.. math::
+
+    M(\hat{\bar{Y}})&=\frac{\lv\hat{\bar{Y}}\rv^2}{dim(\cl{S}_{\bar{X}})}=\frac{\lv\hat{\bar{Y}}\rv^2}{d}
+
+    M(\bs\epsilon)&=\frac{\lv\bs\epsilon\rv^2}{dim(\cl{S}_\epsilon)}=\frac{\lv\bs\epsilon\rv^2}{n-d-1}
+
+The geometric ratio test is identical to the F-test since
+
+.. math::
+
+    \frac{M(\hat{\bar{Y}})}{M(\bs\epsilon)}=\frac{\lv\hat{\bar{Y}}\rv^2/d}
+    {\lv\bs\epsilon\rv^2/(n-d-1)}=\frac{RSS/d}{SSE/(n-d-1)}=f
+
+The geometric approach makes it clear that if :math:`f\simeq 1` then the null 
+hypothesis holds, and we conclude that :math:`Y` does not depend on the 
+predictor variables :math:`X_1,X_2,\cds,X_d`.
+On the other hand, if :math:`f` is large, with a p-value less than the 
+significance level, then we can reject the null hypothesis and accept the
+alternative hypothesis that :math:`Y` depends on at least one predictor variable
+:math:`X_i`.
